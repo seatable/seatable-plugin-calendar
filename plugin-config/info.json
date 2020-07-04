@@ -1,11 +1,11 @@
 {
-  "name": "test",
-  "version": "0.0.1",
+  "name": "calendar",
+  "version": "0.1.0",
   "display_name": {
     "de": "",
-    "en": "test",
+    "en": "Calendar",
     "fr": "",
-    "zh-cn": "测试"
+    "zh-cn": "日历"
   },
-  "description": "123"
+  "description": ""
 }

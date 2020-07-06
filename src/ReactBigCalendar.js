@@ -23,6 +23,7 @@ const propTypes = {
   onRowExpand: PropTypes.func,
   updateSettings: PropTypes.func,
   onInsertRow: PropTypes.func,
+  getRowById: PropTypes.func,
 };
 
 const calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH];
@@ -76,13 +77,14 @@ class ReactBigCalendar extends React.Component {
   }
 
   getEvents = (startDateColumn, endDateColumn, labelColumn) => {
-    let { rows } = this.props;
+    let { activeTable, rows, getRowById } = this.props;
     let events = [];
     if (!startDateColumn) {
       return [];
     }
     rows.forEach((row) => {
-      const event = this.getEvent(row, startDateColumn, endDateColumn, labelColumn);
+      const formattedRow = getRowById(activeTable, row._id);
+      const event = this.getEvent(formattedRow, startDateColumn, endDateColumn, labelColumn);
       events.push(event);
     });
     return events;
@@ -90,17 +92,17 @@ class ReactBigCalendar extends React.Component {
 
   getEvent = (row, startDateColumn, endDateColumn, labelColumn) => {
     const { optionColors, highlightColors } = this.props;
-    const { name: startDateColumnName } = startDateColumn || {};
-    const { name: endDateColumnName } = endDateColumn || {};
+    const { key: startDateColumnKey } = startDateColumn || {};
+    const { key: endDateColumnKey } = endDateColumn || {};
     const title = this.getRecordName(row);
-    const date = row[startDateColumnName];
-    const endDate = row[endDateColumnName];
+    const date = row[startDateColumnKey];
+    const endDate = row[endDateColumnKey];
     let bgColor, textColor;
     if (labelColumn) {
-      const { name: colorColumnName, data } = labelColumn;
+      const { key: colorColumnKey, data } = labelColumn;
       const colorDataOptions = data && data.options;
-      const colorName = row[colorColumnName];
-      const colorOption = colorDataOptions && colorDataOptions.find(o => o.name === colorName);
+      const colorId = row[colorColumnKey];
+      const colorOption = colorDataOptions && colorDataOptions.find(o => o.id === colorId);
       bgColor = colorOption ? colorOption.color : optionColors[2].COLOR;
       textColor = colorOption ? colorOption.textColor : optionColors[2].TEXT_COLOR;
     } else {

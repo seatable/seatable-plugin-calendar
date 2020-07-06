@@ -61,7 +61,7 @@ class Toolbar extends React.Component {
           className={classnames({ 'rbc-view-type': true, 'rbc-active': activeView === name })}
           onClick={this.onSelectView.bind(null, name)}
         >
-          {messages[name]}
+          {intl.get(messages[name])}
         </div>
       ));
     }

@@ -57,13 +57,13 @@ class App extends React.Component {
       await this.dtable.init(window.dtablePluginConfig);
       await this.dtable.syncWithServer();
       this.dtable.subscribe('dtable-connect', () => { this.onDTableConnect(); });
-    } else { 
+    } else {
       // integrated to dtable app
       this.dtable.initInBrowser(window.app.dtableStore);
     }
     this.unsubscribeLocalDtableChanged = this.dtable.subscribe('local-dtable-changed', () => { this.onDTableChanged(); });
     this.unsubscribeRemoteDtableChanged = this.dtable.subscribe('remote-dtable-changed', () => { this.onDTableChanged(); });
-    this.resetData();
+    this.resetData(true);
   }
 
   onDTableConnect = () => {
@@ -74,11 +74,15 @@ class App extends React.Component {
     this.resetData();
   }
 
-  resetData = () => {
+  resetData = (init = false) => {
+    let { showDialog } = this.state;
     let plugin_settings = this.dtable.getPluginSettings(PLUGIN_NAME) || {};
+    if (init) {
+      showDialog = true;
+    }
     this.setState({
       isLoading: false,
-      showDialog: true,
+      showDialog: showDialog,
       plugin_settings
     });
   }
@@ -143,6 +147,7 @@ class App extends React.Component {
             activeView={activeView}
             columns={columns}
             rows={rows}
+            getRowById={this.dtable.getRowById}
             CellType={cellType}
             setting={currentSetting}
             optionColors={optionColors}

@@ -11,6 +11,8 @@ const zh_CN = {
   "Color_From": "颜色来自",
   "Calendar_Select_Description": "提示: 您要在此日历视图中使用哪个字段？您的记录将基于此字段的日期放到日历上",
   "Using_xxx_column": "使用 “{columnName}” 列",
+  "Year": "年",
+  "Month": "月",
   "Week_xxx": "周{weekNumber}",
   "Jan": "1月",
   "Feb": "2月",

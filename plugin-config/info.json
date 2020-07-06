@@ -7,5 +7,10 @@
     "fr": "",
     "zh-cn": "日历"
   },
-  "description": ""
+  "description": {
+    "de": "",
+    "en": "View your records in a calendar.",
+    "fr": "",
+    "zh-cn": "在日历中查看你的记录。"
+  }
 }

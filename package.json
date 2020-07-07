@@ -1,11 +1,11 @@
 {
-  "name": "seatable-plugin-template",
+  "name": "seatable-plugin-calendar",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
     "dom-helpers": "^5.1.4",
-    "dtable-sdk": "0.0.35",
+    "dtable-sdk": "0.0.37",
     "jszip": "^3.2.2",
     "moment": "^2.24.0",
     "react": "^16.12.0",

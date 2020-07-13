@@ -247,12 +247,14 @@ class MonthView extends React.Component {
   };
 
   renderFestival(date) {
-    let festival = this.festivals[date];
-    if (!festival) {
+    let festival;
+    if (Object.keys(this.festivals).includes(date)) {
+      festival = this.festivals[date];
+    } else {
       festival = getFestival(date);
+      this.festivals[date] = festival;
     }
     if (festival) {
-      this.festivals[date] = festival;
       return <div className="rbc-festival">
         <span className="rbc-festival-context" title={festival}>{festival}</span>
       </div>;

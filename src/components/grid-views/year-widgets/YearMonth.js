@@ -1,0 +1,88 @@
+import React, { Fragment } from 'react';
+import { findDOMNode } from 'react-dom';
+import PropTypes from 'prop-types';
+import Header from '../../header/Header';
+import * as dates from '../../../utils/dates';
+import YearDay from './YearDay';
+
+class YearMonth extends React.Component {
+
+  renderMonthHeaders() {
+    let { localizer, components, monthDate } = this.props;
+    let HeaderComponent = components.header || Header;
+
+    return (
+      <div className='rbc-year-month-header'>
+        <HeaderComponent
+          date={monthDate}
+          localizer={localizer}
+          label={localizer.format(monthDate, 'monthFormat')}
+        />
+      </div>
+    );
+  }
+
+  renderWeekDayHeaders(row) {
+    let { localizer, components } = this.props;
+    let first = row[0];
+    let last = row[row.length - 1];
+    let HeaderComponent = components.header || Header;
+
+    return dates.range(first, last, 'day').map((day, idx) => (
+      <div key={'header_' + idx} className='rbc-header'>
+        <HeaderComponent
+          date={day}
+          localizer={localizer}
+          label={localizer.format(day, 'weekdayFormat')}
+        />
+      </div>
+    ));
+  }
+
+  renderDay = (week, weekIdx) => {
+    let { events, monthDate } = this.props;
+
+    return (
+      <div className="rbc-year-day-container" key={`rbc-year-day-container-${weekIdx}`}>
+        {week.map((day, i) => {
+          return <YearDay 
+            key={`rbc-year-day-${weekIdx}-${i}`}
+            day={day}
+            events={events}
+            monthDate={monthDate}
+            range={week}
+            {...this.props}
+          />;
+        })}
+      </div>
+    );
+  };
+
+  getContainer = () => {
+    return findDOMNode(this);
+  };
+
+  render() {
+    let { weeks } = this.props;
+
+    return (
+      <Fragment>
+        {this.renderMonthHeaders()}
+        <div className='rbc-row rbc-month-header'>
+          {this.renderWeekDayHeaders(weeks[0])}
+        </div>
+        {weeks.map(this.renderDay)}
+      </Fragment>
+    );
+  }
+}
+
+YearMonth.propTypes = {
+  weeks: PropTypes.array,
+  monthDate: PropTypes.object,
+  events: PropTypes.array.isRequired,
+  components: PropTypes.object.isRequired,
+  localizer: PropTypes.object.isRequired,
+};
+
+export default YearMonth;

@@ -1,0 +1,182 @@
+// creates an object composed of the own and inherited enumerable property paths of object that are not omitted
+export function omit(object, propertyName) {
+  let result = {};
+  if (!isObject(object)) {
+    return result;
+  }
+  for (let key in object) {
+    if ((Array.isArray(propertyName) && !propertyName.includes(key)) || propertyName !== key) {
+      // eslint-disable-next-line
+      result[key] === object[key];
+    }
+  }
+  return result;
+}
+
+// creates an array of elements split into groups the length of size
+export function chunk(array, size = 1) {
+  let result = [];
+  const length = array == null ? 0 : array.length;
+  if (!length || size < 1) {
+    return [];
+  }
+  let index = 0;
+  let resIndex = 0;
+  result = new Array(Math.ceil(length / size));
+
+  while (index < length) {
+    result[resIndex++] = slice(array, index, (index += size));
+  }
+  return result;
+}
+
+/**
+ * Assigns own and inherited enumerable string keyed properties of source
+ * objects to the destination object for all destination properties that
+ * resolve to `undefined`. Source objects are applied from left to right.
+ * Once a property is set, additional values of the same property are ignored.
+ *
+ * @category Object
+ * @param {Object} object The destination object.
+ * @param {...Object} [sources] The source objects.
+ * @returns {Object} Returns `object`.
+ * @see defaultsDeep
+ * @example
+ *
+ * defaults({ 'a': 1 }, { 'b': 2 }, { 'a': 3 })
+ * // => { 'a': 1, 'b': 2 }
+ */
+export function defaults(object, ...sources) {
+  object = Object(object);
+  sources.forEach((source) => {
+    if (source != null) {
+      source = Object(source);
+      for (const key in source) {
+        const value = object[key];
+        if (value === undefined ||
+            (eq(value, Object.prototype[key]) && !Object.prototype.hasOwnProperty.call(object, key))) {
+          object[key] = source[key];
+        }
+      }
+    }
+  });
+  return object;
+}
+
+export const range = createRange();
+
+function createRange(fromRight) {
+  return (start, end, step) => {
+    if (end === undefined) {
+      end = start;
+      start = 0;
+    }
+    step = step === undefined ? (start < end ? 1 : -1) : step;
+    return baseRange(start, end, step, fromRight);
+  };
+}
+
+/**
+ * The base implementation of `range` and `rangeRight` which doesn't
+ * coerce arguments.
+ *
+ * @private
+ * @param {number} start The start of the range.
+ * @param {number} end The end of the range.
+ * @param {number} step The value to increment or decrement by.
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {Array} Returns the range of numbers.
+ */
+function baseRange(start, end, step, fromRight) {
+  let index = -1;
+  let length = Math.max(Math.ceil((end - start) / (step || 1)), 0);
+  const result = new Array(length);
+
+  while (length--) {
+    result[fromRight ? length : ++index] = start;
+    start += step;
+  }
+  return result;
+}
+
+function isObject(value) {
+  const type = typeof value;
+  return value != null && (type === 'object' || type === 'function');
+}
+
+function slice(array, start, end) {
+  let length = array == null ? 0 : array.length;
+  if (!length) {
+    return [];
+  }
+  start = start == null ? 0 : start;
+  end = end === undefined ? length : end;
+
+  if (start < 0) {
+    start = -start > length ? 0 : (length + start);
+  }
+  end = end > length ? length : end;
+  if (end < 0) {
+    end += length;
+  }
+  length = start > end ? 0 : ((end - start) >>> 0);
+  start >>>= 0;
+
+  let index = -1;
+  const result = new Array(length);
+  while (++index < length) {
+    result[index] = array[index + start];
+  }
+  return result;
+}
+
+/**
+ * comparison between two values to determine if they are equivalent.
+ *
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ * @example
+ *
+ * const object = { 'a': 1 }
+ * const other = { 'a': 1 }
+ *
+ * eq(object, object)
+ * // => true
+ *
+ * eq(object, other)
+ * // => false
+ *
+ * eq('a', 'a')
+ * // => true
+ *
+ * eq('a', Object('a'))
+ * // => false
+ *
+ * eq(NaN, NaN)
+ * // => true
+ */
+function eq(value, other) {
+  return value === other;
+}
+
+export const getDtableUuid = () => {
+  if (window.dtable) {
+    return window.dtable.dtableUuid;
+  }
+  return window.dtablePluginConfig.dtableUuid;
+}
+
+export const getDtableLang = () => {
+  if (window.dtable) {
+    return window.dtable.lang;
+  }
+  return 'zh-cn';
+}
+
+export const getDtablePermission = () => {
+  if (window.dtable) {
+    return window.dtable.permission;
+  }
+  return 'rw';
+}

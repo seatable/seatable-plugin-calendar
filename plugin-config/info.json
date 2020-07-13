@@ -1,11 +1,16 @@
 {
-  "name": "test",
-  "version": "0.0.1",
+  "name": "calendar",
+  "version": "0.1.0",
   "display_name": {
     "de": "",
-    "en": "test",
+    "en": "Calendar",
     "fr": "",
-    "zh-cn": "测试"
+    "zh-cn": "日历"
   },
-  "description": "123"
+  "description": {
+    "de": "",
+    "en": "View your records in a calendar.",
+    "fr": "",
+    "zh-cn": "在日历中查看你的记录。"
+  }
 }

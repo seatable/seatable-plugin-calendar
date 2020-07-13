@@ -1,0 +1,325 @@
+/* eslint no-fallthrough: off */
+import moment from 'moment';
+import { DATE_UNIT, MULTIPLIER_MILLI, MONTHS } from '../constants/date';
+
+export function monthsInYear(year) {
+  return MONTHS.map(m => moment(`${year}-${m}`).startOf(DATE_UNIT.MONTH).toDate());
+}
+
+export function firstVisibleDay(date, localizer) {
+  let firstOfMonth = startOf(date, DATE_UNIT.MONTH);
+
+  return startOf(firstOfMonth, DATE_UNIT.WEEK, localizer.startOfWeek());
+}
+
+export function lastVisibleDay(date, localizer) {
+  let endOfMonth = endOf(date, DATE_UNIT.MONTH);
+
+  return endOf(endOfMonth, DATE_UNIT.WEEK, localizer.startOfWeek());
+}
+
+export function visibleDays(date, localizer) {
+  let current = firstVisibleDay(date, localizer),
+    last = lastVisibleDay(date, localizer),
+    days = [];
+
+  while (lte(current, last, DATE_UNIT.DAY)) {
+    days.push(current);
+    current = add(current, 1, DATE_UNIT.DAY);
+  }
+
+  return days;
+}
+
+export function visibleYearDays(date, localizer) {
+  let current = firstVisibleDay(date, localizer),
+    days = [];
+
+  while (days.length < 42) {
+    days.push(current);
+    current = add(current, 1, DATE_UNIT.DAY);
+  }
+
+  return days;
+}
+
+export function ceil(date, unit) {
+  let floor = startOf(date, unit);
+
+  return eq(floor, date) ? floor : add(floor, 1, unit);
+}
+
+export function range(start, end, unit = DATE_UNIT.DAY) {
+  let current = start,
+    days = [];
+
+  while (lte(current, end, unit)) {
+    days.push(current);
+    current = add(current, 1, unit);
+  }
+
+  return days;
+}
+
+export function merge(date, time) {
+  if (time == null && date == null) return null;
+
+  if (time == null) time = new Date();
+  if (date == null) date = new Date();
+
+  date = startOf(date, DATE_UNIT.DAY);
+  date = hours(date, hours(time));
+  date = minutes(date, minutes(time));
+  date = seconds(date, seconds(time));
+  return milliseconds(date, milliseconds(time));
+}
+
+export function eqTime(dateA, dateB) {
+  return (
+    hours(dateA) === hours(dateB) &&
+    minutes(dateA) === minutes(dateB) &&
+    seconds(dateA) === seconds(dateB)
+  );
+}
+
+export function isJustDate(date) {
+  if (!date) return false;
+  const momentDate = moment(date);
+  return (
+    momentDate.hours() === 0 &&
+    momentDate.minutes() === 0 &&
+    momentDate.seconds() === 0 &&
+    momentDate.milliseconds() === 0
+  );
+}
+
+export function duration(start, end, unit, firstOfWeek) {
+  if (unit === DATE_UNIT.DAY) unit = DATE_UNIT.DATE;
+  return Math.abs(
+    [unit](start, undefined, firstOfWeek) -
+      [unit](end, undefined, firstOfWeek)
+  );
+}
+
+export function diff(dateA, dateB, unit) {
+  if (!unit || unit === DATE_UNIT.MILI) return Math.abs(+dateA - +dateB);
+
+  // the .round() handles an edge case
+  // with DST where the total won't be exact
+  // since one day in the range may be shorter/longer by an hour
+  return Math.round(
+    Math.abs(
+      +startOf(dateA, unit) / MULTIPLIER_MILLI[unit] -
+        +startOf(dateB, unit) / MULTIPLIER_MILLI[unit]
+    )
+  );
+}
+
+export function total(date, unit) {
+  let ms = date.getTime(),
+    div = 1;
+
+  switch (unit) {
+    case DATE_UNIT.WEEK:
+      div *= 7;
+    case DATE_UNIT.DAY:
+      div *= 24;
+    case DATE_UNIT.HOURS:
+      div *= 60;
+    case DATE_UNIT.MINUTES:
+      div *= 60;
+    case DATE_UNIT.SECONDS:
+      div *= 1000;
+    default:
+      break;
+  }
+
+  return ms / div;
+}
+
+export function week(date) {
+  let d = moment(date);
+  d.hours(0);
+  d.dates(d.dates() + 4 - (d.days() || 7));
+  return Math.ceil((d.diff(moment([d.years(), 0, 1])) / 8.64e7 + 1) / 7);
+}
+
+export function today() {
+  return moment().startOf(DATE_UNIT.DAY).toDate();
+}
+
+export function yesterday() {
+  return moment().subtract(1, DATE_UNIT.DAY).startOf(DATE_UNIT.DAY).toDate();
+}
+
+export function tomorrow() {
+  return moment().add(1, DATE_UNIT.DAY).startOf(DATE_UNIT.DAY).toDate();
+}
+
+export function add(d, num, unit) {
+  if (unit) {
+    return moment(d).add(num, unit).toDate();
+  }
+
+  throw new TypeError('Invalid units: "' + unit + '"');
+}
+
+export function subtract(d, num, unit) {
+  return add(d, -num, unit);
+}
+
+export function startOf(d, unit, firstOfWeek) {
+  d = new Date(d);
+
+  switch (unit) {
+    case DATE_UNIT.CENTURY:
+    case DATE_UNIT.DECADE:
+    case DATE_UNIT.YEAR:
+      d = month(d, 0);
+    case DATE_UNIT.MONTH:
+      d = date(d, 1);
+    case DATE_UNIT.WEEK:
+    case DATE_UNIT.DAY:
+      d = hours(d, 0);
+    case DATE_UNIT.HOURS:
+      d = minutes(d, 0);
+    case DATE_UNIT.MINUTES:
+      d = seconds(d, 0);
+    case DATE_UNIT.SECONDS:
+      d = milliseconds(d, 0);
+    default:
+      break;
+  }
+
+  if (unit === DATE_UNIT.DECADE)
+    d = subtract(d, year(d) % 10, 'year');
+
+  if (unit === DATE_UNIT.CENTURY)
+    d = subtract(d, year(d) % 100, 'year');
+
+  if (unit === DATE_UNIT.WEEK)
+    d = weekday(d, 0, firstOfWeek);
+
+  return d;
+}
+
+export function endOf(d, unit, firstOfWeek){
+  d = new Date(d);
+  d = startOf(d, unit, firstOfWeek);
+  switch (unit) {
+    case DATE_UNIT.CENTURY:
+    case DATE_UNIT.DECADE:
+    case DATE_UNIT.YEAR:
+    case DATE_UNIT.MONTH:
+    case DATE_UNIT.WEEK:
+      d = add(d, 1, unit);
+      d = subtract(d, 1, DATE_UNIT.DAY);
+      d.setHours(23, 59, 59, 999);
+      break;
+    case DATE_UNIT.DAY:
+      d.setHours(23, 59, 59, 999);
+      break;
+    case DATE_UNIT.HOURS:
+    case DATE_UNIT.MINUTES:
+    case DATE_UNIT.SECONDS:
+      d = add(d, 1, unit);
+      d = subtract(d, 1, DATE_UNIT.MILI);
+    default:
+      break;
+  }
+  return d;
+}
+
+export const eq = createComparer(function(a, b){ return a === b; });
+export const neq = createComparer(function(a, b){ return a !== b; });
+export const gt =  createComparer(function(a, b){ return a > b; });
+export const gte = createComparer(function(a, b){ return a >= b; });
+export const lt =  createComparer(function(a, b){ return a < b; });
+export const lte = createComparer(function(a, b){ return a <= b; });
+
+export function min(){
+  return moment(Math.min.apply(Math, arguments)).toDate();
+}
+
+export function max(){
+  return moment(Math.max.apply(Math, arguments)).toDate();
+}
+
+export function inRange(day, min, max, unit){
+  unit = unit || 'day';
+
+  return (!min || gte(day, min, unit))
+      && (!max || lte(day, max, unit));
+}
+
+export function weekday(d, val, firstDay) {
+  var w = (day(d) + 7 - (firstDay || 0) ) % 7;
+
+  return val === undefined
+    ? w
+    : add(d, val - w, DATE_UNIT.DAY);
+}
+
+export const milliseconds = createAccessor('Milliseconds');
+export const seconds =      createAccessor('Seconds');
+export const minutes =      createAccessor('Minutes');
+export const hours =        createAccessor('Hours');
+export const day =          createAccessor('Day');
+export const date =         createAccessor('Date');
+export const month =        createAccessor('Month');
+export const year =         createAccessor('FullYear');
+
+export function decade(d, val) {
+  return val === undefined
+    ? year(startOf(d, DATE_UNIT.DECADE))
+    : add(d, val + 10, DATE_UNIT.YEAR);
+}
+
+export function century(d, val) {
+  return val === undefined
+    ? year(startOf(d, DATE_UNIT.CENTURY))
+    : add(d, val + 100, DATE_UNIT.YEAR);
+}
+
+export function getFormattedDate(d, format) {
+  return moment(d).format(format);
+}
+
+function createAccessor(method){
+  let hourLength = (function(method) {  
+    switch(method) {
+      case 'Milliseconds':
+        return 3600000;
+      case 'Seconds':
+        return 3600;
+      case 'Minutes':
+        return 60;
+      case 'Hours':
+        return 1;
+      default:
+        return null;
+    }
+  })(method);
+  
+  return function(d, val){
+    if (val === undefined)
+      return d['get' + method]();
+
+    var dateOut = new Date(d);
+    dateOut['set' + method](val);
+
+    // eslint-disable-next-line
+    if(hourLength && dateOut['get'+method]() !== val && (method === 'Hours' || val >= hourLength && (dateOut.getHours() - d.getHours() < Math.floor(val / hourLength)))){
+      //Skip DST hour, if it occurs
+      dateOut['set'+method](val + hourLength);
+    }
+    
+    return dateOut;
+  };
+}
+
+function createComparer(operator) {
+  return function (a, b, unit) {
+    return operator(+startOf(a, unit), +startOf(b, unit));
+  };
+}

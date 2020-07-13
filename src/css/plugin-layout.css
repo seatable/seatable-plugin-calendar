@@ -1,13 +1,24 @@
-.dtable-plugin.plugin-container {
-  max-width: 954px;
+.dtable-plugin.calendar-plugin-container {
+  width: 1100px;
+  max-width: 1100px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin-left: 50%;
+  -webkit-transform: translateX(-50%)!important;
+  transform: translateX(-50%)!important;
 }
 
-.dtable-plugin.plugin-container .test-plugin-header {
+.dtable-plugin.calendar-plugin-container .modal-content {
+  height: 100%;
+}
+
+.dtable-plugin.calendar-plugin-container .calendar-plugin-header {
   font-size: 24px;
 }
 
-.dtable-plugin.plugin-container .test-plugin-content {
-  padding: 16px;
-  max-height: 700px;
+.dtable-plugin.calendar-plugin-container .calendar-plugin-content {
+  height: 100%;
+  padding: 18px 0 18px;
   overflow: auto;
 }

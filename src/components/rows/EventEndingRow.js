@@ -100,7 +100,6 @@ EventEndingRow.propTypes = {
   slots: PropTypes.number,
   onShowMore: PropTypes.func,
   ...EventRowMixin.propTypes,
-  t: PropTypes.func,
 };
 
 EventEndingRow.defaultProps = {

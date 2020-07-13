@@ -13,7 +13,6 @@ import BackgroundCells from '../cells/BackgroundCells';
 class DateContentRow extends React.Component {
   constructor(...args) {
     super(...args);
-
     this.slotMetrics = DateSlotMetrics.getSlotMetrics();
   }
 

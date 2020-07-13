@@ -1,9 +1,9 @@
 
 const config = {
-  APIToken: "",
+  APIToken: "1bec8558f23811cc28e7d895d8549b6e6ce69e59",
   server: "https://dev.seafile.com/dtable-web",
-  workspaceID: "",
-  dtableName: "",
+  workspaceID: "5",
+  dtableName: "插件测试",
   lang: "zh-cn"
 };
 

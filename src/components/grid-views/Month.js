@@ -3,13 +3,22 @@ import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import getPosition from 'dom-helpers/position';
-import * as animationFrame from 'dom-helpers/animationFrame';
 import { chunk, getDtableLang, getDtablePermission } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';
 import { inRange, sortEvents } from '../../utils/eventLevels';
 import { getFestival } from '../../utils/festival';
-import { navigate } from '../../constants';
+import {
+  getInitialState,
+  getOverscanStartIndex,
+  getOverscanEndIndex,
+  getRenderedRowsCount,
+  getNextMonthDate,
+  isNextMonth,
+  getGridDates,
+  getVisibleStartIndexByDate
+} from '../../utils/monthViewUtils';
+import { navigate, MONTH_ROW_HEIGHT, OVERSCAN_ROWS, OFFSET_ROWS } from '../../constants';
 import Popup from '../popup/Popup';
 import DateContentRow from '../rows/DateContentRow';
 import Header from '../header/Header';
@@ -25,8 +34,7 @@ class MonthView extends React.Component {
     this._pendingSelection = [];
     this.slotRowRef = React.createRef();
     this.state = {
-      rowLimit: 5,
-      needLimitMeasure: true,
+      needLimitMeasure: false,
       popup: false,
       hoverDate: null,
       hoverDateCellPosition: {}
@@ -35,48 +43,76 @@ class MonthView extends React.Component {
     this.lang = getDtableLang();
     this.isChinese = this.lang && this.lang.toLowerCase() === 'zh-cn';
     this.isTableReadOnly = getDtablePermission() === 'r';
+    this.isScrolling = false;
+    this.festivals = {};
   }
 
-  componentWillReceiveProps({ date }) {
-    this.setState({
-      needLimitMeasure: !dates.eq(date, this.props.date, 'month')
-    });
+  componentWillReceiveProps(nextProps) {
+    if (this.props.date !== nextProps.date && nextProps.changeDateByNavicate) {
+      this.isScrolling = false;
+      let visibleStartIndex = OVERSCAN_ROWS + OFFSET_ROWS;
+      let monthRowsHeight = this.rbcMonthRows.offsetHeight;
+      let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
+      let gridDates = getGridDates(nextProps.date, renderedRowsCount);
+      let visibleEndIndex = visibleStartIndex + renderedRowsCount;
+      let scrollTop = visibleStartIndex * MONTH_ROW_HEIGHT;
+      this.updateScroll(scrollTop, visibleStartIndex, visibleEndIndex, gridDates);
+    }
   }
 
   componentDidMount() {
-    let running;
-
-    if (this.state.needLimitMeasure) this.measureRowLimit(this.props);
-
-    window.addEventListener(
-      'resize',
-      (this._resizeListener = () => {
-        if (!running) {
-          animationFrame.request(() => {
-            running = false;
-            this.setState({ needLimitMeasure: true }); //eslint-disable-line
-          });
-        }
-      }),
-      false
-    );
-  }
-
-  componentDidUpdate() {
-    if (this.state.needLimitMeasure) this.measureRowLimit(this.props);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this._resizeListener, false);
+    let monthRowsHeight = this.rbcMonthRows.offsetHeight;
+    this.setState({
+      ...getInitialState(this.props.date, monthRowsHeight)
+    }, () => {
+      this.rbcMonthRows.scrollTop = this.state.visibleStartIndex * MONTH_ROW_HEIGHT;
+    });
   }
 
   getContainer = () => {
     return findDOMNode(this);
   };
 
-  onMonthViewScroll = (event) => {
-    const { scrollLeft, scrollTop } = event.target;
-    this._scroll = { scrollLeft, scrollTop };
+  onMonthViewScroll = (evt) => {
+    if (!this.isScrolling) {
+      this.isScrolling = true;
+      return;
+    }
+    let { date } = this.props;
+    let { gridDates } = this.state;
+    let scrollTop = evt.target.scrollTop;
+    let monthRowsHeight = this.rbcMonthRows.offsetHeight;
+    let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
+    let overRowsCount = scrollTop / MONTH_ROW_HEIGHT;
+    let fract = overRowsCount - Math.trunc(overRowsCount);
+    let overDatesCount = Math.ceil(overRowsCount) - 1;
+    let visibleStartIndex = overDatesCount;
+    let weeks = chunk(gridDates, 7);
+    if (isNextMonth(date, weeks, visibleStartIndex)) {
+      this.isScrolling = false;
+      let nextMonthDate = getNextMonthDate(weeks, visibleStartIndex);
+      gridDates = getGridDates(nextMonthDate, renderedRowsCount);
+      weeks = chunk(gridDates, 7);
+      visibleStartIndex = getVisibleStartIndexByDate(nextMonthDate, weeks);
+      scrollTop = (visibleStartIndex - 1 + (fract || 1)) * MONTH_ROW_HEIGHT;
+      this.props.updateCurrentDate(nextMonthDate);
+    }
+    let visibleEndIndex = visibleStartIndex + renderedRowsCount;
+    this.updateScroll(scrollTop, visibleStartIndex, visibleEndIndex, gridDates);
+  }
+
+  updateScroll = (scrollTop, visibleStartIndex, visibleEndIndex, gridDates) => {
+    let overscanStartIndex = getOverscanStartIndex(visibleStartIndex);
+    let overscanEndIndex = getOverscanEndIndex(visibleEndIndex);
+    this.setState({
+      visibleStartIndex,
+      visibleEndIndex,
+      overscanStartIndex,
+      overscanEndIndex,
+      gridDates
+    }, () => {
+      this.rbcMonthRows.scrollTop = scrollTop;
+    });
   }
 
   handleShowMore = (events, date, cell, slot, target) => {
@@ -108,17 +144,26 @@ class MonthView extends React.Component {
   }
 
   render() {
-    let { date, localizer, className } = this.props,
-      month = dates.visibleDays(date, localizer),
-      weeks = chunk(month, 7);
+    let { className } = this.props;
+    let { overscanStartIndex, overscanEndIndex, gridDates } = this.state;
+    let weeks = [], offsetTop = 0, offsetBottom = 0;
+    if (gridDates) {
+      let allWeeks = chunk(gridDates, 7)
+      weeks = allWeeks.slice(overscanStartIndex, overscanEndIndex);
+      offsetTop = overscanStartIndex * MONTH_ROW_HEIGHT;
+      offsetBottom = (allWeeks.length - overscanEndIndex) * MONTH_ROW_HEIGHT;
+    }
     this._weekCount = weeks.length;
-
     return (
-      <div className={classnames('rbc-month-view', className)} onScroll={this.onMonthViewScroll}>
+      <div className={classnames('rbc-month-view', className)}>
         <div className='rbc-month-header'>
-          {this.renderHeaders(weeks[0])}
+          {this._weekCount > 0 && this.renderHeaders(weeks[0])}
         </div>
-        {weeks.map(this.renderWeek)}
+        <div className="rbc-month-rows" ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
+          <div style={{paddingTop: offsetTop, paddingBottom: offsetBottom}}>
+            {this._weekCount > 0 && weeks.map(this.renderWeek)}
+          </div>
+        </div>
         {this.state.popup && this.renderOverlay()}
       </div>
     );
@@ -137,9 +182,7 @@ class MonthView extends React.Component {
       accessors,
       getters
     } = this.props;
-
-    const { needLimitMeasure, rowLimit } = this.state;
-
+    const { needLimitMeasure } = this.state;
     events = eventsForWeek(events, week[0], week[week.length - 1], accessors);
     events = events.sort((a, b) => sortEvents(a, b, accessors));
     events = events.slice();
@@ -153,7 +196,7 @@ class MonthView extends React.Component {
         date={date}
         range={week}
         events={events}
-        maxRows={rowLimit}
+        maxRows={4}
         selected={selected}
         selectable={selectable}
         components={components}
@@ -204,8 +247,12 @@ class MonthView extends React.Component {
   };
 
   renderFestival(date) {
-    let festival = getFestival(date);
+    let festival = this.festivals[date];
+    if (!festival) {
+      festival = getFestival(date);
+    }
     if (festival) {
+      this.festivals[date] = festival;
       return <div className="rbc-festival">
         <span className="rbc-festival-context" title={festival}>{festival}</span>
       </div>;
@@ -264,10 +311,7 @@ class MonthView extends React.Component {
   }
 
   measureRowLimit() {
-    this.setState({
-      needLimitMeasure: false,
-      rowLimit: this.slotRowRef.current.getRowLimit()
-    });
+    this.setState({needLimitMeasure: false});
   }
 
   handleSelectSlot = (range, slotInfo) => {

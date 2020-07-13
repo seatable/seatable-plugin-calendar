@@ -6,8 +6,7 @@ export function omit(object, propertyName) {
   }
   for (let key in object) {
     if ((Array.isArray(propertyName) && !propertyName.includes(key)) || propertyName !== key) {
-      // eslint-disable-next-line
-      result[key] === object[key];
+      result[key] = object[key];
     }
   }
   return result;

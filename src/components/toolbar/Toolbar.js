@@ -75,7 +75,6 @@ Toolbar.propTypes = {
   localizer: PropTypes.object,
   onNavigate: PropTypes.func.isRequired,
   onSelectView: PropTypes.func.isRequired,
-  t: PropTypes.func,
   onToggleSelectColumn: PropTypes.func,
   startDateColumn: PropTypes.object,
   isToday: PropTypes.bool,

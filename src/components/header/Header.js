@@ -8,7 +8,6 @@ const Header = ({ label, isShowWeek }) => {
 
 Header.propTypes = {
   label: PropTypes.node,
-  t: PropTypes.func,
   isShowWeek: PropTypes.bool,
 };
 

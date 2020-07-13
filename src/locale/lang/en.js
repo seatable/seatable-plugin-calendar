@@ -38,7 +38,8 @@ const en = {
   "more": "more",
   "xxx_Month_xxx_Date_xxx_Week": "{weekDay} {month} {date}",
   "No_date_field_to_place_records_on_the_calendar": "No date field to place records on the calendar.",
-  "There_are_no_records": "There are no records."
+  "There_are_no_records": "There are no records.",
+  "Today": "Today"
 };
 
 export default en; 

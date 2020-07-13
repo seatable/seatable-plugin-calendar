@@ -429,9 +429,9 @@ button.rbc-input::-moz-focus-inner {
   flex: 1 0 0;
   flex-basis: 0px;
   overflow: hidden;
-  height: 120px;
-  min-height: 120px;
-  max-height: 120px;
+  height: 126px;
+  min-height: 126px;
+  max-height: 126px;
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;

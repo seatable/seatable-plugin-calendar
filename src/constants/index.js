@@ -20,7 +20,7 @@ export const CALENDAR_VIEWS = {
 
 export const CALENDAR_HEADER_HEIGHT = 46;
 
-export const MONTH_ROW_HEIGHT = 120;
+export const MONTH_ROW_HEIGHT = 126;
 
 export const OVERSCAN_ROWS = 10;
 

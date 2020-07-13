@@ -30,7 +30,7 @@ class Toolbar extends React.Component {
             className={classnames('rbc-tool-btn', {'today-btn-disabled': isToday})}
             onClick={!isToday ? this.navigate.bind(null, navigate.TODAY) : undefined}
           >
-            {messages.today}
+            {intl.get(messages.today)}
           </span>
           <span onClick={onToggleSelectColumn} className={'selected-column'}>
             <i className="dtable-font dtable-icon-calendar-alt-solid"></i><span title={selectFieldBtntitle}>{selectFieldBtntitle}</span>

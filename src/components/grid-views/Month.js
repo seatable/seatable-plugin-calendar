@@ -3,7 +3,6 @@ import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import getPosition from 'dom-helpers/position';
-import moment from 'moment';
 import { chunk, getDtableLang, getDtablePermission } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';

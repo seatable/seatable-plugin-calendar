@@ -7,11 +7,12 @@ const DateHeader = ({ label, drilldownView, date }) => {
   if (!drilldownView) {
     return <span>{label}</span>;
   }
-  let startOfMonthDate = moment(date).startOf('month').toDate();
+  let mDate = moment(date);
+  let startOfMonthDate = mDate.startOf('month').toDate();
   let isStartOfMonth = dates.eq(date, startOfMonthDate, 'day');
   return (
     <span className="rbc-date-context">
-      {isStartOfMonth && `${moment(date).format('MM')}-`}
+      {isStartOfMonth && `${mDate.format('MM')}-`}
       {label}
     </span>
   );

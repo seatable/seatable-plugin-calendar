@@ -453,9 +453,10 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-date-cell .rbc-date-context {
   display: inline-block;
-  width: 20px;
+  min-width: 20px;
   height: 18px;
   line-height: 18px;
+  padding: 0 2px;
   border-radius: 2px;
   text-align: center;
 }

@@ -3,6 +3,7 @@ import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import getPosition from 'dom-helpers/position';
+import moment from 'moment';
 import { chunk, getDtableLang, getDtablePermission } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';
@@ -218,20 +219,13 @@ class MonthView extends React.Component {
   readerDateHeading = ({ date, className, ...props }) => {
     let { date: currentDate, getDrilldownView, localizer } = this.props;
     let isOffRange = dates.month(date) !== dates.month(currentDate);
-    let isCurrent = dates.eq(date, currentDate, 'day');
     let drilldownView = getDrilldownView(date);
     let label = localizer.format(date, 'dateFormat');
     let DateHeaderComponent = this.props.components.dateHeader || DateHeader;
     return (
       <div
         {...props}
-        className={classnames(
-          className,
-          {
-            'rbc-off-range': isOffRange,
-            'rbc-current': isCurrent
-          }
-        )}
+        className={classnames(className, {'rbc-off-range': isOffRange})}
       >
         <DateHeaderComponent
           label={label}

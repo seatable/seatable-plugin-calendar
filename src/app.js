@@ -89,6 +89,7 @@ class App extends React.Component {
 
   onPluginToggle = () => {
     this.setState({showDialog: false});
+    window.app.onClosePlugin();
   }
 
   getRows = (table, view) => {

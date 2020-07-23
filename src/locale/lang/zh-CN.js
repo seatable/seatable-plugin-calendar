@@ -37,7 +37,9 @@ const zh_CN = {
   "Unnamed_record": "未命名记录",
   "more": "更多",
   "xxx_Month_xxx_Date_xxx_Week": "{month}{date}日 星期{weekDay}",
-  "No_date_field_to_place_records_on_the_calendar": "没有用于将记录放置在日历上的日期字段。"
+  "No_date_field_to_place_records_on_the_calendar": "没有用于将记录放置在日历上的日期字段。",
+  "There_are_no_records": "没有记录。",
+  "Today": "今天"
 };
 
 export default zh_CN; 

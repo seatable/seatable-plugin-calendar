@@ -82,7 +82,7 @@ class Popup extends React.Component {
           <button className='close'><span aria-hidden="true" ref={ref => this.closeBtn = ref}>×</span></button>
         </div>
         <div className="rbc-overlay-body">
-          {events.length === 0 ? <span>{'There_are_no_records'}</span> : events.map((event, idx) => (
+          {events.length === 0 ? <span>{intl.get('There_are_no_records')}</span> : events.map((event, idx) => (
             <EventCell
               key={idx}
               type='popup'
@@ -124,7 +124,6 @@ Popup.propTypes = {
   style: PropTypes.object,
   onHidePopup: PropTypes.func,
   scrolled: PropTypes.object,
-  t: PropTypes.func,
 };
 
 export default Popup;

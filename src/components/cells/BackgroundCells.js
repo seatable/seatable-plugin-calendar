@@ -6,7 +6,7 @@ import Selection, { getBoundsForNode, isEvent } from '../selection/Selection';
 import * as dates from '../../utils/dates';
 import { getSlotAtX, pointInBox } from '../../utils/selection';
 
-class BackgroundCells extends React.Component {
+class BackgroundCells extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -24,9 +24,7 @@ class BackgroundCells extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectable && !this.props.selectable) this._selectable();
-
-    if (!nextProps.selectable && this.props.selectable)
-      this._teardownSelectable();
+    if (!nextProps.selectable && this.props.selectable) this._teardownSelectable();
   }
 
   render() {

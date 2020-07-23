@@ -285,6 +285,31 @@ export function getFormattedDate(d, format) {
   return moment(d).format(format);
 }
 
+export function getMonthStartDate(date) {
+  let mDate = moment(date);
+  let startOfMonth = mDate.startOf(DATE_UNIT.MONTH);
+  return startOfMonth.subtract(startOfMonth.weekday(), 'd').toDate();
+}
+
+export function getMonthEndDate(date) {
+  let mDate = moment(date);
+  let startOfMonth = mDate.endOf(DATE_UNIT.MONTH);
+  return startOfMonth.add(6 - startOfMonth.weekday(), 'd').toDate();
+}
+
+export function getDatesInRange(startDate, endDate, unit = 'day') {
+  let dates = [];
+  while(moment(startDate).isSameOrBefore(endDate)) {
+    dates.push(startDate);
+    startDate = moment(startDate).add(1, unit).toDate();
+  }
+  return dates;
+}
+
+export function isToday(date, unit) {
+  return moment().isSame(date, unit);
+}
+
 function createAccessor(method){
   let hourLength = (function(method) {  
     switch(method) {

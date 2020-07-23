@@ -10,7 +10,7 @@ class EventCell extends React.Component {
     const { bgColor, highlightColor, textColor } = event;
     return {
       background: bgColor,
-      borderLeft: `3px solid ${highlightColor}`,
+      borderLeft: highlightColor && `3px solid ${highlightColor}`,
       color: textColor,
     };
   }

@@ -100,23 +100,19 @@ class Selection {
   teardown() {
     this.isDetached = true;
     this.listeners = Object.create(null);
-    this._removeTouchMoveWindowListener &&
-      this._removeTouchMoveWindowListener();
+    this._removeTouchMoveWindowListener && this._removeTouchMoveWindowListener();
     this._removeInitialEventListener && this._removeInitialEventListener();
     this._removeEndListener && this._removeEndListener();
     this._onEscListener && this._onEscListener();
     this._removeMoveListener && this._removeMoveListener();
     this._removeKeyUpListener && this._removeKeyUpListener();
     this._removeKeyDownListener && this._removeKeyDownListener();
-    this._removeDropFromOutsideListener &&
-      this._removeDropFromOutsideListener();
+    this._removeDropFromOutsideListener && this._removeDropFromOutsideListener();
   }
 
   isSelected(node) {
     let box = this._selectRect;
-
     if (!box || !this.selecting) return false;
-
     return objectsCollide(box, getBoundsForNode(node));
   }
 

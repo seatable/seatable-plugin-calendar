@@ -693,7 +693,6 @@ class Calendar extends React.Component {
     startDateColumn: PropTypes.object,
     onRowExpand: PropTypes.func,
     onInsertRow: PropTypes.func,
-    t: PropTypes.func,
   };
 
   static defaultProps = {
@@ -723,8 +722,8 @@ class Calendar extends React.Component {
     super(...args);
     this.state = {
       context: this.getContext(this.props),
-      isToday: true,
-      date: this.props.defaultDate || ''
+      date: this.props.defaultDate || '',
+      changeDateByNavicate: false,
     };
   }
 
@@ -833,20 +832,14 @@ class Calendar extends React.Component {
     let { date } = this.state;
     let ViewComponent = this.getView();
     let today = getNow();
-    let isToday = false;
     date = moveDate(ViewComponent, {
       ...props,
       action,
       date: newDate || date || today,
       today
     });
-    if (action === navigate.TODAY) {
-      isToday = true;
-    } else {
-      isToday = dates.eq(date, today, 'day');
-    }
     this.handleRangeChange(date, ViewComponent);
-    this.setState({isToday, date});
+    this.setState({date, changeDateByNavicate: true});
   };
 
   onSelectView = view => {
@@ -887,6 +880,10 @@ class Calendar extends React.Component {
     onInsertRow({[name]: date});
   }
 
+  updateCurrentDate = (date) => {
+    this.setState({date, changeDateByNavicate: false});
+  }
+
   render() {
     let {
       view,
@@ -905,8 +902,9 @@ class Calendar extends React.Component {
       startDateColumn,
       ...props
     } = this.props;
-    let { date, context, isToday } = this.state;
-    let current = date || getNow();
+    let { date, context } = this.state;
+    const current = date || getNow();
+    const isToday = dates.isToday(current, view);
     const View = this.getView();
     const { accessors, components, getters, localizer, viewNames } = context;
     const CalToolbar = components.toolbar || Toolbar;
@@ -952,6 +950,8 @@ class Calendar extends React.Component {
             containerPaddingTop={CALENDAR_DIALOG_PADDINGTOP}
             calendarHeaderHeight={CALENDAR_HEADER_HEIGHT}
             onInsertRow={this.onInsertRow}
+            updateCurrentDate={this.updateCurrentDate}
+            changeDateByNavicate={this.state.changeDateByNavicate}
           />):
           <div className="empty-date-tips">{intl.get('No_date_field_to_place_records_on_the_calendar')}</div>
         }

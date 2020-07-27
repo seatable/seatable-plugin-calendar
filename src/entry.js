@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app'
 
-class DTableCalendar {
-
+class TaskList {
   static execute() {
     let wrapper = document.querySelector('#plugin-wrapper');
     ReactDOM.render(<App showDialog={true} />, wrapper);
   }
-
 }
 
-export { DTableCalendar };
+export default TaskList;
+
+window.app.registerPluginItemCallback('calendar', TaskList.execute);

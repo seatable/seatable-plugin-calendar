@@ -1,0 +1,48 @@
+.plugin-view-setting {
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  box-shadow: 0px 2px 10px 3px rgba(0, 0, 0, 0.2);
+  overflow: auto;
+  background: #fff;
+}
+
+.plugin-view-setting .setting-container {
+  padding: 10px;
+}
+
+.plugin-view-setting .setting-header-container {
+  width: 100%;
+  padding: 0 10px;
+}
+
+.plugin-view-setting .setting-header-container .setting-header-wrapper {
+  border-bottom: 1px solid #e2e2e2;
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.plugin-view-setting .setting-header-title {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.plugin-view-setting .btn-close {
+  margin-right: -4px;
+}
+
+.plugin-view-setting .setting-body {
+  padding: 10px;
+}
+
+.plugin-view-setting .setting-item {
+  margin-bottom: 14px;
+}
+
+.plugin-view-setting .setting-item .title {
+  margin-bottom: 10px;
+}

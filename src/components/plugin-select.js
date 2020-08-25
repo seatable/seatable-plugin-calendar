@@ -51,7 +51,7 @@ class PluginSelect extends React.Component {
         components={{ DropdownIndicator }}
         placeholder={placeholder}
         isSearchable={isSearchable}
-        menuPosition={'fixed'}
+        menuPosition={'absolute'}
         menuShouldBlockScroll={true}
         menuShouldScrollIntoView
         menuPortalTarget={this.getMenuPortalTarget()}

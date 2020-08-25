@@ -1,15 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalBody } from 'reactstrap';
+import intl from 'react-intl-universal';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
 import './locale/index.js'
 import ReactBigCalendar from './ReactBigCalendar';
-import { PLUGIN_NAME } from './constants';
+import { PLUGIN_NAME, SETTING_KEY } from './constants';
 import { CALENDAR_DIALOG_MODAL } from './constants/zIndexes';
+import ViewsTabs from './components/views-tabs';
+import ViewSetting from './components/view-setting';
+import { generatorViewId, getDtableUuid } from './utils/common';
+import View from './model/view';
 
 import './locale';
 
 import './css/plugin-layout.css';
+
+import icon from './image/icon.png';
 
 /**
  * the data structure of settings
@@ -22,6 +29,18 @@ import './css/plugin-layout.css';
  * }
  */
 
+const DEFAULT_PLUGIN_SETTINGS = { 
+  views: [
+    {   
+      _id: '0000',
+      name: 'Default View',
+      settings: {}
+    }   
+  ]
+};
+
+const KEY_SELECTED_VIEW_IDS = `${PLUGIN_NAME}-selectedViewIds`;
+
 const propTypes = {
   showDialog: PropTypes.bool
 };
@@ -33,6 +52,9 @@ class App extends React.Component {
     this.state = {
       isLoading: true,
       showDialog: props.showDialog || false,
+      plugin_settings: {},
+      selectedViewIdx: 0,
+      isViewSettingPanelOpen: false,
     };
     this.dtable = new DTable();
   }
@@ -75,16 +97,33 @@ class App extends React.Component {
   }
 
   resetData = (init = false) => {
-    let { showDialog } = this.state;
+    let { showDialog, isViewSettingPanelOpen } = this.state;
     let plugin_settings = this.dtable.getPluginSettings(PLUGIN_NAME) || {};
+    if (!plugin_settings || Object.keys(plugin_settings).length === 0) {
+      plugin_settings = DEFAULT_PLUGIN_SETTINGS;
+    }
+    let { views } = plugin_settings;
+    let dtableUuid = getDtableUuid();
+    let selectedViewIds = this.getSelectedViewIds(KEY_SELECTED_VIEW_IDS) || {};
+    let selectedViewId = selectedViewIds[dtableUuid];
+    let selectedViewIdx = views.findIndex(v => v._id === selectedViewId);
+    selectedViewIdx = selectedViewIdx > 0 ? selectedViewIdx : 0;
     if (init) {
+      isViewSettingPanelOpen = !this.isValidViewSettings(views[selectedViewIdx].settings);
       showDialog = true;
     }
     this.setState({
       isLoading: false,
-      showDialog: showDialog,
-      plugin_settings
+      showDialog,
+      plugin_settings,
+      selectedViewIdx,
+      isViewSettingPanelOpen
     });
+  }
+
+  getSelectedViewIds = (key) => {
+    let selectedViewIds = window.localStorage.getItem(key);
+    return selectedViewIds ? JSON.parse(selectedViewIds) : {};
   }
 
   onPluginToggle = () => {
@@ -126,11 +165,139 @@ class App extends React.Component {
     }
   }
 
+  toggleViewSettingPanel = () => {
+    this.setState({isViewSettingPanelOpen: !this.state.isViewSettingPanelOpen});
+  }
+
+  renderBtnGroups = () => {
+    return (
+      <div className="header-btn-list d-flex align-items-center">
+        <span className="btn-close gallery-setting mr-2" onClick={this.toggleViewSettingPanel}>
+          <i className="dtable-font dtable-icon-settings"></i>
+        </span>
+        <span className="dtable-font dtable-icon-x btn-close" onClick={this.onPluginToggle}></span>
+      </div>
+    );
+  }
+
+  onAddView = (viewName) => {
+    let { plugin_settings } = this.state;
+    let { views: updatedViews } = plugin_settings;
+    let selectedViewIdx = updatedViews.length;
+    let _id = generatorViewId(updatedViews);
+    let newView = new View({_id, name: viewName});
+    updatedViews.push(newView);
+    let { settings } = updatedViews[selectedViewIdx];
+    let isViewSettingPanelOpen = !this.isValidViewSettings(settings);
+    plugin_settings.views = updatedViews;
+    this.setState({
+      plugin_settings,
+      selectedViewIdx,
+      isViewSettingPanelOpen
+    }, () => {
+      this.storeSelectedViewId(updatedViews[selectedViewIdx]._id);
+      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+      this.viewsTabs && this.viewsTabs.setViewsTabsScroll();
+    });
+  }
+
+  onRenameView = (viewName) => {
+    let { plugin_settings, selectedViewIdx } = this.state;
+    let updatedView = plugin_settings.views[selectedViewIdx];
+    updatedView = Object.assign({}, updatedView, {name: viewName});
+    plugin_settings.views[selectedViewIdx] = updatedView;
+    this.setState({
+      plugin_settings
+    }, () => {
+      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+    });
+  }
+
+  onDeleteView = (viewId) => {
+    let { plugin_settings, selectedViewIdx } = this.state;
+    let { views: updatedViews } = plugin_settings;
+    let viewIdx = updatedViews.findIndex(v => v._id === viewId);
+    selectedViewIdx = updatedViews.length - 1 === viewIdx ? viewIdx - 1 : selectedViewIdx;
+    if (viewIdx > -1) {
+      updatedViews.splice(viewIdx, 1);
+      let { settings } = updatedViews[selectedViewIdx];
+      let isViewSettingPanelOpen = !this.isValidViewSettings(settings);
+      plugin_settings.views = updatedViews;
+      this.setState({
+        plugin_settings,
+        selectedViewIdx,
+        isViewSettingPanelOpen
+      }, () => {
+        this.storeSelectedViewId(updatedViews[selectedViewIdx]._id);
+        this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+      });
+    }
+  }
+
+  onSelectView = (viewId) => {
+    let { plugin_settings } = this.state;
+    let { views: updatedViews } = plugin_settings;
+    let viewIdx = updatedViews.findIndex(v => v._id === viewId);
+    if (viewIdx > -1) {
+      let { settings } = updatedViews[viewIdx];
+      let isViewSettingPanelOpen = !this.isValidViewSettings(settings);
+      this.setState({selectedViewIdx: viewIdx, isViewSettingPanelOpen});
+      this.storeSelectedViewId(viewId);
+    }
+  }
+
+  storeSelectedViewId = (viewId) => {
+    let dtableUuid = getDtableUuid();
+    let selectedViewIds = this.getSelectedViewIds(KEY_SELECTED_VIEW_IDS);
+    selectedViewIds[dtableUuid] = viewId;
+    window.localStorage.setItem(KEY_SELECTED_VIEW_IDS, JSON.stringify(selectedViewIds));
+  }
+
+  getSelectedViewIds = (key) => {
+    let selectedViewIds = window.localStorage.getItem(key);
+    return selectedViewIds ? JSON.parse(selectedViewIds) : {};
+  }
+
+  isValidViewSettings = (settings) => {
+    return settings && Object.keys(settings).length > 0;
+  }
+
+  getSelectedTable = (tables, settings = {}) => {
+    let selectedTable = this.dtable.getTableByName(settings[SETTING_KEY.TABLE_NAME]);
+    if (!selectedTable) {
+      return tables[0];
+    }   
+    return selectedTable;
+  }
+
+  onModifyViewSettings = (updated) => {
+    let { plugin_settings, selectedViewIdx } = this.state;
+    let { views: updatedViews } = plugin_settings;
+    let updatedView = plugin_settings.views[selectedViewIdx];
+    let { settings: updatedSettings} = updatedView || {}; 
+    updatedSettings = Object.assign({}, updatedSettings, updated);
+    updatedView.settings = updatedSettings;
+    updatedViews[selectedViewIdx] = updatedView;
+    plugin_settings.views = updatedViews;
+    this.setState({plugin_settings}, () => {
+      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+    }); 
+  }
+
   render() {
-    let { isLoading, showDialog, plugin_settings } = this.state;
+    let { isLoading, showDialog, plugin_settings, selectedViewIdx,
+      isViewSettingPanelOpen
+    } = this.state;
     if (isLoading || !showDialog) {
       return '';
     }
+
+    let { views } = plugin_settings; 
+    let { settings } = views[selectedViewIdx]|| {};
+    let tables = this.dtable.getTables();
+    let selectedTable = this.getSelectedTable(tables, settings);
+    let {/* name: tableName,*/ columns: currentColumns } = selectedTable || {};
+    let tableViews = this.dtable.getViews(selectedTable);
 
     let activeTable = this.dtable.getActiveTable();
     let activeView = this.dtable.getActiveView()
@@ -142,6 +309,21 @@ class App extends React.Component {
     let currentSetting = plugin_settings[activeTable._id] || {};
     return (
       <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={CALENDAR_DIALOG_MODAL}>
+        <ModalHeader className="plugin-header" close={this.renderBtnGroups()}>
+          <div className="logo-title d-flex align-items-center">
+            <img className="plugin-logo mr-1" src={icon} alt="" width="24" />
+            <span className="plugin-title">{intl.get('Calendar')}</span>
+          </div>
+          <ViewsTabs
+            ref={ref => this.viewsTabs = ref}
+            views={views}
+            selectedViewIdx={selectedViewIdx}
+            onAddView={this.onAddView}
+            onRenameView={this.onRenameView}
+            onDeleteView={this.onDeleteView}
+            onSelectView={this.onSelectView}
+          />  
+        </ModalHeader>
         <ModalBody className="calendar-plugin-content">
           <ReactBigCalendar
             activeTable={activeTable}
@@ -157,6 +339,17 @@ class App extends React.Component {
             updateSettings={this.updateSettings}
             onInsertRow={this.onInsertRow}
           />
+          {isViewSettingPanelOpen &&
+            <ViewSetting
+              tables={tables}
+              views={tableViews}
+              settings={settings || {}} 
+              columns={currentColumns}
+              CellType={cellType}
+              onModifyViewSettings={this.onModifyViewSettings}
+              toggleViewSettingPanel={this.toggleViewSettingPanel}
+            />  
+          }   
         </ModalBody>
       </Modal>
     );

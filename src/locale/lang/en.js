@@ -39,7 +39,26 @@ const en = {
   "xxx_Month_xxx_Date_xxx_Week": "{weekDay} {month} {date}",
   "No_date_field_to_place_records_on_the_calendar": "No date field to place records on the calendar.",
   "There_are_no_records": "There are no records.",
-  "Today": "Today"
+  "Today": "Today",
+
+  "New_View": "New View",
+  "Rename_View": "Rename View",
+  "Delete_View": "Delete View",
+  "Name": "Name",
+  "Name_is_required": "Name is required",
+
+    "Settings": "Settings",
+  "Table": "Table",
+  "View": "View",
+  "Name_Column": "Name Column",
+  "No_options": "No options",
+  //"Unnamed_record": "Unnamed record",
+  "Choose_fields": "Choose fields",
+  "Choose_all": "Choose all",
+  "Image_fields": "Image fields",
+  "Title_fields": "Title fields",
+  "Other_fields": "Other fields",
+  "Hide_all": "Hide all"
 };
 
 export default en; 

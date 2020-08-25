@@ -22,3 +22,125 @@
   padding: 18px 0 18px;
   overflow: auto;
 }
+
+/* TODO */
+.calendar-plugin-container .plugin-header {
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.calendar-plugin-container .modal-title {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+
+.calendar-plugin-container .logo-title {
+  width: calc(180px - 1rem);
+  padding: 10px 0;
+}
+
+.calendar-plugin-container .views-tabs {
+  flex: 1;
+  height: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+}
+
+.calendar-plugin-container .views-tabs-scroll {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.calendar-plugin-container .views-tabs-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.calendar-plugin-container .views-tabs .views {
+  height: 100%;
+}
+
+.calendar-plugin-container .view-item {
+  height: 100%;
+  padding: 0 16px;
+  flex: 1 0 auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.calendar-plugin-container .view-item .view-item-content {
+  width: 100%;
+  height: 100%;
+  border-bottom: 2px solid transparent;
+  color: #999;
+}
+
+.calendar-plugin-container .view-item .view-item-content:hover {
+  border-color: #3b88fd;
+  color: #444;
+  cursor: pointer;
+}
+
+.calendar-plugin-container .view-item.active .view-item-content {
+  border-color: #3b88fd;
+  color: #444;
+  cursor: default;
+}
+.calendar-plugin-container .btn-view-dropdown {
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  margin-right: -5px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.calendar-plugin-container .btn-view-dropdown .dtable-icon-drop-down {
+  display: inline-block;
+  height: 18px;
+  font-size: 12px;
+  color: #949494;
+  transform: scale(.8);
+  transition: all .1s;
+}
+
+.calendar-plugin-container .btn-view-dropdown:hover .dtable-icon-drop-down {
+  color: #aaa;
+}
+
+.calendar-plugin-container .btn-add-view {
+  width: 24px;
+  height: 100%;
+}
+
+.calendar-plugin-container .btn-add-view .dtable-icon-add-table {
+  height: 24px;
+  width: 24px;
+  text-align: center;
+  cursor: pointer;
+  color: #000;
+  opacity: 0.5;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+/*
+.calendar-plugin-container .header-btn-list {
+  width: 24px;
+  height: 100%;
+}
+*/
+
+.calendar-plugin-container .btn-close {
+  height: 24px;
+  width: 24px;
+  text-align: center;
+  cursor: pointer;
+  color: #000;
+  opacity: 0.5;
+  font-weight: 700;
+}

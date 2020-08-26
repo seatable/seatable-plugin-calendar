@@ -23,7 +23,6 @@
   overflow: auto;
 }
 
-/* TODO */
 .calendar-plugin-container .plugin-header {
   align-items: center;
   padding: 0 1rem;
@@ -128,14 +127,7 @@
   line-height: 24px;
 }
 
-/*
-.calendar-plugin-container .header-btn-list {
-  width: 24px;
-  height: 100%;
-}
-*/
-
-.calendar-plugin-container .btn-close {
+.calendar-plugin-container .op-icon {
   height: 24px;
   width: 24px;
   text-align: center;

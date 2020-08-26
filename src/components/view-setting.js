@@ -82,7 +82,7 @@ class ViewSetting extends React.Component {
           <div className="setting-header-container d-flex">
             <div className="setting-header-wrapper">
               <div className="setting-header-title">{intl.get('Settings')}</div>
-              <div className="dtable-font dtable-icon-x btn-close" onClick={this.props.toggleViewSettingPanel}></div>
+              <div className="dtable-font dtable-icon-x op-icon" onClick={this.props.toggleViewSettingPanel}></div>
             </div>
           </div>
           <div className="setting-body">

@@ -12,7 +12,7 @@ class ModalPortal extends React.Component {
   constructor(props) {
     super(props);
     this.el = document.createElement('div');
-    this.el.setAttribute('class', 'timeline-modal-portal');
+    this.el.setAttribute('class', 'calendar-modal-portal');
   }
 
   componentDidMount() {

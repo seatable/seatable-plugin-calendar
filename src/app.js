@@ -171,11 +171,11 @@ class App extends React.Component {
 
   renderBtnGroups = () => {
     return (
-      <div className="header-btn-list d-flex align-items-center">
-        <span className="btn-close gallery-setting mr-2" onClick={this.toggleViewSettingPanel}>
+      <div className="d-flex align-items-center">
+        <span className="op-icon mr-2" onClick={this.toggleViewSettingPanel}>
           <i className="dtable-font dtable-icon-settings"></i>
         </span>
-        <span className="dtable-font dtable-icon-x btn-close" onClick={this.onPluginToggle}></span>
+        <span className="dtable-font dtable-icon-x op-icon" onClick={this.onPluginToggle}></span>
       </div>
     );
   }

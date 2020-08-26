@@ -47,18 +47,10 @@ const en = {
   "Name": "Name",
   "Name_is_required": "Name is required",
 
-    "Settings": "Settings",
+  "Settings": "Settings",
   "Table": "Table",
   "View": "View",
-  "Name_Column": "Name Column",
-  "No_options": "No options",
-  //"Unnamed_record": "Unnamed record",
-  "Choose_fields": "Choose fields",
-  "Choose_all": "Choose all",
-  "Image_fields": "Image fields",
-  "Title_fields": "Title fields",
-  "Other_fields": "Other fields",
-  "Hide_all": "Hide all"
+  "No_options": "No options"
 };
 
 export default en; 

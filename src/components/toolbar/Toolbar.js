@@ -9,14 +9,11 @@ class Toolbar extends React.Component {
     let {
       localizer: { messages },
       label,
-      onToggleSelectColumn,
-      startDateColumn,
       isToday,
     } = this.props;
-    const selectFieldBtntitle = startDateColumn && Object.keys(startDateColumn).length > 0 ? intl.get('Using_xxx_column', {columnName: startDateColumn.name}) : intl.get('Select_Column');
     return (
       <div className='rbc-toolbar'>
-        <div className='rbc-btn-group'>
+        <div className='rbc-btn-group align-items-center'>
           <div className='rbc-tool-icon-group'>
             <span onClick={this.navigate.bind(null, navigate.PREVIOUS)} className={'rbc-tool-icon'}>
               <i className="dtable-font dtable-icon-left"></i>
@@ -31,9 +28,6 @@ class Toolbar extends React.Component {
             onClick={!isToday ? this.navigate.bind(null, navigate.TODAY) : undefined}
           >
             {intl.get(messages.today)}
-          </span>
-          <span onClick={onToggleSelectColumn} className={'selected-column'}>
-            <i className="dtable-font dtable-icon-calendar-alt-solid"></i><span title={selectFieldBtntitle}>{selectFieldBtntitle}</span>
           </span>
         </div>
         <span className='rbc-toolbar-label'>{label}</span>
@@ -75,8 +69,6 @@ Toolbar.propTypes = {
   localizer: PropTypes.object,
   onNavigate: PropTypes.func.isRequired,
   onSelectView: PropTypes.func.isRequired,
-  onToggleSelectColumn: PropTypes.func,
-  startDateColumn: PropTypes.object,
   isToday: PropTypes.bool,
 };
 

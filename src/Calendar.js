@@ -34,7 +34,6 @@ class Calendar extends React.Component {
 
   static propTypes = {
     localizer: PropTypes.object.isRequired,
-    onToggleSelectColumn: PropTypes.func,
 
     /**
      * Props passed to main calendar `<div>`.
@@ -922,7 +921,6 @@ class Calendar extends React.Component {
             views={viewNames}
             label={label}
             startDateColumn={startDateColumn}
-            onToggleSelectColumn={this.props.onToggleSelectColumn}
             onSelectView={this.onSelectView}
             onNavigate={this.handleNavigate}
             localizer={localizer}

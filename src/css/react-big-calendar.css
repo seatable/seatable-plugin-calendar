@@ -254,26 +254,6 @@ button.rbc-input::-moz-focus-inner {
   color: #ffffff;
 }
 
-.rbc-btn-group .selected-column {
-  max-width: 380px;
-  height: 26px;
-  padding: 0 6px;
-  display: inline-block;
-  font-size: 14px;
-  border-radius: 4px;
-  line-height: 26px;
-  vertical-align: middle;
-  cursor: pointer;
-  color: rgb(77, 77, 77);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.rbc-btn-group .selected-column:hover {
-  background: #f1f1f1;
-}
-
 .rbc-btn-group .view-type-list {
   display: inline-flex;
   height: 26px;
@@ -310,11 +290,6 @@ button.rbc-input::-moz-focus-inner {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.selected-column .dtable-icon-calendar-alt-solid {
-  margin-right: 6px;
-  font-size: 14px;
 }
 
 .rbc-calendar .empty-date-tips {

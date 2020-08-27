@@ -311,7 +311,7 @@ class App extends React.Component {
       <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={CALENDAR_DIALOG_MODAL}>
         <ModalHeader className="plugin-header" close={this.renderBtnGroups()}>
           <div className="logo-title d-flex align-items-center">
-            <img className="plugin-logo mr-1" src={icon} alt="" width="24" />
+            <img className="plugin-logo mr-2" src={icon} alt="" width="24" />
             <span className="plugin-title">{intl.get('Calendar')}</span>
           </div>
           <ViewsTabs

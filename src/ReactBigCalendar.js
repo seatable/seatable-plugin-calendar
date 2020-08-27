@@ -6,7 +6,6 @@ import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/moment';
 import { getDtableUuid } from './utils/common';
 import { CALENDAR_VIEWS } from './constants';
-import CalendarSelectColumnDialog from './components/dialog/calendar-select-column-dialog';
 import TableEvent from './model/event';
 
 import './css/react-big-calendar.css';
@@ -34,8 +33,7 @@ class ReactBigCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedView: this.getSelectedView(),
-      isShowSelectColumnDialog: false,
+      selectedView: this.getSelectedView()
     };
   }
 
@@ -117,18 +115,6 @@ class ReactBigCalendar extends React.Component {
     return row['0000'] || intl.get('Unnamed_record');
   }
 
-  modifySelectedColumn = (startDateColumn, endDateColumn, labelColumn) => {
-    let { key: start_date_column_key } = startDateColumn || {};
-    let { key: end_date_column_key } = endDateColumn || {};
-    let { key: label_column_key } = labelColumn || {};
-    this.props.updateSettings(this.props.activeTable, start_date_column_key, label_column_key, end_date_column_key);
-    this.setState({ isShowSelectColumnDialog: false });
-  }
-
-  onToggleSelectColumn= () => {
-    this.setState({isShowSelectColumnDialog: !this.state.isShowSelectColumnDialog});
-  }
-
   onRowExpand = (row) => {
     this.props.onRowExpand(row, this.props.activeTable);
   }
@@ -139,7 +125,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   render() {
-    let { columns, CellType, setting } = this.props;
+    let { columns, setting } = this.props;
     let { start_date_column_key, end_date_column_key } = setting;
     let startDateColumn = this.getDateColumn(start_date_column_key);
     let endDateColumn = end_date_column_key ? this.getDateColumn(end_date_column_key) : null;
@@ -151,7 +137,6 @@ class ReactBigCalendar extends React.Component {
           columns={columns}
           startDateColumn={startDateColumn}
           labelColumn={labelColumn}
-          onToggleSelectColumn={this.onToggleSelectColumn}
           localizer={globalizeLocalizer}
           events={events}
           views={calendarViews}
@@ -161,17 +146,6 @@ class ReactBigCalendar extends React.Component {
           onRowExpand={this.onRowExpand}
           onInsertRow={this.onInsertRow}
         />
-        {this.state.isShowSelectColumnDialog &&
-          <CalendarSelectColumnDialog
-            onToggleSelectColumn={this.onToggleSelectColumn}
-            modifySelectedColumn={this.modifySelectedColumn}
-            columns={columns}
-            startDateColumn={startDateColumn}
-            endDateColumn={endDateColumn}
-            labelColumn={labelColumn}
-            CellType={CellType}
-          />
-        }
       </React.Fragment>
     );
   }

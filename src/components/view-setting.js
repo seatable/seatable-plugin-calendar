@@ -10,6 +10,8 @@ import '../css/view-setting.css';
 const propTypes = {
   tables: PropTypes.array,
   views: PropTypes.array,
+  columns: PropTypes.array,
+  CellType: PropTypes.object,
   settings: PropTypes.object,
   onModifyViewSettings: PropTypes.func,
   toggleViewSettingPanel: PropTypes.func
@@ -107,6 +109,7 @@ class ViewSetting extends React.Component {
                 <div className="title">{intl.get('Color_From')}</div>
                 {this.renderSelector(colorOptions, SETTING_KEY.COLUMN_COLOR, 'name', 'name')}
               </div>
+              <p className="small text-muted">{intl.get('Calendar_Select_Description')}</p>
             </div>
           </div>
         </div>

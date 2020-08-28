@@ -78,13 +78,13 @@
 }
 
 .calendar-plugin-container .view-item .view-item-content:hover {
-  border-color: #3b88fd;
+  border-color: #ff8000;
   color: #444;
   cursor: pointer;
 }
 
 .calendar-plugin-container .view-item.active .view-item-content {
-  border-color: #3b88fd;
+  border-color: #ff8000;
   color: #444;
   cursor: default;
 }

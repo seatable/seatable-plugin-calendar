@@ -104,8 +104,7 @@ button.rbc-input::-moz-focus-inner {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  height: 46px;
-  padding: 10px 18px;
+  padding: 0 18px 10px;
   font-size: 16px;
 }
 
@@ -175,22 +174,15 @@ button.rbc-input::-moz-focus-inner {
   color: rgb(77, 77, 77);
 }
 
-.rbc-btn-group .rbc-tool-btn:hover {
-  background-color: #F09F3F;
-  border:  1px solid #F09F3F;
+.rbc-btn-group .rbc-tool-btn:hover,
+.rbc-btn-group .rbc-tool-btn.today-btn-disabled {
+  background-color: #ff8000;
+  border: 1px solid #ff8000;
   color: #ffffff;
 }
 
 .rbc-btn-group .rbc-tool-btn.today-btn-disabled {
-  background: #f6c892;
-  border-color: #f6c892;
-  color: #fff;
-}
-
-.rbc-btn-group .rbc-tool-btn.today-btn-disabled:hover {
-  background: #f6c892;
-  border-color: #f6c892;
-  color: #fff;
+  opacity: 0.4;
   cursor: default;
 }
 
@@ -250,7 +242,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-btn-group .rbc-tool-icon:hover {
-  background-color: #F09F3F;
+  background-color: #ff8000;
   color: #ffffff;
 }
 
@@ -277,7 +269,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-btn-group .view-type-list .rbc-view-type.rbc-active {
   color: #fff;
-  background: #F09F3F;
+  background: #ff8000;
 }
 
 .rbc-btn-group .view-type-list .rbc-view-type.rbc-active:hover {
@@ -437,7 +429,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-now .rbc-date-context {
-  background-color: #F09F3F;
+  background-color: #ff8000;
   color: #ffffff;
 }
 
@@ -928,7 +920,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-year-view .rbc-year-month-header {
   padding-left: 10px;
-  color: #F09F3F;
+  color: #ff8000;
 }
 
 .rbc-year-view .rbc-header {
@@ -971,7 +963,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-year-view .rbc-current {
   border-radius: 2px;
-  background-color: #F09F3F;
+  background-color: #ff8000;
   color: #ffffff;
 }
 
@@ -980,7 +972,7 @@ button.rbc-input::-moz-focus-inner {
   height: 4px;
   width: 4px;
   border-radius: 50%;
-  background-color: #F09F3F;
+  background-color: #ff8000;
   top: 22px;
   left: 16px;
 }

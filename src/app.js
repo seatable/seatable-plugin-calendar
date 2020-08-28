@@ -253,11 +253,6 @@ class App extends React.Component {
     window.localStorage.setItem(KEY_SELECTED_VIEW_IDS, JSON.stringify(selectedViewIds));
   }
 
-  getSelectedViewIds = (key) => {
-    let selectedViewIds = window.localStorage.getItem(key);
-    return selectedViewIds ? JSON.parse(selectedViewIds) : {};
-  }
-
   isValidViewSettings = (settings) => {
     return settings && Object.keys(settings).length > 0;
   }

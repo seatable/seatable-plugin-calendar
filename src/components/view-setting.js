@@ -45,15 +45,6 @@ class ViewSetting extends React.Component {
     return { dateColumns, colorColumns };
   }
 
-  createOptions(columns) {
-    return columns && columns.map((c) => (
-      {
-        value: c,
-        label: <span className='select-option-name'>{c.name}</span>
-      }
-    ));
-  }
-
   renderSelector = (source, settingKey, valueKey, labelKey) => {
     let { settings } = this.props;
     let options = source.map((item) => {
@@ -75,8 +66,6 @@ class ViewSetting extends React.Component {
   render() {
     const { tables, views } = this.props;
     const { dateColumns, colorColumns } = this.getSelectorColumns();
-    const dateOptions = this.createOptions(dateColumns);
-    const colorOptions = this.createOptions(colorColumns);
 
     return (
       <div className="plugin-view-setting position-absolute" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
@@ -99,15 +88,15 @@ class ViewSetting extends React.Component {
               </div>
               <div className="setting-item">
                 <div className="title">{intl.get('Start_Date')}</div>
-                {this.renderSelector(dateOptions, SETTING_KEY.COLUMN_START_DATE, 'name', 'name')}
+                {this.renderSelector(dateColumns, SETTING_KEY.COLUMN_START_DATE, 'name', 'name')}
               </div>
               <div className="setting-item">
                 <div className="title">{intl.get('End_Date_Optional')}</div>
-                {this.renderSelector(dateOptions, SETTING_KEY.COLUMN_END_DATE, 'name', 'name')}
+                {this.renderSelector(dateColumns, SETTING_KEY.COLUMN_END_DATE, 'name', 'name')}
               </div>
               <div className="setting-item">
                 <div className="title">{intl.get('Color_From')}</div>
-                {this.renderSelector(colorOptions, SETTING_KEY.COLUMN_COLOR, 'name', 'name')}
+                {this.renderSelector(colorColumns, SETTING_KEY.COLUMN_COLOR, 'name', 'name')}
               </div>
               <p className="small text-muted">{intl.get('Calendar_Select_Description')}</p>
             </div>

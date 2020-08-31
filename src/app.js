@@ -279,6 +279,10 @@ class App extends React.Component {
     }); 
   }
 
+  getSelectedView = (table, settings = {}) => {
+    return this.dtable.getViewByName(table, settings[SETTING_KEY.VIEW_NAME]);
+  }
+
   render() {
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
       isViewSettingPanelOpen
@@ -288,14 +292,16 @@ class App extends React.Component {
     }
 
     let { views } = plugin_settings; 
-    let { settings } = views[selectedViewIdx]|| {};
+    let selectedPluginView = views[selectedViewIdx];
+    let { settings } = selectedPluginView || {};
     let tables = this.dtable.getTables();
     let selectedTable = this.getSelectedTable(tables, settings);
     let {/* name: tableName,*/ columns: currentColumns } = selectedTable || {};
     let tableViews = this.dtable.getViews(selectedTable);
+    let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
 
-    let activeTable = this.dtable.getActiveTable();
-    let activeView = this.dtable.getActiveView()
+    let activeTable = selectedTable;
+    let activeView = selectedTableView;
     let columns = this.dtable.getColumns(activeTable);
     let cellType = this.dtable.getCellType();
     let optionColors = this.dtable.getOptionColors();

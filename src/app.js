@@ -31,11 +31,11 @@ import icon from './image/icon.png';
 
 const DEFAULT_PLUGIN_SETTINGS = { 
   views: [
-    {   
+    {
       _id: '0000',
       name: 'Default View',
       settings: {}
-    }   
+    }
   ]
 };
 
@@ -99,14 +99,14 @@ class App extends React.Component {
   resetData = (init = false) => {
     let { showDialog, isViewSettingPanelOpen } = this.state;
     let plugin_settings = this.dtable.getPluginSettings(PLUGIN_NAME) || {};
-    if (!plugin_settings || Object.keys(plugin_settings).length === 0) {
+    if (!plugin_settings || Object.keys(plugin_settings).length === 0 || !plugin_settings.views) {
       plugin_settings = DEFAULT_PLUGIN_SETTINGS;
     }
     let { views } = plugin_settings;
     let dtableUuid = getDtableUuid();
     let selectedViewIds = this.getSelectedViewIds(KEY_SELECTED_VIEW_IDS) || {};
     let selectedViewId = selectedViewIds[dtableUuid];
-    let selectedViewIdx = views.findIndex(v => v._id === selectedViewId);
+    let selectedViewIdx = Array.isArray(views) && views.findIndex(v => v._id === selectedViewId);
     selectedViewIdx = selectedViewIdx > 0 ? selectedViewIdx : 0;
     if (init) {
       isViewSettingPanelOpen = !this.isValidViewSettings(views[selectedViewIdx].settings);
@@ -296,7 +296,7 @@ class App extends React.Component {
     let { settings } = selectedPluginView || {};
     let tables = this.dtable.getTables();
     let selectedTable = this.getSelectedTable(tables, settings);
-    let {/* name: tableName,*/ columns: currentColumns } = selectedTable || {};
+    let { columns: currentColumns } = selectedTable || {};
     let tableViews = this.dtable.getViews(selectedTable);
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
 

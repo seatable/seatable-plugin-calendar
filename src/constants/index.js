@@ -25,3 +25,11 @@ export const MONTH_ROW_HEIGHT = 126;
 export const OVERSCAN_ROWS = 10;
 
 export const OFFSET_ROWS = 10;
+
+export const SETTING_KEY = {
+  TABLE_NAME: 'table_name',
+  VIEW_NAME: 'view_name',
+  COLUMN_START_DATE: 'column_start_date',
+  COLUMN_END_DATE: 'column_end_date',
+  COLUMN_COLOR: 'column_color'
+};

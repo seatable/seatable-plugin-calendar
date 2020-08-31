@@ -2,14 +2,13 @@ const zh_CN = {
   "Calendar": "日历",
   "Submit": "提交",
   "Cancel": "取消",
-  "Select_Column": "选择列",
   "Select_date_column": "选择日期列",
   "Select_an_end_date_column": "选择结束日期列",
   "Select_color_column": "选择颜色列",
   "Start_Date": "开始日期",
   "End_Date_Optional": "结束日期 (可选)",
   "Color_From": "颜色来自",
-  "Calendar_Select_Description": "提示: 您要在此日历视图中使用哪个字段？您的记录将基于此字段的日期放到日历上",
+  "Calendar_Select_Description": "提示: 您要在此日历视图中使用哪个字段？您的记录将基于此字段的日期放到日历上。",
   "Using_xxx_column": "使用 “{columnName}” 列",
   "Year": "年",
   "Month": "月",
@@ -39,7 +38,18 @@ const zh_CN = {
   "xxx_Month_xxx_Date_xxx_Week": "{month}{date}日 星期{weekDay}",
   "No_date_field_to_place_records_on_the_calendar": "没有用于将记录放置在日历上的日期字段。",
   "There_are_no_records": "没有记录。",
-  "Today": "今天"
+  "Today": "今天",
+
+  "New_View": "新建视图",
+  "Rename_View": "重命名视图",
+  "Delete_View": "删除视图",
+  "Name": "名称",
+  "Name_is_required": "名称必须存在",
+
+  "Settings": "设置",
+  "Table": "表格",
+  "View": "视图",
+  "No_options": "没有选项"
 };
 
 export default zh_CN; 

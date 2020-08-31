@@ -35,8 +35,7 @@ class PluginSelect extends React.Component {
   };
 
   getMenuPortalTarget = () => {
-    let { menuPortalTarget } = this.props;
-    return document.querySelector('.' + menuPortalTarget || 'modal');
+    return document.querySelector('.modal');
   }
 
   render() {
@@ -51,7 +50,7 @@ class PluginSelect extends React.Component {
         components={{ DropdownIndicator }}
         placeholder={placeholder}
         isSearchable={isSearchable}
-        menuPosition={'absolute'}
+        menuPosition={'fixed'}
         menuShouldBlockScroll={true}
         menuShouldScrollIntoView
         menuPortalTarget={this.getMenuPortalTarget()}

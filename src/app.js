@@ -65,7 +65,7 @@ class App extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({showDialog: nextProps.showDialog});
-  } 
+  }
 
   componentWillUnmount() {
     this.unsubscribeLocalDtableChanged();
@@ -128,7 +128,7 @@ class App extends React.Component {
 
   onPluginToggle = () => {
     this.setState({showDialog: false});
-    window.app.onClosePlugin();
+    window.app.onClosePlugin && window.app.onClosePlugin();
   }
 
   getRows = (table, view) => {
@@ -156,11 +156,13 @@ class App extends React.Component {
     }
   }
 
-  onInsertRow = (rowData, activeTable, activeView) => {
-    this.dtable.appendRow(activeTable, rowData, activeView);
+  onInsertRow = (rowData, activeTable, activeView, rowId) => {
+    let initData = this.dtable.getInsertedRowInitData(activeView, activeTable, rowId);
+    let newRowData = Object.assign({}, initData, rowData);
+    this.dtable.appendRow(activeTable, newRowData, activeView);
     let viewRows = this.dtable.getViewRows(activeView, activeTable);
     let insertedRow = viewRows[viewRows.length - 1];
-    if (insertedRow) {
+    if (insertedRow && window.app.expandRow) {
       window.app.expandRow(insertedRow, activeTable);
     }
   }
@@ -283,6 +285,14 @@ class App extends React.Component {
     return this.dtable.getViewByName(table, settings[SETTING_KEY.VIEW_NAME]);
   }
 
+  getCurrentSettings = () => {
+    let { plugin_settings, selectedViewIdx } = this.state;
+    if (!plugin_settings || !plugin_settings.views || !Array.isArray(plugin_settings.views)) {
+      return {};
+    }
+    return plugin_settings.views[selectedViewIdx] || {};
+  }
+
   render() {
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
       isViewSettingPanelOpen
@@ -296,18 +306,15 @@ class App extends React.Component {
     let { settings } = selectedPluginView || {};
     let tables = this.dtable.getTables();
     let selectedTable = this.getSelectedTable(tables, settings);
-    let { columns: currentColumns } = selectedTable || {};
     let tableViews = this.dtable.getViews(selectedTable);
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
 
-    let activeTable = selectedTable;
-    let activeView = selectedTableView;
-    let columns = this.dtable.getColumns(activeTable);
+    let columns = this.dtable.getColumns(selectedTable);
     let cellType = this.dtable.getCellType();
     let optionColors = this.dtable.getOptionColors();
     let highlightColors = this.dtable.getHighlightColors();
-    let rows = this.getRows(activeTable, activeView);
-    let currentSetting = plugin_settings[activeTable._id] || {};
+    let rows = this.getRows(selectedTable, selectedTableView);
+    let currentSetting = this.getCurrentSettings();
     return (
       <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={CALENDAR_DIALOG_MODAL}>
         <ModalHeader className="plugin-header" close={this.renderBtnGroups()}>
@@ -323,12 +330,13 @@ class App extends React.Component {
             onRenameView={this.onRenameView}
             onDeleteView={this.onDeleteView}
             onSelectView={this.onSelectView}
-          />  
+          />
         </ModalHeader>
         <ModalBody className="calendar-plugin-content">
           <ReactBigCalendar
-            activeTable={activeTable}
-            activeView={activeView}
+            activeTable={selectedTable}
+            activeView={selectedTableView}
+            selectedViewIdx={selectedViewIdx}
             columns={columns}
             rows={rows}
             getRowById={this.dtable.getRowById}
@@ -337,7 +345,6 @@ class App extends React.Component {
             optionColors={optionColors}
             highlightColors={highlightColors}
             onRowExpand={this.onRowExpand}
-            updateSettings={this.updateSettings}
             onInsertRow={this.onInsertRow}
           />
           {isViewSettingPanelOpen &&
@@ -345,7 +352,7 @@ class App extends React.Component {
               tables={tables}
               views={tableViews}
               settings={settings || {}} 
-              columns={currentColumns}
+              columns={columns}
               CellType={cellType}
               onModifyViewSettings={this.onModifyViewSettings}
               toggleViewSettingPanel={this.toggleViewSettingPanel}

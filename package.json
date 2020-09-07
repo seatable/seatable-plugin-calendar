@@ -5,7 +5,7 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "dom-helpers": "^5.1.4",
-    "dtable-sdk": "0.0.53",
+    "dtable-sdk": "0.0.55",
     "jszip": "^3.2.2",
     "moment": "^2.24.0",
     "react": "^16.12.0",

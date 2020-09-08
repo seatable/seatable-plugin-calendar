@@ -192,10 +192,10 @@ export function startOf(d, unit, firstOfWeek) {
   }
 
   if (unit === DATE_UNIT.DECADE)
-    d = subtract(d, year(d) % 10, 'year');
+    d = subtract(d, year(d) % 10, DATE_UNIT.YEAR);
 
   if (unit === DATE_UNIT.CENTURY)
-    d = subtract(d, year(d) % 100, 'year');
+    d = subtract(d, year(d) % 100, DATE_UNIT.YEAR);
 
   if (unit === DATE_UNIT.WEEK)
     d = weekday(d, 0, firstOfWeek);
@@ -288,20 +288,29 @@ export function getFormattedDate(d, format) {
 export function getMonthStartDate(date) {
   let mDate = moment(date);
   let startOfMonth = mDate.startOf(DATE_UNIT.MONTH);
-  return startOfMonth.subtract(startOfMonth.weekday(), 'd').toDate();
+  return startOfMonth.subtract(startOfMonth.weekday(), DATE_UNIT.DAY).toDate();
 }
 
 export function getMonthEndDate(date) {
   let mDate = moment(date);
   let startOfMonth = mDate.endOf(DATE_UNIT.MONTH);
-  return startOfMonth.add(6 - startOfMonth.weekday(), 'd').toDate();
+  return startOfMonth.add(6 - startOfMonth.weekday(), DATE_UNIT.DAY).toDate();
 }
 
-export function getDatesInRange(startDate, endDate, unit = 'day') {
+export function getDatesInRange(startDate, endDate, unit = DATE_UNIT.DAY) {
   let dates = [];
   while(moment(startDate).isSameOrBefore(endDate)) {
     dates.push(startDate);
     startDate = moment(startDate).add(1, unit).toDate();
+  }
+  return dates;
+}
+
+export function getWeekDates(weekStartDate) {
+  let dates = [], startDate = weekStartDate;
+  for (let i = 0; i < 7; i++) {
+    dates.push(startDate);
+    startDate = moment(startDate).add(1, DATE_UNIT.DAY).toDate();
   }
   return dates;
 }
@@ -311,7 +320,7 @@ export function isToday(date, unit) {
 }
 
 function createAccessor(method){
-  let hourLength = (function(method) {  
+  let hourLength = (function(method) {
     switch(method) {
       case 'Milliseconds':
         return 3600000;

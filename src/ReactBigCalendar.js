@@ -13,6 +13,7 @@ import './css/react-big-calendar.css';
 const propTypes = {
   activeTable: PropTypes.object,
   activeView: PropTypes.object,
+  selectedViewIdx: PropTypes.number,
   columns: PropTypes.array,
   rows: PropTypes.array,
   CellType: PropTypes.object,
@@ -20,7 +21,6 @@ const propTypes = {
   highlightColors: PropTypes.object,
   setting: PropTypes.object,
   onRowExpand: PropTypes.func,
-  updateSettings: PropTypes.func,
   onInsertRow: PropTypes.func,
   getRowById: PropTypes.func,
 };
@@ -37,19 +37,25 @@ class ReactBigCalendar extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedViewIdx !== prevProps.selectedViewIdx) {
+      this.setState({selectedView: this.getSelectedView()})
+    }
+  }
+
   getSelectedView = () => {
     let selectedCalendarView = JSON.parse(localStorage.getItem('selectedCalendarView')) || {};
-    let { activeTable } = this.props;
+    let { activeTable, activeView } = this.props;
     let { dtableUuid } = getDtableUuid();
-    let key = dtableUuid + '_' + activeTable._id;
+    let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
     return selectedCalendarView[key] || CALENDAR_VIEWS.MONTH;
   }
 
   onSelectView = (view) => {
     let selectedCalendarView = JSON.parse(localStorage.getItem('selectedCalendarView')) || {};
-    let { activeTable } = this.props;
+    let { activeTable, activeView } = this.props;
     let { dtableUuid } = getDtableUuid();
-    let key = dtableUuid + '_' + activeTable._id;
+    let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
     selectedCalendarView[key] = view;
     localStorage.setItem('selectedCalendarView', JSON.stringify(selectedCalendarView));
     this.setState({selectedView: view});
@@ -120,8 +126,9 @@ class ReactBigCalendar extends React.Component {
   }
 
   onInsertRow = (rowData) => {
-    let { activeTable, activeView, onInsertRow } = this.props;
-    onInsertRow(rowData, activeTable, activeView);
+    let { activeTable, activeView, onInsertRow, rows } = this.props;
+    let row_id = rows.length > 0 ? rows[rows.length - 1]._id : '';
+    onInsertRow(rowData, activeTable, activeView, row_id);
   }
 
   render() {

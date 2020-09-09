@@ -171,6 +171,10 @@ class App extends React.Component {
     this.setState({isViewSettingPanelOpen: !this.state.isViewSettingPanelOpen});
   }
 
+  hideViewSettingPanel = () => {
+    this.setState({isViewSettingPanelOpen: false});
+  }
+
   renderBtnGroups = () => {
     return (
       <div className="d-flex align-items-center">
@@ -346,6 +350,7 @@ class App extends React.Component {
             highlightColors={highlightColors}
             onRowExpand={this.onRowExpand}
             onInsertRow={this.onInsertRow}
+            hideViewSettingPanel={this.hideViewSettingPanel}
           />
           {isViewSettingPanelOpen &&
             <ViewSetting

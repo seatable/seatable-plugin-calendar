@@ -152,6 +152,7 @@ class ReactBigCalendar extends React.Component {
           defaultDate={new Date()}
           onRowExpand={this.onRowExpand}
           onInsertRow={this.onInsertRow}
+          hideViewSettingPanel={this.props.hideViewSettingPanel}
         />
       </React.Fragment>
     );

@@ -913,6 +913,7 @@ class Calendar extends React.Component {
         {...elementProps}
         className={classnames(className, 'rbc-calendar', {'rbc-rtl': props.rtl})}
         style={style}
+        onClick={this.props.hideViewSettingPanel}
       >
         {toolbar && (
           <CalToolbar

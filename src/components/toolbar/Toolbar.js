@@ -13,7 +13,7 @@ class Toolbar extends React.Component {
     } = this.props;
     return (
       <div className='rbc-toolbar'>
-        <div className='rbc-btn-group align-items-center'>
+        <div className='rbc-btn-group'>
           <div className='rbc-tool-icon-group'>
             <span onClick={this.navigate.bind(null, navigate.PREVIOUS)} className={'rbc-tool-icon'}>
               <i className="dtable-font dtable-icon-left"></i>

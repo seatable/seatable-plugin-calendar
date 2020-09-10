@@ -188,7 +188,6 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-btn-group {
-  display: flex;
   flex: 1;
 }
 

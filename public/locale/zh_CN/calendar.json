@@ -1,4 +1,4 @@
-const zh_CN = {
+{
   "Calendar": "日历",
   "Submit": "提交",
   "Cancel": "取消",
@@ -50,6 +50,4 @@ const zh_CN = {
   "Table": "表格",
   "View": "视图",
   "No_options": "没有选项"
-};
-
-export default zh_CN; 
+}

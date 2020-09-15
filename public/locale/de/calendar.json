@@ -1,4 +1,4 @@
-const en = {
+{
   "Calendar": "Calendar",
   "Submit": "Submit",
   "Cancel": "Cancel",
@@ -50,6 +50,4 @@ const en = {
   "Table": "Table",
   "View": "View",
   "No_options": "No options"
-};
-
-export default en;
+}

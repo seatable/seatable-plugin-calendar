@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[seatable_plugins.calendar]
+file_filter = public/locale/<lang>/calendar.json
+source_file = public/locale/en/calendar.json
+source_lang = en_US
+type = KEYVALUEJSON

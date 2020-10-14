@@ -7,8 +7,12 @@ import momentLocalizer from './utils/localizers/moment';
 import { getDtableUuid } from './utils/common';
 import { CALENDAR_VIEWS } from './constants';
 import TableEvent from './model/event';
+import withDragAndDrop from './addons/dragAndDrop'
 
 import './css/react-big-calendar.css';
+//import './addons/dragAndDrop/styles.scss'
+
+const DragAndDropCalendar = withDragAndDrop(Calendar)
 
 const propTypes = {
   activeTable: PropTypes.object,
@@ -131,6 +135,21 @@ class ReactBigCalendar extends React.Component {
     onInsertRow(rowData, activeTable, activeView, row_id);
   }
 
+  moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
+    let updatedData = {}; 
+    let { activeTable, modifyRow, setting } = this.props;
+    let { start_date_column_key, end_date_column_key } = setting;
+    let startDateColumn = this.getDateColumn(start_date_column_key);
+    let endDateColumn = end_date_column_key ? this.getDateColumn(end_date_column_key) : null;
+    if (startDateColumn) {
+      updatedData[startDateColumn.name] = (new Date(start)).toJSON().substring(0,10);
+    }
+    if (endDateColumn) {
+      updatedData[endDateColumn.name] = (new Date(end)).toJSON().substring(0,10);
+    }
+    modifyRow(activeTable, event.row, updatedData);
+  }
+
   render() {
     let { columns, setting } = this.props;
     let { start_date_column_key, end_date_column_key } = setting;
@@ -140,7 +159,7 @@ class ReactBigCalendar extends React.Component {
     let events = this.getEvents(startDateColumn, endDateColumn, labelColumn);
     return (
       <React.Fragment>
-        <Calendar
+        <DragAndDropCalendar
           columns={columns}
           startDateColumn={startDateColumn}
           labelColumn={labelColumn}
@@ -153,6 +172,8 @@ class ReactBigCalendar extends React.Component {
           onRowExpand={this.onRowExpand}
           onInsertRow={this.onInsertRow}
           hideViewSettingPanel={this.props.hideViewSettingPanel}
+          selectable={true}
+          onEventDrop={this.moveEvent}
         />
       </React.Fragment>
     );

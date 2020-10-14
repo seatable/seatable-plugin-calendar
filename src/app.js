@@ -297,6 +297,10 @@ class App extends React.Component {
     return plugin_settings.views[selectedViewIdx] || {};
   }
 
+  modifyRow = (table, row, updated) => {
+    this.dtable.modifyRow(table, row, updated);
+  }
+
   render() {
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
       isViewSettingPanelOpen
@@ -344,6 +348,7 @@ class App extends React.Component {
             columns={columns}
             rows={rows}
             getRowById={this.dtable.getRowById}
+            modifyRow={this.modifyRow}
             CellType={cellType}
             setting={currentSetting}
             optionColors={optionColors}

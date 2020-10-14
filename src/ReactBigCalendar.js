@@ -7,12 +7,12 @@ import momentLocalizer from './utils/localizers/moment';
 import { getDtableUuid } from './utils/common';
 import { CALENDAR_VIEWS } from './constants';
 import TableEvent from './model/event';
-import withDragAndDrop from './addons/dragAndDrop'
+import withDragAndDrop from './addons/dragAndDrop';
 
 import './css/react-big-calendar.css';
-//import './addons/dragAndDrop/styles.scss'
+import './addons/dragAndDrop/styles.scss';
 
-const DragAndDropCalendar = withDragAndDrop(Calendar)
+const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const propTypes = {
   activeTable: PropTypes.object,

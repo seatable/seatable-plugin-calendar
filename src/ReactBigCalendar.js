@@ -10,7 +10,7 @@ import TableEvent from './model/event';
 import withDragAndDrop from './addons/dragAndDrop';
 
 import './css/react-big-calendar.css';
-import './addons/dragAndDrop/styles.scss';
+import './addons/dragAndDrop/styles.css';
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 

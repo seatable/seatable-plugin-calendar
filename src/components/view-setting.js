@@ -68,15 +68,14 @@ class ViewSetting extends React.Component {
     const { dateColumns, colorColumns } = this.getSelectorColumns();
 
     return (
-      <div className="plugin-view-setting position-absolute" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
-        <div className="setting-container">
-          <div className="setting-header-container d-flex">
-            <div className="setting-header-wrapper">
-              <div className="setting-header-title">{intl.get('Settings')}</div>
-              <div className="dtable-font dtable-icon-x op-icon" onClick={this.props.toggleViewSettingPanel}></div>
-            </div>
-          </div>
-          <div className="setting-body">
+      <div className="plugin-view-setting position-absolute d-flex flex-column" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
+        <div className="setting-header-container d-flex justify-content-between align-items-center">
+          <h3 className="setting-header-title m-0">{intl.get('Settings')}</h3>
+          <button className="close op-icon" onClick={this.props.toggleViewSettingPanel}>
+            <i className="dtable-font dtable-icon-x"></i>
+          </button>
+        </div>
+          <div className="setting-body o-auto">
             <div className="setting-list">
               <div className="setting-item table-setting">
                 <div className="title">{intl.get('Table')}</div>
@@ -101,7 +100,6 @@ class ViewSetting extends React.Component {
               <p className="small text-muted">{intl.get('Calendar_Select_Description')}</p>
             </div>
           </div>
-        </div>
       </div>
     );
   }

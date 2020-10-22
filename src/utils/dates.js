@@ -334,7 +334,7 @@ function createAccessor(method){
         return null;
     }
   })(method);
-  
+
   return function(d, val){
     if (val === undefined)
       return d['get' + method]();
@@ -347,7 +347,7 @@ function createAccessor(method){
       //Skip DST hour, if it occurs
       dateOut['set'+method](val + hourLength);
     }
-    
+
     return dateOut;
   };
 }

@@ -27,21 +27,21 @@ class ViewSetting extends React.Component {
       updated = {[setting_key]: value};  // Need init settings after select new table.
     } else {
       updated = Object.assign({}, settings, {[setting_key]: value});
-    }   
+    }
     this.props.onModifyViewSettings(updated);
-  };  
+  };
 
   getSelectorColumns = () => {
     const { columns, CellType } = this.props;
-    let dateColumns = [], colorColumns = []; 
+    let dateColumns = [], colorColumns = [];
     columns && columns.forEach((c) => {
       const { type } = c;
       if (type === CellType.DATE) {
         dateColumns.push(c);
       } else if (type === CellType.SINGLE_SELECT) {
         colorColumns.push(c);
-      }   
-    }); 
+      }
+    });
     return { dateColumns, colorColumns };
   }
 
@@ -60,7 +60,7 @@ class ViewSetting extends React.Component {
       value={selectedOption}
       options={options}
       onChange={this.onModifySettings}
-    />
+    />;
   }
 
   render() {

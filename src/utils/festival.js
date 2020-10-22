@@ -117,7 +117,7 @@ function getTerm(date) {
 }
 
 /**
- * @param {*} year 
+ * @param {*} year
  * @param {*} index 二十四节气中的第几个节气
  */
 function getTerm2Day(year, index) {

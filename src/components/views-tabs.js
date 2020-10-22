@@ -48,7 +48,7 @@ class ViewsTabs extends React.Component {
   }
 
   onDropdownToggle = (evt) => {
-    evt.nativeEvent.stopImmediatePropagation()
+    evt.nativeEvent.stopImmediatePropagation();
     let { top, left, height } = this.btnViewDropdown.parentNode.getBoundingClientRect();
     this.setState({
       isShowViewDropdown: !this.state.isShowViewDropdown,
@@ -117,10 +117,10 @@ class ViewsTabs extends React.Component {
                 <div
                   key={`views-${_id}`}
                   className={classnames({
-                    'view-item': true, 
+                    'view-item': true,
                     'active': isActiveView
                   })
-                }>
+                  }>
                   <div
                     className="view-item-content d-flex align-items-center justify-content-center position-relative"
                     ref={this.setViewItem(i)}

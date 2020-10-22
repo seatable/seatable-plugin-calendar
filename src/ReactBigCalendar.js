@@ -43,7 +43,7 @@ class ReactBigCalendar extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.selectedViewIdx !== prevProps.selectedViewIdx) {
-      this.setState({selectedView: this.getSelectedView()})
+      this.setState({selectedView: this.getSelectedView()});
     }
   }
 
@@ -115,7 +115,7 @@ class ReactBigCalendar extends React.Component {
       textColor = colorOption ? colorOption.textColor : optionColors[2].TEXT_COLOR;
     } else {
       bgColor = optionColors[2].COLOR;
-      textColor = optionColors[2].TEXT_COLOR
+      textColor = optionColors[2].TEXT_COLOR;
     }
     const highlightColor = highlightColors[bgColor];
     return new TableEvent({row, date, endDate, title, bgColor, highlightColor, textColor});
@@ -136,7 +136,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
-    let updatedData = {}; 
+    let updatedData = {};
     let { activeTable, modifyRow, setting } = this.props;
     let { start_date_column_key, end_date_column_key } = setting;
     let startDateColumn = this.getDateColumn(start_date_column_key);

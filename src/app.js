@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
-import './locale/index.js'
+import './locale/index.js';
 import ReactBigCalendar from './ReactBigCalendar';
 import { PLUGIN_NAME, SETTING_KEY } from './constants';
 import { CALENDAR_DIALOG_MODAL } from './constants/zIndexes';
@@ -29,7 +29,7 @@ import icon from './image/icon.png';
  * }
  */
 
-const DEFAULT_PLUGIN_SETTINGS = { 
+const DEFAULT_PLUGIN_SETTINGS = {
   views: [
     {
       _id: '0000',
@@ -267,7 +267,7 @@ class App extends React.Component {
     let selectedTable = this.dtable.getTableByName(settings[SETTING_KEY.TABLE_NAME]);
     if (!selectedTable) {
       return tables[0];
-    }   
+    }
     return selectedTable;
   }
 
@@ -275,14 +275,14 @@ class App extends React.Component {
     let { plugin_settings, selectedViewIdx } = this.state;
     let { views: updatedViews } = plugin_settings;
     let updatedView = plugin_settings.views[selectedViewIdx];
-    let { settings: updatedSettings} = updatedView || {}; 
+    let { settings: updatedSettings} = updatedView || {};
     updatedSettings = Object.assign({}, updatedSettings, updated);
     updatedView.settings = updatedSettings;
     updatedViews[selectedViewIdx] = updatedView;
     plugin_settings.views = updatedViews;
     this.setState({plugin_settings}, () => {
       this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
-    }); 
+    });
   }
 
   getSelectedView = (table, settings = {}) => {
@@ -309,7 +309,7 @@ class App extends React.Component {
       return '';
     }
 
-    let { views } = plugin_settings; 
+    let { views } = plugin_settings;
     let selectedPluginView = views[selectedViewIdx];
     let { settings } = selectedPluginView || {};
     let tables = this.dtable.getTables();
@@ -361,13 +361,13 @@ class App extends React.Component {
             <ViewSetting
               tables={tables}
               views={tableViews}
-              settings={settings || {}} 
+              settings={settings || {}}
               columns={columns}
               CellType={cellType}
               onModifyViewSettings={this.onModifyViewSettings}
               toggleViewSettingPanel={this.toggleViewSettingPanel}
-            />  
-          }   
+            />
+          }
         </ModalBody>
       </Modal>
     );

@@ -26,7 +26,7 @@ class YearDay extends React.Component {
   getDayEvents = () => {
     let { day, events, accessors } = this.props;
     return events.filter(event => {
-      return event.start && 
+      return event.start &&
         dates.inRange(day, accessors.start(event), accessors.end(event), DATE_UNIT.DAY);
     });
   }
@@ -53,7 +53,7 @@ class YearDay extends React.Component {
           <div className={classnames('rbc-year-day', {'rbc-off-range': isOffRange, 'rbc-current': isCurrentDay})} >{Number(label)}</div>
         </div>
         {dayEvents.length > 0 && <span className="day-events"></span>}
-        {isShowEvents && 
+        {isShowEvents &&
         <Popup
           {...this.props}
           popupOffset={popupOffset}

@@ -45,7 +45,7 @@ class YearMonth extends React.Component {
     return (
       <div className="rbc-year-day-container" key={`rbc-year-day-container-${weekIdx}`}>
         {week.map((day, i) => {
-          return <YearDay 
+          return <YearDay
             key={`rbc-year-day-${weekIdx}-${i}`}
             day={day}
             events={events}

@@ -142,10 +142,14 @@ class ReactBigCalendar extends React.Component {
     let startDateColumn = this.getDateColumn(start_date_column_key);
     let endDateColumn = end_date_column_key ? this.getDateColumn(end_date_column_key) : null;
     if (startDateColumn) {
-      updatedData[startDateColumn.name] = (new Date(start)).toJSON().substring(0,10);
+      const { data = {} } = startDateColumn; // `data = {}`: to be compatible with old data
+      const { format = 'YYYY-MM-DD' } = data;
+      updatedData[startDateColumn.name] = moment(start).format(format);
     }
     if (endDateColumn) {
-      updatedData[endDateColumn.name] = (new Date(end)).toJSON().substring(0,10);
+      const { data = {} } = endDateColumn;
+      const { format = 'YYYY-MM-DD' } = data;
+      updatedData[endDateColumn.name] = moment(start).format(format);
     }
     modifyRow(activeTable, event.row, updatedData);
   }

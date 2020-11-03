@@ -14,9 +14,9 @@ import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
 
 
 class DayColumn extends React.Component {
-  state = { 
-    selecting: false, 
-    timeIndicatorPosition: null 
+  state = {
+    selecting: false,
+    timeIndicatorPosition: null
   };
   intervalTriggered = false;
 

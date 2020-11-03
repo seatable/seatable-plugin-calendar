@@ -164,25 +164,25 @@ export const getDtableUuid = () => {
     return window.dtable.dtableUuid;
   }
   return window.dtablePluginConfig.dtableUuid;
-}
+};
 
 export const getDtableLang = () => {
   if (window.dtable) {
     return window.dtable.lang;
   }
   return 'zh-cn';
-}
+};
 
 export const getDtablePermission = () => {
   if (window.dtable) {
     return window.dtable.permission;
   }
   return 'rw';
-}
+};
 
 export const generatorBase64Code = (keyLength = 4) => {
   let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789';
-  let key = ''; 
+  let key = '';
   for (let i = 0; i < keyLength; i++) {
     key += possible.charAt(Math.floor(Math.random() * possible.length));
   }
@@ -198,7 +198,7 @@ export const generatorViewId = (views) => {
     isUnique = views.every(item => {return item._id !== view_id;});
     if (isUnique) {
       break;
-    }   
+    }
   }
   return view_id;
 };

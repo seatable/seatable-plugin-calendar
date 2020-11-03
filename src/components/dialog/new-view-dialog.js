@@ -29,7 +29,7 @@ class NewViewDialog extends React.Component {
   toggle = () => {
     this.props.onNewViewCancel();
   }
-  
+
   handleSubmit = () => {
     let { viewName } = this.state;
     viewName = viewName.trim();
@@ -55,7 +55,7 @@ class NewViewDialog extends React.Component {
           </Form>
           {this.state.errMessage && <Alert color="danger" className="mt-2">{intl.get(this.state.errMessage)}</Alert>}
         </ModalBody>
-        <ModalFooter>          
+        <ModalFooter>
           <Button color="secondary" onClick={this.toggle}>{intl.get('Cancel')}</Button>
           <Button color="primary" onClick={this.handleSubmit}>{intl.get('Submit')}</Button>
         </ModalFooter>

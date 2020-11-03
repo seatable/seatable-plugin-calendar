@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
-import { DROPDOWN_MENU } from '../constants/zIndexes'
+import { DROPDOWN_MENU } from '../constants/zIndexes';
 
 import '../css/dropdown-menu.css';
 
 const propTypes = {
   dropdownMenuPosition: PropTypes.object,
   options: PropTypes.node,
-}
+};
 
 class DropdownMenu extends React.Component {
 

@@ -75,31 +75,31 @@ class ViewSetting extends React.Component {
             <i className="dtable-font dtable-icon-x"></i>
           </button>
         </div>
-          <div className="setting-body o-auto">
-            <div className="setting-list">
-              <div className="setting-item table-setting">
-                <div className="title">{intl.get('Table')}</div>
-                {this.renderSelector(tables, SETTING_KEY.TABLE_NAME, 'name', 'name')}
-              </div>
-              <div className="setting-item view-setting">
-                <div className="title">{intl.get('View')}</div>
-                {this.renderSelector(views, SETTING_KEY.VIEW_NAME, 'name', 'name')}
-              </div>
-              <div className="setting-item">
-                <div className="title">{intl.get('Start_Date')}</div>
-                {this.renderSelector(dateColumns, SETTING_KEY.COLUMN_START_DATE, 'name', 'name')}
-              </div>
-              <div className="setting-item">
-                <div className="title">{intl.get('End_Date_Optional')}</div>
-                {this.renderSelector(dateColumns, SETTING_KEY.COLUMN_END_DATE, 'name', 'name')}
-              </div>
-              <div className="setting-item">
-                <div className="title">{intl.get('Color_From')}</div>
-                {this.renderSelector(colorColumns, SETTING_KEY.COLUMN_COLOR, 'name', 'name')}
-              </div>
-              <p className="small text-muted">{intl.get('Calendar_Select_Description')}</p>
+        <div className="setting-body o-auto">
+          <div className="setting-list">
+            <div className="setting-item table-setting">
+              <div className="title">{intl.get('Table')}</div>
+              {this.renderSelector(tables, SETTING_KEY.TABLE_NAME, 'name', 'name')}
             </div>
+            <div className="setting-item view-setting">
+              <div className="title">{intl.get('View')}</div>
+              {this.renderSelector(views, SETTING_KEY.VIEW_NAME, 'name', 'name')}
+            </div>
+            <div className="setting-item">
+              <div className="title">{intl.get('Start_Date')}</div>
+              {this.renderSelector(dateColumns, SETTING_KEY.COLUMN_START_DATE, 'name', 'name')}
+            </div>
+            <div className="setting-item">
+              <div className="title">{intl.get('End_Date_Optional')}</div>
+              {this.renderSelector(dateColumns, SETTING_KEY.COLUMN_END_DATE, 'name', 'name')}
+            </div>
+            <div className="setting-item">
+              <div className="title">{intl.get('Color_From')}</div>
+              {this.renderSelector(colorColumns, SETTING_KEY.COLUMN_COLOR, 'name', 'name')}
+            </div>
+            <p className="small text-muted">{intl.get('Calendar_Select_Description')}</p>
           </div>
+        </div>
       </div>
     );
   }

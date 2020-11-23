@@ -9,6 +9,8 @@ import Selection, { getBoundsForNode } from '../../components/selection/Selectio
 import EventRow from '../../components/rows/EventRow';
 import { dragAccessors } from './common';
 
+import DraggingLayer from './dragging-layer';
+
 const propTypes = {};
 
 const eventTimes = (event, accessors) => {
@@ -209,6 +211,7 @@ class WeekWrapper extends React.Component {
       const bounds = getBoundsForNode(node);
       const { dragAndDropAction } = this.context.draggable;
 
+      this.setState({box});
       if (dragAndDropAction.action === 'move') this.handleMove(box, bounds);
       if (dragAndDropAction.action === 'resize') this.handleResize(box, bounds);
     });
@@ -270,23 +273,32 @@ class WeekWrapper extends React.Component {
   render() {
     const { children, accessors } = this.props;
 
-    let { segment } = this.state;
+    let { segment, box } = this.state;
+
+    const { interacting, currentEventEl } = this.context.draggable.dragAndDropAction;
 
     return (
       <div className="rbc-addons-dnd-row-body">
         {children}
 
         {segment && (
-          <EventRow
-            {...this.props}
-            selected={null}
-            className="rbc-addons-dnd-drag-row"
-            segments={[segment]}
-            accessors={{
-              ...accessors,
-              ...dragAccessors,
-            }}
-          />
+          <React.Fragment>
+            <EventRow
+              {...this.props}
+              selected={null}
+              className="rbc-addons-dnd-drag-row"
+              segments={[segment]}
+              accessors={{
+                ...accessors,
+                ...dragAccessors,
+              }}
+            />
+            {interacting &&
+            <DraggingLayer
+              el={currentEventEl}
+              box={box}
+            />}
+          </React.Fragment>
         )}
       </div>
     );

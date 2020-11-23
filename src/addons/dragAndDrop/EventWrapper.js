@@ -51,7 +51,7 @@ class EventWrapper extends React.Component {
   }
   handleStartDragging = e => {
     if (e.button === 0) {
-      this.context.draggable.onBeginAction(this.props.event, 'move');
+      this.context.draggable.onBeginAction(this.props.event, 'move', '', this.props.children);
     }
   }
 
@@ -129,6 +129,7 @@ class EventWrapper extends React.Component {
         onTouchStart: this.handleStartDragging,
       };
 
+      /*
       if (isResizable) {
         // replace original event child with anchor-embellished child
         let StartAnchor = null;
@@ -150,6 +151,7 @@ class EventWrapper extends React.Component {
           </div>
         );
       }
+      */
 
       if (
         draggable.dragAndDropAction.interacting && // if an event is being dragged right now

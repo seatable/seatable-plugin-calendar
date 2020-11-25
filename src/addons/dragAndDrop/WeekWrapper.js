@@ -294,10 +294,11 @@ class WeekWrapper extends React.Component {
               }}
             />
             {interacting &&
-            <DraggingLayer
-              el={currentEventEl}
-              box={box}
-            />}
+              <DraggingLayer
+                el={currentEventEl}
+                box={box}
+              />
+            }
           </React.Fragment>
         )}
       </div>

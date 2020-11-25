@@ -3,15 +3,17 @@ import React from 'react';
 class DraggingLayer extends React.Component {
 
   render() {
-    const { el, box={} } = this.props;
+    const { el, box = {} } = this.props;
     let newProps = {
       style: {
         ...el.props.style,
         position: 'fixed',
-        left: box.x - 110,
+        // 1100: the width of this plugin('.calendar-plugin-container')
+        left: box.x - (window.innerWidth - 1100)/2 - 10,
         top: box.y - 42,
         opacity: 0.75,
-        width: 'auto'
+        width: 'auto',
+        minWidth: 145
       }
     };
     let newChildrenProps = {

@@ -93,19 +93,19 @@ class ReactBigCalendar extends React.Component {
     }
     rows.forEach((row) => {
       const formattedRow = getRowById(activeTable, row._id);
-      const event = this.getEvent(formattedRow, startDateColumn, endDateColumn, labelColumn);
+      const event = this.getEvent(row, formattedRow, startDateColumn, endDateColumn, labelColumn);
       events.push(event);
     });
     return events;
   }
 
-  getEvent = (row, startDateColumn, endDateColumn, labelColumn) => {
+  getEvent = (rawRow, row, startDateColumn, endDateColumn, labelColumn) => {
     const { optionColors, highlightColors } = this.props;
-    const { key: startDateColumnKey } = startDateColumn || {};
-    const { key: endDateColumnKey } = endDateColumn || {};
+    const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
+    const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
     const title = this.getRecordName(row);
-    const date = row[startDateColumnKey];
-    const endDate = row[endDateColumnKey];
+    const date = startDateColumnType == 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
+    const endDate = endDateColumnType == 'formula' ? rawRow[endDateColumnName] : row[endDateColumnKey];
     let bgColor, textColor;
     if (labelColumn) {
       const { key: colorColumnKey, data } = labelColumn;
@@ -145,13 +145,19 @@ class ReactBigCalendar extends React.Component {
     let startDateColumn = this.getDateColumn(startDateColumnName);
     let endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
     if (startDateColumn) {
-      const { data = {} } = startDateColumn; // `data = {}`: to be compatible with old data
+      const { type, data = {} } = startDateColumn; // `data = {}`: to be compatible with old data
       const { format = 'YYYY-MM-DD' } = data;
+      if (type == 'formula') {
+        return;
+      }
       updatedData[startDateColumn.name] = moment(start).format(format);
     }
     if (endDateColumn) {
-      const { data = {} } = endDateColumn;
+      const { type, data = {} } = endDateColumn;
       const { format = 'YYYY-MM-DD' } = data;
+      if (type == 'formula') {
+        return;
+      }
       updatedData[endDateColumn.name] = moment(end).format(format);
     }
     modifyRow(activeTable, event.row, updatedData);

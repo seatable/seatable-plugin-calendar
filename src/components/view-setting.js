@@ -38,6 +38,8 @@ class ViewSetting extends React.Component {
       const { type } = c;
       if (type === CellType.DATE) {
         dateColumns.push(c);
+      } else if (type === CellType.FORMULA && c.data.result_type === 'date') {
+        dateColumns.push(c);
       } else if (type === CellType.SINGLE_SELECT) {
         colorColumns.push(c);
       }

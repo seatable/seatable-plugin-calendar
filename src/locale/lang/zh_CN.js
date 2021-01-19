@@ -5,10 +5,9 @@ const zh_CN = {
   "Select_date_column": "选择日期列",
   "Select_an_end_date_column": "选择结束日期列",
   "Select_color_column": "选择颜色列",
-  "Start_Date": "开始日期",
-  "End_Date_Optional": "结束日期 (可选)",
-  "Color_From": "颜色来自",
-  "Calendar_Select_Description": "提示: 您要在此日历视图中使用哪个字段？您的记录将基于此字段的日期放到日历上。",
+  "Start_Date": "开始日期字段",
+  "End_Date_Optional": "结束日期字段 (可选)",
+  "Color_From": "颜色字段",
   "Using_xxx_column": "使用 “{columnName}” 列",
   "Year": "年",
   "Month": "月",
@@ -49,6 +48,7 @@ const zh_CN = {
   "Settings": "设置",
   "Table": "表格",
   "View": "视图",
+  "Title": "标题字段",
   "No_options": "没有选项"
 };
 

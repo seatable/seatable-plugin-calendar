@@ -8,7 +8,6 @@ const fr = {
   "Start_Date": "Date de début",
   "End_Date_Optional": "Date de fin (facultatif)",
   "Color_From": "Couleur",
-  "Calendar_Select_Description": "Note : Quelle colonne date souhaitez-vous utiliser pour la vue du calendrier ? Le calendrier affiche les enregistrements basées sur les données de cette colonne.",
   "Using_xxx_column": "Utilisant colonne \"{columnName}\"",
   "Year": "An",
   "Month": "Mois",
@@ -49,6 +48,7 @@ const fr = {
   "Settings": "Paramètres",
   "Table": "Tableau",
   "View": "Vue",
+  "Title": "",
   "No_options": "Il n'y a pas d'options."
 };
 

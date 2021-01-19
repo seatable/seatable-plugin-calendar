@@ -65,27 +65,40 @@ class ReactBigCalendar extends React.Component {
     this.setState({selectedView: view});
   }
 
+  getTitleColumn = (columnName) => {
+    const { columns, CellType } = this.props;
+    const titleColumnTypes = [
+      CellType.TEXT, CellType.SINGLE_SELECT, CellType.FORMULA,
+      CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER];
+    if (!Array.isArray(columns)) return null;
+    if (columnName) {
+      return columns.find(c => c.name === columnName) || null;
+    }
+    return columns.find(c => titleColumnTypes.indexOf(c.type) != -1) || null;
+  }
+
   getDateColumn = (columnName) => {
     const { columns, CellType } = this.props;
     if (!Array.isArray(columns)) return null;
     if (!columnName) {
-      return columns.find(c => c.type === CellType.DATE) || null;
+      return columns.find(c => {
+        return c.type === CellType.DATE ||
+          (c.type === CellType.FORMULA && c.data.result_type === 'date');
+      }) || null;
     }
     return columns.find(c => c.name === columnName) || null;
   }
 
-  getLabelColumn = () => {
-    const { setting, columns, CellType } = this.props;
-    const { settings = {} } = setting;
-    const labelColumnName = settings[SETTING_KEY.COLUMN_COLOR];
+  getLabelColumn = (columnName) => {
+    const { columns, CellType } = this.props;
     if (!Array.isArray(columns)) return null;
-    if (labelColumnName) {
-      return columns.find(c => c.name === labelColumnName) || null;
+    if (columnName) {
+      return columns.find(c => c.name === columnName) || null;
     }
     return columns.find(c => c.type === CellType.SINGLE_SELECT) || null;
   }
 
-  getEvents = (startDateColumn, endDateColumn, labelColumn) => {
+  getEvents = (titleColumn, startDateColumn, endDateColumn, labelColumn) => {
     let { activeTable, rows, getRowById } = this.props;
     let events = [];
     if (!startDateColumn) {
@@ -93,17 +106,18 @@ class ReactBigCalendar extends React.Component {
     }
     rows.forEach((row) => {
       const formattedRow = getRowById(activeTable, row._id);
-      const event = this.getEvent(row, formattedRow, startDateColumn, endDateColumn, labelColumn);
+      const event = this.getEvent(row, formattedRow, titleColumn, startDateColumn, endDateColumn, labelColumn);
       events.push(event);
     });
     return events;
   }
 
-  getEvent = (rawRow, row, startDateColumn, endDateColumn, labelColumn) => {
+  getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, labelColumn) => {
     const { optionColors, highlightColors } = this.props;
+    const { key: titleColumnKey, name: titleColumnName, type: titleColumnType } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
-    const title = this.getRecordName(row);
+    const title = rawRow[titleColumnName];
     const date = startDateColumnType == 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
     const endDate = endDateColumnType == 'formula' ? rawRow[endDateColumnName] : row[endDateColumnKey];
     let bgColor, textColor;
@@ -120,10 +134,6 @@ class ReactBigCalendar extends React.Component {
     }
     const highlightColor = highlightColors[bgColor];
     return new TableEvent({row, date, endDate, title, bgColor, highlightColor, textColor});
-  }
-
-  getRecordName = (row) => {
-    return row['0000'] || intl.get('Unnamed_record');
   }
 
   onRowExpand = (row) => {
@@ -166,12 +176,15 @@ class ReactBigCalendar extends React.Component {
   render() {
     let { columns, setting } = this.props;
     const { settings = {} } = setting;
+    const titleColumnName = settings[SETTING_KEY.COLUMN_TITLE];
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
+    const colorColumnName = settings[SETTING_KEY.COLUMN_COLOR];
+    let titleColumn = this.getTitleColumn(titleColumnName);
     let startDateColumn = this.getDateColumn(startDateColumnName);
     let endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
-    let labelColumn = this.getLabelColumn();
-    let events = this.getEvents(startDateColumn, endDateColumn, labelColumn);
+    let labelColumn = this.getLabelColumn(colorColumnName);
+    let events = this.getEvents(titleColumn, startDateColumn, endDateColumn, labelColumn);
     return (
       <React.Fragment>
         <DragAndDropCalendar

@@ -5,10 +5,9 @@ const en = {
   "Select_date_column": "Select date column",
   "Select_an_end_date_column": "Select an end date column",
   "Select_color_column": "Select color column",
-  "Start_Date": "Start Date",
-  "End_Date_Optional": "End Date (Optional)",
-  "Color_From": "Color From",
-  "Calendar_Select_Description": "Tip: Which field do you want to use in this calendar view? Your record will be placed on the calendar based on the date of this field.",
+  "Start_Date": "Start date field",
+  "End_Date_Optional": "End date field (optional)",
+  "Color_From": "Color field",
   "Using_xxx_column": "Using \"{columnName}\" column",
   "Year": "Year",
   "Month": "Month",
@@ -49,6 +48,7 @@ const en = {
   "Settings": "Settings",
   "Table": "Table",
   "View": "View",
+  "Title": "Title field",
   "No_options": "No options"
 };
 

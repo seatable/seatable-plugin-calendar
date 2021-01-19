@@ -8,7 +8,6 @@ const de = {
   "Start_Date": "Startdatum",
   "End_Date_Optional": "Enddatum (optional)",
   "Color_From": "Farbe",
-  "Calendar_Select_Description": "Hinweis: Welche Datumsspalte wollen Sie für die Kalenderansicht verwenden? Im Kalender werden die Tabelleneinträge basierend auf den Daten in dieser Spalte angezeigt.",
   "Using_xxx_column": "Spalte \"{columnName}\" verwenden",
   "Year": "Jahr",
   "Month": "Monat",
@@ -48,6 +47,7 @@ const de = {
 
   "Settings": "Einstellungen",
   "Table": "Tabelle",
+  "Title": "",
   "View": "Ansicht",
   "No_options": "Keine Optionen"
 };

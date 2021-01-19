@@ -33,7 +33,12 @@ class ViewSetting extends React.Component {
 
   getSelectorColumns = () => {
     const { columns, CellType } = this.props;
-    let dateColumns = [], colorColumns = [];
+    let dateColumns = [],
+        colorColumns = [],
+        titleColumns = [];
+    const titleColumnTypes = [
+      CellType.TEXT, CellType.SINGLE_SELECT, CellType.FORMULA,
+      CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER];
     columns && columns.forEach((c) => {
       const { type } = c;
       if (type === CellType.DATE) {
@@ -43,8 +48,11 @@ class ViewSetting extends React.Component {
       } else if (type === CellType.SINGLE_SELECT) {
         colorColumns.push(c);
       }
+      if (titleColumnTypes.indexOf(type) != -1) {
+        titleColumns.push(c);
+      }
     });
-    return { dateColumns, colorColumns };
+    return { dateColumns, colorColumns, titleColumns };
   }
 
   renderSelector = (source, settingKey, valueKey, labelKey) => {
@@ -55,7 +63,10 @@ class ViewSetting extends React.Component {
       return {value, label, setting_key: settingKey};
     });
     let selectedOption = options.find(item => item.value === settings[settingKey]);
-    if (!selectedOption && (settingKey === SETTING_KEY.TABLE_NAME || settingKey === SETTING_KEY.VIEW_NAME)) {
+    if (!selectedOption && (
+      settingKey === SETTING_KEY.TABLE_NAME ||
+      settingKey === SETTING_KEY.VIEW_NAME ||
+      settingKey === SETTING_KEY.COLUMN_TITLE)) {
       selectedOption = options[0];
     }
     return <PluginSelect
@@ -67,7 +78,7 @@ class ViewSetting extends React.Component {
 
   render() {
     const { tables, views } = this.props;
-    const { dateColumns, colorColumns } = this.getSelectorColumns();
+    const { dateColumns, colorColumns, titleColumns } = this.getSelectorColumns();
 
     return (
       <div className="plugin-view-setting position-absolute d-flex flex-column" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
@@ -86,6 +97,10 @@ class ViewSetting extends React.Component {
             <div className="setting-item view-setting">
               <div className="title">{intl.get('View')}</div>
               {this.renderSelector(views, SETTING_KEY.VIEW_NAME, 'name', 'name')}
+            </div>
+            <div className="setting-item view-setting">
+              <div className="title">{intl.get('Title')}</div>
+              {this.renderSelector(titleColumns, SETTING_KEY.COLUMN_TITLE, 'name', 'name')}
             </div>
             <div className="setting-item">
               <div className="title">{intl.get('Start_Date')}</div>

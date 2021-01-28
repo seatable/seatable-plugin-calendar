@@ -34,8 +34,8 @@ class ViewSetting extends React.Component {
   getSelectorColumns = () => {
     const { columns, CellType } = this.props;
     let dateColumns = [],
-        colorColumns = [],
-        titleColumns = [];
+      colorColumns = [],
+      titleColumns = [];
     const titleColumnTypes = [
       CellType.TEXT, CellType.SINGLE_SELECT, CellType.FORMULA,
       CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER];
@@ -48,7 +48,7 @@ class ViewSetting extends React.Component {
       } else if (type === CellType.SINGLE_SELECT) {
         colorColumns.push(c);
       }
-      if (titleColumnTypes.indexOf(type) != -1) {
+      if (titleColumnTypes.indexOf(type) !== -1) {
         titleColumns.push(c);
       }
     });

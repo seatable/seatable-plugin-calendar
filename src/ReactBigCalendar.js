@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import intl from 'react-intl-universal';
 import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/moment';
 import { getDtableUuid } from './utils/common';
@@ -37,11 +36,16 @@ class ReactBigCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedView: this.getSelectedView()
+      selectedView: this.getSelectedView(),
+      events: this.getEvents(props),
     };
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.rows !== this.props.rows) {
+      const newEvents = this.getEvents(this.props);
+      this.setState({events: newEvents});
+    }
     if (this.props.selectedViewIdx !== prevProps.selectedViewIdx) {
       this.setState({selectedView: this.getSelectedView()});
     }
@@ -74,7 +78,7 @@ class ReactBigCalendar extends React.Component {
     if (columnName) {
       return columns.find(c => c.name === columnName) || null;
     }
-    return columns.find(c => titleColumnTypes.indexOf(c.type) != -1) || null;
+    return columns.find(c => titleColumnTypes.indexOf(c.type) !== -1) || null;
   }
 
   getDateColumn = (columnName) => {
@@ -98,8 +102,17 @@ class ReactBigCalendar extends React.Component {
     return columns.find(c => c.type === CellType.SINGLE_SELECT) || null;
   }
 
-  getEvents = (titleColumn, startDateColumn, endDateColumn, labelColumn) => {
-    let { activeTable, rows, getRowById } = this.props;
+  getEvents = (props) => {
+    let { activeTable, rows, getRowById, setting } = props;
+    const { settings = {} } = setting;
+    const titleColumnName = settings[SETTING_KEY.COLUMN_TITLE];
+    const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
+    const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
+    const colorColumnName = settings[SETTING_KEY.COLUMN_COLOR];
+    let titleColumn = this.getTitleColumn(titleColumnName);
+    let startDateColumn = this.getDateColumn(startDateColumnName);
+    let endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
+    let labelColumn = this.getLabelColumn(colorColumnName);
     let events = [];
     if (!startDateColumn) {
       return [];
@@ -114,12 +127,12 @@ class ReactBigCalendar extends React.Component {
 
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, labelColumn) => {
     const { optionColors, highlightColors } = this.props;
-    const { key: titleColumnKey, name: titleColumnName, type: titleColumnType } = titleColumn || {};
+    const { name: titleColumnName } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
     const title = rawRow[titleColumnName];
-    const date = startDateColumnType == 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
-    const endDate = endDateColumnType == 'formula' ? rawRow[endDateColumnName] : row[endDateColumnKey];
+    const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
+    const endDate = endDateColumnType === 'formula' ? rawRow[endDateColumnName] : row[endDateColumnKey];
     let bgColor, textColor;
     if (labelColumn) {
       const { key: colorColumnKey, data } = labelColumn;
@@ -157,7 +170,7 @@ class ReactBigCalendar extends React.Component {
     if (startDateColumn) {
       const { type, data = {} } = startDateColumn; // `data = {}`: to be compatible with old data
       const { format = 'YYYY-MM-DD' } = data;
-      if (type == 'formula') {
+      if (type === 'formula') {
         return;
       }
       updatedData[startDateColumn.name] = moment(start).format(format);
@@ -165,7 +178,7 @@ class ReactBigCalendar extends React.Component {
     if (endDateColumn) {
       const { type, data = {} } = endDateColumn;
       const { format = 'YYYY-MM-DD' } = data;
-      if (type == 'formula') {
+      if (type === 'formula') {
         return;
       }
       updatedData[endDateColumn.name] = moment(end).format(format);
@@ -175,35 +188,29 @@ class ReactBigCalendar extends React.Component {
 
   render() {
     let { columns, setting } = this.props;
+    const { events } = this.state;
     const { settings = {} } = setting;
-    const titleColumnName = settings[SETTING_KEY.COLUMN_TITLE];
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
-    const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
     const colorColumnName = settings[SETTING_KEY.COLUMN_COLOR];
-    let titleColumn = this.getTitleColumn(titleColumnName);
     let startDateColumn = this.getDateColumn(startDateColumnName);
-    let endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
     let labelColumn = this.getLabelColumn(colorColumnName);
-    let events = this.getEvents(titleColumn, startDateColumn, endDateColumn, labelColumn);
     return (
-      <React.Fragment>
-        <DragAndDropCalendar
-          columns={columns}
-          startDateColumn={startDateColumn}
-          labelColumn={labelColumn}
-          localizer={globalizeLocalizer}
-          events={events}
-          views={calendarViews}
-          view={this.state.selectedView}
-          onSelectView={this.onSelectView}
-          defaultDate={new Date()}
-          onRowExpand={this.onRowExpand}
-          onInsertRow={this.onInsertRow}
-          hideViewSettingPanel={this.props.hideViewSettingPanel}
-          selectable={true}
-          onEventDrop={this.moveEvent}
-        />
-      </React.Fragment>
+      <DragAndDropCalendar
+        columns={columns}
+        startDateColumn={startDateColumn}
+        labelColumn={labelColumn}
+        localizer={globalizeLocalizer}
+        events={events}
+        views={calendarViews}
+        view={this.state.selectedView}
+        onSelectView={this.onSelectView}
+        defaultDate={new Date()}
+        onRowExpand={this.onRowExpand}
+        onInsertRow={this.onInsertRow}
+        hideViewSettingPanel={this.props.hideViewSettingPanel}
+        selectable={true}
+        onEventDrop={this.moveEvent}
+      />
     );
   }
 }

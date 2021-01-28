@@ -2,11 +2,11 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import moment from 'moment';
 import getPosition from 'dom-helpers/position';
 import { getDtableLang, getDtablePermission } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';
-import { inRange } from '../../utils/eventLevels';
 import { getFestival } from '../../utils/festival';
 import {
   getInitialState,
@@ -25,9 +25,8 @@ import Popup from '../popup/Popup';
 import DateContentRow from '../rows/DateContentRow';
 import Header from '../header/Header';
 import DateHeader from '../header/DateHeader';
+import { sortEvents } from '../../utils/eventLevels';
 
-let eventsForWeek = (evts, start, end, accessors) =>
-  evts.filter(e => inRange(e, start, end, accessors));
 
 class MonthView extends React.Component {
   constructor(...args) {
@@ -39,7 +38,8 @@ class MonthView extends React.Component {
       needLimitMeasure: false,
       popup: false,
       hoverDate: null,
-      hoverDateCellPosition: {}
+      hoverDateCellPosition: {},
+      weekEventsMap: this.getWeekEventsMap(this.props.events)
     };
     this.rbcDateCells = {};
     this.lang = getDtableLang();
@@ -47,6 +47,32 @@ class MonthView extends React.Component {
     this.isTableReadOnly = getDtablePermission() === 'r';
     this.isScrolling = false;
     this.festivals = {};
+  }
+
+  getWeekEventsMap = (events) => {
+    let weekEventsMap = {};
+    events.forEach((event) => {
+      const { start, end } = event;
+      const m_end = moment(end);
+      let m_eventWeekStart = moment(start).startOf('week');
+      let m_eventWeekEnd = moment(start).endOf('week');
+      this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
+      while(m_end.isAfter(m_eventWeekEnd)) {
+        m_eventWeekStart.add(7, 'd');
+        m_eventWeekEnd.add(7, 'd');
+        this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
+      }
+    });
+    return weekEventsMap;
+  }
+
+  updateWeekEvents = (weekEventsMap, m_eventWeekStart, event) => {
+    const formatEventWeekStart = m_eventWeekStart.format('YYYY-MM-DD');
+    if (weekEventsMap[formatEventWeekStart]) {
+      weekEventsMap[formatEventWeekStart].push(event);
+    } else {
+      weekEventsMap[formatEventWeekStart] = [event];
+    }
   }
 
   componentDidMount() {
@@ -62,6 +88,10 @@ class MonthView extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.events !== this.props.events) {
+      const newWeekEventsMap = this.getWeekEventsMap(this.props.events);
+      this.setState({weekEventsMap: newWeekEventsMap});
+    }
     if (prevProps.date !== this.props.date && this.props.changeDateByNavicate) {
       this.isScrolling = false;
       let visibleStartIndex = OVERSCAN_ROWS + OFFSET_ROWS;
@@ -121,8 +151,8 @@ class MonthView extends React.Component {
 
   handleShowMore = (events, date, cell, slot, target) => {
     //cancel any pending selections so only the event click goes through.
-    const { containerPaddingTop, calendarHeaderHeight, popup } = this.props;
-    if (!popup) {
+    const { containerPaddingTop, calendarHeaderHeight } = this.props;
+    if (!this.state.popup) {
       this.clearSelection();
       let position = getPosition(cell, findDOMNode(this));
       let { top } = position;
@@ -173,23 +203,23 @@ class MonthView extends React.Component {
   }
 
   renderWeek = (weekStartDate, weekIdx) => {
-    let { events, components, selectable, getNow, selected, date, localizer, longPressThreshold,
+    let { components, selectable, getNow, selected, date, localizer, longPressThreshold,
       accessors, getters } = this.props;
-    const { needLimitMeasure } = this.state;
+    const { needLimitMeasure, weekEventsMap } = this.state;
+    const formatWeekStartDate = moment(weekStartDate).format('YYYY-MM-DD');
     let weekDates = dates.getWeekDates(weekStartDate);
-    events = eventsForWeek(events, weekDates[0], weekDates[weekDates.length - 1], accessors);
-    // events = events.sort((a, b) => sortEvents(a, b, accessors)); // can be deleted after confirmed
-    events = events.slice();
+    let weekEvents = weekEventsMap[formatWeekStartDate] || [];
+
     return (
       <DateContentRow
-        key={weekIdx}
+        key={formatWeekStartDate}
         ref={weekIdx === 0 ? this.slotRowRef : undefined}
         container={this.getContainer}
         className='rbc-month-row'
         getNow={getNow}
         date={date}
         range={weekDates}
-        events={events}
+        events={weekEvents}
         maxRows={4}
         selected={selected}
         selectable={selectable}

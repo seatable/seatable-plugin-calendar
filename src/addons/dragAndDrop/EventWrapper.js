@@ -68,7 +68,7 @@ class EventWrapper extends React.Component {
   }
 
   render() {
-    const { event, type, continuesPrior, continuesAfter } = this.props;
+    const { event } = this.props; // { event, type, continuesPrior, continuesAfter }
 
     let { children } = this.props;
 

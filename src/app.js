@@ -172,7 +172,9 @@ class App extends React.Component {
   }
 
   hideViewSettingPanel = () => {
-    this.setState({isViewSettingPanelOpen: false});
+    if (this.state.isViewSettingPanelOpen) {
+      this.setState({isViewSettingPanelOpen: false});
+    }
   }
 
   renderBtnGroups = () => {

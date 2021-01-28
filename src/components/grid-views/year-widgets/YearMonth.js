@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Header from '../../header/Header';
 import * as dates from '../../../utils/dates';
 import YearDay from './YearDay';
+import moment from 'moment';
 
 class YearMonth extends React.Component {
 
@@ -40,27 +41,30 @@ class YearMonth extends React.Component {
   }
 
   renderDay = (week, weekIdx) => {
-    let { events, monthDate } = this.props;
-
+    let { monthDate, dayEventsMap } = this.props;
     return (
       <div className="rbc-year-day-container" key={`rbc-year-day-container-${weekIdx}`}>
         {week.map((day, i) => {
-          return <YearDay
-            key={`rbc-year-day-${weekIdx}-${i}`}
-            day={day}
-            events={events}
-            monthDate={monthDate}
-            range={week}
-            {...this.props}
-          />;
+          const formatDate = moment(day).format('YYYY-MM-DD');
+          const dayEvents = dayEventsMap[formatDate] || [];
+          return (
+            <YearDay
+              key={`rbc-year-day-${weekIdx}-${i}`}
+              day={day}
+              monthDate={monthDate}
+              range={week}
+              dayEvents={dayEvents}
+              {...this.props}
+            />
+          );
         })}
       </div>
     );
-  };
+  }
 
   getContainer = () => {
     return findDOMNode(this);
-  };
+  }
 
   render() {
     let { weeks } = this.props;
@@ -80,7 +84,7 @@ class YearMonth extends React.Component {
 YearMonth.propTypes = {
   weeks: PropTypes.array,
   monthDate: PropTypes.object,
-  events: PropTypes.array.isRequired,
+  dayEventsMap: PropTypes.object.isRequired,
   components: PropTypes.object.isRequired,
   localizer: PropTypes.object.isRequired,
 };

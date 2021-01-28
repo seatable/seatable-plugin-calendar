@@ -27,7 +27,6 @@ import Header from '../header/Header';
 import DateHeader from '../header/DateHeader';
 import { sortEvents } from '../../utils/eventLevels';
 
-
 class MonthView extends React.Component {
   constructor(...args) {
     super(...args);
@@ -39,7 +38,7 @@ class MonthView extends React.Component {
       popup: false,
       hoverDate: null,
       hoverDateCellPosition: {},
-      weekEventsMap: this.getWeekEventsMap(this.props.events)
+      weekEventsMap: this.getWeekEventsMap(this.props.events, this.props.accessors)
     };
     this.rbcDateCells = {};
     this.lang = getDtableLang();
@@ -49,20 +48,21 @@ class MonthView extends React.Component {
     this.festivals = {};
   }
 
-  getWeekEventsMap = (events) => {
+  getWeekEventsMap = (events, accessors) => {
     let weekEventsMap = {};
     events.forEach((event) => {
       const { start, end } = event;
       const m_end = moment(end);
-      let m_eventWeekStart = moment(start).startOf('week');
-      let m_eventWeekEnd = moment(start).endOf('week');
+      let m_eventWeekStart = moment(start).startOf(DATE_UNIT.WEEK);
+      let m_eventWeekEnd = moment(start).endOf(DATE_UNIT.WEEK);
       this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       while(m_end.isAfter(m_eventWeekEnd)) {
-        m_eventWeekStart.add(7, 'd');
-        m_eventWeekEnd.add(7, 'd');
+        m_eventWeekStart.add(7, DATE_UNIT.DAY);
+        m_eventWeekEnd.add(7, DATE_UNIT.DAY);
         this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       }
     });
+    this.sortWeeksEvents(weekEventsMap, accessors);
     return weekEventsMap;
   }
 
@@ -73,6 +73,13 @@ class MonthView extends React.Component {
     } else {
       weekEventsMap[formatEventWeekStart] = [event];
     }
+  }
+
+  sortWeeksEvents = (weekEventsMap, accessors) => {
+    Object.keys(weekEventsMap).forEach((weekStart) => {
+      let events = weekEventsMap[weekStart];
+      weekEventsMap[weekStart].events = events.sort((prevEvent, nextEvent) => sortEvents(prevEvent, nextEvent, accessors))
+    });
   }
 
   componentDidMount() {
@@ -89,7 +96,7 @@ class MonthView extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.events !== this.props.events) {
-      const newWeekEventsMap = this.getWeekEventsMap(this.props.events);
+      const newWeekEventsMap = this.getWeekEventsMap(this.props.events, this.props.accessors);
       this.setState({weekEventsMap: newWeekEventsMap});
     }
     if (prevProps.date !== this.props.date && this.props.changeDateByNavicate) {

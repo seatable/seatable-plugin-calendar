@@ -6,7 +6,8 @@ import YearMonth from './year-widgets/YearMonth';
 import { chunk } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { navigate } from '../../constants';
-import { MONTHS } from '../../constants/date';
+import { DATE_UNIT, MONTHS } from '../../constants/date';
+import moment from 'moment';
 
 class YearView extends React.Component {
 
@@ -14,8 +15,28 @@ class YearView extends React.Component {
     super(props);
     this.state = {
       scroll: {scrollLeft: 0, scrollTop: 0},
+      dayEventsMap: this.getDayEventsMap(props.events),
     };
     this.rbcYearViewSize = {};
+  }
+
+  getDayEventsMap = (events) => {
+    let dayEventsMap = {};
+    events.forEach((event) => {
+      const { start, end } = event;
+      let m_start = moment(start);
+      let m_end = moment(end);
+      while(m_end.isSameOrAfter(m_start)) {
+        let formattedStart = moment(m_start).format('YYYY-MM-DD');
+        if (dayEventsMap[formattedStart]) {
+          dayEventsMap[formattedStart].push(event);
+        } else {
+          dayEventsMap[formattedStart] = [event];
+        }
+        m_start.add(1, DATE_UNIT.DAY);
+      }
+    });
+    return dayEventsMap;
   }
 
   onYearViewScroll = (event) => {
@@ -28,8 +49,16 @@ class YearView extends React.Component {
     this.rbcYearViewSize = {height: offsetHeight, width: offsetWidth};
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.events !== this.props.events) {
+      const newDayEventsMap = this.getDayEventsMap(this.props.events);
+      this.setState({dayEventsMap: newDayEventsMap});
+    }
+  }
+
   render() {
     let { date: todayDate, localizer, className } = this.props;
+    const { scroll, dayEventsMap } = this.state;
 
     return (
       <div className={classnames('rbc-year-view', className)} onScroll={this.onYearViewScroll} ref={ref => this.rbcYearView = ref} >
@@ -42,7 +71,8 @@ class YearView extends React.Component {
             <YearMonth
               {...this.props}
               rbcYearViewSize={this.rbcYearViewSize}
-              rbcYearViewScroll={this.state.scroll}
+              rbcYearViewScroll={scroll}
+              dayEventsMap={dayEventsMap}
               weeks={weeks}
               monthDate={monthDate}
             />

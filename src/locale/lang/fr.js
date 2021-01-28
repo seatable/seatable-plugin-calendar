@@ -1,13 +1,13 @@
 const fr = {
-  "Calendar": "Calendrier",
+  "Calendar": "Calendar",
   "Submit": "Soumettre",
   "Cancel": "Annuler",
   "Select_date_column": "Sélectionner la colonne date",
   "Select_an_end_date_column": "Sélectionner la colonne avec la date de fin",
   "Select_color_column": "Sélectionner la colonne couleur",
-  "Start_Date": "Date de début",
-  "End_Date_Optional": "Date de fin (facultatif)",
-  "Color_From": "Couleur",
+  "Start_Date": "Start date field",
+  "End_Date_Optional": "End date field (optional)",
+  "Color_From": "Color field",
   "Using_xxx_column": "Utilisant colonne \"{columnName}\"",
   "Year": "An",
   "Month": "Mois",
@@ -38,17 +38,15 @@ const fr = {
   "No_date_field_to_place_records_on_the_calendar": "Aucune information de date disponible pour afficher les entrées dans le calendrier.",
   "There_are_no_records": "Il n'y a pas d'enregistrements.",
   "Today": "Aujourd'hui",
-
   "New_View": "Nouvelle vue",
   "Rename_View": "Renommer la vue",
   "Delete_View": "Supprimmer la vue",
   "Name": "Nom",
   "Name_is_required": "Le nom est nécessaire.",
-
   "Settings": "Paramètres",
   "Table": "Tableau",
   "View": "Vue",
-  "Title": "",
+  "Title": "Title field",
   "No_options": "Il n'y a pas d'options."
 };
 

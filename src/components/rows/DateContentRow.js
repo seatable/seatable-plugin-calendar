@@ -10,7 +10,8 @@ import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import BackgroundCells from '../cells/BackgroundCells';
 
-class DateContentRow extends React.Component {
+class DateContentRow extends React.PureComponent {
+
   constructor(...args) {
     super(...args);
     this.slotMetrics = DateSlotMetrics.getSlotMetrics();

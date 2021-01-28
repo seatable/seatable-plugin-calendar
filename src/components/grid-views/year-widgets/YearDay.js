@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import * as dates from '../../../utils/dates';
-import { DATE_UNIT } from '../../../constants/date';
 import Popup from '../../popup/Popup';
 
 class YearDay extends React.Component {
@@ -23,14 +22,6 @@ class YearDay extends React.Component {
     this.position = {left: offsetLeft + rbcYearMonthLeft + 34, top: offsetTop + rbcYearTop};
   }
 
-  getDayEvents = () => {
-    let { day, events, accessors } = this.props;
-    return events.filter(event => {
-      return event.start &&
-        dates.inRange(day, accessors.start(event), accessors.end(event), DATE_UNIT.DAY);
-    });
-  }
-
   onEventsToggle = () => {
     this.setState({isShowEvents: !this.state.isShowEvents});
   }
@@ -40,12 +31,11 @@ class YearDay extends React.Component {
   }
 
   render() {
-    let { day, monthDate, localizer, accessors, selected, getters, components, popupOffset, onRowExpand } = this.props;
+    let { day, monthDate, localizer, accessors, selected, getters, components, popupOffset, onRowExpand, dayEvents } = this.props;
     let { isShowEvents } = this.state;
     let isOffRange = dates.month(day) !== dates.month(monthDate);
     let isCurrentDay = dates.eq(day, new Date(), 'day');
     let label = localizer.format(day, 'dateFormat');
-    let dayEvents = this.getDayEvents();
 
     return (
       <div className="rbc-year-day-item" ref={ref => this.rbcYearDayItem = ref}>
@@ -75,7 +65,7 @@ class YearDay extends React.Component {
 
 YearDay.propTypes = {
   day: PropTypes.instanceOf(Date),
-  events: PropTypes.array,
+  dayEvents: PropTypes.array,
   monthDate: PropTypes.instanceOf(Date),
   localizer: PropTypes.object,
   rbcYearViewScroll: PropTypes.object,

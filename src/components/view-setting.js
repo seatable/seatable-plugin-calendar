@@ -19,8 +19,21 @@ const propTypes = {
 
 class ViewSetting extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      settings: props.settings || {},
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.settings !== this.props.settings) {
+      this.setState({settings: nextProps.settings});
+    }
+  }
+
   onModifySettings = (selectedOption) => {
-    let { settings } = this.props;
+    let { settings } = this.state;
     let { setting_key, value } = selectedOption;
     let updated;
     if (setting_key === SETTING_KEY.TABLE_NAME) {
@@ -28,7 +41,14 @@ class ViewSetting extends React.Component {
     } else {
       updated = Object.assign({}, settings, {[setting_key]: value});
     }
-    this.props.onModifyViewSettings(updated);
+    this.setState(({settings: updated}));
+    if (!this.timer) {
+      this.timer = setTimeout(() => {
+        this.props.onModifyViewSettings(updated);
+        clearTimeout(this.timer);
+        this.timer = null;
+      }, 0);
+    }
   };
 
   getSelectorColumns = () => {
@@ -56,7 +76,7 @@ class ViewSetting extends React.Component {
   }
 
   renderSelector = (source, settingKey, valueKey, labelKey) => {
-    let { settings } = this.props;
+    let { settings } = this.state;
     let options = source.map((item) => {
       let value = item[valueKey];
       let label = item[labelKey];

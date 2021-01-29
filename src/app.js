@@ -55,6 +55,8 @@ class App extends React.Component {
       plugin_settings: {},
       selectedViewIdx: 0,
       isViewSettingPanelOpen: false,
+      rows: [],
+
     };
     this.dtable = new DTable();
   }
@@ -112,13 +114,28 @@ class App extends React.Component {
       isViewSettingPanelOpen = !this.isValidViewSettings(views[selectedViewIdx].settings);
       showDialog = true;
     }
+
+    this.cellType = this.dtable.getCellType();
+    this.optionColors = this.dtable.getOptionColors();
+    this.highlightColors = this.dtable.getHighlightColors();
+    const selectedPluginView = views[selectedViewIdx];
+    const rows = selectedPluginView ? this.getPluginViewRows(selectedPluginView.settings) : [];
     this.setState({
       isLoading: false,
       showDialog,
       plugin_settings,
       selectedViewIdx,
-      isViewSettingPanelOpen
+      isViewSettingPanelOpen,
+      rows,
     });
+  }
+
+  getPluginViewRows = (settings) => {
+    const tables = this.dtable.getTables();
+    const selectedTable = this.getSelectedTable(tables, settings);
+    const tableViews = this.dtable.getViews(selectedTable);
+    const selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
+    return this.getRows(selectedTable, selectedTableView);
   }
 
   getSelectedViewIds = (key) => {
@@ -248,8 +265,9 @@ class App extends React.Component {
     let viewIdx = updatedViews.findIndex(v => v._id === viewId);
     if (viewIdx > -1) {
       let { settings } = updatedViews[viewIdx];
-      let isViewSettingPanelOpen = !this.isValidViewSettings(settings);
-      this.setState({selectedViewIdx: viewIdx, isViewSettingPanelOpen});
+      const isViewSettingPanelOpen = !this.isValidViewSettings(settings);
+      const rows = this.getPluginViewRows(settings);
+      this.setState({selectedViewIdx: viewIdx, isViewSettingPanelOpen, rows});
       this.storeSelectedViewId(viewId);
     }
   }
@@ -305,7 +323,7 @@ class App extends React.Component {
 
   render() {
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
-      isViewSettingPanelOpen
+      isViewSettingPanelOpen, rows,
     } = this.state;
     if (isLoading || !showDialog) {
       return '';
@@ -320,10 +338,6 @@ class App extends React.Component {
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
 
     let columns = this.dtable.getColumns(selectedTable);
-    let cellType = this.dtable.getCellType();
-    let optionColors = this.dtable.getOptionColors();
-    let highlightColors = this.dtable.getHighlightColors();
-    let rows = this.getRows(selectedTable, selectedTableView);
     let currentSetting = this.getCurrentSettings();
     return (
       <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={CALENDAR_DIALOG_MODAL}>
@@ -351,10 +365,10 @@ class App extends React.Component {
             rows={rows}
             getRowById={this.dtable.getRowById}
             modifyRow={this.modifyRow}
-            CellType={cellType}
             setting={currentSetting}
-            optionColors={optionColors}
-            highlightColors={highlightColors}
+            CellType={this.cellType}
+            optionColors={this.optionColors}
+            highlightColors={this.highlightColors}
             onRowExpand={this.onRowExpand}
             onInsertRow={this.onInsertRow}
             hideViewSettingPanel={this.hideViewSettingPanel}
@@ -365,7 +379,7 @@ class App extends React.Component {
               views={tableViews}
               settings={settings || {}}
               columns={columns}
-              CellType={cellType}
+              CellType={this.cellType}
               onModifyViewSettings={this.onModifyViewSettings}
               toggleViewSettingPanel={this.toggleViewSettingPanel}
             />

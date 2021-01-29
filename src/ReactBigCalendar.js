@@ -120,7 +120,9 @@ class ReactBigCalendar extends React.Component {
     rows.forEach((row) => {
       const formattedRow = getRowById(activeTable, row._id);
       const event = this.getEvent(row, formattedRow, titleColumn, startDateColumn, endDateColumn, labelColumn);
-      events.push(event);
+      if (event) {
+        events.push(event);
+      }
     });
     return events;
   }
@@ -133,6 +135,7 @@ class ReactBigCalendar extends React.Component {
     const title = rawRow[titleColumnName];
     const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
     const endDate = endDateColumnType === 'formula' ? rawRow[endDateColumnName] : row[endDateColumnKey];
+    if (!date) return null; // start date must exist.
     let bgColor, textColor;
     if (labelColumn) {
       const { key: colorColumnKey, data } = labelColumn;

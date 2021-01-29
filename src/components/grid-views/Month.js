@@ -78,7 +78,7 @@ class MonthView extends React.Component {
   sortWeeksEvents = (weekEventsMap, accessors) => {
     Object.keys(weekEventsMap).forEach((weekStart) => {
       let events = weekEventsMap[weekStart];
-      weekEventsMap[weekStart].events = events.sort((prevEvent, nextEvent) => sortEvents(prevEvent, nextEvent, accessors))
+      weekEventsMap[weekStart].events = events.sort((prevEvent, nextEvent) => sortEvents(prevEvent, nextEvent, accessors));
     });
   }
 

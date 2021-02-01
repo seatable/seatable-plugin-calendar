@@ -11,7 +11,7 @@ const LOCALES = {
   'zh-cn': zh_CN,
 };
 
-const LAUGUAGE = 'zh-cn';
+const LANGUAGE = 'zh-cn';
 
-let lang = (window.dtable && window.dtable.lang) ? window.dtable.lang : LAUGUAGE;
+let lang = (window.dtable && window.dtable.lang) ? window.dtable.lang : LANGUAGE;
 intl.init({currentLocale: lang, locales: LOCALES});

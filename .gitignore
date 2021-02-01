@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# local development settings
+/src/setting.local.js
+
 # dependencies
 /node_modules
 /.pnp

@@ -69,7 +69,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-header {
   overflow: hidden;
-  flex: 1 0 0%;
+  flex: 1 0 0;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding: 0 3px;
@@ -316,7 +316,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-event-overlaps {
-  box-shadow: -1px 1px 5px 0px rgba(51, 51, 51, 0.5);
+  box-shadow: -1px 1px 5px 0 rgba(51, 51, 51, 0.5);
 }
 
 .rbc-event-continues-prior {
@@ -394,7 +394,7 @@ button.rbc-input::-moz-focus-inner {
   position: relative;
   flex-direction: column;
   flex: 1 0 0;
-  flex-basis: 0px;
+  flex-basis: 0;
   overflow: hidden;
   height: 126px;
   min-height: 126px;
@@ -468,7 +468,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-day-bg {
-  flex: 1 0 0%;
+  flex: 1 0 0;
 }
 
 .rbc-day-bg + .rbc-day-bg {
@@ -692,7 +692,7 @@ button.rbc-input::-moz-focus-inner {
 .rbc-time-view-resources .rbc-time-header-content {
   min-width: auto;
   flex: 1 0 0;
-  flex-basis: 0px;
+  flex-basis: 0;
 }
 
 .rbc-time-view-resources .rbc-time-header-cell-single-day {
@@ -707,7 +707,7 @@ button.rbc-input::-moz-focus-inner {
 .rbc-time-view-resources .rbc-day-bg {
   width: 140px;
   flex: 1 1 0;
-  flex-basis: 0 px;
+  flex-basis: 0px;
 }
 
 .rbc-time-header-content + .rbc-time-header-content {
@@ -821,7 +821,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-time-content {
   display: flex;
-  flex: 1 0 0%;
+  flex: 1 0 0;
   align-items: flex-start;
   width: 100%;
   border-top: 2px solid #ddd;
@@ -934,7 +934,7 @@ button.rbc-input::-moz-focus-inner {
   position: relative;
   justify-content: space-between;
   flex: 1 0 0;
-  flex-basis: 0px;
+  flex-basis: 0;
 }
 
 .rbc-year-view .rbc-year-day-item {

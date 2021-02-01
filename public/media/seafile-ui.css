@@ -3162,7 +3162,7 @@ input[type="button"].btn-block {
       margin-left: -0.75rem; }
       .card-deck .card {
         display: flex;
-        flex: 1 0 0%;
+        flex: 1 0 0;
         flex-direction: column;
         margin-right: 0.75rem;
         margin-bottom: 0;
@@ -3177,7 +3177,7 @@ input[type="button"].btn-block {
     .card-group {
       flex-flow: row wrap; }
       .card-group > .card {
-        flex: 1 0 0%;
+        flex: 1 0 0;
         margin-bottom: 0; }
         .card-group > .card + .card {
           margin-left: 0;
@@ -10732,11 +10732,11 @@ Icon input
     padding-left: 2em;
     margin: 0.5em 0; }
   .article li p:first-child {
-    margin-top: 0px;
-    margin-bottom: 0px; }
+    margin-top: 0;
+    margin-bottom: 0; }
   .article li.task-list-item p:nth-child(2) {
-    margin-top: 0px;
-    margin-bottom: 0px; }
+    margin-top: 0;
+    margin-bottom: 0; }
   .article li.task-list-item {
     position: relative;
     list-style: none; }

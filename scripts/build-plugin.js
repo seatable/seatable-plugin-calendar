@@ -28,7 +28,7 @@ if (isFileExist(paths.pluginConfigPath, 'icon.png')) {
 }
 
 if (isFileExist(paths.pluginConfigPath, 'card_image.png')) {
-  const cardImagePath = path.join(paths.pluginConfigPath, 'card_image.png'); 
+  const cardImagePath = path.join(paths.pluginConfigPath, 'card_image.png');
   zip.file('task/media/card_image.png', fs.readFileSync(cardImagePath));
 }
 
@@ -47,7 +47,7 @@ let jsonFileContent = Object.assign({}, pluginInfoContent, pluginInfoContentExpa
 
 zip.file('task/info.json', JSON.stringify(jsonFileContent, null, '  '));
 
-zip.generateAsync({type: "nodebuffer"}).then(function(content) { 
+zip.generateAsync({type: "nodebuffer"}).then(function(content) {
   let zip = `${pluginInfoContent.name}-${pluginInfoContent.version}.zip`;
   fs.writeFile(paths.zipPath + '/' + zip, content, function(err) {
     if (err) {
@@ -69,7 +69,7 @@ function isFileExist(overallPath, fileName) {
 
 /**
  * Get the full file path
- * @param  {string} overallPath File parent path 
+ * @param  {string} overallPath File parent path
  */
 function getFullFileName(overallPath) {
   if (!isDirExist(overallPath)) {

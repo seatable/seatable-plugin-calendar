@@ -22,9 +22,7 @@ class RenameViewDialog extends Component {
   handleChange = (event) => {
     let { viewName } = this.state;
     let value = event.target.value;
-    if (value === viewName) {
-      return;
-    } else {
+    if (value !== viewName) {
       this.setState({viewName: value});
     }
   }

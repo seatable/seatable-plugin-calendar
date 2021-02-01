@@ -94,6 +94,5 @@ function getFullFileName(overallPath) {
  */
 function getFileContent (overallPath) {
   // Specifying encoding returns a string, otherwise returns a Buffer
-  let content = fs.readFileSync(overallPath, { encoding: 'utf-8' });
-  return content;
+  return fs.readFileSync(overallPath, {encoding: 'utf-8'});
 }

@@ -10,11 +10,11 @@ const pluginName = files[0];
 
 const generatorLanguage = (lang, content) => {
   return (
-    `const ${lang} = ${content};
+`const ${lang} = ${content};
 
 export default ${lang};`
   );
-};
+}
 
 SUPPORT_LANGUAGES.forEach(lang => {
   // 读出

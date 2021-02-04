@@ -3162,7 +3162,7 @@ input[type="button"].btn-block {
       margin-left: -0.75rem; }
       .card-deck .card {
         display: flex;
-        flex: 1 0 0;
+        flex: 1 0 0%;
         flex-direction: column;
         margin-right: 0.75rem;
         margin-bottom: 0;
@@ -3177,7 +3177,7 @@ input[type="button"].btn-block {
     .card-group {
       flex-flow: row wrap; }
       .card-group > .card {
-        flex: 1 0 0;
+        flex: 1 0 0%;
         margin-bottom: 0; }
         .card-group > .card + .card {
           margin-left: 0;
@@ -4001,7 +4001,7 @@ button.close {
   .bs-popover-top .arrow::before, .bs-popover-auto[x-placement^="top"] .arrow::before {
     bottom: 0;
     border-top-color: #dee3eb; }
-
+  
   .bs-popover-top .arrow::after,
   .bs-popover-auto[x-placement^="top"] .arrow::after {
     bottom: 1px;
@@ -4021,7 +4021,7 @@ button.close {
   .bs-popover-right .arrow::before, .bs-popover-auto[x-placement^="right"] .arrow::before {
     left: 0;
     border-right-color: #dee3eb; }
-
+  
   .bs-popover-right .arrow::after,
   .bs-popover-auto[x-placement^="right"] .arrow::after {
     left: 1px;
@@ -4038,7 +4038,7 @@ button.close {
   .bs-popover-bottom .arrow::before, .bs-popover-auto[x-placement^="bottom"] .arrow::before {
     top: 0;
     border-bottom-color: #dee3eb; }
-
+  
   .bs-popover-bottom .arrow::after,
   .bs-popover-auto[x-placement^="bottom"] .arrow::after {
     top: 1px;
@@ -4067,7 +4067,7 @@ button.close {
   .bs-popover-left .arrow::before, .bs-popover-auto[x-placement^="left"] .arrow::before {
     right: 0;
     border-left-color: #dee3eb; }
-
+  
   .bs-popover-left .arrow::after,
   .bs-popover-auto[x-placement^="left"] .arrow::after {
     right: 1px;
@@ -6961,7 +6961,7 @@ a.text-dark:hover, a.text-dark:focus {
     border: 1px solid #000; }
   .table, .text-wrap table {
     border-collapse: collapse !important; }
-
+    
     .table td,
     .text-wrap table td, .table th, .text-wrap table th {
       background-color: #fff !important; }
@@ -10732,11 +10732,11 @@ Icon input
     padding-left: 2em;
     margin: 0.5em 0; }
   .article li p:first-child {
-    margin-top: 0;
-    margin-bottom: 0; }
+    margin-top: 0px;
+    margin-bottom: 0px; }
   .article li.task-list-item p:nth-child(2) {
-    margin-top: 0;
-    margin-bottom: 0; }
+    margin-top: 0px;
+    margin-bottom: 0px; }
   .article li.task-list-item {
     position: relative;
     list-style: none; }

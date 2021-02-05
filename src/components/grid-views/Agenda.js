@@ -103,9 +103,7 @@ class Agenda extends React.Component {
               dateLabel
             )}
           </td>
-        ) : (
-          false
-        );
+        ) : false;
 
       return (
         <tr

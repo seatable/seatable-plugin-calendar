@@ -84,9 +84,7 @@ class EventEndingRow extends React.Component {
       >
         {`+${count} ${intl.get('more')}`}
       </button>
-    ) : (
-      false
-    );
+    ) : false;
   }
 
   showMore(slot, e) {

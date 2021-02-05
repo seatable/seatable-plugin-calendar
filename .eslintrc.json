@@ -22,7 +22,6 @@
       "warn",
       "always"
     ],
-
     "no-case-declarations": "warn",
     "no-cond-assign": "warn",
     "no-redeclare": "warn",
@@ -30,7 +29,14 @@
     "no-class-assign": "warn",
     "no-unused-vars": "warn",
     "no-irregular-whitespace": "warn",
-    "no-console": "warn",
+    "no-console": "off",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "CallExpression[callee.object.name='console'][callee.property.name!=/^(log|warn|error|info|trace)$/]",
+        "message": "Unexpected property on console object was called"
+      }
+    ],
     "no-useless-escape": "warn",
     "no-trailing-spaces": "warn"
   }

@@ -32,7 +32,7 @@ const propTypes = {
   getRowById: PropTypes.func,
 };
 
-const calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH];
+const calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.WEEK, CALENDAR_VIEWS.DAY, CALENDAR_VIEWS.AGENDA];
 const localizer = momentLocalizer(moment);
 
 class ReactBigCalendar extends React.Component {
@@ -179,6 +179,8 @@ class ReactBigCalendar extends React.Component {
     this.props.onRowExpand(row, this.props.activeTable);
   }
 
+  onSelectEvent = ({row}) => this.onRowExpand(row);
+
   onInsertRow = (rowData) => {
     let { activeTable, activeView, onInsertRow, rows } = this.props;
     let row_id = rows.length > 0 ? rows[rows.length - 1]._id : '';
@@ -235,6 +237,7 @@ class ReactBigCalendar extends React.Component {
         onSelectView={this.onSelectView}
         defaultDate={new Date()}
         onRowExpand={this.onRowExpand}
+        onSelectEvent={this.onSelectEvent}
         onInsertRow={this.onInsertRow}
         hideViewSettingPanel={this.props.hideViewSettingPanel}
         selectable={true}

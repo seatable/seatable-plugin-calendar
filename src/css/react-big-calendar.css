@@ -666,7 +666,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-day-slot .rbc-event {
-  border: 1px solid #265985;
+  border: 0 solid #265985;
   display: flex;
   max-height: 100%;
   min-height: 20px;
@@ -815,6 +815,19 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-time-header > .rbc-row.rbc-row-resource {
   border-bottom: 1px solid #ddd;
+}
+
+.rbc-time-header-cell .rbc-header + .rbc-header {
+  border-left: 1px solid #ddd;
+}
+
+.rbc-time-header-cell .rbc-header button{
+  width: 100%;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: none;
+  outline: 0;
 }
 
 .rbc-time-header-cell-single-day {
@@ -1022,4 +1035,11 @@ button.rbc-input::-moz-focus-inner {
   height: 4px;
   border-radius: 50%;
   background-color: #F25041;
+}
+
+.rbc-agenda-empty {
+  flex-grow: 0.618;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

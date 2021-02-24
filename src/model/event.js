@@ -23,6 +23,8 @@
  *          31A0 = "2021-02-24"
  */
 
+const FIXED_PERIOD_OF_TIME_IN_HOURS = 1;
+
 /**
  * event.allDay mapping of SeaTable TableEvent
  *
@@ -42,6 +44,30 @@ const allDayImplementation = (eventStart, rowDate, defAllDay) => {
     return true;
   }
   return defAllDay;
+};
+
+/**
+ * event.end mapping of SeaTable TableEvent
+ *
+ * given the dates-in-row for start and end are with or w/o minute precision,
+ * when the end is undefined, the same as -or- before the start and the event
+ * is strictly not truly all-day, the events end date is the start date plus
+ * a minimum, fixed period of time (e.g. one hour).
+ *
+ * @see TableEvent.constructor()
+ *
+ * @param {Date|undefined} eventStart
+ * @param {boolean|undefined} eventAllDay
+ * @param {string|undefined} rowDate
+ */
+const endImplementation = (eventStart, eventAllDay, rowDate) => {
+  let end = rowDate ? new Date(rowDate) : eventStart;
+  if ((eventAllDay !== true) && (rowDate === undefined || end <= eventStart)) {
+    end = new Date(+eventStart);
+    const hours = Math.max(1, Math.abs(parseInt(FIXED_PERIOD_OF_TIME_IN_HOURS.toFixed(0), 10)));
+    end.setHours(eventStart.getHours() + hours);
+  }
+  return end;
 };
 
 /**
@@ -74,7 +100,7 @@ export default class TableEvent {
     /* 2/2: React-Big-Calendar event properties */
     this.title = object.title || null;
     this.start = object.date && new Date(object.date);
-    this.end = object.endDate ? new Date(object.endDate) : this.start;
     this.allDay = allDayImplementation(this.start, object.date, this.allDay);
+    this.end = endImplementation(this.start, this.allDay, object.endDate);
   }
 }

@@ -24,6 +24,27 @@
  */
 
 /**
+ * event.allDay mapping of SeaTable TableEvent
+ *
+ * given the date-in-row is without minute precision, when representing
+ * the start date of an event, then the event all-day is true.
+ *
+ * otherwise all-day is the defined-all-day.
+ *
+ * @see TableEvent.constructor()
+ *
+ * @param {Date|undefined} eventStart
+ * @param {string|undefined} rowDate
+ * @param {boolean|undefined} defAllDay
+ */
+const allDayImplementation = (eventStart, rowDate, defAllDay) => {
+  if (eventStart && rowDate && (eventStart.toISOString().slice(0, 10) === rowDate)) {
+    return true;
+  }
+  return defAllDay;
+};
+
+/**
  * TableEvent
  *
  * SeaTable TableEvent properties:
@@ -54,5 +75,6 @@ export default class TableEvent {
     this.title = object.title || null;
     this.start = object.date && new Date(object.date);
     this.end = object.endDate ? new Date(object.endDate) : this.start;
+    this.allDay = allDayImplementation(this.start, object.date, this.allDay);
   }
 }

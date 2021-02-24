@@ -1,12 +1,58 @@
+/**
+ * TableEventRowTypedef
+ *
+ * @typedef  {Object.<string, string|object>|{}} TableEventRowTypedef
+ * @property {string} _id of table row, e.g. "ECh6pHYlTmusfVdbCvfsQg"
+ * @property {array} _participants e.g. []
+ * @property {string} _creator e.g. "bad4755091934d0ea34d5e3c313ef7d9@auth.local"
+ * @property {string} _ctime e.g. "2021-02-15T09:18:31.250+00:00"
+ * @property {string} _last_modifier e.g. "aaac4eb68f294f0ba61bbb764c23c48a@auth.local"
+ * @property {string} _mtime e.g. "2021-02-23T16:04:25.310+00:00"
+ * @property {string|object} 0000 default column (string for the default "Name" column in a just created table)
+ *
+ * dynamic properties: multiple for each other column in the row, examples
+ *          Y316 = "2021-01-01"
+ *          41my = null
+ *          GsGz = "787316"
+ *          04n7 = "text..."
+ *          U41U = Object {text: "abc... .\n\n\n",
+ *                         preview: "abc... . ",
+ *                         images: Array(0),
+ *                         links: Array(0),
+ *                         checklist: Object}
+ *          31A0 = "2021-02-24"
+ */
+
+/**
+ * TableEvent
+ *
+ * SeaTable TableEvent properties:
+ * @property {TableEventRowTypedef|object} row [TABLE DATA] SeaTable row object
+ * @property {string} bgColor [PRESENTATION] HTML/CSS color like "#RRGGBB"
+ * @property {string} highlightColor [PRESENTATION] HTML/CSS color like "#RRGGBB"
+ * @property {string} textColor [PRESENTATION] HTML/CSS color like "#RRGGBB"
+ *
+ * React Big Calendar event properties:
+ * @property {string} title
+ * @property {Date} start
+ * @property {Date} end
+ * @property {boolean|undefined} allDay
+ * @property {any|undefined} resource
+ */
 export default class TableEvent {
 
+  /**
+   * @param {{row: TableEventRowTypedef}|*} object
+   */
   constructor(object = {}) {
+    /* 1/2: SeaTable TableEvent properties */
     this.row = object.row || {};
-    this.title = object.title || null;
-    this.start = object.date && new Date(object.date);
-    this.end = object.endDate ? new Date(object.endDate) : this.start;
     this.bgColor = object.bgColor || null;
     this.highlightColor = object.highlightColor || null;
     this.textColor = object.textColor || null;
+    /* 2/2: React-Big-Calendar event properties */
+    this.title = object.title || null;
+    this.start = object.date && new Date(object.date);
+    this.end = object.endDate ? new Date(object.endDate) : this.start;
   }
 }

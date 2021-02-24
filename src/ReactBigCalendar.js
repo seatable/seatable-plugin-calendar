@@ -175,14 +175,14 @@ class ReactBigCalendar extends React.Component {
       if (type === 'formula') {
         return;
       }
-      updatedData[startDateColumn.name] = moment(start).format('YYYY-MM-DD');
+      updatedData[startDateColumn.name] = moment(start).format('YYYY-MM-DD HH:mm');
     }
     if (endDateColumn) {
       const { type } = endDateColumn;
       if (type === 'formula') {
         return;
       }
-      updatedData[endDateColumn.name] = moment(end).format('YYYY-MM-DD');
+      updatedData[endDateColumn.name] = moment(end).format('YYYY-MM-DD HH:mm');
     }
     modifyRow(activeTable, event.row, updatedData);
   }

@@ -1,0 +1,12 @@
+# plugin-zip (build artefact folder)
+#
+# build output directory for the plugin zip archives
+#
+!/.gitignore
+
+# zips
+/*.zip
+
+# zip backups
+/*.zip~
+/*.zip.~?*~

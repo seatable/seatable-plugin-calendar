@@ -33,7 +33,7 @@ const DEFAULT_PLUGIN_SETTINGS = {
   views: [
     {
       _id: '0000',
-      name: 'Default View',
+      name: `${intl.get('Default_View')}`,
       settings: {}
     }
   ]

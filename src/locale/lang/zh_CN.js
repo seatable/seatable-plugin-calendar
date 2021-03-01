@@ -38,6 +38,7 @@ const zh_CN = {
   'No_date_field_to_place_records_on_the_calendar': '没有用于将记录放置在日历上的日期字段。',
   'There_are_no_records': '没有记录。',
   'Today': '今天',
+  'Default_View': '默认视图',
   'New_View': '新建视图',
   'Rename_View': '重命名视图',
   'Delete_View': '删除视图',

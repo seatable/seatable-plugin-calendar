@@ -48,7 +48,9 @@ const en = {
   'Table': 'Table',
   'View': 'View',
   'Title': 'Title field',
-  'No_options': 'No options'
+  'No_options': 'No options',
+  'Week': 'Week',
+  'Day': 'Day',
 };
 
 export default en;

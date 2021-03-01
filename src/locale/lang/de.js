@@ -47,7 +47,9 @@ const de = {
   'Table': 'Tabelle',
   'View': 'Ansicht',
   'Title': 'Title field',
-  'No_options': 'Keine Optionen'
+  'No_options': 'Keine Optionen',
+  'Week': 'Woche',
+  'Day': 'Tag',
 };
 
 export default de;

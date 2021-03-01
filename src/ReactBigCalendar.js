@@ -28,7 +28,7 @@ const propTypes = {
   getRowById: PropTypes.func,
 };
 
-const calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH];
+const calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.WEEK, CALENDAR_VIEWS.DAY];
 const globalizeLocalizer = momentLocalizer(moment);
 
 class ReactBigCalendar extends React.Component {

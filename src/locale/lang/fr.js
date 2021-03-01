@@ -47,7 +47,9 @@ const fr = {
   'Table': 'Tableau',
   'View': 'Vue',
   'Title': 'Title field',
-  'No_options': 'Il n\'y a pas d\'options.'
+  'No_options': 'Il n\'y a pas d\'options.',
+  'Week': 'Semaine',
+  'Day': 'Jour',
 };
 
 export default fr;

@@ -48,7 +48,9 @@ const zh_CN = {
   'Table': '表格',
   'View': '视图',
   'Title': '标题字段',
-  'No_options': '没有选项'
+  'No_options': '没有选项',
+  'Week': '周',
+  'Day': '日',
 };
 
 export default zh_CN;

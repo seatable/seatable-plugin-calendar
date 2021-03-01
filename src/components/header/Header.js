@@ -3,7 +3,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 
 const Header = ({ label, isShowWeek }) => {
-  return <span>{isShowWeek ? intl.get('Week_xxx', {weekNumber: intl.get(label)}) : intl.get(label)}</span>;
+  const weekNumber = intl.get(label).defaultMessage(label);
+  return <span>{isShowWeek ? intl.get('Week_xxx', {weekNumber: weekNumber}) : weekNumber}</span>;
 };
 
 Header.propTypes = {

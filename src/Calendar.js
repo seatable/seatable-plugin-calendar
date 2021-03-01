@@ -788,7 +788,7 @@ class Calendar extends React.Component {
 
   getView = () => {
     const views = this.getViews();
-    return views[this.props.view];
+    return views[this.props.view] || views[Calendar.defaultProps.view] || views[Object.keys(views)[0]];
   };
 
   getDrilldownView = date => {

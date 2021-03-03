@@ -65,8 +65,11 @@ class App extends React.Component {
     this.initPluginDTableData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({showDialog: nextProps.showDialog});
+  static getDerivedStateFromProps(nextProps, prevState){
+    if (nextProps.showDialog != undefined) {
+      return {showDialog: nextProps.showDialog};
+    }
+    return null;
   }
 
   componentWillUnmount() {

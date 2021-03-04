@@ -141,7 +141,7 @@ class TimeGridHeader extends React.Component {
           className='rbc-label rbc-time-header-gutter'
           style={{ width, minWidth: width, maxWidth: width }}
         >
-          {TimeGutterHeader && <TimeGutterHeader />}
+          {TimeGutterHeader && <TimeGutterHeader {...this.props} />}
         </div>
 
         {resources.map(([id, resource], idx) => (

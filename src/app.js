@@ -326,7 +326,7 @@ class App extends React.Component {
 
     let { views } = plugin_settings;
     let selectedPluginView = views[selectedViewIdx];
-    let { settings } = selectedPluginView || {};
+    let { settings } = selectedPluginView || { settings: {} };
     let tables = this.dtable.getTables();
     let selectedTable = this.getSelectedTable(tables, settings);
     let tableViews = this.dtable.getViews(selectedTable);
@@ -372,7 +372,7 @@ class App extends React.Component {
             <ViewSetting
               tables={tables}
               views={tableViews}
-              settings={settings || {}}
+              settings={settings}
               columns={columns}
               CellType={this.cellType}
               columnIconConfig={this.columnIconConfig}

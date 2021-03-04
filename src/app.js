@@ -65,10 +65,6 @@ class App extends React.Component {
     this.initPluginDTableData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({showDialog: nextProps.showDialog});
-  }
-
   componentWillUnmount() {
     this.unsubscribeLocalDtableChanged();
     this.unsubscribeRemoteDtableChanged();
@@ -99,7 +95,7 @@ class App extends React.Component {
   }
 
   resetData = (init = false) => {
-    let { showDialog, isViewSettingPanelOpen } = this.state;
+    let { isViewSettingPanelOpen } = this.state;
     let plugin_settings = this.dtable.getPluginSettings(PLUGIN_NAME) || {};
     if (!plugin_settings || Object.keys(plugin_settings).length === 0 || !plugin_settings.views) {
       plugin_settings = DEFAULT_PLUGIN_SETTINGS;
@@ -112,7 +108,6 @@ class App extends React.Component {
     selectedViewIdx = selectedViewIdx > 0 ? selectedViewIdx : 0;
     if (init) {
       isViewSettingPanelOpen = !this.isValidViewSettings(views[selectedViewIdx].settings);
-      showDialog = true;
     }
 
     this.cellType = this.dtable.getCellType();
@@ -122,7 +117,6 @@ class App extends React.Component {
     const rows = selectedPluginView ? this.getPluginViewRows(selectedPluginView.settings) : [];
     this.setState({
       isLoading: false,
-      showDialog,
       plugin_settings,
       selectedViewIdx,
       isViewSettingPanelOpen,

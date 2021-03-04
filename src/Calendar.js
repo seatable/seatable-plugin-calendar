@@ -720,14 +720,9 @@ class Calendar extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {
-      context: this.getContext(this.props),
       date: this.props.defaultDate || '',
       changeDateByNavicate: false,
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ context: this.getContext(nextProps) });
   }
 
   getContext({
@@ -901,11 +896,11 @@ class Calendar extends React.Component {
       startDateColumn,
       ...props
     } = this.props;
-    let { date, context } = this.state;
+    let { date } = this.state;
     const current = date || getNow();
     const isToday = dates.isToday(current, view);
     const View = this.getView();
-    const { accessors, components, getters, localizer, viewNames } = context;
+    const { accessors, components, getters, localizer, viewNames } = this.getContext(this.props);
     const CalToolbar = components.toolbar || Toolbar;
     const label = View.title(current, { localizer, length });
     return (

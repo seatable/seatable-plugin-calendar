@@ -26,12 +26,6 @@ class ViewSetting extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.settings !== this.props.settings) {
-      this.setState({settings: nextProps.settings});
-    }
-  }
-
   onModifySettings = (selectedOption) => {
     let { settings } = this.state;
     let { setting_key, value } = selectedOption;

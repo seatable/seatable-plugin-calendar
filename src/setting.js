@@ -37,5 +37,5 @@ if (intl.options && intl.options.locales && intl.options.locales[config.lang]) {
   console.info('[SeaTable Plugin Development] Suggestions: verify "./src/setting.local.js" and/or the locales in "./src/locale"');
 }
 
-/* (5/5) init window.dtable  */
-window.dtable = config;
+/* (5/5) init window.dtablePluginConfig  */
+window.dtablePluginConfig = config;

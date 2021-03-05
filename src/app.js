@@ -74,7 +74,7 @@ class App extends React.Component {
     if (window.app === undefined) {
       // local develop
       window.app = {};
-      await this.dtable.init(window.dtable);
+      await this.dtable.init(window.dtablePluginConfig);
       await this.dtable.syncWithServer();
       this.dtable.subscribe('dtable-connect', () => { this.onDTableConnect(); });
     } else {

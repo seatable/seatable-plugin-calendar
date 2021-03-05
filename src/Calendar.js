@@ -723,6 +723,7 @@ class Calendar extends React.Component {
       date: this.props.defaultDate || '',
       changeDateByNavicate: false,
     };
+    this.view2ComponentMap = this.getView2ComponentMap();
   }
 
   getContext({
@@ -777,24 +778,23 @@ class Calendar extends React.Component {
     };
   }
 
-  getViews = () => {
+  getView2ComponentMap = () => {
     const views = this.props.views;
-    let viewObject = {};
+    let view2ComponentMap = {};
     Array.isArray(views) && views.forEach((v) => {
-      viewObject[v] = VIEWS[v];
+      view2ComponentMap[v] = VIEWS[v];
     });
-    return viewObject;
+    return view2ComponentMap;
   };
 
-  getView = () => {
-    const views = this.getViews();
-    return views[this.props.view];
+  getCurrentView = () => {
+    return this.view2ComponentMap[this.props.view];
   };
 
   getDrilldownView = date => {
     const { view, drilldownView, getDrilldownView } = this.props;
     if (!getDrilldownView) return drilldownView;
-    return getDrilldownView(date, view, Object.keys(this.getViews()));
+    return getDrilldownView(date, view, Object.keys(this.view2ComponentMap));
   };
 
   /**
@@ -824,7 +824,7 @@ class Calendar extends React.Component {
   handleNavigate = (action, newDate) => {
     let { view, getNow, ...props } = this.props;
     let { date } = this.state;
-    let ViewComponent = this.getView();
+    let ViewComponent = this.getCurrentView();
     let today = getNow();
     date = moveDate(ViewComponent, {
       ...props,
@@ -841,10 +841,9 @@ class Calendar extends React.Component {
       this.props.onSelectView(view);
     }
 
-    let views = this.getViews();
     this.handleRangeChange(
       this.state.date || this.props.getNow(),
-      views[view],
+      this.view2ComponentMap[view],
       view
     );
   };
@@ -899,7 +898,7 @@ class Calendar extends React.Component {
     let { date } = this.state;
     const current = date || getNow();
     const isToday = dates.isToday(current, view);
-    const View = this.getView();
+    const View = this.getCurrentView();
     const { accessors, components, getters, localizer, viewNames } = this.getContext(this.props);
     const CalToolbar = components.toolbar || Toolbar;
     const label = View.title(current, { localizer, length });

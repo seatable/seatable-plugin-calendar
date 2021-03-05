@@ -54,7 +54,7 @@ class ReactBigCalendar extends React.Component {
   getSelectedView = () => {
     let selectedCalendarView = JSON.parse(localStorage.getItem('selectedCalendarView')) || {};
     let { activeTable, activeView } = this.props;
-    let { dtableUuid } = getDtableUuid();
+    let dtableUuid = getDtableUuid();
     let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
     return selectedCalendarView[key] || CALENDAR_VIEWS.MONTH;
   }
@@ -62,7 +62,7 @@ class ReactBigCalendar extends React.Component {
   onSelectView = (view) => {
     let selectedCalendarView = JSON.parse(localStorage.getItem('selectedCalendarView')) || {};
     let { activeTable, activeView } = this.props;
-    let { dtableUuid } = getDtableUuid();
+    let dtableUuid = getDtableUuid();
     let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
     selectedCalendarView[key] = view;
     localStorage.setItem('selectedCalendarView', JSON.stringify(selectedCalendarView));

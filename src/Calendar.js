@@ -723,7 +723,7 @@ class Calendar extends React.Component {
       date: this.props.defaultDate || '',
       changeDateByNavicate: false,
     };
-    this.viewsComponentsMap = this.getViewsComponentsMap();
+    this.view2ComponentMap = this.getView2ComponentMap();
   }
 
   getContext({
@@ -778,23 +778,23 @@ class Calendar extends React.Component {
     };
   }
 
-  getViewsComponentsMap = () => {
+  getView2ComponentMap = () => {
     const views = this.props.views;
-    let viewsComponentsMap = {};
+    let view2ComponentMap = {};
     Array.isArray(views) && views.forEach((v) => {
-      viewsComponentsMap[v] = VIEWS[v];
+      view2ComponentMap[v] = VIEWS[v];
     });
-    return viewsComponentsMap;
+    return view2ComponentMap;
   };
 
   getCurrentView = () => {
-    return this.viewsComponentsMap[this.props.view];
+    return this.view2ComponentMap[this.props.view];
   };
 
   getDrilldownView = date => {
     const { view, drilldownView, getDrilldownView } = this.props;
     if (!getDrilldownView) return drilldownView;
-    return getDrilldownView(date, view, Object.keys(this.viewsComponentsMap));
+    return getDrilldownView(date, view, Object.keys(this.view2ComponentMap));
   };
 
   /**
@@ -843,7 +843,7 @@ class Calendar extends React.Component {
 
     this.handleRangeChange(
       this.state.date || this.props.getNow(),
-      this.viewsComponentsMap[view],
+      this.view2ComponentMap[view],
       view
     );
   };

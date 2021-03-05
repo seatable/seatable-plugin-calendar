@@ -162,6 +162,11 @@ class ReactBigCalendar extends React.Component {
     onInsertRow(rowData, activeTable, activeView, row_id);
   }
 
+  getFormattedDate = (date, originalFormat) => {
+    const targetFormat = originalFormat && originalFormat.indexOf('HH:mm') > -1 ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD';
+    return moment(date).format(targetFormat);
+  }
+
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     let updatedData = {};
     let { activeTable, modifyRow, setting } = this.props;
@@ -171,18 +176,20 @@ class ReactBigCalendar extends React.Component {
     let startDateColumn = this.getDateColumn(startDateColumnName);
     let endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
     if (startDateColumn) {
-      const { type } = startDateColumn;
+      const { type, data } = startDateColumn;
       if (type === 'formula') {
         return;
       }
-      updatedData[startDateColumn.name] = moment(start).format('YYYY-MM-DD HH:mm');
+      const startDateFormat = data && data.format;
+      updatedData[startDateColumn.name] = this.getFormattedDate(start, startDateFormat);
     }
     if (endDateColumn) {
-      const { type } = endDateColumn;
+      const { type, data } = endDateColumn;
       if (type === 'formula') {
         return;
       }
-      updatedData[endDateColumn.name] = moment(end).format('YYYY-MM-DD HH:mm');
+      const endDateFormat = data && data.format;
+      updatedData[endDateColumn.name] = this.getFormattedDate(end, endDateFormat);
     }
     modifyRow(activeTable, event.row, updatedData);
   }

@@ -39,11 +39,11 @@ const FIXED_PERIOD_OF_TIME_IN_HOURS = 1;
  * @param {string|undefined} rowDate
  * @param {boolean|undefined} defAllDay
  */
-const allDayImplementation = (eventStart, rowDate, defAllDay) => {
+const allDayImplementation = (eventStart, rowDate) => {
   if (eventStart && rowDate && (eventStart.toISOString().slice(0, 10) === rowDate)) {
     return true;
   }
-  return defAllDay;
+  return false;
 };
 
 /**
@@ -62,7 +62,7 @@ const allDayImplementation = (eventStart, rowDate, defAllDay) => {
  */
 const endImplementation = (eventStart, eventAllDay, rowDate) => {
   let end = rowDate ? new Date(rowDate) : eventStart;
-  if ((eventAllDay !== true) && (rowDate === undefined || end <= eventStart)) {
+  if (eventAllDay !== true && !rowDate) {
     end = new Date(+eventStart);
     const hours = Math.max(1, Math.abs(parseInt(FIXED_PERIOD_OF_TIME_IN_HOURS.toFixed(0), 10)));
     end.setHours(eventStart.getHours() + hours);
@@ -100,7 +100,7 @@ export default class TableEvent {
     /* 2/2: React-Big-Calendar event properties */
     this.title = object.title || null;
     this.start = object.date && new Date(object.date);
-    this.allDay = allDayImplementation(this.start, object.date, this.allDay);
+    this.allDay = allDayImplementation(this.start, object.date);
     this.end = endImplementation(this.start, this.allDay, object.endDate);
   }
 }

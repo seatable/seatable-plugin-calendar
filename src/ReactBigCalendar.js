@@ -136,6 +136,11 @@ class ReactBigCalendar extends React.Component {
     const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
     const endDate = endDateColumnType === 'formula' ? rawRow[endDateColumnName] : row[endDateColumnKey];
     if (!date) return null; // start date must exist.
+    
+    // invalid event if duration less than 0 between end date with start date.
+    if (endDate && moment(endDate).isBefore(date)) {
+      return null;
+    }
     let bgColor, textColor;
     if (labelColumn) {
       const { key: colorColumnKey, data } = labelColumn;

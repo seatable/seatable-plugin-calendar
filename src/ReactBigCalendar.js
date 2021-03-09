@@ -167,9 +167,14 @@ class ReactBigCalendar extends React.Component {
     onInsertRow(rowData, activeTable, activeView, row_id);
   }
 
-  getFormattedDate = (date, originalFormat) => {
+  getFormattedDate = (date, originalFormat, droppedOnAllDaySlot) => {
     const targetFormat = originalFormat && originalFormat.indexOf('HH:mm') > -1 ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD';
-    return moment(date).format(targetFormat);
+    let mDate = moment(date);
+    if (droppedOnAllDaySlot) {
+      mDate.hours(0);
+      mDate.minutes(0);
+    }
+    return mDate.format(targetFormat);
   }
 
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
@@ -186,7 +191,7 @@ class ReactBigCalendar extends React.Component {
         return;
       }
       const startDateFormat = data && data.format;
-      updatedData[startDateColumn.name] = this.getFormattedDate(start, startDateFormat);
+      updatedData[startDateColumn.name] = this.getFormattedDate(start, startDateFormat, droppedOnAllDaySlot);
     }
     if (endDateColumn) {
       const { type, data } = endDateColumn;
@@ -194,7 +199,7 @@ class ReactBigCalendar extends React.Component {
         return;
       }
       const endDateFormat = data && data.format;
-      updatedData[endDateColumn.name] = this.getFormattedDate(end, endDateFormat);
+      updatedData[endDateColumn.name] = this.getFormattedDate(end, endDateFormat, droppedOnAllDaySlot);
     }
     modifyRow(activeTable, event.row, updatedData);
   }

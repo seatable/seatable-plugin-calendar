@@ -61,7 +61,18 @@ const allDayImplementation = (eventStart, rowDate) => {
  * @param {string|undefined} rowDate
  */
 const endImplementation = (eventStart, eventAllDay, rowDate) => {
-  let end = rowDate ? new Date(rowDate) : eventStart;
+  let end;
+  if (rowDate) {
+    end = new Date(rowDate);
+
+    // given the date-in-row is without minute precision
+    if (end.toISOString().slice(0, 10) === rowDate) {
+      end.setHours(0);
+      end.setMinutes(0);
+    }
+  } else {
+    end = eventStart;
+  }
   if (eventAllDay !== true && !rowDate) {
     end = new Date(+eventStart);
     const hours = Math.max(1, Math.abs(parseInt(FIXED_PERIOD_OF_TIME_IN_HOURS.toFixed(0), 10)));

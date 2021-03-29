@@ -62,26 +62,30 @@ class ViewSetting extends React.Component {
       } else if (type === CellType.SINGLE_SELECT) {
         colorColumns.push(c);
       }
-      if (titleColumnTypes.indexOf(type) !== -1) {
+      if (titleColumnTypes.includes(type)) {
         titleColumns.push(c);
       }
     });
-    return { dateColumns, colorColumns, titleColumns };
+    let endDateColumns = [...dateColumns];
+    if (endDateColumns.length) {
+      endDateColumns.unshift({name: String.fromCharCode(160)});
+    }
+    return { dateColumns, colorColumns, titleColumns, endDateColumns };
   }
 
   renderSelector = (source, settingKey, valueKey, labelKey) => {
     let { settings } = this.state;
-    let options = source.map((item) => {
-      let value = item[valueKey];
-      let label = item[labelKey];
-      return {value, label, setting_key: settingKey};
-    });
+    let options = source.map((item) => ({
+      value: item[valueKey],
+      label: item[labelKey],
+      setting_key: settingKey
+    }));
     let selectedOption = options.find(item => item.value === settings[settingKey]);
     if (!selectedOption && (
       settingKey === SETTING_KEY.TABLE_NAME ||
       settingKey === SETTING_KEY.VIEW_NAME ||
       settingKey === SETTING_KEY.COLUMN_TITLE)) {
-      selectedOption = options[0];
+      selectedOption = options[0] || undefined;
     }
     return <PluginSelect
       value={selectedOption}
@@ -92,7 +96,7 @@ class ViewSetting extends React.Component {
 
   render() {
     const { tables, views } = this.props;
-    const { dateColumns, colorColumns, titleColumns } = this.getSelectorColumns();
+    const { dateColumns, colorColumns, titleColumns, endDateColumns } = this.getSelectorColumns();
 
     return (
       <div className="plugin-view-setting position-absolute d-flex flex-column" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
@@ -122,7 +126,7 @@ class ViewSetting extends React.Component {
             </div>
             <div className="setting-item">
               <div className="title">{intl.get('End_Date_Optional')}</div>
-              {this.renderSelector(dateColumns, SETTING_KEY.COLUMN_END_DATE, 'name', 'name')}
+              {this.renderSelector(endDateColumns, SETTING_KEY.COLUMN_END_DATE, 'name', 'name')}
             </div>
             <div className="setting-item">
               <div className="title">{intl.get('Color_From')}</div>

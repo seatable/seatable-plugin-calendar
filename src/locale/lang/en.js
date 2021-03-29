@@ -5,9 +5,9 @@ const en = {
   'Select_date_column': 'Select date column',
   'Select_an_end_date_column': 'Select an end date column',
   'Select_color_column': 'Select color column',
-  'Start_Date': 'Start date field',
-  'End_Date_Optional': 'End date field (optional)',
-  'Color_From': 'Color field',
+  'Start_Date': 'Start date',
+  'End_Date_Optional': 'End date (optional)',
+  'Color_From': 'Color',
   'Using_xxx_column': 'Using "{columnName}" column',
   'Year': 'Year',
   'Month': 'Month',
@@ -47,7 +47,7 @@ const en = {
   'Settings': 'Settings',
   'Table': 'Table',
   'View': 'View',
-  'Title': 'Title field',
+  'Title': 'Title',
   'No_options': 'No options'
 };
 

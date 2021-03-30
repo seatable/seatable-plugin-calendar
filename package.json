@@ -20,7 +20,7 @@
   "scripts": {
     "clean": "rm -rf plugin-zip && mkdir plugin-zip",
     "start": "node scripts/start.js",
-    "build": "CI=true npm run test && node scripts/build.js",
+    "build": "export CI=\"${CI-true}\" && CI=true npm run test && node scripts/build.js",
     "test": "node scripts/test.js",
     "translate": "node scripts/translate.js",
     "push-translate": "tx push -s",

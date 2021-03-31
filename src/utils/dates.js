@@ -119,6 +119,7 @@ export function total(date, unit) {
   let ms = date.getTime(),
     div = 1;
 
+  // noinspection FallThroughInSwitchStatementJS
   switch (unit) {
     case DATE_UNIT.WEEK:
       div *= 7;
@@ -171,6 +172,7 @@ export function subtract(d, num, unit) {
 export function startOf(d, unit, firstOfWeek) {
   d = new Date(d);
 
+  // noinspection FallThroughInSwitchStatementJS
   switch (unit) {
     case DATE_UNIT.CENTURY:
     case DATE_UNIT.DECADE:
@@ -224,6 +226,7 @@ export function endOf(d, unit, firstOfWeek){
     case DATE_UNIT.SECONDS:
       d = add(d, 1, unit);
       d = subtract(d, 1, DATE_UNIT.MILI);
+      break;
     default:
       break;
   }

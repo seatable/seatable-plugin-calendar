@@ -46,6 +46,7 @@ const en = {
   'Title': 'Title field',
   'No_options': 'No options',
   'Not_used': 'Not used',
+  "Select_the_month_range": "Select the month range"
 };
 
 export default en;

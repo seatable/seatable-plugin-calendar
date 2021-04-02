@@ -241,6 +241,8 @@ class ReactBigCalendar extends React.Component {
         hideViewSettingPanel={this.props.hideViewSettingPanel}
         selectable={true}
         onEventDrop={this.moveEvent}
+        isExporting={this.props.isExporting}
+        exportedMonths={this.props.exportedMonths}
       />
     );
   }

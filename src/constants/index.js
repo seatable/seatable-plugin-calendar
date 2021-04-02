@@ -1,3 +1,6 @@
+import * as zIndexes from './zIndexes';
+export { zIndexes };
+
 export const PLUGIN_NAME = 'calendar';
 
 export const CALENDAR_DIALOG_PADDINGTOP = 18;
@@ -34,3 +37,19 @@ export const SETTING_KEY = {
   COLUMN_END_DATE: 'column_end_date',
   COLUMN_COLOR: 'column_color'
 };
+
+
+export const DATE_UNIT = { 
+  YEAR: 'year',
+  MONTH: 'month',
+  DAY: 'day',
+};
+
+export const DATE_FORMAT = { 
+  YEAR_MONTH_DAY: 'YYYY-MM-DD',
+  YEAR_MONTH: 'YYYY-MM',
+  YEAR: 'YYYY',
+  MONTH: 'MM',
+  DAY: 'DD'
+};
+

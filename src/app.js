@@ -1,14 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
+import html2PDF from 'jspdf-html2canvas';
+import moment from 'moment';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
 import './locale/index.js';
 import ReactBigCalendar from './ReactBigCalendar';
-import { PLUGIN_NAME, SETTING_KEY } from './constants';
+import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT } from './constants';
 import { CALENDAR_DIALOG_MODAL } from './constants/zIndexes';
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
+import TimeRangeDialog from './components/dialog/time-range-dialog';
 import { generatorViewId, getDtableUuid } from './utils/common';
 import View from './model/view';
 
@@ -56,7 +59,7 @@ class App extends React.Component {
       selectedViewIdx: 0,
       isViewSettingPanelOpen: false,
       rows: [],
-
+      isTimeRangeDialogOpen: false
     };
     this.dtable = new DTable();
   }
@@ -189,9 +192,50 @@ class App extends React.Component {
     }
   }
 
+  toggleTimeRangeDialog = () => {
+    this.setState({isTimeRangeDialogOpen: !this.state.isTimeRangeDialogOpen});
+  }
+
+  exportSelectedMonths = (start, end) => {
+    let exportedMonths = [];
+    const startMonth = moment(start, DATE_FORMAT.YEAR_MONTH);
+    const endMonth = moment(end, DATE_FORMAT.YEAR_MONTH);
+    const diffMonthAmount = endMonth.diff(startMonth, 'months');
+    for (let i = 0; i < diffMonthAmount + 1; i++) {
+      // `push` the 1st day of each month, in the native Date object
+      exportedMonths.push(moment(startMonth).add(i, 'months').date(1).toDate());
+    }
+    this.setState({
+      isExporting: true,
+      exportedMonths: exportedMonths
+    }, () => {
+      const _this = this;
+      const pages = document.getElementsByClassName('rbc-month-view-exported');
+      html2PDF(pages, {
+        jsPDF: {
+          format: 'a4',
+          orientation: 'landscape',
+        },
+        imageType: 'image/jpeg',
+        output: `${intl.get('Calendar')}–${start}${start == end ? '' : '–' + end}.pdf`,
+        success: function(pdf) {
+          _this.setState({
+            isExporting: false,
+            exportedMonths: []
+          });
+          _this.toggleTimeRangeDialog();
+          pdf.save(this.output);
+        }
+      });
+    });
+  }
+
   renderBtnGroups = () => {
     return (
       <div className="d-flex align-items-center">
+        <span className="op-icon mr-2" onClick={this.toggleTimeRangeDialog}>
+          <i className="dtable-font dtable-icon-export"></i>
+        </span>
         <span className="op-icon mr-2" onClick={this.toggleViewSettingPanel}>
           <i className="dtable-font dtable-icon-settings"></i>
         </span>
@@ -318,7 +362,9 @@ class App extends React.Component {
 
   render() {
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
-      isViewSettingPanelOpen, rows,
+      rows,
+      isViewSettingPanelOpen,
+      isTimeRangeDialogOpen
     } = this.state;
     if (isLoading || !showDialog) {
       return '';
@@ -367,6 +413,8 @@ class App extends React.Component {
             onRowExpand={this.onRowExpand}
             onInsertRow={this.onInsertRow}
             hideViewSettingPanel={this.hideViewSettingPanel}
+            isExporting={this.state.isExporting}
+            exportedMonths={this.state.exportedMonths}
           />
           {isViewSettingPanelOpen &&
             <ViewSetting
@@ -378,6 +426,13 @@ class App extends React.Component {
               columnIconConfig={this.columnIconConfig}
               onModifyViewSettings={this.onModifyViewSettings}
               toggleViewSettingPanel={this.toggleViewSettingPanel}
+            />
+          }
+          {isTimeRangeDialogOpen &&
+            <TimeRangeDialog
+              isExporting={this.state.isExporting}
+              onConfirmTimeRange={this.exportSelectedMonths}
+              toggleDialog={this.toggleTimeRangeDialog}
             />
           }
         </ModalBody>

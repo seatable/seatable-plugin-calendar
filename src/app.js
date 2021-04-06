@@ -113,6 +113,7 @@ class App extends React.Component {
     this.cellType = this.dtable.getCellType();
     this.optionColors = this.dtable.getOptionColors();
     this.highlightColors = this.dtable.getHighlightColors();
+    this.columnIconConfig = this.dtable.getColumnIconConfig();
     const selectedPluginView = views[selectedViewIdx];
     const rows = selectedPluginView ? this.getPluginViewRows(selectedPluginView.settings) : [];
     this.setState({
@@ -374,6 +375,7 @@ class App extends React.Component {
               settings={settings || {}}
               columns={columns}
               CellType={this.cellType}
+              columnIconConfig={this.columnIconConfig}
               onModifyViewSettings={this.onModifyViewSettings}
               toggleViewSettingPanel={this.toggleViewSettingPanel}
             />

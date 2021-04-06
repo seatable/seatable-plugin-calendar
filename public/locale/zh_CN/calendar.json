@@ -2,13 +2,9 @@
   "Calendar": "日历",
   "Submit": "提交",
   "Cancel": "取消",
-  "Select_date_column": "选择日期列",
-  "Select_an_end_date_column": "选择结束日期列",
-  "Select_color_column": "选择颜色列",
   "Start_Date": "开始日期字段",
   "End_Date_Optional": "结束日期字段 (可选)",
   "Color_From": "颜色字段",
-  "Using_xxx_column": "使用 “{columnName}” 列",
   "Year": "年",
   "Month": "月",
   "Week_xxx": "周{weekNumber}",
@@ -48,5 +44,6 @@
   "Table": "表格",
   "View": "视图",
   "Title": "标题字段",
-  "No_options": "没有选项"
+  "No_options": "没有选项",
+  "Select_a_field": "选择一个字段"
 }

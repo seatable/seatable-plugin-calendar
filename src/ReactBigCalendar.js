@@ -128,6 +128,17 @@ class ReactBigCalendar extends React.Component {
     return events;
   }
 
+  getEventEndDate = (rawRow, row, columnType, columnName, columnKey, startDate) => {
+    const { CellType } = this.props;
+    switch (columnType) {
+      case CellType.DATE: return row[columnKey];
+      case CellType.FORMULA: return rawRow[columnName];
+      case CellType.DURATION:
+        return moment(startDate).add(rawRow[columnName], 'seconds').format('YYYY-MM-DD HH:mm');
+      default: return null;
+    }
+  }
+
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, labelColumn) => {
     const { optionColors, highlightColors } = this.props;
     const { name: titleColumnName } = titleColumn || {};
@@ -135,13 +146,11 @@ class ReactBigCalendar extends React.Component {
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
     const title = rawRow[titleColumnName];
     const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
-    const endDate = endDateColumnType === 'formula' ? rawRow[endDateColumnName] : row[endDateColumnKey];
-
     // start date must exist and valid.
     if (!date || !isValidDateObject(new Date(date))) {
       return null;
     }
-
+    const endDate = this.getEventEndDate(rawRow, row, endDateColumnType, endDateColumnName, endDateColumnKey, date);
     // Invalid event:
     // 1. invalid end date
     // 2. duration less than 0 between end date with start date.

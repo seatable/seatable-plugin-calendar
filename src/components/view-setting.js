@@ -26,12 +26,12 @@ class ViewSetting extends React.Component {
     this.state = {
       settings: props.settings || {},
     };
-    const { dateColumns, colorColumns, titleColumns } = this.getSelectorColumns();
+    const { dateColumns, endDateColumns, colorColumns, titleColumns } = this.getSelectorColumns();
     this.tableOptions = this.createOptions(tables, SETTING_KEY.TABLE_NAME, 'name');
     this.viewOptions = this.createOptions(views, SETTING_KEY.VIEW_NAME, 'name');
     this.titleColumnOptions = this.createOptions(titleColumns, SETTING_KEY.COLUMN_TITLE, 'value');
     this.dateColumnOptions = this.createOptions(dateColumns, SETTING_KEY.COLUMN_START_DATE, 'value');
-    this.endDateColumnOptions = this.createOptions(dateColumns, SETTING_KEY.COLUMN_END_DATE, 'value');
+    this.endDateColumnOptions = this.createOptions(endDateColumns, SETTING_KEY.COLUMN_END_DATE, 'value');
     if (this.endDateColumnOptions.length) {
       this.endDateColumnOptions.unshift(
         {
@@ -82,6 +82,7 @@ class ViewSetting extends React.Component {
   getSelectorColumns = () => {
     const { columns, CellType, columnIconConfig } = this.props;
     let dateColumns = [],
+      endDateColumns = [],
       colorColumns = [],
       titleColumns = [];
     const titleColumnTypes = [
@@ -96,6 +97,9 @@ class ViewSetting extends React.Component {
       };
       if (type === CellType.DATE || (type === CellType.FORMULA && c.data.result_type === 'date')) {
         dateColumns.push(columnOption);
+        endDateColumns.push(columnOption);
+      } else if (type === CellType.DURATION) {
+        endDateColumns.push(columnOption);
       } else if (type === CellType.SINGLE_SELECT) {
         colorColumns.push(columnOption);
       }
@@ -103,7 +107,7 @@ class ViewSetting extends React.Component {
         titleColumns.push(columnOption);
       }
     });
-    return { dateColumns, colorColumns, titleColumns };
+    return { dateColumns, endDateColumns, colorColumns, titleColumns };
   }
 
   renderSelector = (options, settingKey) => {

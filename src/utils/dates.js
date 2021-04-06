@@ -357,3 +357,7 @@ function createComparer(operator) {
     return operator(+startOf(a, unit), +startOf(b, unit));
   };
 }
+
+export function isValidDateObject(date) {
+  return date && date instanceof Date && !isNaN(date.getTime());
+}

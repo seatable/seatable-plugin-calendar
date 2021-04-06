@@ -4,6 +4,7 @@ import moment from 'moment';
 import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/moment';
 import { getDtableUuid } from './utils/common';
+import { isValidDateObject } from './utils/dates';
 import { CALENDAR_VIEWS, SETTING_KEY } from './constants';
 import TableEvent from './model/event';
 import withDragAndDrop from './addons/dragAndDrop';
@@ -135,10 +136,16 @@ class ReactBigCalendar extends React.Component {
     const title = rawRow[titleColumnName];
     const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
     const endDate = endDateColumnType === 'formula' ? rawRow[endDateColumnName] : row[endDateColumnKey];
-    if (!date) return null; // start date must exist.
 
-    // invalid event if duration less than 0 between end date with start date.
-    if (endDate && moment(endDate).isBefore(date)) {
+    // start date must exist and valid.
+    if (!date || !isValidDateObject(new Date(date))) {
+      return null;
+    }
+
+    // Invalid event:
+    // 1. invalid end date
+    // 2. duration less than 0 between end date with start date.
+    if (endDate && (!isValidDateObject(new Date(endDate)) || moment(endDate).isBefore(date))) {
       return null;
     }
     let bgColor, textColor;

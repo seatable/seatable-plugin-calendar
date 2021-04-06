@@ -8,13 +8,21 @@ const SUPPORT_LANGUAGES = ['en', 'de', 'fr', 'zh_CN'];
 const files = fs.readdirSync(path.join(sourcePath, SUPPORT_LANGUAGES[0]));
 const pluginName = files[0];
 
+const langTemplate = ([...s], lang, content) => `${s.shift()}${lang}${s.shift()}${
+  content.replace(
+    /^(\s*)"(.*?)": "(.*)",?$/gm
+    , (m, p1, p2, p3) => `${p1}'${p2}': '${p3.replace(/'/g, '\\$&')}',`
+  ).trimEnd()
+}${s.shift()}${lang}${s.shift()}`;
+
 const generatorLanguage = (lang, content) => {
   return (
-`const ${lang} = ${content};
+    langTemplate`const ${lang} = ${content};
 
-export default ${lang};`
+export default ${lang};
+`
   );
-}
+};
 
 SUPPORT_LANGUAGES.forEach(lang => {
   // 读出

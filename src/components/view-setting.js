@@ -7,8 +7,6 @@ import '../locale';
 
 import '../css/view-setting.css';
 
-const SELECT_NONE = 'select_none';
-
 const propTypes = {
   tables: PropTypes.array,
   views: PropTypes.array,

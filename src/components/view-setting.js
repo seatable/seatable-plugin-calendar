@@ -98,7 +98,8 @@ class ViewSetting extends React.Component {
         dateColumns.push(columnOption);
       } else if (type === CellType.SINGLE_SELECT) {
         colorColumns.push(columnOption);
-      } else if (titleColumnTypes.includes(type)) {
+      }
+      if (titleColumnTypes.includes(type)) {
         titleColumns.push(columnOption);
       }
     });

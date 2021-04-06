@@ -2,13 +2,9 @@
   "Calendar": "Calendar",
   "Submit": "Submit",
   "Cancel": "Cancel",
-  "Select_date_column": "Select date column",
-  "Select_an_end_date_column": "Select an end date column",
-  "Select_color_column": "Select color column",
   "Start_Date": "Start date field",
   "End_Date_Optional": "End date field (optional)",
   "Color_From": "Color field",
-  "Using_xxx_column": "Using \"{columnName}\" column",
   "Year": "Year",
   "Month": "Month",
   "Week_xxx": "{weekNumber}",
@@ -48,5 +44,6 @@
   "Table": "Table",
   "View": "View",
   "Title": "Title field",
-  "No_options": "No options"
+  "No_options": "No options",
+  "Not_used": "Not used"
 }

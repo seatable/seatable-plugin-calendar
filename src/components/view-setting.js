@@ -37,9 +37,9 @@ class ViewSetting extends React.Component {
     if (this.endDateColumnOptions.length) {
       this.endDateColumnOptions.unshift(
         {
-          value: SELECT_NONE,
+          value: '',
           setting_key: SETTING_KEY.COLUMN_END_DATE,
-          label: <span className={'select-module select-module-name null-option-name'}>{intl.get('Select_a_field')}</span>,
+          label: <span className={'select-module select-module-name null-option-name'}>{intl.get('Not_used')}</span>,
         }
       );
     }
@@ -66,9 +66,6 @@ class ViewSetting extends React.Component {
     let { settings } = this.state;
     let { setting_key, value } = selectedOption;
     let updated;
-    if (value === SELECT_NONE) {
-      value = '';
-    }
     if (setting_key === SETTING_KEY.TABLE_NAME) {
       updated = {[setting_key]: value};  // Need init settings after select new table.
     } else {

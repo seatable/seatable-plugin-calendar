@@ -45,7 +45,8 @@ const zh_CN = {
   "View": "视图",
   "Title": "标题字段",
   "No_options": "没有选项",
-  "Select_a_field": "选择一个字段"
-};
+  "Not_used": "不使用"
+}
+;
 
 export default zh_CN;

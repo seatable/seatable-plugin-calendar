@@ -45,7 +45,8 @@ const fr = {
   "View": "Vue",
   "Title": "Colonne titre",
   "No_options": "Il n'y a pas d'options.",
-  "Select_a_field": "Select a field"
-};
+  "Not_used": "Not used"
+}
+;
 
 export default fr;

@@ -45,7 +45,8 @@ const de = {
   "View": "Ansicht",
   "Title": "Feld für Titel",
   "No_options": "Keine Optionen",
-  "Select_a_field": "Select a field"
-};
+  "Not_used": "Not used"
+}
+;
 
 export default de;

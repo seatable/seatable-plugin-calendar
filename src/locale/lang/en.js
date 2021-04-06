@@ -45,7 +45,8 @@ const en = {
   "View": "View",
   "Title": "Title field",
   "No_options": "No options",
-  "Select_a_field": "Select a field"
-};
+  "Not_used": "Not used"
+}
+;
 
 export default en;

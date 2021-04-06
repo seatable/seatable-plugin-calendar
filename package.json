@@ -19,8 +19,9 @@
   },
   "scripts": {
     "clean": "rm -rf plugin-zip && mkdir plugin-zip",
-    "start": "node scripts/start.js",
-    "build": "export CI=\"${CI-true}\" && CI=true npm run test && node scripts/build.js",
+    "start": "npm run fix && node scripts/start.js",
+    "build": "export CI=\"${CI-true}\" && npm run fix && CI=true npm run test && node scripts/build.js",
+    "fix": "npm exec -- eslint --fix src/locale/lang",
     "test": "node scripts/test.js",
     "translate": "node scripts/translate.js",
     "push-translate": "tx push -s",

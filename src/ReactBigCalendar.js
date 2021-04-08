@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Calendar from './Calendar';
-import momentLocalizer from './utils/localizers/moment';
+import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
 import { CALENDAR_VIEWS, SETTING_KEY } from './constants';
@@ -30,7 +30,7 @@ const propTypes = {
 };
 
 const calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH];
-const globalizeLocalizer = momentLocalizer(moment);
+const localizer = momentLocalizer(moment);
 
 class ReactBigCalendar extends React.Component {
 
@@ -230,7 +230,7 @@ class ReactBigCalendar extends React.Component {
         columns={columns}
         startDateColumn={startDateColumn}
         labelColumn={labelColumn}
-        localizer={globalizeLocalizer}
+        localizer={localizer}
         events={events}
         views={calendarViews}
         view={this.state.selectedView}

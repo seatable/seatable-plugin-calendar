@@ -44,14 +44,6 @@ class Popup extends React.Component {
     this.popperRef = node;
   }
 
-  getHeaderFormat = () => {
-    let { slotStart, localizer } = this.props;
-    let month = localizer.format(slotStart, 'monthFormat');
-    let date = Number(localizer.format(slotStart, 'dateFormat'));
-    let week_day = localizer.format(slotStart, 'weekdayFormat');
-    return intl.get('xxx_Month_xxx_Date_xxx_Week', {month: intl.get(month), date, weekDay: intl.get(week_day)});
-  }
-
   render() {
     let {
       events,
@@ -61,6 +53,7 @@ class Popup extends React.Component {
       components,
       slotStart,
       slotEnd,
+      localizer,
       scrolled,
     } = this.props;
 
@@ -78,7 +71,7 @@ class Popup extends React.Component {
         ref={this.setPopperRef}
       >
         <div className='rbc-overlay-header'>
-          {this.getHeaderFormat()}
+          {localizer.format(slotStart, 'dayHeaderFormat')}
           <button className='close'><span aria-hidden="true" ref={ref => this.closeBtn = ref}>×</span></button>
         </div>
         <div className="rbc-overlay-body">

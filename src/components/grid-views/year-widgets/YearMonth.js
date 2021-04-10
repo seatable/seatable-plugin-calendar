@@ -5,6 +5,7 @@ import Header from '../../header/Header';
 import * as dates from '../../../utils/dates';
 import YearDay from './YearDay';
 import moment from 'moment';
+import intl from 'react-intl-universal';
 
 class YearMonth extends React.Component {
 
@@ -15,9 +16,7 @@ class YearMonth extends React.Component {
     return (
       <div className='rbc-year-month-header'>
         <HeaderComponent
-          date={monthDate}
-          localizer={localizer}
-          label={localizer.format(monthDate, 'monthFormat')}
+          label={intl.get(localizer.format(monthDate, 'monthFormat'))}
         />
       </div>
     );
@@ -32,9 +31,7 @@ class YearMonth extends React.Component {
     return dates.range(first, last, 'day').map((day, idx) => (
       <div key={'header_' + idx} className='rbc-header'>
         <HeaderComponent
-          date={day}
-          localizer={localizer}
-          label={localizer.format(day, 'weekdayFormat')}
+          label={intl.get(localizer.format(day, 'weekdayFormat'))}
         />
       </div>
     ));

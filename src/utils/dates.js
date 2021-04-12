@@ -256,7 +256,7 @@ export function inRange(day, min, max, unit){
 }
 
 export function weekday(d, val, firstDay) {
-  var w = (day(d) + 7 - (firstDay || 0) ) % 7;
+  const w = (day(d) + 7 - (firstDay || 0)) % 7;
 
   return val === undefined
     ? w
@@ -342,7 +342,7 @@ function createAccessor(method){
     if (val === undefined)
       return d['get' + method]();
 
-    var dateOut = new Date(d);
+    const dateOut = new Date(d);
     dateOut['set' + method](val);
 
     // eslint-disable-next-line

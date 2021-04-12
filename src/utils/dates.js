@@ -141,8 +141,8 @@ export function total(date, unit) {
 export function week(date) {
   let d = moment(date);
   d.hours(0);
-  d.dates(d.dates() + 4 - (d.days() || 7));
-  return Math.ceil((d.diff(moment([d.years(), 0, 1])) / 8.64e7 + 1) / 7);
+  d.date(d.date() + 4 - (d.days() || 7));
+  return Math.ceil((d.diff(moment([d.year(), 0, 1])) / 8.64e7 + 1) / 7);
 }
 
 export function today() {

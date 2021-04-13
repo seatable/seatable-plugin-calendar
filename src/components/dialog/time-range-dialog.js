@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+/*
 import 'moment/locale/zh-cn';
 import 'moment/locale/en-gb';
+*/
 //import 'moment/min/locales.min';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input, Alert } from 'reactstrap';
 import intl from 'react-intl-universal';
 import Picker from '@seafile/seafile-calendar/lib/Picker';
 import RangeCalendar from '@seafile/seafile-calendar/lib/RangeCalendar';
@@ -23,10 +25,14 @@ class SelectExportTimeRangeDialog extends Component {
 
   constructor(props) {
     super(props);
+    /*
     const lang = window.dtable ? window.dtable.lang : 'zh-cn';
     const now = moment().locale(lang);
+    */
+    const now = moment();
     this.state = {
-      dateRange: [now, now]
+      dateRange: [now, now],
+      outOfRange: false
     };
   }
 
@@ -62,6 +68,7 @@ class SelectExportTimeRangeDialog extends Component {
         format={DATE_FORMAT.YEAR_MONTH}
         defaultSelectedValue={dateRange}
         onPanelChange={this.onChangeSelectedRangeDates}
+        showOk={true}
       />
     );
   }
@@ -69,19 +76,13 @@ class SelectExportTimeRangeDialog extends Component {
   onOpenChange = (open) => {
     if (!open) {
       const { dateRange } = this.state;
-      const { gridStartDate, gridEndDate } = this.props;
-
-      // not changed.
-      if (dateRange[0].isSame(gridStartDate) && dateRange[1].isSame(gridEndDate)) {
+      const diffs = dateRange[1].diff(dateRange[0], DATE_UNIT.MONTH);
+      if (diffs < 0) {
         return;
       }
-
-      // not allowed date range.
-      const diffs = dateRange[1].diff(dateRange[0], DATE_UNIT.DAY);
-      if (diffs < 0) {
-        const { gridStartDate, gridEndDate } = this.props;
+      if (diffs > 11) {
         this.setState({
-          dateRange: [moment(gridStartDate), moment(gridEndDate)]
+          outOfRange: true
         });
         return;
       }
@@ -89,11 +90,17 @@ class SelectExportTimeRangeDialog extends Component {
   }
 
   onDatePickerChange = (dates) => {
-    this.setState({dateRange: dates});
+    this.setState({
+      dateRange: dates,
+      outOfRange: false
+    });
   }
 
   onChangeSelectedRangeDates = (dates) => {
-    this.setState({dateRange: dates});
+    this.setState({
+      dateRange: dates,
+      outOfRange: false
+    });
   }
 
   toggle = () => {
@@ -115,15 +122,17 @@ class SelectExportTimeRangeDialog extends Component {
 
   render() {
     const { isExporting } = this.props;
+    const { outOfRange } = this.state;
     return (
       <Modal isOpen={true} toggle={this.toggle} autoFocus={false}>
-        <ModalHeader toggle={this.toggle}>{intl.get('Select_the_month_range')}</ModalHeader>
+        <ModalHeader toggle={this.toggle}>{intl.get('Choose_the_time_range')}</ModalHeader>
         <ModalBody>
           {this.renderPicker()}
+          {outOfRange && <Alert color="danger" className="mt-2">{intl.get('Out_of_range')}</Alert>}
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={this.toggle} disabled={isExporting}>{intl.get('Cancel')}</Button>
-          <Button color="primary" onClick={this.handleSubmit} disabled={isExporting} className={isExporting ? 'btn-loading' : ''}>{intl.get('Submit')}</Button>
+          <Button color="primary" onClick={this.handleSubmit} disabled={outOfRange || isExporting} className={isExporting ? 'btn-loading' : ''}>{intl.get('Submit')}</Button>
         </ModalFooter>
       </Modal>
     );

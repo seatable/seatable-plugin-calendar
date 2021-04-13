@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
-import html2PDF from 'jspdf-html2canvas';
 import moment from 'moment';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
@@ -210,23 +209,24 @@ class App extends React.Component {
       exportedMonths: exportedMonths
     }, () => {
       const _this = this;
-      const pages = document.getElementsByClassName('rbc-month-view-exported');
-      html2PDF(pages, {
-        jsPDF: {
-          format: 'a4',
-          orientation: 'landscape',
-        },
-        imageType: 'image/jpeg',
-        output: `${intl.get('Calendar')}–${start}${start == end ? '' : '–' + end}.pdf`,
-        success: function(pdf) {
-          _this.setState({
-            isExporting: false,
-            exportedMonths: []
-          });
-          _this.toggleTimeRangeDialog();
-          pdf.save(this.output);
-        }
-      });
+      const prtContent = document.getElementById('exported-months');
+      const w = prtContent.scrollWidth;
+      const h = prtContent.scrollHeight;
+      const WinPrint = window.open('', '', 'left=0,top=0,width=' + w + ',height=' + h +',toolbar=0,scrollbars=0,status=0');
+      WinPrint.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>');
+      WinPrint.document.write(prtContent.innerHTML + '</body></html>');
+      WinPrint.document.title = `${intl.get('Calendar')}–${start}${start == end ? '' : '–' + end}.pdf`;
+      WinPrint.document.close();
+      WinPrint.onload = function () {
+        WinPrint.focus();
+        WinPrint.print();
+        WinPrint.close();
+        _this.setState({
+          isExporting: false,
+          exportedMonths: []
+        });
+        _this.toggleTimeRangeDialog();
+      };
     });
   }
 
@@ -234,7 +234,7 @@ class App extends React.Component {
     return (
       <div className="d-flex align-items-center">
         <span className="op-icon mr-2" onClick={this.toggleTimeRangeDialog}>
-          <i className="dtable-font dtable-icon-export"></i>
+          <i className="dtable-font dtable-icon-print"></i>
         </span>
         <span className="op-icon mr-2" onClick={this.toggleViewSettingPanel}>
           <i className="dtable-font dtable-icon-settings"></i>

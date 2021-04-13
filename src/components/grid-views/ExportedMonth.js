@@ -113,7 +113,7 @@ class ExportedMonth extends React.Component {
     let weeksCount = renderWeeks.length; // usually there are 5 weeks in a month, but in months such as 2021-05, there are 6 weeks.
 
     return (
-      <div className={classnames('rbc-month-view-exported pt-6', className)}>
+      <div className={classnames('rbc-month-view-exported', className)}>
         <h3 className="mb-3 h4 text-center font-weight-normal">{ExportedMonth.title(date, {localizer})}</h3>
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}

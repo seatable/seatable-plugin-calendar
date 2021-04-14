@@ -219,18 +219,14 @@ class ReactBigCalendar extends React.Component {
   }
 
   render() {
-    let { columns, setting } = this.props;
+    const { columns, setting: {settings = {}} } = this.props;
     const { events } = this.state;
-    const { settings = {} } = setting;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
-    const colorColumnName = settings[SETTING_KEY.COLUMN_COLOR];
-    let startDateColumn = this.getDateColumn(startDateColumnName);
-    let labelColumn = this.getLabelColumn(colorColumnName);
+    const startDateColumn = this.getDateColumn(startDateColumnName);
     return (
       <DragAndDropCalendar
         columns={columns}
         startDateColumn={startDateColumn}
-        labelColumn={labelColumn}
         localizer={localizer}
         events={events}
         views={calendarViews}

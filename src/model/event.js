@@ -21,6 +21,58 @@
  *                         links: Array(0),
  *                         checklist: Object}
  *          31A0 = "2021-02-24"
+ *
+ */
+/**
+ * TableEventDTableColumnDefinitionTypedef
+ *
+ * @typedef {Object.<string, string|object>|{}} TableEventDTableColumnDefinitionTypedef
+ * @property {string} key
+ * @property {string} type
+ * @property {string} name
+ * @property {bool} editable
+ * @property {string} width
+ * @property {bool} resizable
+ * @property {bool} draggable
+ * @property {*} data (depends on type)
+ * @property {string} permission_type
+ * @property {Array} permitted_users
+ *
+ * Example:
+ *
+ * {
+ *     "key": "nYvV",
+ *     "type": "single-select",
+ *     "name": "Category",
+ *     "editable": true,
+ *     "width": 200,
+ *     "resizable": true,
+ *     "draggable": true,
+ *     "data": {
+ *         "options": [
+ *             {
+ *                 "name": "Fun",
+ *                 "color": "#FFDDE5",
+ *                 "textColor": "#202428",
+ *                 "id": "482632"
+ *             },
+ *             {
+ *                 "name": "Leisure",
+ *                 "color": "#F4667C",
+ *                 "textColor": "#FFFFFF",
+ *                 "id": "323575"
+ *             },
+ *             {
+ *                 "name": "Obligatory",
+ *                 "color": "#46A1FD",
+ *                 "textColor": "#FFFFFF",
+ *                 "id": "55022"
+ *             }
+ *         ]
+ *     },
+ *     "permission_type": "",
+ *     "permitted_users": []
+ * }
  */
 
 const FIXED_PERIOD_OF_TIME_IN_HOURS = 1;
@@ -87,6 +139,33 @@ const endImplementation = (eventStart, eventAllDay, rowDate) => {
  * @property {any|undefined} resource
  */
 export default class TableEvent {
+
+  /**
+   * obtain colors (background, text, highlight) for row and labelColumn
+   *
+   * @param {TableEventRowTypedef} row
+   * @param {?TableEventDTableColumnDefinitionTypedef} colorColumn
+   * @param {Array.<Object>} optionColors dtable option-colors
+   * @param {Array.<string>} highlightColors dtable highlight-colors
+   * @return {{highlightColor: ?string, bgColor: ?string, textColor: ?string}}
+   */
+  static getColors({row, colorColumn, optionColors, highlightColors}) {
+    const colors = {bgColor: null, textColor: null, highlightColor: null};
+    const defaultOptionColor = optionColors[2];
+    if (colorColumn) {
+      const { key: colorColumnKey, data } = colorColumn;
+      const colorDataOptions = data && data.options;
+      const colorId = row[colorColumnKey];
+      const colorOption = colorDataOptions && colorDataOptions.find(o => o.id === colorId);
+      colors.bgColor = colorOption ? colorOption.color : defaultOptionColor.COLOR;
+      colors.textColor = colorOption ? colorOption.textColor : defaultOptionColor.TEXT_COLOR;
+    } else {
+      colors.bgColor = defaultOptionColor.COLOR;
+      colors.textColor = defaultOptionColor.TEXT_COLOR;
+    }
+    colors.highlightColor = highlightColors[colors.bgColor];
+    return colors;
+  }
 
   /**
    * @param {{row: TableEventRowTypedef}|*} object

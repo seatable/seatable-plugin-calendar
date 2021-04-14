@@ -95,7 +95,7 @@ class ReactBigCalendar extends React.Component {
     return columns.find(c => c.name === columnName) || null;
   }
 
-  getLabelColumn = (columnName) => {
+  getColorColumn = (columnName) => {
     const { columns, CellType } = this.props;
     if (!Array.isArray(columns)) return null;
     if (columnName) {
@@ -114,14 +114,14 @@ class ReactBigCalendar extends React.Component {
     let titleColumn = this.getTitleColumn(titleColumnName);
     let startDateColumn = this.getDateColumn(startDateColumnName);
     let endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
-    let labelColumn = this.getLabelColumn(colorColumnName);
+    let colorColumn = this.getColorColumn(colorColumnName);
     let events = [];
     if (!startDateColumn) {
       return [];
     }
     rows.forEach((row) => {
       const formattedRow = getRowById(activeTable, row._id);
-      const event = this.getEvent(row, formattedRow, titleColumn, startDateColumn, endDateColumn, labelColumn);
+      const event = this.getEvent(row, formattedRow, titleColumn, startDateColumn, endDateColumn, colorColumn);
       if (event) {
         events.push(event);
       }
@@ -140,7 +140,7 @@ class ReactBigCalendar extends React.Component {
     }
   }
 
-  getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, labelColumn) => {
+  getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, colorColumn) => {
     const { optionColors, highlightColors } = this.props;
     const { name: titleColumnName } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
@@ -158,20 +158,8 @@ class ReactBigCalendar extends React.Component {
     if (endDate && (!isValidDateObject(new Date(endDate)) || moment(endDate).isBefore(date))) {
       return null;
     }
-    let bgColor, textColor;
-    if (labelColumn) {
-      const { key: colorColumnKey, data } = labelColumn;
-      const colorDataOptions = data && data.options;
-      const colorId = row[colorColumnKey];
-      const colorOption = colorDataOptions && colorDataOptions.find(o => o.id === colorId);
-      bgColor = colorOption ? colorOption.color : optionColors[2].COLOR;
-      textColor = colorOption ? colorOption.textColor : optionColors[2].TEXT_COLOR;
-    } else {
-      bgColor = optionColors[2].COLOR;
-      textColor = optionColors[2].TEXT_COLOR;
-    }
-    const highlightColor = highlightColors[bgColor];
-    return new TableEvent({row, date, endDate, title, bgColor, highlightColor, textColor});
+    const eventColors = TableEvent.getColors({row, colorColumn, optionColors, highlightColors});
+    return new TableEvent({row, date, endDate, title, ...eventColors});
   }
 
   onRowExpand = (row) => {

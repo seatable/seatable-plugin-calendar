@@ -57,7 +57,8 @@ class ReactBigCalendar extends React.Component {
     let { activeTable, activeView } = this.props;
     let dtableUuid = getDtableUuid();
     let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
-    return selectedCalendarView[key] || CALENDAR_VIEWS.MONTH;
+    let view = selectedCalendarView[key];
+    return -1 === calendarViews.indexOf(view) ? CALENDAR_VIEWS.MONTH : view;
   }
 
   onSelectView = (view) => {

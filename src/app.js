@@ -208,25 +208,29 @@ class App extends React.Component {
       isExporting: true,
       exportedMonths: exportedMonths
     }, () => {
-      const _this = this;
+      const printIframe = document.body.appendChild(document.createElement('iframe'));
+      const printWindow = printIframe.contentWindow;
       const prtContent = document.getElementById('exported-months');
-      const w = prtContent.scrollWidth;
-      const h = prtContent.scrollHeight;
-      const WinPrint = window.open('', '', 'left=0,top=0,width=' + w + ',height=' + h +',toolbar=0,scrollbars=0,status=0');
-      WinPrint.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>');
-      WinPrint.document.write(prtContent.innerHTML + '</body></html>');
-      WinPrint.document.title = `${intl.get('Calendar')}–${start}${start == end ? '' : '–' + end}.pdf`;
-      WinPrint.document.close();
-      WinPrint.onload = function () {
-        WinPrint.focus();
-        WinPrint.print();
-        WinPrint.close();
-        _this.setState({
+      const removeIframe = function() {
+        document.body.removeChild(printIframe);
+      };
+      printIframe.className = "position-fixed w-0 h-0 invisible";
+      printWindow.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>');
+      printWindow.document.write(prtContent.innerHTML + '</body></html>');
+      printWindow.document.title = `${intl.get('Calendar')}–${start}${start == end ? '' : '–' + end}.pdf`;
+      printWindow.document.close();
+      printWindow.onload = function () {
+        printWindow.focus();
+        printWindow.print();
+      };
+      printWindow.onafterprint = removeIframe;
+      setTimeout(() => {
+        this.setState({
           isExporting: false,
           exportedMonths: []
         });
-        _this.toggleTimeRangeDialog();
-      };
+        this.toggleTimeRangeDialog();
+      });
     });
   }
 

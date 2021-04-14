@@ -75,8 +75,6 @@
  * }
  */
 
-const FIXED_PERIOD_OF_TIME_IN_HOURS = 1;
-
 /**
  * event.allDay mapping of SeaTable TableEvent
  *
@@ -116,8 +114,7 @@ const endImplementation = (eventStart, eventAllDay, rowDate) => {
   let end = rowDate ? new Date(rowDate) : eventStart;
   if (eventAllDay !== true && !rowDate) {
     end = new Date(+eventStart);
-    const hours = Math.max(1, Math.abs(parseInt(FIXED_PERIOD_OF_TIME_IN_HOURS.toFixed(0), 10)));
-    end.setHours(eventStart.getHours() + hours);
+    end.setHours(eventStart.getHours() + TableEvent.FIXED_PERIOD_OF_TIME_IN_HOURS);
   }
   return end;
 };
@@ -139,6 +136,8 @@ const endImplementation = (eventStart, eventAllDay, rowDate) => {
  * @property {any|undefined} resource
  */
 export default class TableEvent {
+
+  static FIXED_PERIOD_OF_TIME_IN_HOURS = 1;
 
   /**
    * obtain colors (background, text, highlight) for row and labelColumn

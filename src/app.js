@@ -208,15 +208,18 @@ class App extends React.Component {
       isExporting: true,
       exportedMonths: exportedMonths
     }, () => {
-      const printIframe = document.body.appendChild(document.createElement('iframe'));
+      const iframeID = 'iframe-for-print';
+      const printIframe = document.getElementById(iframeID) || document.body.appendChild(document.createElement('iframe'));
       const printWindow = printIframe.contentWindow;
       const prtContent = document.getElementById('exported-months');
       const removeIframe = function() {
-        document.body.removeChild(printIframe);
+        printWindow.document.open();
+        printWindow.document.close();
       };
+      printIframe.id = iframeID;
       printIframe.className = "position-fixed w-0 h-0 invisible";
-      printWindow.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>');
-      printWindow.document.write(prtContent.innerHTML + '</body></html>');
+      printWindow.document.open();
+      printWindow.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>' + prtContent.innerHTML + '</body></html>');
       printWindow.document.title = `${intl.get('Calendar')}–${start}${start == end ? '' : '–' + end}.pdf`;
       printWindow.document.close();
       printWindow.onload = function () {

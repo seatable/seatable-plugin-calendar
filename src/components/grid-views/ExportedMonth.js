@@ -32,7 +32,6 @@ class ExportedMonth extends React.Component {
     this.lang = getDtableLang();
     this.isChinese = this.lang && this.lang.toLowerCase() === 'zh-cn';
     this.isTableReadOnly = getDtablePermission() === 'r';
-    this.isScrolling = false;
     this.festivals = {};
   }
 
@@ -41,8 +40,8 @@ class ExportedMonth extends React.Component {
     events.forEach((event) => {
       const { start, end } = event;
       const m_end = moment(end);
-      let m_eventWeekStart = moment(start).startOf(DATE_UNIT.WEEK);
-      let m_eventWeekEnd = moment(start).endOf(DATE_UNIT.WEEK);
+      let m_eventWeekStart = moment(dates.startOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
+      let m_eventWeekEnd = moment(dates.endOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
       this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       while(m_end.isAfter(m_eventWeekEnd)) {
         m_eventWeekStart.add(7, DATE_UNIT.DAY);
@@ -109,7 +108,7 @@ class ExportedMonth extends React.Component {
     let { localizer, date } = this.props,
       month = dates.visibleDays(date, localizer),
       weeks = chunk(month, 7);
-    renderWeeks = weeks.map(week => week[0]);
+    renderWeeks = weeks.map(week => week[localizer.startOfWeek()]);
     let weeksCount = renderWeeks.length; // usually there are 5 weeks in a month, but in months such as 2021-05, there are 6 weeks.
 
     return (

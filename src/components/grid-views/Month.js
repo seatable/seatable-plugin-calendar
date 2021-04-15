@@ -54,8 +54,8 @@ class MonthView extends React.Component {
     events.forEach((event) => {
       const { start, end } = event;
       const m_end = moment(end);
-      let m_eventWeekStart = moment(start).startOf(DATE_UNIT.WEEK);
-      let m_eventWeekEnd = moment(start).endOf(DATE_UNIT.WEEK);
+      let m_eventWeekStart = moment(dates.startOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
+      let m_eventWeekEnd = moment(dates.endOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
       this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       while(m_end.isAfter(m_eventWeekEnd)) {
         m_eventWeekStart.add(7, DATE_UNIT.DAY);
@@ -88,7 +88,7 @@ class MonthView extends React.Component {
       let monthRowsHeight = this.rbcMonthRows.offsetHeight;
       let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
       this.setState({
-        ...getInitialState(this.props.date, renderedRowsCount)
+        ...getInitialState(this.props.date, renderedRowsCount, this.props.localizer)
       }, () => {
         this.rbcMonthRows.scrollTop = this.state.visibleStartIndex * MONTH_ROW_HEIGHT;
       });
@@ -105,7 +105,7 @@ class MonthView extends React.Component {
       let visibleStartIndex = OVERSCAN_ROWS + OFFSET_ROWS;
       let monthRowsHeight = this.rbcMonthRows.offsetHeight;
       let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
-      let allWeeksStartDates = getAllWeeksStartDates(this.props.date, renderedRowsCount);
+      let allWeeksStartDates = getAllWeeksStartDates(this.props.date, renderedRowsCount, this.props.localizer);
       let visibleEndIndex = visibleStartIndex + renderedRowsCount;
       let scrollTop = visibleStartIndex * MONTH_ROW_HEIGHT;
       this.updateScroll(scrollTop, visibleStartIndex, visibleEndIndex, allWeeksStartDates);
@@ -134,7 +134,7 @@ class MonthView extends React.Component {
       this.isScrolling = false;
       let nextMonthDate = getNextMonthDate(allWeeksStartDates, visibleStartIndex);
       let lastVisibleWeekStartDate = allWeeksStartDates[visibleStartIndex];
-      allWeeksStartDates = getAllWeeksStartDates(nextMonthDate, renderedRowsCount);
+      allWeeksStartDates = getAllWeeksStartDates(nextMonthDate, renderedRowsCount, this.props.localizer);
       visibleStartIndex = getVisibleStartIndexByDate(lastVisibleWeekStartDate, allWeeksStartDates);
       scrollTop = (visibleStartIndex + (fract || 1)) * MONTH_ROW_HEIGHT;
       this.props.updateCurrentDate(getWeekEndDate(nextMonthDate));

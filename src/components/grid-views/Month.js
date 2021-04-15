@@ -26,7 +26,6 @@ import DateContentRow from '../rows/DateContentRow';
 import Header from '../header/Header';
 import DateHeader from '../header/DateHeader';
 import { sortEvents } from '../../utils/eventLevels';
-import intl from 'react-intl-universal';
 
 class MonthView extends React.Component {
   constructor(...args) {
@@ -296,7 +295,9 @@ class MonthView extends React.Component {
     return dates.range(first, last, 'day').map((day, idx) => (
       <div key={'header_' + idx} className='rbc-header'>
         <HeaderComponent
-          label={intl.get('Week_xxx', {weekNumber: intl.get(localizer.format(day, 'weekdayFormat'))})}
+          date={day}
+          localizer={localizer}
+          label={localizer.format(day, 'weekdayFormat')}
         />
       </div>
     ));

@@ -14,12 +14,17 @@ You need:
 
 The workflow of translation is as following:
 
-* Add new strings to the english version js file
+* Add new strings to the english translation file
 * Use `push-translate` command defined in package.json to push translations to Transifex
 * Translate the strings in Transifex
 * Use `pull-translate` command to download translations from Transifex
 
 If you add translations in your PR directly, they will be overwritten by the `pull-translate` command.
+
+## Translation of the Plugin and localization of Calendar Dates
+
+* react-intl-universal is used for string translations (`intl`, standard)
+* the localizer of the calendar component is decorated by `intl-decorator` which adds `intl`  to it so that formats can be defined per locale/culture in either `intl`  or `intl-decorator`.
 
 ## Dependencies
 

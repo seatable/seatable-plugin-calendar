@@ -412,6 +412,7 @@ button.rbc-input::-moz-focus-inner {
 }
 @media print {
   .rbc-month-view-exported {
+    font-family: Arial, Helvetica, sans-serif, fangsong;
     break-inside: avoid;
     break-after: page;
   }

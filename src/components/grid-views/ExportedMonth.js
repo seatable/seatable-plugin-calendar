@@ -3,6 +3,7 @@ import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import moment from 'moment';
+import intl from 'react-intl-universal';
 import getPosition from 'dom-helpers/position';
 import chunk from 'lodash/chunk';
 import { getDtableLang, getDtablePermission } from '../../utils/common';
@@ -210,10 +211,7 @@ class ExportedMonth extends React.Component {
     return dates.range(first, last, 'day').map((day, idx) => (
       <div key={'header_' + idx} className='rbc-header'>
         <HeaderComponent
-          date={day}
-          localizer={localizer}
-          label={localizer.format(day, 'weekdayFormat')}
-          isShowWeek={true}
+          label={intl.get('Week_xxx', {weekNumber: intl.get(localizer.format(day, 'weekdayFormat'))})}
         />
       </div>
     ));

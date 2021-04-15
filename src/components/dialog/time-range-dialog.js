@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-/*
-import 'moment/locale/zh-cn';
-import 'moment/locale/en-gb';
-*/
-//import 'moment/min/locales.min';
+import 'moment/min/locales.min';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input, Alert } from 'reactstrap';
 import intl from 'react-intl-universal';
 import Picker from '@seafile/seafile-calendar/lib/Picker';
@@ -25,11 +21,8 @@ class SelectExportTimeRangeDialog extends Component {
 
   constructor(props) {
     super(props);
-    /*
     const lang = window.dtable ? window.dtable.lang : 'zh-cn';
     const now = moment().locale(lang);
-    */
-    const now = moment();
     this.state = {
       dateRange: [now, now],
       outOfRange: false

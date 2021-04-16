@@ -217,7 +217,7 @@ class App extends React.Component {
         printWindow.document.close();
       };
       printIframe.id = iframeID;
-      printIframe.className = "position-fixed w-0 h-0 invisible";
+      printIframe.className = "position-fixed fixed-bottom w-0 h-0 border-0 invisible";
       printWindow.document.open();
       printWindow.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>' + prtContent.innerHTML + '</body></html>');
       printWindow.document.title = `${intl.get('Calendar')}–${start}${start == end ? '' : '–' + end}.pdf`;

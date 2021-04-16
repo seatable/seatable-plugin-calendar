@@ -1,13 +1,14 @@
 import { MONTH_ROW_HEIGHT, OVERSCAN_ROWS, OFFSET_ROWS } from '../constants';
 import { DATE_UNIT } from '../constants/date';
 import moment from 'moment';
+import { startOf } from './dates';
 
-export const getInitialState = (date, renderedRowsCount) => {
+export const getInitialState = (date, renderedRowsCount, localizer) => {
   let visibleStartIndex = OFFSET_ROWS + OVERSCAN_ROWS;
   let visibleEndIndex = visibleStartIndex + renderedRowsCount;
   let overscanStartIndex = getOverscanStartIndex(visibleStartIndex);
   let overscanEndIndex = getOverscanEndIndex(visibleEndIndex);
-  let allWeeksStartDates = getAllWeeksStartDates(date, renderedRowsCount);
+  let allWeeksStartDates = getAllWeeksStartDates(date, renderedRowsCount, localizer);
   return {
     visibleStartIndex,
     visibleEndIndex,
@@ -17,8 +18,8 @@ export const getInitialState = (date, renderedRowsCount) => {
   };
 };
 
-export const getAllWeeksStartDates = (date, renderedRowsCount) => {
-  const visibleStartWeekDate = moment(date).startOf('week').subtract(7, DATE_UNIT.DAY);
+export const getAllWeeksStartDates = (date, renderedRowsCount, localizer) => {
+  const visibleStartWeekDate = moment(startOf(date, DATE_UNIT.WEEK, localizer.startOfWeek())).subtract(7, DATE_UNIT.DAY);
   const gridStartWeekDate = moment(visibleStartWeekDate).subtract((OVERSCAN_ROWS + OFFSET_ROWS) * 7, DATE_UNIT.DAY).toDate();
   const gridEndWeekDate = moment(visibleStartWeekDate).add((renderedRowsCount + OVERSCAN_ROWS + OFFSET_ROWS) * 7, DATE_UNIT.DAY).toDate();
   return getWeeksStartDates(gridStartWeekDate, gridEndWeekDate);

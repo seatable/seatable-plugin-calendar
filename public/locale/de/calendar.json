@@ -33,8 +33,8 @@
   "xxx_Month_xxx_Date_xxx_Week": "{weekDay} {month} {date}",
   "No_date_field_to_place_records_on_the_calendar": "Es sind keine Datumsinformationen vorhanden, um die Einträge im Kalender anzuzeigen.",
   "There_are_no_records": "Es gibt keine Einträge.",
-  "Today": "Heue",
-  "Default_View": "Default View",
+  "Today": "Heute",
+  "Default_View": "Standardansicht",
   "New_View": "Neue Ansicht",
   "Rename_View": "Ansicht umbenennen",
   "Delete_View": "Ansicht löschen",
@@ -45,5 +45,7 @@
   "View": "Ansicht",
   "Title": "Feld für Titel",
   "No_options": "Keine Optionen",
-  "Not_used": "Not used"
+  "Not_used": "Nicht genutzt",
+  "Choose_the_time_range": "Choose the time range",
+  "Out_of_range": "At most 12 months can be selected."
 }

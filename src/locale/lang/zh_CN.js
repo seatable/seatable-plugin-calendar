@@ -46,6 +46,8 @@ const zh_CN = {
   'Title': '标题字段',
   'No_options': '没有选项',
   'Not_used': '不使用',
+  'Choose_the_time_range': '选择时间范围',
+  'Out_of_range': '最多可以选择12个月。',
 };
 
 export default zh_CN;

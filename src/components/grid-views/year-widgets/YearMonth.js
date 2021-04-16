@@ -69,7 +69,7 @@ class YearMonth extends React.Component {
     return (
       <Fragment>
         {this.renderMonthHeaders()}
-        <div className='rbc-row rbc-month-header'>
+        <div className='rbc-row'>
           {this.renderWeekDayHeaders(weeks[0])}
         </div>
         {weeks.map(this.renderDay)}

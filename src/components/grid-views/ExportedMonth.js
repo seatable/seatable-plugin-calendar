@@ -3,32 +3,20 @@ import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import moment from 'moment';
+import intl from 'react-intl-universal';
 import getPosition from 'dom-helpers/position';
+import chunk from 'lodash/chunk';
 import { getDtableLang, getDtablePermission } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';
 import { getFestival } from '../../utils/festival';
-import {
-  getInitialState,
-  getOverscanStartIndex,
-  getOverscanEndIndex,
-  getRenderedRowsCount,
-  getNextMonthDate,
-  isNextMonth,
-  getAllWeeksStartDates,
-  getVisibleStartIndexByDate,
-  getWeekEndDate
-} from '../../utils/monthViewUtils';
-import { navigate, MONTH_ROW_HEIGHT, OVERSCAN_ROWS, OFFSET_ROWS } from '../../constants';
 import { DATE_UNIT } from '../../constants/date';
-import Popup from '../popup/Popup';
 import DateContentRow from '../rows/DateContentRow';
 import Header from '../header/Header';
 import DateHeader from '../header/DateHeader';
 import { sortEvents } from '../../utils/eventLevels';
-import intl from 'react-intl-universal';
 
-class MonthView extends React.Component {
+class ExportedMonth extends React.Component {
   constructor(...args) {
     super(...args);
     this._bgRows = [];
@@ -45,7 +33,6 @@ class MonthView extends React.Component {
     this.lang = getDtableLang();
     this.isChinese = this.lang && this.lang.toLowerCase() === 'zh-cn';
     this.isTableReadOnly = getDtablePermission() === 'r';
-    this.isScrolling = false;
     this.festivals = {};
   }
 
@@ -83,79 +70,9 @@ class MonthView extends React.Component {
     });
   }
 
-  componentDidMount() {
-    if (this.rbcMonthRows) {
-      let monthRowsHeight = this.rbcMonthRows.offsetHeight;
-      let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
-      this.setState({
-        ...getInitialState(this.props.date, renderedRowsCount, this.props.localizer)
-      }, () => {
-        this.rbcMonthRows.scrollTop = this.state.visibleStartIndex * MONTH_ROW_HEIGHT;
-      });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.events !== this.props.events) {
-      const newWeekEventsMap = this.getWeekEventsMap(this.props.events, this.props.accessors);
-      this.setState({weekEventsMap: newWeekEventsMap});
-    }
-    if (prevProps.date !== this.props.date && this.props.changeDateByNavicate) {
-      this.isScrolling = false;
-      let visibleStartIndex = OVERSCAN_ROWS + OFFSET_ROWS;
-      let monthRowsHeight = this.rbcMonthRows.offsetHeight;
-      let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
-      let allWeeksStartDates = getAllWeeksStartDates(this.props.date, renderedRowsCount, this.props.localizer);
-      let visibleEndIndex = visibleStartIndex + renderedRowsCount;
-      let scrollTop = visibleStartIndex * MONTH_ROW_HEIGHT;
-      this.updateScroll(scrollTop, visibleStartIndex, visibleEndIndex, allWeeksStartDates);
-    }
-  }
-
   getContainer = () => {
     return findDOMNode(this);
   };
-
-  onMonthViewScroll = (evt) => {
-    if (!this.isScrolling) {
-      this.isScrolling = true;
-      return;
-    }
-    let { date } = this.props;
-    let { allWeeksStartDates } = this.state;
-    let scrollTop = evt.target.scrollTop;
-    let monthRowsHeight = this.rbcMonthRows.offsetHeight;
-    let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
-    let overRowsCount = scrollTop / MONTH_ROW_HEIGHT;
-    let fract = overRowsCount - Math.trunc(overRowsCount);
-    let overDatesCount = Math.ceil(overRowsCount) - 1;
-    let visibleStartIndex = overDatesCount;
-    if (isNextMonth(date, allWeeksStartDates, visibleStartIndex)) {
-      this.isScrolling = false;
-      let nextMonthDate = getNextMonthDate(allWeeksStartDates, visibleStartIndex);
-      let lastVisibleWeekStartDate = allWeeksStartDates[visibleStartIndex];
-      allWeeksStartDates = getAllWeeksStartDates(nextMonthDate, renderedRowsCount, this.props.localizer);
-      visibleStartIndex = getVisibleStartIndexByDate(lastVisibleWeekStartDate, allWeeksStartDates);
-      scrollTop = (visibleStartIndex + (fract || 1)) * MONTH_ROW_HEIGHT;
-      this.props.updateCurrentDate(getWeekEndDate(nextMonthDate));
-    }
-    let visibleEndIndex = visibleStartIndex + renderedRowsCount;
-    this.updateScroll(scrollTop, visibleStartIndex, visibleEndIndex, allWeeksStartDates);
-  }
-
-  updateScroll = (scrollTop, visibleStartIndex, visibleEndIndex, allWeeksStartDates) => {
-    let overscanStartIndex = getOverscanStartIndex(visibleStartIndex);
-    let overscanEndIndex = getOverscanEndIndex(visibleEndIndex);
-    this.setState({
-      visibleStartIndex,
-      visibleEndIndex,
-      overscanStartIndex,
-      overscanEndIndex,
-      allWeeksStartDates
-    }, () => {
-      this.rbcMonthRows.scrollTop = scrollTop;
-    });
-  }
 
   handleShowMore = (events, date, cell, slot, target) => {
     //cancel any pending selections so only the event click goes through.
@@ -187,25 +104,23 @@ class MonthView extends React.Component {
 
   render() {
     let { className } = this.props;
-    let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
-    let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
-    if (allWeeksStartDates) {
-      renderWeeks = allWeeksStartDates.slice(overscanStartIndex, overscanEndIndex);
-      offsetTop = overscanStartIndex * MONTH_ROW_HEIGHT;
-      offsetBottom = (allWeeksStartDates.length - overscanEndIndex) * MONTH_ROW_HEIGHT;
-    }
-    let weeksCount = renderWeeks.length;
+    let renderWeeks = [];
+
+    let { localizer, date } = this.props,
+      month = dates.visibleDays(date, localizer),
+      weeks = chunk(month, 7);
+    renderWeeks = weeks.map(week => week[localizer.startOfWeek()]);
+    let weeksCount = renderWeeks.length; // usually there are 5 weeks in a month, but in months such as 2021-05, there are 6 weeks.
+
     return (
-      <div className={classnames('rbc-month-view', className)}>
+      <div className={classnames('rbc-month-view-exported', className)}>
+        <h3 className="mb-3 h4 text-center font-weight-normal">{ExportedMonth.title(date, {localizer})}</h3>
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
         </div>
-        <div className="rbc-month-rows" ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
-          <div style={{paddingTop: offsetTop, paddingBottom: offsetBottom}}>
-            {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
-          </div>
+        <div className={`rbc-month-rows ${weeksCount == 6 ? 'rbc-month-rows-6weeks' : ''}`}>
+          {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
         </div>
-        {this.state.popup && this.renderOverlay()}
       </div>
     );
   }
@@ -302,35 +217,6 @@ class MonthView extends React.Component {
     ));
   }
 
-  renderOverlay() {
-    let overlay = (this.state && this.state.overlay) || {};
-    let { accessors, localizer, components, getters, selected, popupOffset } = this.props;
-
-    return (
-      <Popup
-        {...this.props}
-        scrolled={this._scroll || null}
-        popupOffset={popupOffset}
-        accessors={accessors}
-        getters={getters}
-        selected={selected}
-        components={components}
-        localizer={localizer}
-        position={overlay.position}
-        events={overlay.events}
-        slotStart={overlay.date}
-        slotEnd={overlay.end}
-        onSelect={this.onRowExpand}
-        onDoubleClick={this.handleDoubleClickEvent}
-        onHidePopup={this.onHidePopup}
-      />
-    );
-  }
-
-  measureRowLimit() {
-    this.setState({needLimitMeasure: false});
-  }
-
   handleSelectSlot = (range, slotInfo) => {
     this._pendingSelection = this._pendingSelection.concat(range);
 
@@ -372,7 +258,7 @@ class MonthView extends React.Component {
   }
 }
 
-MonthView.propTypes = {
+ExportedMonth.propTypes = {
   events: PropTypes.array.isRequired,
   date: PropTypes.instanceOf(Date),
   min: PropTypes.instanceOf(Date),
@@ -411,26 +297,13 @@ MonthView.propTypes = {
   onInsertRow: PropTypes.func,
 };
 
-MonthView.range = (date, { localizer }) => {
+ExportedMonth.range = (date, { localizer }) => {
   let start = dates.firstVisibleDay(date, localizer);
   let end = dates.lastVisibleDay(date, localizer);
   return { start, end };
 };
 
-MonthView.navigate = (date, action) => {
-  switch (action) {
-    case navigate.PREVIOUS:
-      return dates.add(date, -1, DATE_UNIT.MONTH);
-
-    case navigate.NEXT:
-      return dates.add(date, 1, DATE_UNIT.MONTH);
-
-    default:
-      return date;
-  }
-};
-
-MonthView.title = (date, { localizer }) =>
+ExportedMonth.title = (date, { localizer }) =>
   localizer.format(date, 'monthHeaderFormat');
 
-export default MonthView;
+export default ExportedMonth;

@@ -404,6 +404,25 @@ button.rbc-input::-moz-focus-inner {
   border-bottom: 1px solid #ddd;
 }
 
+/* for exported month in which there are 6 weeks */
+.rbc-month-view-exported .rbc-month-rows-6weeks .rbc-month-row {
+  height: 105px;
+  min-height: 105px;
+  max-height: 105px;
+}
+@media print {
+  .rbc-month-view-exported {
+    font-family: Arial, Helvetica, sans-serif, fangsong;
+    page-break-inside: avoid; /* for old browsers */
+    page-break-after: always; /* for old browsers */
+    break-inside: avoid;
+    break-after: page;
+  }
+  @page {
+    size: landscape;
+  }
+}
+
 .rbc-date-cell {
   position: relative;
   display: inline-flex;

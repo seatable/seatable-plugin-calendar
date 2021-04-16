@@ -18,6 +18,7 @@ import { mergeWithDefaults } from './utils/localizers/localizer';
 import * as dates from './utils/dates';
 import { navigate, CALENDAR_VIEWS, CALENDAR_HEADER_HEIGHT, CALENDAR_DIALOG_PADDINGTOP } from './constants';
 import VIEWS from './components/grid-views';
+import ExportedMonths from './components/grid-views/ExportedMonths';
 import NoopWrapper from './components/wrapper/NoopWrapper';
 import Toolbar from './components/toolbar/Toolbar';
 
@@ -923,29 +924,57 @@ class Calendar extends React.Component {
           />
         )}
         {startDateColumn ? (
-          <View
-            {...props}
-            events={events}
-            date={current}
-            getNow={getNow}
-            length={length}
-            localizer={localizer}
-            getters={getters}
-            components={components}
-            accessors={accessors}
-            showMultiDayTimes={showMultiDayTimes}
-            getDrilldownView={this.getDrilldownView}
-            onNavigate={this.handleNavigate}
-            onDrillDown={this.handleDrillDown}
-            onRowExpand={this.props.onRowExpand}
-            onDoubleClickEvent={this.handleDoubleClickEvent}
-            onSelectSlot={this.handleSelectSlot}
-            containerPaddingTop={CALENDAR_DIALOG_PADDINGTOP}
-            calendarHeaderHeight={CALENDAR_HEADER_HEIGHT}
-            onInsertRow={this.onInsertRow}
-            updateCurrentDate={this.updateCurrentDate}
-            changeDateByNavicate={this.state.changeDateByNavicate}
-          />):
+          <React.Fragment>
+            <View
+              {...props}
+              events={events}
+              date={current}
+              getNow={getNow}
+              length={length}
+              localizer={localizer}
+              getters={getters}
+              components={components}
+              accessors={accessors}
+              showMultiDayTimes={showMultiDayTimes}
+              getDrilldownView={this.getDrilldownView}
+              onNavigate={this.handleNavigate}
+              onDrillDown={this.handleDrillDown}
+              onRowExpand={this.props.onRowExpand}
+              onDoubleClickEvent={this.handleDoubleClickEvent}
+              onSelectSlot={this.handleSelectSlot}
+              containerPaddingTop={CALENDAR_DIALOG_PADDINGTOP}
+              calendarHeaderHeight={CALENDAR_HEADER_HEIGHT}
+              onInsertRow={this.onInsertRow}
+              updateCurrentDate={this.updateCurrentDate}
+              changeDateByNavicate={this.state.changeDateByNavicate}
+            />
+            {this.props.isExporting && (
+              <ExportedMonths
+                {...props}
+                events={events}
+                date={current}
+                getNow={getNow}
+                length={length}
+                localizer={localizer}
+                getters={getters}
+                components={components}
+                accessors={accessors}
+                showMultiDayTimes={showMultiDayTimes}
+                getDrilldownView={this.getDrilldownView}
+                onNavigate={this.handleNavigate}
+                onDrillDown={this.handleDrillDown}
+                onRowExpand={this.props.onRowExpand}
+                onDoubleClickEvent={this.handleDoubleClickEvent}
+                onSelectSlot={this.handleSelectSlot}
+                containerPaddingTop={CALENDAR_DIALOG_PADDINGTOP}
+                calendarHeaderHeight={CALENDAR_HEADER_HEIGHT}
+                onInsertRow={this.onInsertRow}
+                updateCurrentDate={this.updateCurrentDate}
+                changeDateByNavicate={this.state.changeDateByNavicate}
+              />
+            )}
+          </React.Fragment>
+        ):
           <div className="empty-date-tips">{intl.get('No_date_field_to_place_records_on_the_calendar')}</div>
         }
       </div>

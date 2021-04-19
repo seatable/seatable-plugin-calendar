@@ -5,13 +5,13 @@ import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
+import { getCollaboratorsName } from './utils/value-format-utils';
 import { CALENDAR_VIEWS, SETTING_KEY } from './constants';
 import TableEvent from './model/event';
 import withDragAndDrop from './addons/dragAndDrop';
 
 import './css/react-big-calendar.css';
 import './addons/dragAndDrop/styles.css';
-import { getCollaboratorsName } from './utils/value-format-utils';
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 

@@ -5,6 +5,7 @@ import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
+import { getCollaboratorsName } from './utils/value-format-utils';
 import { CALENDAR_VIEWS, SETTING_KEY } from './constants';
 import TableEvent from './model/event';
 import withDragAndDrop from './addons/dragAndDrop';
@@ -140,12 +141,22 @@ class ReactBigCalendar extends React.Component {
     }
   }
 
+  getEventTitle = (rawRow, columnType, columnName) => {
+    const { CellType, collaborators } = this.props;
+    const title = rawRow[columnName];
+    switch (columnType) {
+      case CellType.COLLABORATOR:
+        return getCollaboratorsName(collaborators, title);
+      default: return title;
+    }
+  }
+
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, colorColumn) => {
     const { optionColors, highlightColors } = this.props;
-    const { name: titleColumnName } = titleColumn || {};
+    const { type: titleColumnType, name: titleColumnName } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
-    const title = rawRow[titleColumnName];
+    const title = this.getEventTitle(rawRow, titleColumnType, titleColumnName);
     const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
     // start date must exist and valid.
     if (!date || !isValidDateObject(new Date(date))) {

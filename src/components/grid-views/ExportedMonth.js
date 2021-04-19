@@ -118,7 +118,7 @@ class ExportedMonth extends React.Component {
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
         </div>
-        <div className={`rbc-month-rows ${weeksCount == 6 ? 'rbc-month-rows-6weeks' : ''}`}>
+        <div className={`rbc-month-rows ${weeksCount === 6 ? 'rbc-month-rows-6weeks' : ''}`}>
           {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
         </div>
       </div>

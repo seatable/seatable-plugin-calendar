@@ -78,6 +78,8 @@ class App extends React.Component {
       window.app = {};
       await this.dtable.init(window.dtablePluginConfig);
       await this.dtable.syncWithServer();
+      let relatedUsersRes = await this.getRelatedUsersFromServer(this.dtable.dtableStore);
+      window.app.collaborators = relatedUsersRes.data.user_list;
       this.dtable.subscribe('dtable-connect', () => { this.onDTableConnect(); });
     } else {
       // integrated to dtable app
@@ -86,6 +88,10 @@ class App extends React.Component {
     this.unsubscribeLocalDtableChanged = this.dtable.subscribe('local-dtable-changed', () => { this.onDTableChanged(); });
     this.unsubscribeRemoteDtableChanged = this.dtable.subscribe('remote-dtable-changed', () => { this.onDTableChanged(); });
     this.resetData(true);
+  }
+
+  async getRelatedUsersFromServer(dtableStore) {
+    return dtableStore.dtableAPI.getTableRelatedUsers();
   }
 
   onDTableConnect = () => {
@@ -116,6 +122,8 @@ class App extends React.Component {
     this.optionColors = this.dtable.getOptionColors();
     this.highlightColors = this.dtable.getHighlightColors();
     this.columnIconConfig = this.dtable.getColumnIconConfig();
+    this.collaborators = this.getRelatedUsersFromLocal();
+    this.currentUser = this.getCurrentUserFromLocal();
     const selectedPluginView = views[selectedViewIdx];
     const rows = selectedPluginView ? this.getPluginViewRows(selectedPluginView.settings) : [];
     this.setState({
@@ -145,13 +153,32 @@ class App extends React.Component {
     window.app.onClosePlugin && window.app.onClosePlugin();
   }
 
+  getRelatedUsersFromLocal = () => {
+    let { collaborators, state } = window.app;
+    if (!collaborators) {
+      // dtable app
+      return state && state.collaborators;
+    }
+    return collaborators; // local develop
+  }
+
+  getCurrentUserFromLocal = () => {
+    let username, userId;
+    if (window.dtable) {
+      username = window.dtable.username;
+      userId = window.dtable.userId;
+    }
+    return { username, userId };
+  }
+
   getRows = (table, view) => {
     let rows = [];
     let { name: tableName } = table;
     let { name: viewName } = view;
+    let { username, userId } = this.currentUser;
     this.dtable.forEachRow(tableName, viewName, (row) => {
       rows.push(row);
-    });
+    }, {username, userId});
     return rows;
   }
 
@@ -217,10 +244,10 @@ class App extends React.Component {
         printWindow.document.close();
       };
       printIframe.id = iframeID;
-      printIframe.className = "position-fixed fixed-bottom w-0 h-0 border-0 invisible";
+      printIframe.className = 'position-fixed fixed-bottom w-0 h-0 border-0 invisible';
       printWindow.document.open();
       printWindow.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>' + prtContent.innerHTML + '</body></html>');
-      printWindow.document.title = `${intl.get('Calendar')}–${start}${start == end ? '' : '–' + end}.pdf`;
+      printWindow.document.title = `${intl.get('Calendar')}–${start}${start === end ? '' : '–' + end}.pdf`;
       printWindow.document.close();
       printWindow.onload = function () {
         printWindow.focus();
@@ -417,6 +444,7 @@ class App extends React.Component {
             CellType={this.cellType}
             optionColors={this.optionColors}
             highlightColors={this.highlightColors}
+            collaborators={this.collaborators}
             onRowExpand={this.onRowExpand}
             onInsertRow={this.onInsertRow}
             hideViewSettingPanel={this.hideViewSettingPanel}

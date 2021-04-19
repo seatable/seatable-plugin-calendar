@@ -55,6 +55,7 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
   };
   intlFormat('dayHeaderFormat');
   intlFormat('yearHeaderFormat');
+  intlFormat('monthFormat');
   intlFormat('yearMonthWeekdayFormat', 'dd');
   intlFormat('weekdayFormat');
 

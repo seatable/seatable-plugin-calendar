@@ -25,6 +25,7 @@ If you add translations in your PR directly, they will be overwritten by the `pu
 
 * react-intl-universal is used for string translations (`intl`, standard)
 * the localizer of the calendar component is decorated by `intl-decorator` which adds `intl`  to it so that formats can be defined per locale/culture in either `intl`  or `intl-decorator`.
+* calendar messages have `.rbc.messages.<msgId>` translation keys.
 
 ## Dependencies
 

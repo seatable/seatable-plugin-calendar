@@ -27,7 +27,7 @@ class Toolbar extends React.Component {
             className={classnames('rbc-tool-btn', {'today-btn-disabled': isToday})}
             onClick={!isToday ? this.navigate.bind(null, navigate.TODAY) : undefined}
           >
-            {intl.get(messages.today)}
+            {intl.get('.rbc.messages.today').d(messages.today)}
           </span>
         </div>
         <span className='rbc-toolbar-label'>{label}</span>
@@ -55,7 +55,7 @@ class Toolbar extends React.Component {
           className={classnames({ 'rbc-view-type': true, 'rbc-active': activeView === name })}
           onClick={this.onSelectView.bind(null, name)}
         >
-          {intl.get(messages[name])}
+          {intl.get(`.rbc.messages.${name}`).d(messages[name])}
         </div>
       ));
     }

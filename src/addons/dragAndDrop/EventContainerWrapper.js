@@ -10,6 +10,7 @@ import Selection, {
 import TimeGridEvent from '../../components/time/TimeGridEvent';
 import { dragAccessors } from './common';
 import NoopWrapper from '../../components/wrapper/NoopWrapper';
+import intl from 'react-intl-universal';
 
 const pointInColumn = (bounds, { x, y }) => {
   const { left, right, top } = bounds;
@@ -246,7 +247,7 @@ class EventContainerWrapper extends React.Component {
     if (startsBeforeDay) format = 'eventTimeRangeEndFormat';
     else if (startsAfterDay) format = 'eventTimeRangeStartFormat';
 
-    if (startsBeforeDay && startsAfterDay) label = localizer.messages.allDay;
+    if (startsBeforeDay && startsAfterDay) label = intl.get('.rbc.messages.allDay').d(localizer.messages.allDay);
     else label = localizer.format({ start, end }, format);
 
     return React.cloneElement(children, {

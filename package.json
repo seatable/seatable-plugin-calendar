@@ -1,13 +1,13 @@
 {
   "name": "seatable-plugin-calendar",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "private": true,
   "dependencies": {
     "@seafile/seafile-calendar": "0.0.15",
     "classnames": "^2.2.6",
     "clsx": "^1.1.1",
     "dom-helpers": "^5.1.4",
-    "dtable-sdk": "0.0.72",
+    "dtable-sdk": "0.0.76",
     "jszip": "^3.2.2",
     "moment": "^2.24.0",
     "react": "^16.12.0",

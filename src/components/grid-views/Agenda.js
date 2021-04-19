@@ -8,6 +8,7 @@ import * as dates from '../../utils/dates';
 import { inRange } from '../../utils/eventLevels';
 import { isSelected } from '../../utils/selection';
 import { navigate } from '../../constants';
+import intl from 'react-intl-universal';
 
 class Agenda extends React.Component {
   constructor(props) {
@@ -44,12 +45,12 @@ class Agenda extends React.Component {
               <thead>
                 <tr>
                   <th className='rbc-header' ref={this.dateColRef}>
-                    {messages.date}
+                    {intl.get('.rbc.messages.date').d(messages.date)}
                   </th>
                   <th className='rbc-header' ref={this.timeColRef}>
-                    {messages.time}
+                    {intl.get('.rbc.messages.time').d(messages.time)}
                   </th>
-                  <th className='rbc-header'>{messages.event}</th>
+                  <th className='rbc-header'>{intl.get('.rbc.messages.event').d(messages.event)}</th>
                 </tr>
               </thead>
             </table>
@@ -62,7 +63,7 @@ class Agenda extends React.Component {
             </div>
           </React.Fragment>
         ) : (
-          <span className='rbc-agenda-empty'>{messages.noEventsInRange}</span>
+          <span className='rbc-agenda-empty'>{intl.get('.rbc.messages.noEventsInRange').d(messages.noEventsInRange)}</span>
         )}
       </div>
     );
@@ -128,7 +129,7 @@ class Agenda extends React.Component {
 
     let labelClass = '',
       TimeComponent = components.time,
-      label = localizer.messages.allDay;
+      label = intl.get('.rbc.messages.allDay').d(localizer.messages.allDay);
 
     let end = accessors.end(event);
     let start = accessors.start(event);

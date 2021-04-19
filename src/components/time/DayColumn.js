@@ -11,6 +11,7 @@ import { isSelected } from '../../utils/selection';
 import { notify } from '../../utils/helpers';
 import * as DayEventLayout from '../../utils/DayEventLayout';
 import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
+import intl from 'react-intl-universal';
 
 
 class DayColumn extends React.Component {
@@ -214,7 +215,7 @@ class DayColumn extends React.Component {
       if (startsBeforeDay) format = 'eventTimeRangeEndFormat';
       else if (startsAfterDay) format = 'eventTimeRangeStartFormat';
 
-      if (startsBeforeDay && startsAfterDay) label = messages.allDay;
+      if (startsBeforeDay && startsAfterDay) label = intl.get('.rbc.messages.allDay').d(messages.allDay);
       else label = localizer.format({ start, end }, format);
 
       let continuesEarlier = startsBeforeDay || slotMetrics.startsBefore(start);

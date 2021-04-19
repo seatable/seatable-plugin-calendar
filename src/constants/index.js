@@ -39,13 +39,13 @@ export const SETTING_KEY = {
 };
 
 
-export const DATE_UNIT = { 
+export const DATE_UNIT = {
   YEAR: 'year',
   MONTH: 'month',
   DAY: 'day',
 };
 
-export const DATE_FORMAT = { 
+export const DATE_FORMAT = {
   YEAR_MONTH_DAY: 'YYYY-MM-DD',
   YEAR_MONTH: 'YYYY-MM',
   YEAR: 'YYYY',

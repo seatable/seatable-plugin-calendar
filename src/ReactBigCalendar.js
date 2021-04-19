@@ -6,12 +6,14 @@ import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
 import { getCollaboratorsName } from './utils/value-format-utils';
-import { CALENDAR_VIEWS, SETTING_KEY } from './constants';
+import { CALENDAR_VIEWS, PLUGIN_NAME, SETTING_KEY } from './constants';
 import TableEvent from './model/event';
 import withDragAndDrop from './addons/dragAndDrop';
 
 import './css/react-big-calendar.css';
 import './addons/dragAndDrop/styles.css';
+
+const LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW = `.${PLUGIN_NAME}.selectedCalendarView`;
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -54,7 +56,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   getSelectedView = () => {
-    let selectedCalendarView = JSON.parse(localStorage.getItem('selectedCalendarView')) || {};
+    let selectedCalendarView = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW)) || {};
     let { activeTable, activeView } = this.props;
     let dtableUuid = getDtableUuid();
     let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
@@ -63,12 +65,12 @@ class ReactBigCalendar extends React.Component {
   }
 
   onSelectView = (view) => {
-    let selectedCalendarView = JSON.parse(localStorage.getItem('selectedCalendarView')) || {};
+    let selectedCalendarView = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW)) || {};
     let { activeTable, activeView } = this.props;
     let dtableUuid = getDtableUuid();
     let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
     selectedCalendarView[key] = view;
-    localStorage.setItem('selectedCalendarView', JSON.stringify(selectedCalendarView));
+    localStorage.setItem(LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW, JSON.stringify(selectedCalendarView));
     this.setState({selectedView: view});
   }
 

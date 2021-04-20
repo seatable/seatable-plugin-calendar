@@ -168,7 +168,6 @@ class ViewSetting extends React.Component {
               <div className="title">{intl.get('Color_From')}</div>
               {this.renderSelector(colorColumnOptions, SETTING_KEY.COLUMN_COLOR)}
             </div>
-            <p className="small text-muted">{intl.get('Calendar_Select_Description')}</p>
           </div>
         </div>
       </div>

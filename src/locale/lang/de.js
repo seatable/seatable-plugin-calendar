@@ -30,6 +30,8 @@ const de = {
   'more': 'mehr',
   '.rbc.localizer.moment.yearHeaderFormat': 'YYYY',
   '.rbc.localizer.moment.dayHeaderFormat': 'dddd, DD. MMMM',
+  '.rbc.localizer.moment.weekdayFormat': 'ddd',
+  '.rbc.localizer.moment.yearMonthWeekdayFormat': 'dd',
   'No_date_field_to_place_records_on_the_calendar': 'Es sind keine Datumsinformationen vorhanden, um die Einträge im Kalender anzuzeigen.',
   'There_are_no_records': 'Es gibt keine Einträge.',
   'Today': 'Heute',
@@ -45,8 +47,8 @@ const de = {
   'Title': 'Feld für Titel',
   'No_options': 'Keine Optionen',
   'Not_used': 'Nicht genutzt',
-  'Choose_the_time_range': 'Choose the time range',
-  'Out_of_range': 'At most 12 months can be selected.',
+  'Choose_the_time_range': 'Zeitraum auswählen',
+  'Out_of_range': 'Der maximale Zeitraum sind 12 Monate.',
 };
 
 export default de;

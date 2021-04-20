@@ -30,7 +30,7 @@ class YearMonth extends React.Component {
     return dates.range(first, last, 'day').map((day, idx) => (
       <div key={'header_' + idx} className='rbc-header'>
         <HeaderComponent
-          label={localizer.format(day, 'weekdayFormat')}
+          label={localizer.format(day, 'weekdayShortFormat')}
         />
       </div>
     ));

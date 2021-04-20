@@ -64,13 +64,6 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
   subject.formats.weekdayShortFormat = 'dd'; // e.g. 'Su'
   subject.formats.weekdayFormat = 'ddd'; // e.g. 'Sun'
 
-  subject.startOfWeek = () => {
-    // const culture = intlLocaleCulture();
-    // let data = culture ? moment.localeData(culture) : moment.localeData();
-    // return data ? data.firstDayOfWeek() : 0;
-    return 0; // keep Sunday as the first day of the week.
-  };
-
   subject.format = (value, format) => {
     return _format(value, format, intlLocaleCulture());
   };

@@ -61,7 +61,7 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
   intlFormat('dayHeaderFormat');
   intlFormat('yearHeaderFormat');
 
-  subject.formats.weekdayShortFormat = 'dd'; // e.g. 'Su'
+  subject.formats.yearMonthWeekdayFormat = 'dd'; // e.g. 'Su'
   subject.formats.weekdayFormat = 'ddd'; // e.g. 'Sun'
 
   subject.format = (value, format) => {

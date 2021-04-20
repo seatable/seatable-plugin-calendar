@@ -53,16 +53,16 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
   };
 
   // use keys for localizer formats like .rbc.localizer.moment.dayHeaderFormat for dayHeaderFormat
-  const intlFormat = (format) => {
+  const intlFormat = (format, fallBackFormat = undefined) => {
+    _formats[format] || (_formats[format] = fallBackFormat);
     subject.formats[format] = (date, _culture, _localizer) => mergeWithDefaultsFormat(
       date, intl.get(`.rbc.localizer.moment.${format}`).d(_formats[format])
     );
   };
   intlFormat('dayHeaderFormat');
   intlFormat('yearHeaderFormat');
-
-  subject.formats.yearMonthWeekdayFormat = 'dd'; // e.g. 'Su'
-  subject.formats.weekdayFormat = 'ddd'; // e.g. 'Sun'
+  intlFormat('yearMonthWeekdayFormat', 'dd');
+  intlFormat('weekdayFormat');
 
   subject.format = (value, format) => {
     return _format(value, format, intlLocaleCulture());

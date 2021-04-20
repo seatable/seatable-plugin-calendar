@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import intl from 'react-intl-universal';
 import YearMonth from './year-widgets/YearMonth';
 import { chunk } from '../../utils/common';
 import * as dates from '../../utils/dates';
@@ -108,7 +107,7 @@ YearView.navigate = (date, action) => {
 };
 
 YearView.title = (date, { localizer }) => {
-  return intl.get('xxx_Year', {yearNumber: localizer.format(date, 'yearHeaderFormat')});
+  return localizer.format(date, 'yearHeaderFormat');
 };
 
 export default YearView;

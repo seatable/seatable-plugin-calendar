@@ -30,6 +30,8 @@
   "more": "Plus",
   ".rbc.localizer.moment.yearHeaderFormat": "YYYY",
   ".rbc.localizer.moment.dayHeaderFormat": "ddd MMM DD",
+  ".rbc.localizer.moment.weekdayFormat": "ddd",
+  ".rbc.localizer.moment.yearMonthWeekdayFormat": "dd",
   "No_date_field_to_place_records_on_the_calendar": "Aucune information de date disponible pour afficher les entrées dans le calendrier.",
   "There_are_no_records": "Il n'y a pas d'enregistrements.",
   "Today": "Aujourd'hui",
@@ -45,6 +47,6 @@
   "Title": "Colonne titre",
   "No_options": "Il n'y a pas d'options.",
   "Not_used": "Ne pas utilisé",
-  "Choose_the_time_range": "Choose the time range",
-  "Out_of_range": "At most 12 months can be selected."
+  "Choose_the_time_range": "Sélectionner la période",
+  "Out_of_range": "La période maximale est de 12 mois."
 }

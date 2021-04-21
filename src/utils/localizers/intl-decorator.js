@@ -2,12 +2,6 @@ import intl from 'react-intl-universal';
 import momentLocalizer from './moment';
 import * as dates from '../dates';
 
-// import locale files
-import 'moment/locale/de';
-import 'moment/locale/en-gb';
-import 'moment/locale/fr';
-import 'moment/locale/zh-cn';
-
 // 'de' week-range-format decoration
 let weekRangeFormatDe = ({start, end}, culture, local) =>
   local.format(start, dates.eq(start, end, 'month') ? 'DD.' : 'DD. MMMM', culture) +

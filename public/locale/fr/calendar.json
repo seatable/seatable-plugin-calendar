@@ -30,6 +30,7 @@
   "more": "Plus",
   ".rbc.localizer.moment.yearHeaderFormat": "YYYY",
   ".rbc.localizer.moment.dayHeaderFormat": "ddd MMM DD",
+  ".rbc.localizer.moment.monthFormat": "MMM",
   ".rbc.localizer.moment.weekdayFormat": "ddd",
   ".rbc.localizer.moment.yearMonthWeekdayFormat": "dd",
   "No_date_field_to_place_records_on_the_calendar": "Aucune information de date disponible pour afficher les entrées dans le calendrier.",

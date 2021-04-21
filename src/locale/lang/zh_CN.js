@@ -30,6 +30,7 @@ const zh_CN = {
   'more': '更多',
   '.rbc.localizer.moment.yearHeaderFormat': 'YYYY年',
   '.rbc.localizer.moment.dayHeaderFormat': 'MMMDD日 星期dd',
+  '.rbc.localizer.moment.monthFormat': 'MMM',
   '.rbc.localizer.moment.weekdayFormat': 'ddd',
   '.rbc.localizer.moment.yearMonthWeekdayFormat': 'dd',
   'No_date_field_to_place_records_on_the_calendar': '没有用于将记录放置在日历上的日期字段。',

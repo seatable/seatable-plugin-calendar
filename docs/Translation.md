@@ -1,6 +1,6 @@
 # Plugin Translation
 
-The SeaTable calendar plugins translation are done with the_[Transifex]_ service.
+The SeaTable calendar plugins translation are done with the _[Transifex]_ service.
 
 You need:
 

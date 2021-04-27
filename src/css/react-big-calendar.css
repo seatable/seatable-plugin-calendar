@@ -340,6 +340,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-row-segment {
   padding: 0 3px 3px;
+  overflow: hidden;
 }
 
 .rbc-selected-cell {
@@ -430,6 +431,7 @@ button.rbc-input::-moz-focus-inner {
   padding: 2px 3px 3px;
   font-size: 12px;
   text-align: left;
+  overflow: hidden;
 }
 
 .rbc-date-cell:hover .calendar-insert-row-btn {
@@ -998,7 +1000,6 @@ button.rbc-input::-moz-focus-inner {
 .rbc-festival {
   flex: 1;
   padding-left: 4px;
-  padding-right: 20px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

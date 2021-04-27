@@ -160,15 +160,14 @@ class ReactBigCalendar extends React.Component {
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
     const title = this.getEventTitle(rawRow, titleColumnType, titleColumnName);
     const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
-    // start date must exist and valid.
+    // start date must exist and be valid.
     if (!date || !isValidDateObject(new Date(date))) {
       return null;
     }
     const endDate = this.getEventEndDate(rawRow, row, endDateColumnType, endDateColumnName, endDateColumnKey, date);
-    // Invalid event:
-    // 1. invalid end date
-    // 2. duration less than 0 between end date with start date.
-    if (endDate && (!isValidDateObject(new Date(endDate)) || moment(endDate).isBefore(date))) {
+    // end date if exists must be valid
+    // NOTE: end date might be before start date, this is delegated to TableEvent()
+    if (endDate && !isValidDateObject(new Date(endDate))) {
       return null;
     }
     const eventColors = TableEvent.getColors({row, colorColumn, optionColors, highlightColors});
@@ -193,9 +192,10 @@ class ReactBigCalendar extends React.Component {
   }
 
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
-    let updatedData = {};
-    let { activeTable, modifyRow, setting, CellType } = this.props;
-    const { settings = {} } = setting;
+    const { events } = this.state;
+    const idx = events.indexOf(event);
+    const updatedData = {};
+    let { activeTable, modifyRow, setting: {settings}, CellType, getRowById} = this.props;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
     let startDateColumn = this.getDateColumn(startDateColumnName);
@@ -206,19 +206,39 @@ class ReactBigCalendar extends React.Component {
         return;
       }
       const startDateFormat = data && data.format;
+      const startDateMinutePrecision = startDateFormat && startDateFormat.indexOf('HH:mm') > -1;
       updatedData[startDateColumn.name] = this.getFormattedDate(start, startDateFormat);
+      if (!droppedOnAllDaySlot && startDateMinutePrecision && event.allDay) {
+        event.allDay = false;
+        end = new Date(start.valueOf());
+        end.setHours(end.getHours() + TableEvent.FIXED_PERIOD_OF_TIME_IN_HOURS);
+      }
+      if (droppedOnAllDaySlot && startDateMinutePrecision) {
+        // an event can only be made all-day if it has a true end-date field when its start-date is with
+        // time (with minute precision) [if an event is across two days, it is also displayed on top]
+        if (endDateColumn && (endDateColumn !== startDateColumn) && endDateColumn.type === CellType.DATE) {
+          const startEndSameDay = moment(start).format('YYYY-MM-DD') === moment(end).format('YYYY-MM-DD');
+          if (startEndSameDay) {
+            end = moment(end).add(1, 'day').startOf('day').toDate();
+          }
+        }
+      }
     }
     if (endDateColumn) {
       const { type, data } = endDateColumn;
-      if (type === CellType.FORMULA) {
-        return;
-      }
-      if (type !== CellType.DURATION) {
+      if (type === CellType.DATE) {
         const endDateFormat = data && data.format;
         updatedData[endDateColumn.name] = this.getFormattedDate(end, endDateFormat);
       }
     }
     modifyRow(activeTable, event.row, updatedData);
+
+    const updatedEvent = { ...event, start, end, ...{row: getRowById(activeTable, event.row._id)}};
+    const nextEvents = [...events];
+    nextEvents.splice(idx, 1, updatedEvent);
+    this.setState({
+      events: nextEvents
+    });
   }
 
   render() {

@@ -191,6 +191,42 @@ class ReactBigCalendar extends React.Component {
     return moment(date).format(targetFormat);
   }
 
+  /**
+   * create new event row
+   *
+   * @param {Date} start
+   * @param {Date} end
+   */
+  createEvent = ({ start, end }) => {
+    const { CellType, activeTable, appendRow, setting: {settings} } = this.props;
+    const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
+    const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
+    const startDateColumn = this.getDateColumn(startDateColumnName);
+    const endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
+    if (startDateColumn.type !== CellType.DATE) {
+      return;
+    }
+    const rowData = {};
+    const startDateFormat = startDateColumn.data && startDateColumn.data.format;
+    const startDateMinutePrecision = startDateFormat && startDateFormat.indexOf('HH:mm') > -1;
+    rowData[startDateColumn.name] = this.getFormattedDate(start, startDateFormat);
+    if (startDateMinutePrecision) {
+      switch (endDateColumn.type) {
+        case CellType.DATE:
+          if (endDateColumn !== startDateColumn) {
+            rowData[endDateColumn.name] = this.getFormattedDate(end, endDateColumn.data && endDateColumn.data.format);
+          }
+          break;
+        case CellType.DURATION:
+          rowData[endDateColumn.name] = (Math.abs(end - start) / 1000).toFixed();
+          break;
+        default:
+          break;
+      }
+    }
+    appendRow(activeTable, rowData);
+  }
+
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     const { events } = this.state;
     const idx = events.indexOf(event);
@@ -241,6 +277,19 @@ class ReactBigCalendar extends React.Component {
     });
   }
 
+  handleSelectSlot = ({ action, start, end}) => {
+    if (action === 'select') {
+      this.createEvent({start, end});
+    }
+  }
+
+  handleSelecting = ({ start, end }) => {
+    const { CellType, setting: {settings} } = this.props;
+    const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
+    const startDateColumn = this.getDateColumn(startDateColumnName);
+    return startDateColumn.type === CellType.DATE;
+  }
+
   render() {
     const { columns, setting: {settings = {}} } = this.props;
     const { events } = this.state;
@@ -260,7 +309,9 @@ class ReactBigCalendar extends React.Component {
         onSelectEvent={this.onSelectEvent}
         onInsertRow={this.onInsertRow}
         hideViewSettingPanel={this.props.hideViewSettingPanel}
-        selectable={true}
+        selectable
+        onSelectSlot={this.handleSelectSlot}
+        onSelecting={this.handleSelecting}
         onEventDrop={this.moveEvent}
         isExporting={this.props.isExporting}
         exportedMonths={this.props.exportedMonths}

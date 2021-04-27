@@ -4,14 +4,13 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
-import './locale/index.js';
 import ReactBigCalendar from './ReactBigCalendar';
 import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT } from './constants';
 import { CALENDAR_DIALOG_MODAL } from './constants/zIndexes';
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
-import { generatorViewId, getDtableUuid } from './utils/common';
+import { generatorViewId, getDtableUuid, checkDesktop} from './utils/common';
 import View from './model/view';
 
 import './locale';
@@ -399,6 +398,7 @@ class App extends React.Component {
   }
 
   render() {
+    const isDesktop = checkDesktop();
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
       rows,
       isViewSettingPanelOpen,
@@ -418,23 +418,29 @@ class App extends React.Component {
 
     let columns = this.dtable.getColumns(selectedTable);
     let currentSetting = this.getCurrentSettings();
+
+    const ViewsTabsEl = (
+      <ViewsTabs
+        ref={ref => this.viewsTabs = ref}
+        views={views}
+        selectedViewIdx={selectedViewIdx}
+        onAddView={this.onAddView}
+        onRenameView={this.onRenameView}
+        onDeleteView={this.onDeleteView}
+        onSelectView={this.onSelectView}
+      />
+    );
+
     return (
       <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={CALENDAR_DIALOG_MODAL}>
-        <ModalHeader className="plugin-header" close={this.renderBtnGroups()}>
+        <ModalHeader className="plugin-header h-7" close={this.renderBtnGroups()}>
           <div className="logo-title d-flex align-items-center">
             <img className="plugin-logo mr-2" src={icon} alt="" width="24" />
             <span className="plugin-title">{intl.get('Calendar')}</span>
           </div>
-          <ViewsTabs
-            ref={ref => this.viewsTabs = ref}
-            views={views}
-            selectedViewIdx={selectedViewIdx}
-            onAddView={this.onAddView}
-            onRenameView={this.onRenameView}
-            onDeleteView={this.onDeleteView}
-            onSelectView={this.onSelectView}
-          />
+          {isDesktop && ViewsTabsEl}
         </ModalHeader>
+        {!isDesktop && <div className="h-7 d-flex pr-4 border-bottom">{ViewsTabsEl}</div>}
         <ModalBody className="calendar-plugin-content">
           <ReactBigCalendar
             activeTable={selectedTable}

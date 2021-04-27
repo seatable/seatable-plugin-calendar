@@ -377,6 +377,7 @@ button.rbc-input::-moz-focus-inner {
   display: flex;
   flex-direction: row;
   padding: 0 18px;
+  margin-right: 15px;
 }
 
 .rbc-month-rows {

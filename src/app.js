@@ -264,11 +264,14 @@ class App extends React.Component {
   }
 
   renderBtnGroups = () => {
+    const isDesktop = checkDesktop();
     return (
       <div className="d-flex align-items-center">
+        {isDesktop &&
         <span className="op-icon mr-2" onClick={this.toggleTimeRangeDialog}>
           <i className="dtable-font dtable-icon-print"></i>
         </span>
+        }
         <span className="op-icon mr-2" onClick={this.toggleViewSettingPanel}>
           <i className="dtable-font dtable-icon-settings"></i>
         </span>

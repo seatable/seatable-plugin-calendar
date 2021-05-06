@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import moment from 'moment';
 import getPosition from 'dom-helpers/position';
-import { getDtableLang, getDtablePermission } from '../../utils/common';
+import { getDtableLang, getDtablePermission, checkDesktop } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';
 import { getFestival } from '../../utils/festival';
@@ -209,6 +209,7 @@ class MonthView extends React.Component {
   }
 
   renderWeek = (weekStartDate, weekIdx) => {
+    const isDesktop = checkDesktop();
     let { components, selectable, getNow, selected, date, localizer, longPressThreshold,
       accessors, getters } = this.props;
     const { needLimitMeasure, weekEventsMap } = this.state;
@@ -234,6 +235,7 @@ class MonthView extends React.Component {
         getters={getters}
         localizer={localizer}
         renderHeader={this.readerDateHeading}
+        renderFestival={!isDesktop && this.isChinese && this.renderFestivalCell}
         renderForMeasure={needLimitMeasure}
         onShowMore={this.handleShowMore}
         onRowExpand={this.onRowExpand}
@@ -251,6 +253,7 @@ class MonthView extends React.Component {
     let drilldownView = getDrilldownView(date);
     let label = localizer.format(date, 'dateFormat');
     let DateHeaderComponent = this.props.components.dateHeader || DateHeader;
+    const isDesktop = checkDesktop();
     return (
       <div
         {...props}
@@ -263,8 +266,8 @@ class MonthView extends React.Component {
           isOffRange={isOffRange}
           onDrillDown={e => this.handleHeadingClick(date, drilldownView, e)}
         />
-        {this.isChinese && this.renderFestival(date)}
-        {!this.isTableReadOnly && <div className="calendar-insert-row-btn" onClick={this.onInsertRow.bind(this, date)}><i className="dtable-font dtable-icon-add-table"></i></div>}
+        {isDesktop && this.isChinese && this.renderFestival(date)}
+        {isDesktop && !this.isTableReadOnly && <div className="calendar-insert-row-btn" onClick={this.onInsertRow.bind(this, date)}><i className="dtable-font dtable-icon-add-table"></i></div>}
       </div>
     );
   };
@@ -285,7 +288,12 @@ class MonthView extends React.Component {
     return null;
   }
 
+  renderFestivalCell = (date) => {
+    return this.renderFestival(date);
+  }
+
   renderHeaders(row) {
+    const isDesktop = checkDesktop();
     let { localizer, components } = this.props;
     let first = row[0];
     let last = row[row.length - 1];
@@ -296,7 +304,7 @@ class MonthView extends React.Component {
         <HeaderComponent
           date={day}
           localizer={localizer}
-          label={localizer.format(day, 'weekdayFormat')}
+          label={localizer.format(day, isDesktop ? 'weekdayFormat' : 'yearMonthWeekdayFormat')}
         />
       </div>
     ));

@@ -93,7 +93,7 @@ class EventCell extends React.Component {
           onDoubleClick={e => onDoubleClick && onDoubleClick(event, e)}
         >
           {!isDesktop && <span className="rbc-event-mobile-decorator" style={{
-            background: event.bgColor
+            background: event.highlightColor || event.bgColor
           }}></span>}
           {typeof children === 'function' ? children(content) : content}
         </div>

@@ -572,7 +572,6 @@ button.rbc-input::-moz-focus-inner {
 .rbc-overlay {
   position: fixed;
   width: calc(100% - 10px);
-  padding-bottom: 12px;
   background-color: #fff;
   box-shadow: 0 0 5px #ccc;
   border: 1px solid rgba(0, 40, 100, 0.12);
@@ -588,10 +587,6 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-overlay .rbc-overlay-header {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -608,7 +603,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-overlay .rbc-overlay-body {
   min-height: 132px;
-  padding: 31px 12px 0;
+  padding: 12px 8px;
   overflow-y: auto;
   max-height: 260px;
 }

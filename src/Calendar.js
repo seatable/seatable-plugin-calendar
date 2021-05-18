@@ -746,7 +746,8 @@ class Calendar extends React.Component {
     culture,
     messages = {},
     components = {},
-    formats = {}
+    formats = {},
+    configuredWeekStart
   }) {
     let names = viewNames(views);
     const msgs = message(messages);
@@ -764,7 +765,7 @@ class Calendar extends React.Component {
 
     return {
       viewNames: names,
-      localizer: mergeWithDefaults(localizer, culture, formats, msgs),
+      localizer: mergeWithDefaults(localizer, culture, formats, msgs, configuredWeekStart),
       getters: {
         eventProp: (...args) =>
           (eventPropGetter && eventPropGetter(...args)) || {},

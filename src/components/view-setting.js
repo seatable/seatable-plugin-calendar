@@ -110,7 +110,14 @@ class ViewSetting extends React.Component {
       );
     }
     const colorColumnOptions = this.createOptions(colorColumns, SETTING_KEY.COLUMN_COLOR, 'value');
-    return { tableOptions, viewOptions, titleColumnOptions, dateColumnOptions, endDateColumnOptions, colorColumnOptions };
+
+    let weekStartOptions = [{name: intl.get('Sunday'), value: 0}, {name: intl.get('Monday'), value: 1}];
+    weekStartOptions = this.createOptions(weekStartOptions, SETTING_KEY.WEEK_START, 'value');
+    return {
+      tableOptions, viewOptions,
+      titleColumnOptions, dateColumnOptions, endDateColumnOptions,
+      colorColumnOptions, weekStartOptions
+    };
   }
 
   renderSelector = (options, settingKey) => {
@@ -131,8 +138,11 @@ class ViewSetting extends React.Component {
   }
 
   render() {
-    const { tableOptions, viewOptions, titleColumnOptions, dateColumnOptions, endDateColumnOptions, colorColumnOptions }
-      = this.getSelectorOptions(this.getSelectorColumns());
+    const {
+      tableOptions, viewOptions,
+      titleColumnOptions, dateColumnOptions, endDateColumnOptions, colorColumnOptions,
+      weekStartOptions
+    } = this.getSelectorOptions(this.getSelectorColumns());
 
     return (
       <div className="plugin-view-setting position-absolute d-flex flex-column" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
@@ -167,6 +177,10 @@ class ViewSetting extends React.Component {
             <div className="setting-item">
               <div className="title">{intl.get('Color_From')}</div>
               {this.renderSelector(colorColumnOptions, SETTING_KEY.COLUMN_COLOR)}
+            </div>
+            <div className="setting-item">
+              <div className="title">{intl.get('Week_start')}</div>
+              {this.renderSelector(weekStartOptions, SETTING_KEY.WEEK_START)}
             </div>
           </div>
         </div>

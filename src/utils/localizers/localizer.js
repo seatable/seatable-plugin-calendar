@@ -20,7 +20,7 @@ export class DateLocalizer {
   }
 }
 
-export function mergeWithDefaults(localizer, culture, formatOverrides, messages) {
+export function mergeWithDefaults(localizer, culture, formatOverrides, messages, configuredWeekStart) {
   const formats = {
     ...localizer.formats,
     ...formatOverrides
@@ -29,7 +29,12 @@ export function mergeWithDefaults(localizer, culture, formatOverrides, messages)
   return {
     ...localizer,
     messages,
-    startOfWeek: () => localizer.startOfWeek(culture),
+    startOfWeek: () => {
+      if (configuredWeekStart != undefined) {
+        return configuredWeekStart;
+      }
+      return localizer.startOfWeek(culture);
+    },
     format: (value, format) =>
       localizer.format(value, formats[format] || format, culture)
   };

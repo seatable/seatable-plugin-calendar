@@ -312,6 +312,7 @@ class ReactBigCalendar extends React.Component {
         columns={columns}
         startDateColumn={startDateColumn}
         localizer={localizer}
+        configuredWeekStart={settings[SETTING_KEY.WEEK_START]}
         events={events}
         views={this.calendarViews}
         view={this.state.selectedView}

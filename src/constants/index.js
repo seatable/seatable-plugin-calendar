@@ -35,7 +35,8 @@ export const SETTING_KEY = {
   COLUMN_TITLE: 'column_title',
   COLUMN_START_DATE: 'column_start_date',
   COLUMN_END_DATE: 'column_end_date',
-  COLUMN_COLOR: 'column_color'
+  COLUMN_COLOR: 'column_color',
+  WEEK_START: 'week_start'
 };
 
 

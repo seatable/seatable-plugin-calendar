@@ -126,6 +126,7 @@ class ViewSetting extends React.Component {
     if (!selectedOption && (
       settingKey === SETTING_KEY.TABLE_NAME ||
       settingKey === SETTING_KEY.VIEW_NAME ||
+      settingKey === SETTING_KEY.WEEK_START ||
       settingKey === SETTING_KEY.COLUMN_TITLE)) {
       selectedOption = options[0] || undefined;
     }

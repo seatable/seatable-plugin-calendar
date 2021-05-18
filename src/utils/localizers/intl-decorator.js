@@ -76,6 +76,6 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
   return subject;
 };
 
-export default function (moment) {
-  return intlDayHeaderFormatDecorator(momentLocalizer(moment), moment);
+export default function (moment, configuredWeekStart) {
+  return intlDayHeaderFormatDecorator(momentLocalizer(moment, configuredWeekStart), moment);
 }

@@ -42,7 +42,7 @@ export let formats = {
   agendaTimeRangeFormat: timeRangeFormat
 };
 
-export default function(moment) {
+export default function(moment, configuredWeekStart) {
   let locale = (m, c) => (c ? m.locale(c) : m);
 
   return new DateLocalizer({
@@ -50,6 +50,9 @@ export default function(moment) {
     firstOfWeek(culture) {
       // let data = culture ? moment.localeData(culture) : moment.localeData();
       // return data ? data.firstDayOfWeek() : 0;
+      if (configuredWeekStart != undefined) {
+        return configuredWeekStart;
+      }
       return 0; // set first of week is sunday.
     },
 

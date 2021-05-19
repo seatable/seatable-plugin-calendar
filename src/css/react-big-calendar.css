@@ -81,7 +81,7 @@ button.rbc-input::-moz-focus-inner {
   text-align: center;
 }
 
-@media screen and (min-width: 768px) {
+@media print, screen and (min-width: 768px) {
   .rbc-month-header .rbc-header {
     padding: 0 3px;
     color: #212529;
@@ -434,13 +434,12 @@ button.rbc-input::-moz-focus-inner {
   overflow-y: scroll;
 }
 
-@media screen and (min-width: 768px) {
+@media print, screen and (min-width: 768px) {
   .rbc-month-header,
   .rbc-month-rows {
     padding: 0 18px;
   }
 }
-
 
 .rbc-month-row {
   display: flex;
@@ -454,7 +453,8 @@ button.rbc-input::-moz-focus-inner {
   max-height: 126px;
   border-bottom: 1px solid #ddd;
 }
-@media screen and (min-width: 768px) {
+
+@media print, screen and (min-width: 768px) {
   .rbc-month-row {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -495,7 +495,7 @@ button.rbc-input::-moz-focus-inner {
   justify-content: center;
 }
 
-@media screen and (min-width: 768px) {
+@media print, screen and (min-width: 768px) {
   .rbc-date-cell {
     justify-content: initial;
   }
@@ -558,7 +558,7 @@ button.rbc-input::-moz-focus-inner {
   flex: 1 0 0;
 }
 
-@media screen and (min-width: 768px) {
+@media print, screen and (min-width: 768px) {
   .rbc-day-bg + .rbc-day-bg {
     border-left: 1px solid #ddd;
   }

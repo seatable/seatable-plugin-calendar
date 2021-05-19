@@ -436,14 +436,14 @@ class App extends React.Component {
 
     return (
       <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={CALENDAR_DIALOG_MODAL}>
-        <ModalHeader className="plugin-header h-7" close={this.renderBtnGroups()}>
+        <ModalHeader className="plugin-header flex-shrink-0 h-7" close={this.renderBtnGroups()}>
           <div className="logo-title d-flex align-items-center">
             <img className="plugin-logo mr-2" src={icon} alt="" width="24" />
             <span className="plugin-title">{intl.get('Calendar')}</span>
           </div>
           {isDesktop && ViewsTabsEl}
         </ModalHeader>
-        {!isDesktop && <div className="h-7 d-flex pr-4 border-bottom">{ViewsTabsEl}</div>}
+        {!isDesktop && <div className="flex-shrink-0 h-7 d-flex pr-4 border-bottom">{ViewsTabsEl}</div>}
         <ModalBody className="calendar-plugin-content">
           <ReactBigCalendar
             activeTable={selectedTable}

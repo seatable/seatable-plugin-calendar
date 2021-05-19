@@ -53,11 +53,21 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
       date, intl.get(`.rbc.localizer.moment.${format}`).d(_formats[format])
     );
   };
-  intlFormat('dayHeaderFormat');
-  intlFormat('yearHeaderFormat');
-  intlFormat('monthFormat');
-  intlFormat('yearMonthWeekdayFormat', 'dd');
+  /* in moment.js order */
+  intlFormat('dateFormat');
+  intlFormat('dayFormat');
   intlFormat('weekdayFormat');
+  intlFormat('monthFormat');
+
+  intlFormat('yearHeaderFormat');
+  intlFormat('dayHeaderFormat');
+
+  intlFormat('agendaDateFormat', 'ddd MMM DD');
+
+  /* additional decorator formats */
+  intlFormat('yearMonthWeekdayFormat', 'dd');
+  intlFormat('yearMonthDateFormat', 'DD');
+  intlFormat('weekOfYearFormat', 'WW');
 
   subject.format = (value, format) => {
     return _format(value, format, intlLocaleCulture());

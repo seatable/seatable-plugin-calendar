@@ -35,12 +35,12 @@ class YearDay extends React.Component {
     let { isShowEvents } = this.state;
     let isOffRange = dates.month(day) !== dates.month(monthDate);
     let isCurrentDay = dates.eq(day, new Date(), 'day');
-    let label = localizer.format(day, 'dateFormat');
+    let label = localizer.format(day, 'yearMonthDateFormat');
 
     return (
       <div className="rbc-year-day-item" ref={ref => this.rbcYearDayItem = ref}>
         <div className="rbc-year-day-content" onClick={this.onEventsToggle}>
-          <div className={classnames('rbc-year-day', {'rbc-off-range': isOffRange, 'rbc-current': isCurrentDay})} >{Number(label)}</div>
+          <div className={classnames('rbc-year-day', {'rbc-off-range': isOffRange, 'rbc-current': isCurrentDay})} >{label}</div>
         </div>
         {dayEvents.length > 0 && <span className="day-events"></span>}
         {isShowEvents &&

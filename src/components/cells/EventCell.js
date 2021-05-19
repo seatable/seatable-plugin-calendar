@@ -7,14 +7,12 @@ import { checkDesktop } from '../../utils/common';
 class EventCell extends React.Component {
 
   getRbcEventStyle = () => {
-    const isDesktop = checkDesktop();
     const { event } = this.props;
     const { bgColor, highlightColor, textColor } = event;
-    return isDesktop ? {
+    return {
       background: bgColor,
       borderLeft: highlightColor && `3px solid ${highlightColor}`,
       color: textColor,
-    } : {
     };
   }
 
@@ -92,9 +90,6 @@ class EventCell extends React.Component {
           onClick={e => this.onRowExpand(event, e)}
           onDoubleClick={e => onDoubleClick && onDoubleClick(event, e)}
         >
-          {!isDesktop && <span className="rbc-event-mobile-decorator" style={{
-            background: event.highlightColor || event.bgColor
-          }}></span>}
           {typeof children === 'function' ? children(content) : content}
         </div>
       </EventWrapper>

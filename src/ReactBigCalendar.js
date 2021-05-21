@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { SELECT_OPTION_COLORS } from 'dtable-store';
 import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
@@ -111,12 +112,11 @@ class ReactBigCalendar extends React.Component {
     if (columnName) {
       return columns.find(c => c.name === columnName) || null;
     }
-    return columns.find(c => c.type === CellType.SINGLE_SELECT) || null;
+    return null; // for 'Not used': settings[SETTING_KEY.COLUMN_COLOR] is `''`
   }
 
   getEvents = (props) => {
-    let { activeTable, rows, getRowById, setting } = props;
-    const { settings = {} } = setting;
+    let { activeTable, activeView, rows, getRowById, setting: settings } = props;
     const titleColumnName = settings[SETTING_KEY.COLUMN_TITLE];
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
@@ -129,6 +129,13 @@ class ReactBigCalendar extends React.Component {
     if (!startDateColumn) {
       return [];
     }
+
+    let rowColorsMap = {};
+    SELECT_OPTION_COLORS.forEach((optionColor) => {
+      rowColorsMap[optionColor.COLOR] = optionColor.TEXT_COLOR;
+    });
+    this.rowColorsMap = rowColorsMap;
+
     rows.forEach((row) => {
       const formattedRow = getRowById(activeTable, row._id);
       const event = this.getEvent(row, formattedRow, titleColumn, startDateColumn, endDateColumn, colorColumn);
@@ -161,7 +168,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, colorColumn) => {
-    const { optionColors, highlightColors } = this.props;
+    const { optionColors, highlightColors, rowsColor, setting: settings } = this.props;
     const { type: titleColumnType, name: titleColumnName } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
@@ -177,7 +184,10 @@ class ReactBigCalendar extends React.Component {
     if (endDate && !isValidDateObject(new Date(endDate))) {
       return null;
     }
-    const eventColors = TableEvent.getColors({row, colorColumn, optionColors, highlightColors});
+
+    const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
+    const rowColorsMap = this.rowColorsMap;
+    const eventColors = TableEvent.getColors({row, colorColumn, configuredUseRowColor, optionColors, highlightColors, rowsColor, rowColorsMap});
     return new TableEvent({row, date, endDate, title, ...eventColors});
   }
 

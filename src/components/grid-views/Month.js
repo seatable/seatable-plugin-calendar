@@ -127,8 +127,7 @@ class MonthView extends React.Component {
     let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
     let overRowsCount = scrollTop / MONTH_ROW_HEIGHT;
     let fract = overRowsCount - Math.trunc(overRowsCount);
-    let overDatesCount = Math.ceil(overRowsCount) - 1;
-    let visibleStartIndex = overDatesCount;
+    let visibleStartIndex = Math.ceil(overRowsCount) - 1;
     if (isNextMonth(date, allWeeksStartDates, visibleStartIndex)) {
       this.isScrolling = false;
       let nextMonthDate = getNextMonthDate(allWeeksStartDates, visibleStartIndex);

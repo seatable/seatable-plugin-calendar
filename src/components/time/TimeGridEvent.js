@@ -5,6 +5,23 @@ function stringifyPercent(v) {
   return typeof v === 'string' ? v : v + '%';
 }
 
+/**
+ * duplication from EventCell.getRbcEventStyle for colored style of week/day events
+ *
+ * @see EventCell.getRbcEventStyle
+ * @param props
+ * @return {{borderLeft: string, color, background}}
+ */
+const getRbcEventStyle = (props) => {
+  const { event } = props;
+  const { bgColor, highlightColor, textColor } = event;
+  return {
+    background: bgColor,
+    borderLeft: highlightColor && `3px solid ${highlightColor}`,
+    color: textColor,
+  };
+};
+
 /* eslint-disable react/prop-types */
 function TimeGridEvent(props) {
   const {
@@ -45,6 +62,7 @@ function TimeGridEvent(props) {
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         style={{
+          ...getRbcEventStyle(props),
           ...userProps.style,
           top: stringifyPercent(top),
           [rtl ? 'right' : 'left']: stringifyPercent(xOffset),

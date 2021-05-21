@@ -81,17 +81,26 @@
  * given the date-in-row is without minute precision, when representing
  * the start date of an event, then the event all-day is true.
  *
- * otherwise all-day is the defined-all-day.
+ * given the date-in-row is with minute precision, when representing the
+ * start date of an event and there is no end-date-in-row, then the
+ * event all-day is true, as well.
+ *
+ * otherwise all-day is false
  *
  * @see TableEvent.constructor()
  *
  * @param {Date|undefined} eventStart
  * @param {string|undefined} rowDate
- * @param {boolean|undefined} defAllDay
+ * @param {string|undefined} rowEndDate
  */
-const allDayImplementation = (eventStart, rowDate) => {
+const allDayImplementation = (eventStart, rowDate, rowEndDate) => {
+  // rowDate is DATE, not DATETIME
   if (eventStart && rowDate && (eventStart.toISOString().slice(0, 10) === rowDate)) {
     return true;
+  }
+  // rowDate is DATETIME, not DATE
+  if (eventStart && rowDate && !rowEndDate) {
+    return false;
   }
   return false;
 };
@@ -109,12 +118,25 @@ const allDayImplementation = (eventStart, rowDate) => {
  * @param {Date|undefined} eventStart
  * @param {boolean|undefined} eventAllDay
  * @param {string|undefined} rowDate
+ * @return {Date|undefined}
  */
 const endImplementation = (eventStart, eventAllDay, rowDate) => {
-  let end = rowDate ? new Date(rowDate) : eventStart;
-  if (eventAllDay !== true && !rowDate) {
+  let end;
+  if (rowDate) {
+    end = new Date(rowDate);
+    // given the date-in-row is without minute precision
+    if (end.toISOString().slice(0, 10) === rowDate) {
+      end.setHours(12);
+      end.setMinutes(0);
+    }
+  } else {
+    end = eventStart;
+  }
+  if ((eventAllDay !== true) && eventStart && (rowDate === undefined || end <= eventStart)) {
     end = new Date(+eventStart);
     end.setHours(eventStart.getHours() + TableEvent.FIXED_PERIOD_OF_TIME_IN_HOURS);
+  } else if (eventStart && (rowDate === undefined || end <= eventStart)) {
+    end = new Date(+eventStart);
   }
   return end;
 };
@@ -178,7 +200,7 @@ export default class TableEvent {
     /* 2/2: React-Big-Calendar event properties */
     this.title = object.title || null;
     this.start = object.date && new Date(object.date);
-    this.allDay = allDayImplementation(this.start, object.date);
+    this.allDay = allDayImplementation(this.start, object.date, object.endDate);
     this.end = endImplementation(this.start, this.allDay, object.endDate);
   }
 }

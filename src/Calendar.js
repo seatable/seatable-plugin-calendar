@@ -749,6 +749,18 @@ class Calendar extends React.Component {
   }) {
     let names = viewNames(views);
     const msgs = message(messages);
+
+    components[CALENDAR_VIEWS.WEEK] = {
+      timeGutterHeader: (props) => {
+        const { localizer, range } = props;
+        return (
+          <div className={'rbc-week-of-year'}>
+            {localizer.format(range[1], 'weekOfYearFormat')}
+          </div>
+        );
+      }
+    };
+
     return {
       viewNames: names,
       localizer: mergeWithDefaults(localizer, culture, formats, msgs),

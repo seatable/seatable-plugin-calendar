@@ -394,6 +394,10 @@ class App extends React.Component {
     this.dtable.modifyRow(table, row, updated);
   }
 
+  appendRow = (table, rowData) => {
+    this.dtable.appendRow(table, rowData);
+  }
+
   render() {
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
       rows,
@@ -439,6 +443,7 @@ class App extends React.Component {
             columns={columns}
             rows={rows}
             getRowById={this.dtable.getRowById}
+            appendRow={this.appendRow}
             modifyRow={this.modifyRow}
             setting={currentSetting}
             CellType={this.cellType}

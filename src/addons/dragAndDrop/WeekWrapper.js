@@ -9,8 +9,6 @@ import Selection, { getBoundsForNode } from '../../components/selection/Selectio
 import EventRow from '../../components/rows/EventRow';
 import { dragAccessors } from './common';
 
-import DraggingLayer from './dragging-layer';
-
 const propTypes = {};
 
 const eventTimes = (event, accessors) => {
@@ -140,6 +138,8 @@ class WeekWrapper extends React.Component {
     const { accessors, slotMetrics: metrics } = this.props;
 
     let { start, end } = eventTimes(event, accessors);
+    let originalStart = start;
+    let originalEnd = end;
 
     let rowBox = getBoundsForNode(node);
     let cursorInRow = pointInBox(rowBox, point);
@@ -147,13 +147,8 @@ class WeekWrapper extends React.Component {
     if (direction === 'RIGHT') {
       if (cursorInRow) {
         if (metrics.last < start) return this.reset();
-        // add min
-        end = dates.add(
-          metrics.getDateForSlot(
-            getSlotAtX(rowBox, point.x, false, metrics.slots)
-          ),
-          1,
-          'day'
+        end = metrics.getDateForSlot(
+          getSlotAtX(rowBox, point.x, false, metrics.slots)
         );
       } else if (
         dates.inRange(start, metrics.first, metrics.last) ||
@@ -164,10 +159,12 @@ class WeekWrapper extends React.Component {
         this.setState({ segment: null });
         return;
       }
-
-      end = dates.max(end, dates.add(start, 1, 'day'));
+      end = dates.merge(end, accessors.end(event));
+      if (dates.lt(end, start)) {
+        end = originalEnd;
+      }
     } else if (direction === 'LEFT') {
-      // inbetween Row
+      // in-between Row
       if (cursorInRow) {
         if (metrics.first > end) return this.reset();
 
@@ -183,8 +180,10 @@ class WeekWrapper extends React.Component {
         this.reset();
         return;
       }
-
-      start = dates.min(dates.add(end, -1, 'day'), start);
+      start = dates.merge(start, accessors.start(event));
+      if (dates.gt(start, end)) {
+        start = originalStart;
+      }
     }
 
     this.update(event, start, end);
@@ -193,8 +192,16 @@ class WeekWrapper extends React.Component {
   _selectable = () => {
     let node = findDOMNode(this).closest('.rbc-month-row, .rbc-allday-cell');
     let container = node.closest('.rbc-month-view, .rbc-time-view');
+    if (!container) {
+      return;
+    }
+    let allowedTargets = container.querySelectorAll(
+      '.rbc-day-slot, .rbc-allday-cell'
+    );
 
-    let selector = (this._selector = new Selection(() => container));
+    let selector = (this._selector = new Selection(() => container, {
+      allowedTargets: () => allowedTargets,
+    }));
 
     selector.on('beforeSelect', point => {
       const { isAllDay } = this.props;
@@ -211,7 +218,6 @@ class WeekWrapper extends React.Component {
       const bounds = getBoundsForNode(node);
       const { dragAndDropAction } = this.context.draggable;
 
-      this.setState({box});
       if (dragAndDropAction.action === 'move') this.handleMove(box, bounds);
       if (dragAndDropAction.action === 'resize') this.handleResize(box, bounds);
     });
@@ -220,8 +226,13 @@ class WeekWrapper extends React.Component {
     selector.on('select', point => {
       const bounds = getBoundsForNode(node);
 
-      if (!this.state.segment || !pointInBox(bounds, point)) return;
-      this.handleInteractionEnd();
+      if (!this.state.segment) return;
+
+      if (!pointInBox(bounds, point)) {
+        this.reset();
+      } else {
+        this.handleInteractionEnd();
+      }
     });
 
     selector.on('dropFromOutside', point => {
@@ -273,33 +284,23 @@ class WeekWrapper extends React.Component {
   render() {
     const { children, accessors } = this.props;
 
-    let { segment, box } = this.state;
-
-    const { interacting, currentEventEl } = this.context.draggable.dragAndDropAction;
+    let { segment } = this.state;
 
     return (
       <div className="rbc-addons-dnd-row-body">
         {children}
 
         {segment && (
-          <React.Fragment>
-            <EventRow
-              {...this.props}
-              selected={null}
-              className="rbc-addons-dnd-drag-row"
-              segments={[segment]}
-              accessors={{
-                ...accessors,
-                ...dragAccessors,
-              }}
-            />
-            {interacting &&
-              <DraggingLayer
-                el={currentEventEl}
-                box={box}
-              />
-            }
-          </React.Fragment>
+          <EventRow
+            {...this.props}
+            selected={null}
+            className="rbc-addons-dnd-drag-row"
+            segments={[segment]}
+            accessors={{
+              ...accessors,
+              ...dragAccessors,
+            }}
+          />
         )}
       </div>
     );

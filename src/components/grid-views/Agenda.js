@@ -11,6 +11,7 @@ import { navigate } from '../../constants';
 import intl from 'react-intl-universal';
 
 class Agenda extends React.Component {
+
   constructor(props) {
     super(props);
     this.headerRef = React.createRef();
@@ -171,17 +172,14 @@ class Agenda extends React.Component {
     let isOverflowing =
       this.contentRef.current.scrollHeight >
       this.contentRef.current.clientHeight;
-    let widths = this._widths || [];
 
     this._widths = [
       getWidth(firstRow.children[0]),
       getWidth(firstRow.children[1])
     ];
 
-    if (widths[0] !== this._widths[0] || widths[1] !== this._widths[1]) {
-      this.dateColRef.current.style.width = this._widths[0] + 'px';
-      this.timeColRef.current.style.width = this._widths[1] + 'px';
-    }
+    this.dateColRef.current.style.width = this._widths[0] + 'px';
+    this.timeColRef.current.style.width = this._widths[1] + 'px';
 
     if (isOverflowing) {
       addClass(header, 'rbc-header-overflowing');

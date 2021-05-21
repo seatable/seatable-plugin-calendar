@@ -93,8 +93,11 @@ button.rbc-input::-moz-focus-inner {
   text-decoration: none;
 }
 
+/* maximum event rows: 10 */
 .rbc-row-content {
   position: relative;
+  max-height: 250px;
+  overflow-y: auto;
   user-select: none;
   -webkit-user-select: none;
   z-index: 4;
@@ -260,6 +263,7 @@ button.rbc-input::-moz-focus-inner {
   padding: 0 12px;
   border-radius: 5px;
   background: transparent;
+  white-space: nowrap;
 }
 
 .rbc-btn-group .view-type-list .rbc-view-type:hover {
@@ -377,7 +381,6 @@ button.rbc-input::-moz-focus-inner {
   display: flex;
   flex-direction: row;
   padding: 0 18px;
-  margin-right: 15px;
 }
 
 .rbc-month-rows {
@@ -808,10 +811,6 @@ button.rbc-input::-moz-focus-inner {
   flex-direction: row;
 }
 
-.rbc-time-header.rbc-overflowing {
-  border-right: 1px solid #ddd;
-}
-
 .rbc-rtl .rbc-time-header.rbc-overflowing {
   border-right-width: 0;
   border-left: 1px solid #ddd;
@@ -1050,4 +1049,8 @@ button.rbc-input::-moz-focus-inner {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.rbc-agenda-content {
+  overflow-y: auto;
 }

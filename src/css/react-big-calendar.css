@@ -200,7 +200,7 @@ button.rbc-input::-moz-focus-inner {
   color: rgb(77, 77, 77);
 }
 
-.rbc-btn-group .rbc-tool-btn:hover,
+.rbc-btn-group .rbc-tool-btn.enable-hover:hover,
 .rbc-btn-group .rbc-tool-btn.today-btn-disabled {
   background-color: #ff8000;
   border: 1px solid #ff8000;
@@ -266,7 +266,7 @@ button.rbc-input::-moz-focus-inner {
   transform: scale(0.7);
 }
 
-.rbc-btn-group .rbc-tool-icon:hover {
+.rbc-btn-group .rbc-tool-icon.enable-hover:hover {
   background-color: #ff8000;
   color: #ffffff;
 }

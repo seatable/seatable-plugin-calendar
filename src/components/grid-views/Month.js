@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import moment from 'moment';
 import getPosition from 'dom-helpers/position';
-import { getDtableLang, getDtablePermission, checkDesktop } from '../../utils/common';
+import { getDtableLang, getDtablePermission, checkDesktop, isMobile, isIOS } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';
 import { getFestival } from '../../utils/festival';
@@ -46,6 +46,7 @@ class MonthView extends React.Component {
     this.isTableReadOnly = getDtablePermission() === 'r';
     this.isScrolling = false;
     this.festivals = {};
+    this.isIosMobile = isMobile && isIOS;
   }
 
   getWeekEventsMap = (events, accessors) => {
@@ -135,7 +136,16 @@ class MonthView extends React.Component {
       let lastVisibleWeekStartDate = allWeeksStartDates[visibleStartIndex];
       allWeeksStartDates = getAllWeeksStartDates(nextMonthDate, renderedRowsCount, this.props.localizer);
       visibleStartIndex = getVisibleStartIndexByDate(lastVisibleWeekStartDate, allWeeksStartDates);
-      scrollTop = (visibleStartIndex + (fract || 1)) * MONTH_ROW_HEIGHT;
+      let newScrollTop = (visibleStartIndex + (fract || 1)) * MONTH_ROW_HEIGHT;
+      if (this.isIosMobile && !this.timer) {
+        this.timer = setTimeout(() => {
+          this.rbcMonthRows.scrollTop = newScrollTop;
+          clearTimeout(this.timer);
+          this.timer = null;
+        });
+      } else {
+        scrollTop = newScrollTop;
+      }
       this.props.updateCurrentDate(getWeekEndDate(nextMonthDate));
     }
     let visibleEndIndex = visibleStartIndex + renderedRowsCount;

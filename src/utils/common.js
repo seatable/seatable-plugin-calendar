@@ -206,3 +206,8 @@ export const generatorViewId = (views) => {
 export const checkDesktop = () => {
   return window.innerWidth >= 768;
 };
+
+export const isMobile = (typeof (window) !== 'undefined') && (window.innerWidth < 768 || navigator.userAgent.toLowerCase().match(/(ipod|ipad|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|wince)/i) != null);
+
+// Not suitable for some IOS Safari
+export const isIOS = typeof (window) !== 'undefined' && navigator.userAgent.toLowerCase().match(/(ipod|ipad|iphone)/i) !== null;

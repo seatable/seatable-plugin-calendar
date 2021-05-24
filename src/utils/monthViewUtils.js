@@ -2,9 +2,11 @@ import { MONTH_ROW_HEIGHT, OVERSCAN_ROWS, OFFSET_ROWS } from '../constants';
 import { DATE_UNIT } from '../constants/date';
 import moment from 'moment';
 import { startOf } from './dates';
+import { checkDesktop } from './common';
 
 export const getInitialState = (date, renderedRowsCount, localizer) => {
-  let visibleStartIndex = OFFSET_ROWS + OVERSCAN_ROWS;
+  const isDesktop = checkDesktop();
+  let visibleStartIndex = isDesktop ? OFFSET_ROWS + OVERSCAN_ROWS : 52 * 2;
   let visibleEndIndex = visibleStartIndex + renderedRowsCount;
   let overscanStartIndex = getOverscanStartIndex(visibleStartIndex);
   let overscanEndIndex = getOverscanEndIndex(visibleEndIndex);
@@ -20,8 +22,10 @@ export const getInitialState = (date, renderedRowsCount, localizer) => {
 
 export const getAllWeeksStartDates = (date, renderedRowsCount, localizer) => {
   const visibleStartWeekDate = moment(startOf(date, DATE_UNIT.WEEK, localizer.startOfWeek())).subtract(7, DATE_UNIT.DAY);
-  const gridStartWeekDate = moment(visibleStartWeekDate).subtract((OVERSCAN_ROWS + OFFSET_ROWS) * 7, DATE_UNIT.DAY).toDate();
-  const gridEndWeekDate = moment(visibleStartWeekDate).add((renderedRowsCount + OVERSCAN_ROWS + OFFSET_ROWS) * 7, DATE_UNIT.DAY).toDate();
+  const isDesktop = checkDesktop();
+  const weekOffset = isDesktop ? OFFSET_ROWS + OVERSCAN_ROWS : 52 * 2;
+  const gridStartWeekDate = moment(visibleStartWeekDate).subtract(weekOffset * 7, DATE_UNIT.DAY).toDate();
+  const gridEndWeekDate = moment(visibleStartWeekDate).add((renderedRowsCount + weekOffset) * 7, DATE_UNIT.DAY).toDate();
   return getWeeksStartDates(gridStartWeekDate, gridEndWeekDate);
 };
 
@@ -30,7 +34,8 @@ export const getRenderedRowsCount = (viewportHeight) => {
 };
 
 export const getOverscanStartIndex = (visibleStartIndex) => {
-  return visibleStartIndex - OVERSCAN_ROWS;
+  const isDesktop = checkDesktop();
+  return isDesktop ? visibleStartIndex - OVERSCAN_ROWS : visibleStartIndex;
 };
 
 export const getOverscanEndIndex = (visibleEndIndex) => {

@@ -116,6 +116,7 @@ class MonthView extends React.Component {
   };
 
   onMonthViewScroll = (evt) => {
+    const isDesktop = checkDesktop();
     if (!this.isScrolling) {
       this.isScrolling = true;
       return;
@@ -127,12 +128,15 @@ class MonthView extends React.Component {
     let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
     let overRowsCount = scrollTop / MONTH_ROW_HEIGHT;
     let fract = overRowsCount - Math.trunc(overRowsCount);
-    let visibleStartIndex = Math.ceil(overRowsCount) - 1;
+    let overDatesCount = Math.ceil(overRowsCount) - 1;
+    let visibleStartIndex = overDatesCount < 0 ? 0 : overDatesCount;
     if (isNextMonth(date, allWeeksStartDates, visibleStartIndex)) {
       this.isScrolling = false;
       let nextMonthDate = getNextMonthDate(allWeeksStartDates, visibleStartIndex);
       let lastVisibleWeekStartDate = allWeeksStartDates[visibleStartIndex];
-      allWeeksStartDates = getAllWeeksStartDates(nextMonthDate, renderedRowsCount, this.props.localizer);
+      if (isDesktop) {
+        allWeeksStartDates = getAllWeeksStartDates(nextMonthDate, renderedRowsCount, this.props.localizer);
+      }
       visibleStartIndex = getVisibleStartIndexByDate(lastVisibleWeekStartDate, allWeeksStartDates);
       scrollTop = (visibleStartIndex + (fract || 1)) * MONTH_ROW_HEIGHT;
       this.props.updateCurrentDate(getWeekEndDate(nextMonthDate));

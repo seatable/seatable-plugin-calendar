@@ -691,6 +691,7 @@ class Calendar extends React.Component {
     className: PropTypes.string,
     columns: PropTypes.array,
     startDateColumn: PropTypes.object,
+    isMobile: PropTypes.bool,
     onRowExpand: PropTypes.func,
     onInsertRow: PropTypes.func,
   };
@@ -835,19 +836,45 @@ class Calendar extends React.Component {
   };
 
   handleNavigate = (action, newDate) => {
-    let { view, getNow, ...props } = this.props;
+    let { view, getNow, isMobile, ...props } = this.props;
     let { date } = this.state;
     let ViewComponent = this.getCurrentView();
     let today = getNow();
-    date = moveDate(ViewComponent, {
+    let updatedDate = moveDate(ViewComponent, {
       ...props,
       action,
       date: newDate || date || today,
       today
     });
-    this.handleRangeChange(date, ViewComponent);
-    this.setState({date, changeDateByNavicate: true});
+
+    if (isMobile) {
+      const isValidDate = this.checkCurrentDate(updatedDate);
+      if (!isValidDate) {
+        this.scrollToBoundary();
+        return;
+      }
+    }
+    this.handleRangeChange(updatedDate, ViewComponent);
+    this.setState({date: updatedDate, changeDateByNavicate: true});
   };
+
+  checkCurrentDate = date => {
+    if (this.props.view === CALENDAR_VIEWS.MONTH) {
+      return this.currentView && this.currentView.isDateBetweenDateRange(date);
+    }
+    return true;
+  }
+
+  scrollToBoundary = (action) => {
+    if (this.props.view === CALENDAR_VIEWS.MONTH) {
+      if (!this.currentView) return;
+      if (action === navigate.NEXT) {
+        this.currentView.scrollToBottom();
+      } else if (action === navigate.PREVIOUS) {
+        this.currentView.scrollToTop();
+      }
+    }
+  }
 
   onSelectView = view => {
     if (view !== this.props.view && isValidView(view, this.props)) {
@@ -939,6 +966,7 @@ class Calendar extends React.Component {
           <React.Fragment>
             <View
               {...props}
+              ref={ref => this.currentView = ref}
               events={events}
               date={current}
               getNow={getNow}
@@ -983,6 +1011,7 @@ class Calendar extends React.Component {
                 onInsertRow={this.onInsertRow}
                 updateCurrentDate={this.updateCurrentDate}
                 changeDateByNavicate={this.state.changeDateByNavicate}
+                isMobile={this.props.isMobile}
               />
             )}
           </React.Fragment>

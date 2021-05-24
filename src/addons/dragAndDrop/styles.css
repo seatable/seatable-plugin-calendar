@@ -2,6 +2,10 @@
   position: relative;
 }
 
+.rbc-mobile-month-rows .rbc-addons-dnd-row-body {
+  overflow: hidden !important;
+}
+
 .rbc-addons-dnd .rbc-addons-dnd-drag-row {
   position: absolute;
   top: 0;

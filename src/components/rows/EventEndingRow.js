@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import EventRowMixin from './EventRowMixin';
 import { eventLevels } from '../../utils/eventLevels';
-import { range, checkDesktop } from '../../utils/common';
+import { range } from '../../utils/common';
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot;
 let eventsInSlot = (segments, slot) =>
   segments.filter(seg => isSegmentInSlot(seg, slot)).length;
 
 class EventEndingRow extends React.Component {
+
   render() {
-    const isDesktop = checkDesktop();
     let {
       segments,
-      slotMetrics: { slots }
+      slotMetrics: { slots },
+      isMobile,
     } = this.props;
     let rowSegments = eventLevels(segments).levels[0];
 
@@ -26,7 +27,7 @@ class EventEndingRow extends React.Component {
     while (current <= slots) {
       let key = '_lvl_' + current;
 
-      if (!isDesktop) {
+      if (isMobile) {
         row.push(
           EventRowMixin.renderSpan(
             slots,
@@ -90,9 +91,8 @@ class EventEndingRow extends React.Component {
   }
 
   renderShowMore(segments, slot) {
-    const isDesktop = checkDesktop();
     let count = eventsInSlot(segments, slot);
-    if (!isDesktop) {
+    if (this.props.isMobile) {
       return <div className="rbc-mobile-date-cover" onClick={e => this.showMore(slot, e)}></div>;
     }
     return count ? (

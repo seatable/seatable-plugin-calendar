@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import moment from 'moment';
 import getPosition from 'dom-helpers/position';
-import { getDtableLang, getDtablePermission, checkDesktop } from '../../utils/common';
+import { getDtableLang, getDtablePermission } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';
 import { getFestival } from '../../utils/festival';
 import {
   getInitialState,
+  getInitStateByDateRange,
   getOverscanStartIndex,
   getOverscanEndIndex,
   getRenderedRowsCount,
@@ -17,7 +18,12 @@ import {
   isNextMonth,
   getAllWeeksStartDates,
   getVisibleStartIndexByDate,
-  getWeekEndDate
+  getWeekEndDate,
+  getVisibleBoundariesByScrollTop,
+  getOverscanStartIndexWithinDateRange,
+  getOverScanEndIdxWithinDateRange,
+  getVisibleStartIndexByWeekStartDate,
+  getVisibleEndIndex,
 } from '../../utils/monthViewUtils';
 import { navigate, MONTH_ROW_HEIGHT, OVERSCAN_ROWS, OFFSET_ROWS } from '../../constants';
 import { DATE_UNIT } from '../../constants/date';
@@ -46,6 +52,7 @@ class MonthView extends React.Component {
     this.isTableReadOnly = getDtablePermission() === 'r';
     this.isScrolling = false;
     this.festivals = {};
+    this.initDateRange();
   }
 
   getWeekEventsMap = (events, accessors) => {
@@ -84,10 +91,17 @@ class MonthView extends React.Component {
 
   componentDidMount() {
     if (this.rbcMonthRows) {
+      const { localizer, isMobile } = this.props;
       let monthRowsHeight = this.rbcMonthRows.offsetHeight;
       let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
+      let initState;
+      if (isMobile) {
+        initState = getInitStateByDateRange(this.startDate, this.endDate, this.props.date, renderedRowsCount, localizer);
+      } else {
+        initState = getInitialState(this.props.date, renderedRowsCount, localizer);
+      }
       this.setState({
-        ...getInitialState(this.props.date, renderedRowsCount, this.props.localizer)
+        ...initState
       }, () => {
         this.rbcMonthRows.scrollTop = this.state.visibleStartIndex * MONTH_ROW_HEIGHT;
       });
@@ -100,6 +114,10 @@ class MonthView extends React.Component {
       this.setState({weekEventsMap: newWeekEventsMap});
     }
     if (prevProps.date !== this.props.date && this.props.changeDateByNavicate) {
+      if (this.props.isMobile) {
+        this.updateScrollByDateOnMobile(this.props.date);
+        return;
+      }
       this.isScrolling = false;
       let visibleStartIndex = OVERSCAN_ROWS + OFFSET_ROWS;
       let monthRowsHeight = this.rbcMonthRows.offsetHeight;
@@ -115,34 +133,62 @@ class MonthView extends React.Component {
     return findDOMNode(this);
   };
 
+  initDateRange = () => {
+    if (!this.props.isMobile) return;
+    this.startDate = dates.startOf(moment(this.props.date).startOf(DATE_UNIT.YEAR).subtract(2, DATE_UNIT.YEAR), DATE_UNIT.WEEK, this.props.localizer.startOfWeek());
+    this.endDate = dates.startOf(moment(this.props.date).endOf(DATE_UNIT.YEAR).add(2, DATE_UNIT.YEAR), DATE_UNIT.WEEK, this.props.localizer.startOfWeek());
+  }
+
   onMonthViewScroll = (evt) => {
-    const isDesktop = checkDesktop();
     if (!this.isScrolling) {
       this.isScrolling = true;
       return;
     }
-    let { date } = this.props;
-    let { allWeeksStartDates } = this.state;
-    let scrollTop = evt.target.scrollTop;
-    let monthRowsHeight = this.rbcMonthRows.offsetHeight;
-    let renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
-    let overRowsCount = scrollTop / MONTH_ROW_HEIGHT;
-    let fract = overRowsCount - Math.trunc(overRowsCount);
-    let overDatesCount = Math.ceil(overRowsCount) - 1;
-    let visibleStartIndex = overDatesCount < 0 ? 0 : overDatesCount;
-    if (isNextMonth(date, allWeeksStartDates, visibleStartIndex)) {
+    const scrollTop = evt.target.scrollTop;
+    const { date, isMobile } = this.props;
+    const { allWeeksStartDates } = this.state;
+    const monthRowsHeight = this.rbcMonthRows.offsetHeight;
+    if (isMobile) {
+      this.onScrollOnMobile(scrollTop, date, allWeeksStartDates, monthRowsHeight);
+    } else {
+      this.onScrollOnDesktop(scrollTop, date, allWeeksStartDates, monthRowsHeight);
+    }
+  }
+
+  onScrollOnDesktop = (scrollTop, currentDate, allWeeksStartDates, monthRowsHeight) => {
+    const renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
+    const overRowsCount = scrollTop / MONTH_ROW_HEIGHT;
+    const fract = overRowsCount - Math.trunc(overRowsCount);
+    let visibleStartIndex = Math.ceil(overRowsCount) - 1;
+    visibleStartIndex = visibleStartIndex < 0 ? 0 : visibleStartIndex;
+    if (isNextMonth(currentDate, allWeeksStartDates, visibleStartIndex)) {
       this.isScrolling = false;
-      let nextMonthDate = getNextMonthDate(allWeeksStartDates, visibleStartIndex);
-      let lastVisibleWeekStartDate = allWeeksStartDates[visibleStartIndex];
-      if (isDesktop) {
-        allWeeksStartDates = getAllWeeksStartDates(nextMonthDate, renderedRowsCount, this.props.localizer);
-      }
+      const nextMonthDate = getNextMonthDate(allWeeksStartDates, visibleStartIndex);
+      const lastVisibleWeekStartDate = allWeeksStartDates[visibleStartIndex];
+      allWeeksStartDates = getAllWeeksStartDates(nextMonthDate, renderedRowsCount, this.props.localizer);
       visibleStartIndex = getVisibleStartIndexByDate(lastVisibleWeekStartDate, allWeeksStartDates);
       scrollTop = (visibleStartIndex + (fract || 1)) * MONTH_ROW_HEIGHT;
       this.props.updateCurrentDate(getWeekEndDate(nextMonthDate));
     }
-    let visibleEndIndex = visibleStartIndex + renderedRowsCount;
+    const visibleEndIndex = visibleStartIndex + renderedRowsCount;
     this.updateScroll(scrollTop, visibleStartIndex, visibleEndIndex, allWeeksStartDates);
+  }
+
+  onScrollOnMobile = (scrollTop, currentDate, allWeeksStartDates, monthRowsHeight) => {
+    const datesCount = allWeeksStartDates.length;
+    const { visibleStartIndex, visibleEndIndex } = getVisibleBoundariesByScrollTop(scrollTop, monthRowsHeight, datesCount);
+    const overscanStartIndex = getOverscanStartIndexWithinDateRange(visibleStartIndex);
+    const overscanEndIndex = getOverScanEndIdxWithinDateRange(visibleEndIndex, datesCount);
+    if (isNextMonth(currentDate, allWeeksStartDates, visibleStartIndex)) {
+      const nextMonthDate = getNextMonthDate(allWeeksStartDates, visibleStartIndex);
+      this.props.updateCurrentDate(getWeekEndDate(nextMonthDate));
+    }
+    this.setState({
+      visibleStartIndex,
+      visibleEndIndex,
+      overscanStartIndex,
+      overscanEndIndex,
+    });
   }
 
   updateScroll = (scrollTop, visibleStartIndex, visibleEndIndex, allWeeksStartDates) => {
@@ -157,6 +203,47 @@ class MonthView extends React.Component {
     }, () => {
       this.rbcMonthRows.scrollTop = scrollTop;
     });
+  }
+
+  updateScrollByDateOnMobile = (date) => {
+    const { allWeeksStartDates } = this.state;
+    const datesCount = allWeeksStartDates.length;
+    const currentWeekStartDate = moment(dates.startOf(date, DATE_UNIT.WEEK, this.props.localizer.startOfWeek())).subtract(1, DATE_UNIT.WEEK);
+    const monthRowsHeight = this.rbcMonthRows.offsetHeight;
+    const renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
+    const visibleStartIndex = getVisibleStartIndexByWeekStartDate(currentWeekStartDate, allWeeksStartDates);
+    const visibleEndIndex = getVisibleEndIndex(visibleStartIndex, renderedRowsCount, datesCount);
+    const overscanStartIndex = getOverscanStartIndexWithinDateRange(visibleStartIndex);
+    const overscanEndIndex = getOverScanEndIdxWithinDateRange(visibleEndIndex, datesCount);
+    this.setState({
+      visibleStartIndex,
+      visibleEndIndex,
+      overscanStartIndex,
+      overscanEndIndex,
+    }, () => {
+      this.rbcMonthRows.scrollTop = visibleStartIndex * MONTH_ROW_HEIGHT;
+    });
+  }
+
+  isDateBetweenDateRange = (date) => {
+    return moment(date).isSameOrAfter(this.startDate) && moment(date).isSameOrBefore(this.endDate);
+  }
+
+  scrollToTop = () => {
+    let scrollTop = this.rbcMonthRows.scrollTop;
+    if (scrollTop === 0) {
+      return;
+    }
+    this.rbcMonthRows.scrollTop = 0;
+  }
+
+  scrollToBottom = () => {
+    const { scrollHeight, offsetHeight, scrollTop } = this.rbcMonthRows;
+    const restScrollTop = scrollHeight - offsetHeight;
+    if (restScrollTop - scrollTop === 0) {
+      return;
+    }
+    this.rbcMonthRows.scrollTop = restScrollTop;
   }
 
   handleShowMore = (events, date, cell, slot, target) => {
@@ -188,7 +275,7 @@ class MonthView extends React.Component {
   }
 
   render() {
-    let { className } = this.props;
+    let { className, isMobile } = this.props;
     let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
     let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
     if (allWeeksStartDates) {
@@ -198,11 +285,11 @@ class MonthView extends React.Component {
     }
     let weeksCount = renderWeeks.length;
     return (
-      <div className={classnames('rbc-month-view', className)}>
+      <div className={classnames('rbc-month-view', className)} ref={ref => this.currentView = ref}>
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
         </div>
-        <div className="rbc-month-rows" ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
+        <div className={classnames('rbc-month-rows', {'rbc-mobile-month-rows': isMobile})} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
           <div style={{paddingTop: offsetTop, paddingBottom: offsetBottom}}>
             {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
           </div>
@@ -213,9 +300,8 @@ class MonthView extends React.Component {
   }
 
   renderWeek = (weekStartDate, weekIdx) => {
-    const isDesktop = checkDesktop();
     let { components, selectable, getNow, selected, date, localizer, longPressThreshold,
-      accessors, getters } = this.props;
+      accessors, getters, isMobile } = this.props;
     const { needLimitMeasure, weekEventsMap } = this.state;
     const formatWeekStartDate = moment(weekStartDate).format('YYYY-MM-DD');
     let weekDates = dates.getWeekDates(weekStartDate);
@@ -234,12 +320,13 @@ class MonthView extends React.Component {
         maxRows={4}
         selected={selected}
         selectable={selectable}
+        isMobile={isMobile}
         components={components}
         accessors={accessors}
         getters={getters}
         localizer={localizer}
         renderHeader={this.readerDateHeading}
-        renderFestival={!isDesktop && this.isChinese && this.renderFestivalCell}
+        renderFestival={isMobile && this.isChinese && this.renderFestivalCell}
         renderForMeasure={needLimitMeasure}
         onShowMore={this.handleShowMore}
         onRowExpand={this.onRowExpand}
@@ -252,12 +339,12 @@ class MonthView extends React.Component {
   };
 
   readerDateHeading = ({ date, className, ...props }) => {
-    let { date: currentDate, getDrilldownView, localizer } = this.props;
+    let { date: currentDate, getDrilldownView, localizer, isMobile } = this.props;
     let isOffRange = dates.month(date) !== dates.month(currentDate);
     let drilldownView = getDrilldownView(date);
     let label = localizer.format(date, 'dateFormat');
     let DateHeaderComponent = this.props.components.dateHeader || DateHeader;
-    const isDesktop = checkDesktop();
+    const isDesktop = !isMobile;
     return (
       <div
         {...props}
@@ -297,11 +384,11 @@ class MonthView extends React.Component {
   }
 
   renderHeaders(row) {
-    const isDesktop = checkDesktop();
-    let { localizer, components } = this.props;
+    let { localizer, components, isMobile } = this.props;
     let first = row[0];
     let last = row[row.length - 1];
     let HeaderComponent = components.header || Header;
+    const isDesktop = !isMobile;
 
     return dates.range(first, last, 'day').map((day, idx) => (
       <div key={'header_' + idx} className='rbc-header'>

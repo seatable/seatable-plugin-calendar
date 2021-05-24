@@ -9,7 +9,6 @@ import * as DateSlotMetrics from '../../utils/DateSlotMetrics';
 import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import BackgroundCells from '../cells/BackgroundCells';
-import { checkDesktop } from '../../utils/common';
 
 class DateContentRow extends React.PureComponent {
 
@@ -115,7 +114,8 @@ class DateContentRow extends React.PureComponent {
       onDoubleClick,
       resourceId,
       longPressThreshold,
-      isAllDay
+      isAllDay,
+      isMobile,
     } = this.props;
     if (renderForMeasure) return this.renderDummy();
     let metrics = this.slotMetrics(this.props);
@@ -123,7 +123,6 @@ class DateContentRow extends React.PureComponent {
 
     let WeekWrapper = components.weekWrapper;
 
-    const isDesktop = checkDesktop();
     const eventRowProps = {
       selected,
       accessors,
@@ -169,10 +168,11 @@ class DateContentRow extends React.PureComponent {
             {levels.map((segs, idx) => (
               <EventRow key={idx} segments={segs} {...eventRowProps} />
             ))}
-            {((isDesktop && !!extra.length) || !isDesktop) && (
+            {((!isMobile && !!extra.length) || isMobile) && (
               <EventEndingRow
                 segments={extra}
                 onShowMore={this.handleShowMore}
+                isMobile={isMobile}
                 {...eventRowProps}
               />
             )}

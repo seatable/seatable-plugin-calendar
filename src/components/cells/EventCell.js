@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import classnames from 'classnames';
 import * as dates from '../../utils/dates';
+import { checkDesktop } from '../../utils/common';
 
 class EventCell extends React.Component {
 
@@ -18,6 +19,7 @@ class EventCell extends React.Component {
   onRowExpand = (data) => {
     this.props.onRowExpand(data.row);
   }
+
 
   render() {
     let {
@@ -53,6 +55,8 @@ class EventCell extends React.Component {
 
     let userProps = getters.eventProp(event, start, end, selected);
 
+    const isDesktop = checkDesktop();
+
     const content = (
       <div className='rbc-event-content' title={tooltip || undefined}>
         {Event ? (
@@ -78,6 +82,7 @@ class EventCell extends React.Component {
           style={{ ...userProps.style, ...style, ...this.getRbcEventStyle() }}
           className={classnames('rbc-event', className, userProps.className, {
             'rbc-selected': selected,
+            'rbc-event-mobile': !isDesktop,
             'rbc-event-allday': showAsAllDay,
             'rbc-event-continues-prior': continuesPrior,
             'rbc-event-continues-after': continuesAfter

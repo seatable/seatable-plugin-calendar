@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import EventRowMixin from './EventRowMixin';
 import { eventLevels } from '../../utils/eventLevels';
-import { range } from '../../utils/common';
+import { range, checkDesktop } from '../../utils/common';
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot;
 let eventsInSlot = (segments, slot) =>
@@ -11,11 +11,13 @@ let eventsInSlot = (segments, slot) =>
 
 class EventEndingRow extends React.Component {
   render() {
+    const isDesktop = checkDesktop();
     let {
       segments,
       slotMetrics: { slots }
     } = this.props;
     let rowSegments = eventLevels(segments).levels[0];
+
 
     let current = 1,
       lastEnd = 1,
@@ -24,8 +26,21 @@ class EventEndingRow extends React.Component {
     while (current <= slots) {
       let key = '_lvl_' + current;
 
+      if (!isDesktop) {
+        row.push(
+          EventRowMixin.renderSpan(
+            slots,
+            1,
+            key,
+            this.renderShowMore(segments, current)
+          )
+        );
+        current++;
+        continue;
+      }
+
       let { event, left, right, span } =
-        rowSegments.filter(seg => isSegmentInSlot(seg, current))[0] || {}; //eslint-disable-line
+        (rowSegments && rowSegments.filter(seg => isSegmentInSlot(seg, current))[0]) || {}; //eslint-disable-line
 
       if (!event) {
         current++;
@@ -75,7 +90,11 @@ class EventEndingRow extends React.Component {
   }
 
   renderShowMore(segments, slot) {
+    const isDesktop = checkDesktop();
     let count = eventsInSlot(segments, slot);
+    if (!isDesktop) {
+      return <div className="rbc-mobile-date-cover" onClick={e => this.showMore(slot, e)}></div>;
+    }
     return count ? (
       <button
         key={'sm_' + slot}

@@ -203,3 +203,6 @@ export const generatorViewId = (views) => {
   return view_id;
 };
 
+export const checkDesktop = () => {
+  return window.innerWidth >= 768;
+};

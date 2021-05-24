@@ -9,6 +9,7 @@ import * as DateSlotMetrics from '../../utils/DateSlotMetrics';
 import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import BackgroundCells from '../cells/BackgroundCells';
+import { checkDesktop } from '../../utils/common';
 
 class DateContentRow extends React.PureComponent {
 
@@ -106,6 +107,7 @@ class DateContentRow extends React.PureComponent {
       components,
       getNow,
       renderHeader,
+      renderFestival,
       onRowExpand,
       localizer,
       onSelectStart,
@@ -121,6 +123,7 @@ class DateContentRow extends React.PureComponent {
 
     let WeekWrapper = components.weekWrapper;
 
+    const isDesktop = checkDesktop();
     const eventRowProps = {
       selected,
       accessors,
@@ -156,10 +159,17 @@ class DateContentRow extends React.PureComponent {
             </div>
           )}
           <WeekWrapper isAllDay={isAllDay} {...eventRowProps}>
+            {renderFestival && (
+              <div className='rbc-row'>
+                {range.map((date, index) => {
+                  return <div key={index} className="rbc-festival-row-segment">{renderFestival(date)}</div>;
+                })}
+              </div>
+            )}
             {levels.map((segs, idx) => (
               <EventRow key={idx} segments={segs} {...eventRowProps} />
             ))}
-            {!!extra.length && (
+            {((isDesktop && !!extra.length) || !isDesktop) && (
               <EventEndingRow
                 segments={extra}
                 onShowMore={this.handleShowMore}

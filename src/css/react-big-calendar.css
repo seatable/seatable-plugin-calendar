@@ -23,7 +23,6 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-calendar {
   box-sizing: border-box;
-  padding-top: 18px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -72,13 +71,22 @@ button.rbc-input::-moz-focus-inner {
   flex: 1 0 0;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 0 3px;
-  text-align: left;
   vertical-align: middle;
   font-weight: 400;
   font-size: 14px;
   min-height: 0;
   border-bottom: 1px solid #ddd;
+  padding: 12px 3px 6px;
+  color: #999;
+  text-align: center;
+}
+
+@media print, screen and (min-width: 768px) {
+  .rbc-month-header .rbc-header {
+    padding: 0 3px;
+    color: #212529;
+    text-align: left;
+  }
 }
 
 .rbc-rtl .rbc-header + .rbc-header {
@@ -103,13 +111,30 @@ button.rbc-input::-moz-focus-inner {
   z-index: 4;
 }
 
+.rbc-mobile-date-cover {
+  position: absolute; /* relative to .rbc-addons-dnd-row-body */
+  top: -23px;
+  bottom: 0;
+  width: 14.2857%;
+  height: 125px;
+}
+
 .rbc-toolbar {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 0 18px 10px;
+  padding: 10px 18px;
+  background: #f5f5f5;
   font-size: 16px;
+  border-bottom: 1px solid #0028641f;
+}
+
+@media screen and (min-width: 768px) {
+  .rbc-toolbar {
+    padding: 18px 18px 10px;
+    background: #fff;
+    border-bottom: 0;
+  }
 }
 
 .rbc-toolbar .rbc-toolbar-label {
@@ -310,6 +335,23 @@ button.rbc-input::-moz-focus-inner {
   text-align: left;
 }
 
+.rbc-event-mobile {
+  padding-left: 8px;
+  position: relative;
+  font-size: 12px;
+}
+
+.rbc-event-mobile-decorator {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
 .rbc-slot-selecting .rbc-event {
   cursor: inherit;
   pointer-events: none;
@@ -345,6 +387,11 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-row-segment {
   padding: 0 3px 3px;
+  overflow: hidden;
+}
+
+.rbc-festival-row-segment { /* only for mobile */
+  flex: 1 1 0px;
 }
 
 .rbc-selected-cell {
@@ -380,7 +427,6 @@ button.rbc-input::-moz-focus-inner {
 .rbc-month-header {
   display: flex;
   flex-direction: row;
-  padding: 0 18px;
 }
 
 .rbc-month-rows {
@@ -389,8 +435,14 @@ button.rbc-input::-moz-focus-inner {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: 0 18px;
   overflow-y: scroll;
+}
+
+@media print, screen and (min-width: 768px) {
+  .rbc-month-header,
+  .rbc-month-rows {
+    padding: 0 18px;
+  }
 }
 
 .rbc-month-row {
@@ -403,9 +455,14 @@ button.rbc-input::-moz-focus-inner {
   height: 126px;
   min-height: 126px;
   max-height: 126px;
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
+}
+
+@media print, screen and (min-width: 768px) {
+  .rbc-month-row {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
 }
 
 /* for exported month in which there are 6 weeks */
@@ -435,6 +492,17 @@ button.rbc-input::-moz-focus-inner {
   padding: 2px 3px 3px;
   font-size: 12px;
   text-align: left;
+  overflow: hidden;
+}
+
+.rbc-date-cell {
+  justify-content: center;
+}
+
+@media print, screen and (min-width: 768px) {
+  .rbc-date-cell {
+    justify-content: initial;
+  }
 }
 
 .rbc-date-cell:hover .calendar-insert-row-btn {
@@ -494,8 +562,10 @@ button.rbc-input::-moz-focus-inner {
   flex: 1 0 0;
 }
 
-.rbc-day-bg + .rbc-day-bg {
-  border-left: 1px solid #ddd;
+@media print, screen and (min-width: 768px) {
+  .rbc-day-bg + .rbc-day-bg {
+    border-left: 1px solid #ddd;
+  }
 }
 
 .rbc-rtl .rbc-day-bg + .rbc-day-bg {
@@ -505,8 +575,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-overlay {
   position: fixed;
-  width: 200px;
-  padding-bottom: 12px;
+  width: calc(100% - 10px);
   background-color: #fff;
   box-shadow: 0 0 5px #ccc;
   border: 1px solid rgba(0, 40, 100, 0.12);
@@ -515,11 +584,13 @@ button.rbc-input::-moz-focus-inner {
   overflow: hidden;
 }
 
+@media screen and (min-width: 768px) {
+  .rbc-overlay {
+    width: 200px;
+  }
+}
+
 .rbc-overlay .rbc-overlay-header {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -536,7 +607,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-overlay .rbc-overlay-body {
   min-height: 132px;
-  padding: 31px 12px 0;
+  padding: 12px 8px;
   overflow-y: auto;
   max-height: 260px;
 }
@@ -1018,9 +1089,9 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-festival {
+  font-size: 12px;
   flex: 1;
   padding-left: 4px;
-  padding-right: 20px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

@@ -13,8 +13,8 @@ class Toolbar extends React.Component {
     } = this.props;
     return (
       <div className='rbc-toolbar'>
-        <div className='rbc-btn-group'>
-          <div className='rbc-tool-icon-group'>
+        <div className='rbc-btn-group d-flex'>
+          <div className='rbc-tool-icon-group d-flex'>
             <span onClick={this.navigate.bind(null, navigate.PREVIOUS)} className={'rbc-tool-icon'}>
               <i className="dtable-font dtable-icon-left"></i>
             </span>
@@ -24,7 +24,7 @@ class Toolbar extends React.Component {
             </span>
           </div>
           <span
-            className={classnames('rbc-tool-btn', {'today-btn-disabled': isToday})}
+            className={classnames('rbc-tool-btn text-truncate', {'today-btn-disabled': isToday})}
             onClick={!isToday ? this.navigate.bind(null, navigate.TODAY) : undefined}
           >
             {intl.get('.rbc.messages.today').d(messages.today)}

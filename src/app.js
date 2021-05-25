@@ -10,7 +10,7 @@ import { CALENDAR_DIALOG_MODAL } from './constants/zIndexes';
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
-import { generatorViewId, getDtableUuid, checkDesktop} from './utils/common';
+import { generatorViewId, getDtableUuid, isMobile } from './utils/common';
 import View from './model/view';
 
 import './locale';
@@ -60,6 +60,7 @@ class App extends React.Component {
       isTimeRangeDialogOpen: false
     };
     this.dtable = new DTable();
+    this.isMobile = isMobile;
   }
 
   componentDidMount() {
@@ -264,13 +265,12 @@ class App extends React.Component {
   }
 
   renderBtnGroups = () => {
-    const isDesktop = checkDesktop();
     return (
       <div className="d-flex align-items-center">
-        {isDesktop &&
-        <span className="op-icon mr-2" onClick={this.toggleTimeRangeDialog}>
-          <i className="dtable-font dtable-icon-print"></i>
-        </span>
+        {!this.isMobile &&
+          <span className="op-icon mr-2" onClick={this.toggleTimeRangeDialog}>
+            <i className="dtable-font dtable-icon-print"></i>
+          </span>
         }
         <span className="op-icon mr-2" onClick={this.toggleViewSettingPanel}>
           <i className="dtable-font dtable-icon-settings"></i>
@@ -401,7 +401,6 @@ class App extends React.Component {
   }
 
   render() {
-    const isDesktop = checkDesktop();
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
       rows,
       isViewSettingPanelOpen,
@@ -441,9 +440,9 @@ class App extends React.Component {
             <img className="plugin-logo mr-2" src={icon} alt="" width="24" />
             <span className="plugin-title">{intl.get('Calendar')}</span>
           </div>
-          {isDesktop && ViewsTabsEl}
+          {!this.isMobile && ViewsTabsEl}
         </ModalHeader>
-        {!isDesktop && <div className="flex-shrink-0 h-7 d-flex pr-4 border-bottom">{ViewsTabsEl}</div>}
+        {this.isMobile && <div className="flex-shrink-0 h-7 d-flex pr-4 border-bottom">{ViewsTabsEl}</div>}
         <ModalBody className="calendar-plugin-content">
           <ReactBigCalendar
             activeTable={selectedTable}
@@ -464,6 +463,7 @@ class App extends React.Component {
             hideViewSettingPanel={this.hideViewSettingPanel}
             isExporting={this.state.isExporting}
             exportedMonths={this.state.exportedMonths}
+            isMobile={this.isMobile}
           />
           {isViewSettingPanelOpen &&
             <ViewSetting

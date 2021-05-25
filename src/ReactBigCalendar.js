@@ -27,18 +27,19 @@ const propTypes = {
   optionColors: PropTypes.array,
   highlightColors: PropTypes.object,
   setting: PropTypes.object,
+  isMobile: PropTypes.bool,
   onRowExpand: PropTypes.func,
   onInsertRow: PropTypes.func,
   getRowById: PropTypes.func,
 };
 
-const calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.WEEK, CALENDAR_VIEWS.DAY, CALENDAR_VIEWS.AGENDA];
 const localizer = momentLocalizer(moment);
 
 class ReactBigCalendar extends React.Component {
 
   constructor(props) {
     super(props);
+    this.initCalendarViews();
     this.state = {
       selectedView: this.getSelectedView(),
       events: this.getEvents(props),
@@ -55,13 +56,21 @@ class ReactBigCalendar extends React.Component {
     }
   }
 
+  initCalendarViews = () => {
+    if (this.props.isMobile) {
+      this.calendarViews = [CALENDAR_VIEWS.MONTH];
+    } else {
+      this.calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.WEEK, CALENDAR_VIEWS.DAY, CALENDAR_VIEWS.AGENDA];
+    }
+  }
+
   getSelectedView = () => {
     let selectedCalendarView = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW)) || {};
     let { activeTable, activeView } = this.props;
     let dtableUuid = getDtableUuid();
     let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
     let view = selectedCalendarView[key];
-    return -1 === calendarViews.indexOf(view) ? CALENDAR_VIEWS.MONTH : view;
+    return -1 === this.calendarViews.indexOf(view) ? CALENDAR_VIEWS.MONTH : view;
   }
 
   onSelectView = (view) => {
@@ -304,7 +313,7 @@ class ReactBigCalendar extends React.Component {
         startDateColumn={startDateColumn}
         localizer={localizer}
         events={events}
-        views={calendarViews}
+        views={this.calendarViews}
         view={this.state.selectedView}
         onSelectView={this.onSelectView}
         defaultDate={new Date()}
@@ -318,6 +327,7 @@ class ReactBigCalendar extends React.Component {
         onEventDrop={this.moveEvent}
         isExporting={this.props.isExporting}
         exportedMonths={this.props.exportedMonths}
+        isMobile={this.props.isMobile}
       />
     );
   }

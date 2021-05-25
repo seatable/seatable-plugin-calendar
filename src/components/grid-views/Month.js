@@ -113,8 +113,15 @@ class MonthView extends React.Component {
       const newWeekEventsMap = this.getWeekEventsMap(this.props.events, this.props.accessors);
       this.setState({weekEventsMap: newWeekEventsMap});
     }
-    if (prevProps.localizer !== this.props.localizer || // for set 'week start'
-      (prevProps.date !== this.props.date && this.props.changeDateByNavicate)) {
+
+    if (prevProps.configuredWeekStart !== this.props.configuredWeekStart) { // for set 'week start'
+      const monthRowsHeight = this.rbcMonthRows.offsetHeight;
+      const renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
+      const allWeeksStartDates = getAllWeeksStartDates(this.props.date, renderedRowsCount, this.props.localizer);
+      this.setState({ allWeeksStartDates });
+    }
+
+    if (prevProps.date !== this.props.date && this.props.changeDateByNavicate) {
       if (this.props.isMobile) {
         this.updateScrollByDateOnMobile(this.props.date);
         return;

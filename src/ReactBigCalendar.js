@@ -33,8 +33,6 @@ const propTypes = {
   getRowById: PropTypes.func,
 };
 
-const localizer = momentLocalizer(moment);
-
 class ReactBigCalendar extends React.Component {
 
   constructor(props) {
@@ -307,10 +305,14 @@ class ReactBigCalendar extends React.Component {
     const { events } = this.state;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
+
+    const configuredWeekStart = settings[SETTING_KEY.WEEK_START];
+    const localizer = momentLocalizer(moment, configuredWeekStart);
     return (
       <DragAndDropCalendar
         columns={columns}
         startDateColumn={startDateColumn}
+        configuredWeekStart={configuredWeekStart}
         localizer={localizer}
         events={events}
         views={this.calendarViews}

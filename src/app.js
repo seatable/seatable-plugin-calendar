@@ -58,6 +58,7 @@ class App extends React.Component {
       selectedViewIdx: 0,
       isViewSettingPanelOpen: false,
       rows: [],
+      rowsColor: {},
       isTimeRangeDialogOpen: false
     };
     this.dtable = new DTable();
@@ -121,18 +122,27 @@ class App extends React.Component {
 
     this.cellType = this.dtable.getCellType();
     this.optionColors = this.dtable.getOptionColors();
+
+    let rowColorsMap = {};
+    this.optionColors.forEach((optionColor) => {
+      rowColorsMap[optionColor.COLOR] = optionColor.TEXT_COLOR;
+    });
+    this.rowColorsMap = rowColorsMap;
+
     this.highlightColors = this.dtable.getHighlightColors();
     this.columnIconConfig = this.dtable.getColumnIconConfig();
     this.collaborators = this.getRelatedUsersFromLocal();
     this.currentUser = this.getCurrentUserFromLocal();
     const selectedPluginView = views[selectedViewIdx];
     const rows = selectedPluginView ? this.getPluginViewRows(selectedPluginView.settings) : [];
+    const rowsColor = this.getRowsColor(selectedPluginView.settings);
     this.setState({
       isLoading: false,
       plugin_settings,
       selectedViewIdx,
       isViewSettingPanelOpen,
       rows,
+      rowsColor
     });
   }
 
@@ -383,14 +393,6 @@ class App extends React.Component {
     return this.dtable.getViewByName(table, settings[SETTING_KEY.VIEW_NAME]);
   }
 
-  getCurrentSettings = () => {
-    let { plugin_settings, selectedViewIdx } = this.state;
-    if (!plugin_settings || !plugin_settings.views || !Array.isArray(plugin_settings.views)) {
-      return {};
-    }
-    return plugin_settings.views[selectedViewIdx] || {};
-  }
-
   modifyRow = (table, row, updated) => {
     this.dtable.modifyRow(table, row, updated);
   }
@@ -399,9 +401,24 @@ class App extends React.Component {
     this.dtable.appendRow(table, rowData);
   }
 
+  getRowsColor = (settings) => {
+    let tables = this.dtable.getTables();
+    let selectedTable = this.getSelectedTable(tables, settings);
+    let tableViews = this.dtable.getViews(selectedTable);
+    let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
+
+    let rowsColor = {};
+    if (settings[SETTING_KEY.COLORED_BY_ROW_COLOR]) {
+      const viewRows = this.dtable.getViewRows(selectedTableView, selectedTable);
+      rowsColor = this.dtable.getViewRowsColor(viewRows, selectedTableView, selectedTable);
+    }
+    return rowsColor;
+  }
+
   render() {
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
       rows,
+      rowsColor,
       isViewSettingPanelOpen,
       isTimeRangeDialogOpen
     } = this.state;
@@ -418,7 +435,6 @@ class App extends React.Component {
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
 
     let columns = this.dtable.getColumns(selectedTable);
-    let currentSetting = this.getCurrentSettings();
 
     const modalClassNames = classnames(
       'dtable-plugin',
@@ -438,6 +454,14 @@ class App extends React.Component {
         onSelectView={this.onSelectView}
       />
     );
+
+    // set default value for 'color field' in settings
+    const singleSelectColumn = columns.filter(item => item.type == this.cellType.SINGLE_SELECT)[0];
+    if (singleSelectColumn) {
+      if (!settings[SETTING_KEY.COLORED_BY_ROW_COLOR] && settings[SETTING_KEY.COLUMN_COLOR] == undefined) {
+        settings[SETTING_KEY.COLUMN_COLOR] = singleSelectColumn.name;
+      }
+    }
 
     return (
       <Modal
@@ -463,12 +487,14 @@ class App extends React.Component {
             selectedViewIdx={selectedViewIdx}
             columns={columns}
             rows={rows}
+            rowsColor={rowsColor}
             getRowById={this.dtable.getRowById}
             appendRow={this.appendRow}
             modifyRow={this.modifyRow}
-            setting={currentSetting}
+            settings={settings}
             CellType={this.cellType}
             optionColors={this.optionColors}
+            rowColorsMap={this.rowColorsMap}
             highlightColors={this.highlightColors}
             collaborators={this.collaborators}
             onRowExpand={this.onRowExpand}

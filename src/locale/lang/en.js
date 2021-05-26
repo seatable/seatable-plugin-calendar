@@ -52,6 +52,7 @@ const en = {
   'Not_used': 'Not used',
   'Choose_the_time_range': 'Choose the time range',
   'Out_of_range': 'At most 12 months can be selected.',
+  'Row_color': 'Row color'
 };
 
 export default en;

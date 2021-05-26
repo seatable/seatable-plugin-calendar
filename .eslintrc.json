@@ -38,6 +38,7 @@
       }
     ],
     "no-useless-escape": "warn",
-    "no-trailing-spaces": "warn"
+    "no-trailing-spaces": "warn",
+    "eqeqeq": "off"
   }
 }

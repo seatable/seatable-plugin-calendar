@@ -170,17 +170,22 @@ export default class TableEvent {
    * @param {Array.<string>} highlightColors dtable highlight-colors
    * @return {{highlightColor: ?string, bgColor: ?string, textColor: ?string}}
    */
-  static getColors({row, colorColumn, optionColors, highlightColors}) {
+  static getColors({row, colorColumn, configuredUseRowColor, optionColors, highlightColors, rowsColor, rowColorsMap}) {
     const colors = {bgColor: null, textColor: null, highlightColor: null};
     const defaultOptionColor = optionColors[2];
-    if (colorColumn) {
+    if (configuredUseRowColor) {
+      const bgColor = rowsColor[row._id];
+      colors.bgColor = bgColor;
+      colors.textColor = rowColorsMap[bgColor];
+    } else if (colorColumn) {
       const { key: colorColumnKey, data } = colorColumn;
       const colorDataOptions = data && data.options;
       const colorId = row[colorColumnKey];
       const colorOption = colorDataOptions && colorDataOptions.find(o => o.id === colorId);
-      colors.bgColor = colorOption ? colorOption.color : defaultOptionColor.COLOR;
-      colors.textColor = colorOption ? colorOption.textColor : defaultOptionColor.TEXT_COLOR;
-    } else {
+      colors.bgColor = colorOption && colorOption.color;
+      colors.textColor = colorOption && colorOption.textColor;
+    }
+    if (!colors.bgColor) {
       colors.bgColor = defaultOptionColor.COLOR;
       colors.textColor = defaultOptionColor.TEXT_COLOR;
     }

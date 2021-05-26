@@ -109,14 +109,28 @@ class ViewSetting extends React.Component {
         }
       );
     }
-    const colorColumnOptions = this.createOptions(colorColumns, SETTING_KEY.COLUMN_COLOR, 'value');
+
+    const colorFieldOptions = this.createOptions(colorColumns, SETTING_KEY.COLUMN_COLOR, 'value');
+    colorFieldOptions.unshift(
+      {
+        value: '',
+        setting_key: SETTING_KEY.COLUMN_COLOR,
+        label: <span className={'select-module select-module-name null-option-name'}>{intl.get('Not_used')}</span>
+      },
+      {
+        value: 'row_color',
+        setting_key: SETTING_KEY.COLORED_BY_ROW_COLOR,
+        label: <span className={'select-module select-module-name'}>{intl.get('Row_color')}</span>
+      }
+    );
 
     let weekStartOptions = [{name: intl.get('Sunday'), value: 0}, {name: intl.get('Monday'), value: 1}];
     weekStartOptions = this.createOptions(weekStartOptions, SETTING_KEY.WEEK_START, 'value');
+
     return {
       tableOptions, viewOptions,
       titleColumnOptions, dateColumnOptions, endDateColumnOptions,
-      colorColumnOptions, weekStartOptions
+      colorFieldOptions, weekStartOptions
     };
   }
 
@@ -138,11 +152,46 @@ class ViewSetting extends React.Component {
     />;
   }
 
+  renderColorSelector = (options) => {
+    const { settings } = this.props;
+    let selectedOption;
+    if (settings[SETTING_KEY.COLORED_BY_ROW_COLOR]) {
+      selectedOption = options.find((option) => option.setting_key === SETTING_KEY.COLORED_BY_ROW_COLOR);
+    } else {
+      selectedOption = options.find((option) => option.value === settings[SETTING_KEY.COLUMN_COLOR]);
+    }
+    if (!selectedOption) {
+      selectedOption = options[0];
+    }
+    return (
+      <PluginSelect
+        classNamePrefix={'calendar-view-setting-selector'}
+        value={selectedOption}
+        options={options}
+        onChange={this.onSelectColoredBy}
+      />
+    );
+  }
+
+  onSelectColoredBy = (selectedOption) => {
+    const { setting_key, value } = selectedOption;
+    let update = {};
+    if (setting_key === SETTING_KEY.COLORED_BY_ROW_COLOR) {
+      update[SETTING_KEY.COLORED_BY_ROW_COLOR] = true;
+      update[SETTING_KEY.COLUMN_COLOR] = null;
+    } else {
+      update[SETTING_KEY.COLORED_BY_ROW_COLOR] = false;
+      update[SETTING_KEY.COLUMN_COLOR] = value;
+    }
+    const newSettings = Object.assign({}, this.props.settings, update);
+    this.props.onModifyViewSettings(newSettings);
+  }
+
   render() {
     const {
       tableOptions, viewOptions,
-      titleColumnOptions, dateColumnOptions, endDateColumnOptions, colorColumnOptions,
-      weekStartOptions
+      titleColumnOptions, dateColumnOptions, endDateColumnOptions,
+      colorFieldOptions, weekStartOptions
     } = this.getSelectorOptions(this.getSelectorColumns());
 
     return (
@@ -177,7 +226,7 @@ class ViewSetting extends React.Component {
             </div>
             <div className="setting-item">
               <div className="title">{intl.get('Color_From')}</div>
-              {this.renderSelector(colorColumnOptions, SETTING_KEY.COLUMN_COLOR)}
+              {this.renderColorSelector(colorFieldOptions)}
             </div>
             <div className="setting-item">
               <div className="title">{intl.get('Week_start')}</div>

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+import classnames from 'classnames';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
 import ReactBigCalendar from './ReactBigCalendar';
@@ -266,7 +267,7 @@ class App extends React.Component {
 
   renderBtnGroups = () => {
     return (
-      <div className="d-flex align-items-center">
+      <div className="d-flex align-items-center plugin-calendar-operators">
         {!this.isMobile &&
           <span className="op-icon mr-2" onClick={this.toggleTimeRangeDialog}>
             <i className="dtable-font dtable-icon-print"></i>
@@ -419,6 +420,13 @@ class App extends React.Component {
     let columns = this.dtable.getColumns(selectedTable);
     let currentSetting = this.getCurrentSettings();
 
+    const modalClassNames = classnames(
+      'dtable-plugin',
+      'calendar-plugin-container',
+      {
+        'plugin-calendar-mobile': this.isMobile
+      }
+    );
     const ViewsTabsEl = (
       <ViewsTabs
         ref={ref => this.viewsTabs = ref}
@@ -432,13 +440,20 @@ class App extends React.Component {
     );
 
     return (
-      <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={this.isMobile ? MOBILE_CALENDAR_DIALOG_MODAL : CALENDAR_DIALOG_MODAL}>
-        <ModalHeader className="plugin-header flex-shrink-0 h-7" close={this.renderBtnGroups()}>
+      <Modal
+        isOpen={true}
+        toggle={this.onPluginToggle}
+        className={modalClassNames}
+        size="lg"
+        zIndex={this.isMobile ? MOBILE_CALENDAR_DIALOG_MODAL : CALENDAR_DIALOG_MODAL}
+      >
+        <ModalHeader className="plugin-header flex-shrink-0 h-7">
           <div className="logo-title d-flex align-items-center">
             <img className="plugin-logo mr-2" src={icon} alt="" width="24" />
             <span className="plugin-title">{intl.get('Calendar')}</span>
           </div>
           {!this.isMobile && ViewsTabsEl}
+          {this.renderBtnGroups()}
         </ModalHeader>
         {this.isMobile && <div className="flex-shrink-0 h-7 d-flex pl-4 pr-4 border-bottom">{ViewsTabsEl}</div>}
         <ModalBody className="calendar-plugin-content">

@@ -57,6 +57,7 @@
   display: flex;
   flex: 1;
   height: 100%;
+  width: 100%;
 }
 
 .calendar-plugin-container .logo-title {
@@ -148,6 +149,18 @@
   opacity: 0.5;
   font-weight: 500;
   line-height: 24px;
+}
+
+.plugin-calendar-operators {
+  margin-left: 80px;
+}
+
+.plugin-calendar-mobile .modal-title {
+  justify-content: space-between;
+}
+
+.plugin-calendar-mobile .plugin-calendar-operators {
+  margin-left: 0;
 }
 
 .calendar-plugin-container .op-icon {

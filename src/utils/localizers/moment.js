@@ -50,10 +50,8 @@ export default function(moment, configuredWeekStart) {
     firstOfWeek(culture) {
       // let data = culture ? moment.localeData(culture) : moment.localeData();
       // return data ? data.firstDayOfWeek() : 0;
-      if (configuredWeekStart != undefined) {
-        return configuredWeekStart;
-      }
-      return 0; // set first of week is sunday.
+
+      return configuredWeekStart || 0; // the default first of week is sunday.
     },
 
     format(value, format, culture) {

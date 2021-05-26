@@ -6,7 +6,7 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
 import ReactBigCalendar from './ReactBigCalendar';
 import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT } from './constants';
-import { CALENDAR_DIALOG_MODAL } from './constants/zIndexes';
+import { CALENDAR_DIALOG_MODAL, MOBILE_CALENDAR_DIALOG_MODAL } from './constants/zIndexes';
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
@@ -432,7 +432,7 @@ class App extends React.Component {
     );
 
     return (
-      <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={CALENDAR_DIALOG_MODAL}>
+      <Modal isOpen={true} toggle={this.onPluginToggle} className="dtable-plugin calendar-plugin-container" size="lg" zIndex={this.isMobile ? MOBILE_CALENDAR_DIALOG_MODAL : CALENDAR_DIALOG_MODAL}>
         <ModalHeader className="plugin-header flex-shrink-0 h-7" close={this.renderBtnGroups()}>
           <div className="logo-title d-flex align-items-center">
             <img className="plugin-logo mr-2" src={icon} alt="" width="24" />
@@ -440,7 +440,7 @@ class App extends React.Component {
           </div>
           {!this.isMobile && ViewsTabsEl}
         </ModalHeader>
-        {this.isMobile && <div className="flex-shrink-0 h-7 d-flex pr-4 border-bottom">{ViewsTabsEl}</div>}
+        {this.isMobile && <div className="flex-shrink-0 h-7 d-flex pl-4 pr-4 border-bottom">{ViewsTabsEl}</div>}
         <ModalBody className="calendar-plugin-content">
           <ReactBigCalendar
             activeTable={selectedTable}

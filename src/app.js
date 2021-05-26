@@ -78,10 +78,14 @@ class App extends React.Component {
     if (window.app === undefined) {
       // local develop
       window.app = {};
+      window.app.state = {};
+      window.dtable = {};
       await this.dtable.init(window.dtablePluginConfig);
       await this.dtable.syncWithServer();
-      let relatedUsersRes = await this.getRelatedUsersFromServer(this.dtable.dtableStore);
-      window.app.collaborators = relatedUsersRes.data.user_list;
+      const relatedUsersRes = await this.getRelatedUsersFromServer(this.dtable.dtableStore);
+      const userList = relatedUsersRes.data.user_list;
+      window.app.collaborators = userList;
+      window.app.state.collaborators = userList;
       this.dtable.subscribe('dtable-connect', () => { this.onDTableConnect(); });
     } else {
       // integrated to dtable app
@@ -353,7 +357,8 @@ class App extends React.Component {
       let { settings } = updatedViews[viewIdx];
       const isViewSettingPanelOpen = !this.isValidViewSettings(settings);
       const rows = this.getPluginViewRows(settings);
-      this.setState({selectedViewIdx: viewIdx, isViewSettingPanelOpen, rows});
+      const rowsColor = this.getRowsColor(settings);
+      this.setState({selectedViewIdx: viewIdx, isViewSettingPanelOpen, rows, rowsColor});
       this.storeSelectedViewId(viewId);
     }
   }
@@ -402,17 +407,16 @@ class App extends React.Component {
   }
 
   getRowsColor = (settings) => {
+    const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
+    if (!configuredUseRowColor) {
+      return {};
+    }
     let tables = this.dtable.getTables();
     let selectedTable = this.getSelectedTable(tables, settings);
     let tableViews = this.dtable.getViews(selectedTable);
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
-
-    let rowsColor = {};
-    if (settings[SETTING_KEY.COLORED_BY_ROW_COLOR]) {
-      const viewRows = this.dtable.getViewRows(selectedTableView, selectedTable);
-      rowsColor = this.dtable.getViewRowsColor(viewRows, selectedTableView, selectedTable);
-    }
-    return rowsColor;
+    const viewRows = this.dtable.getViewRows(selectedTableView, selectedTable);
+    return this.dtable.getViewRowsColor(viewRows, selectedTableView, selectedTable);
   }
 
   render() {

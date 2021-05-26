@@ -5,6 +5,9 @@
   "Start_Date": "Поле дата начала",
   "End_Date_Optional": "Поле дата окончания (необязательно)",
   "Color_From": "Цвет поля",
+  "Week_start": "Week start",
+  "Sunday": "Sunday",
+  "Monday": "Monday",
   "Unnamed_record": "Нет имени",
   "more": "больше",
   ".rbc.localizer.moment.dateFormat": "DD",
@@ -48,5 +51,6 @@
   "No_options": "Нет опций",
   "Not_used": "Не используется",
   "Choose_the_time_range": "Выберите временной диапазон",
-  "Out_of_range": "Можно выбрать не более 12 месяцев."
+  "Out_of_range": "Можно выбрать не более 12 месяцев.",
+  "Row_color": "Row color"
 }

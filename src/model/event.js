@@ -182,9 +182,10 @@ export default class TableEvent {
       const colorDataOptions = data && data.options;
       const colorId = row[colorColumnKey];
       const colorOption = colorDataOptions && colorDataOptions.find(o => o.id === colorId);
-      colors.bgColor = colorOption ? colorOption.color : defaultOptionColor.COLOR;
-      colors.textColor = colorOption ? colorOption.textColor : defaultOptionColor.TEXT_COLOR;
-    } else {
+      colors.bgColor = colorOption && colorOption.color;
+      colors.textColor = colorOption && colorOption.textColor;
+    }
+    if (!colors.bgColor) {
       colors.bgColor = defaultOptionColor.COLOR;
       colors.textColor = defaultOptionColor.TEXT_COLOR;
     }

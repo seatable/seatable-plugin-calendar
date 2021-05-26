@@ -190,7 +190,7 @@ class ViewSetting extends React.Component {
   render() {
     const {
       tableOptions, viewOptions,
-      titleColumnOptions, dateColumnOptions, endDateColumnOptions, 
+      titleColumnOptions, dateColumnOptions, endDateColumnOptions,
       colorFieldOptions, weekStartOptions
     } = this.getSelectorOptions(this.getSelectorColumns());
 

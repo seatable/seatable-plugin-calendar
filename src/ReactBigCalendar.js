@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { SELECT_OPTION_COLORS } from 'dtable-store';
 import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
@@ -27,7 +26,7 @@ const propTypes = {
   CellType: PropTypes.object,
   optionColors: PropTypes.array,
   highlightColors: PropTypes.object,
-  setting: PropTypes.object,
+  settings: PropTypes.object,
   isMobile: PropTypes.bool,
   onRowExpand: PropTypes.func,
   onInsertRow: PropTypes.func,
@@ -107,7 +106,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   getColorColumn = (columnName) => {
-    const { columns, CellType } = this.props;
+    const { columns } = this.props;
     if (!Array.isArray(columns)) return null;
     if (columnName) {
       return columns.find(c => c.name === columnName) || null;
@@ -116,7 +115,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   getEvents = (props) => {
-    let { activeTable, activeView, rows, getRowById, setting: settings } = props;
+    let { activeTable, rows, getRowById, settings } = props;
     const titleColumnName = settings[SETTING_KEY.COLUMN_TITLE];
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
@@ -129,12 +128,6 @@ class ReactBigCalendar extends React.Component {
     if (!startDateColumn) {
       return [];
     }
-
-    let rowColorsMap = {};
-    SELECT_OPTION_COLORS.forEach((optionColor) => {
-      rowColorsMap[optionColor.COLOR] = optionColor.TEXT_COLOR;
-    });
-    this.rowColorsMap = rowColorsMap;
 
     rows.forEach((row) => {
       const formattedRow = getRowById(activeTable, row._id);
@@ -168,7 +161,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, colorColumn) => {
-    const { optionColors, highlightColors, rowsColor, setting: settings } = this.props;
+    const { optionColors, highlightColors, rowsColor, rowColorsMap, settings } = this.props;
     const { type: titleColumnType, name: titleColumnName } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
@@ -186,7 +179,6 @@ class ReactBigCalendar extends React.Component {
     }
 
     const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
-    const rowColorsMap = this.rowColorsMap;
     const eventColors = TableEvent.getColors({row, colorColumn, configuredUseRowColor, optionColors, highlightColors, rowsColor, rowColorsMap});
     return new TableEvent({row, date, endDate, title, ...eventColors});
   }
@@ -215,7 +207,7 @@ class ReactBigCalendar extends React.Component {
    * @param {Date} end
    */
   createEvent = ({ start, end }) => {
-    const { CellType, activeTable, appendRow, setting: {settings} } = this.props;
+    const { CellType, activeTable, appendRow, settings } = this.props;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
@@ -248,7 +240,7 @@ class ReactBigCalendar extends React.Component {
     const { events } = this.state;
     const idx = events.indexOf(event);
     let updatedData = {};
-    let { activeTable, modifyRow, setting: {settings}, CellType, getRowById} = this.props;
+    let { activeTable, modifyRow, settings, CellType, getRowById } = this.props;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
     let startDateColumn = this.getDateColumn(startDateColumnName);
@@ -304,14 +296,14 @@ class ReactBigCalendar extends React.Component {
   }
 
   handleSelecting = ({ start, end }) => {
-    const { CellType, setting: {settings} } = this.props;
+    const { CellType, settings } = this.props;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
     return startDateColumn.type === CellType.DATE;
   }
 
   render() {
-    const { columns, setting: {settings = {}} } = this.props;
+    const { columns, settings } = this.props;
     const { events } = this.state;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);

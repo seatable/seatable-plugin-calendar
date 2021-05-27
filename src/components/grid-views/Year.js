@@ -13,10 +13,8 @@ class YearView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      scroll: {scrollLeft: 0, scrollTop: 0},
       dayEventsMap: this.getDayEventsMap(props.events),
     };
-    this.rbcYearViewSize = {};
   }
 
   getDayEventsMap = (events) => {
@@ -38,16 +36,6 @@ class YearView extends React.Component {
     return dayEventsMap;
   }
 
-  onYearViewScroll = (event) => {
-    const { scrollLeft, scrollTop } = event.target;
-    this.setState({scroll: {scrollLeft, scrollTop}});
-  }
-
-  componentDidMount() {
-    let { offsetWidth, offsetHeight } = this.rbcYearView;
-    this.rbcYearViewSize = {height: offsetHeight, width: offsetWidth};
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.events !== this.props.events) {
       const newDayEventsMap = this.getDayEventsMap(this.props.events);
@@ -57,10 +45,10 @@ class YearView extends React.Component {
 
   render() {
     let { date: todayDate, localizer, className } = this.props;
-    const { scroll, dayEventsMap } = this.state;
+    const { dayEventsMap } = this.state;
 
     return (
-      <div className={classnames('rbc-year-view', className)} onScroll={this.onYearViewScroll} ref={ref => this.rbcYearView = ref} >
+      <div className={classnames('rbc-year-view', className)} ref={ref => this.rbcYearView = ref} >
         {MONTHS.map(item => {
           let year = dates.year(todayDate);
           let monthDate = new Date(`${year}-${item}`);
@@ -69,8 +57,6 @@ class YearView extends React.Component {
           return <div className="rbc-year-month-view" key={`rbc-year-month-${item}`}>
             <YearMonth
               {...this.props}
-              rbcYearViewSize={this.rbcYearViewSize}
-              rbcYearViewScroll={scroll}
               dayEventsMap={dayEventsMap}
               weeks={weeks}
               monthDate={monthDate}

@@ -68,7 +68,6 @@ YearDay.propTypes = {
   dayEvents: PropTypes.array,
   monthDate: PropTypes.instanceOf(Date),
   localizer: PropTypes.object,
-  rbcYearViewScroll: PropTypes.object,
   accessors: PropTypes.object,
   getters: PropTypes.object.isRequired,
   selected: PropTypes.bool,

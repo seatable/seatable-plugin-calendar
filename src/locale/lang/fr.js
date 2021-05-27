@@ -5,9 +5,9 @@ const fr = {
   'Start_Date': 'Colonne date de début',
   'End_Date_Optional': 'Colonne date de fin (facultatif)',
   'Color_From': 'Couleur',
-  'Week_start': 'Week start',
-  'Sunday': 'Sunday',
-  'Monday': 'Monday',
+  'Week_start': 'Début de semaine',
+  'Sunday': 'Dimanche',
+  'Monday': 'Lundi',
   'Unnamed_record': 'Nouveau enregistrement',
   'more': 'Plus',
   '.rbc.localizer.moment.dateFormat': 'DD',
@@ -52,7 +52,7 @@ const fr = {
   'Not_used': 'Ne pas utilisé',
   'Choose_the_time_range': 'Sélectionner la période',
   'Out_of_range': 'La période maximale est de 12 mois.',
-  'Row_color': 'Row color',
+  'Row_color': 'Couleur de la ligne',
 };
 
 export default fr;

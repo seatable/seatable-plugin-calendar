@@ -15,6 +15,8 @@ class YearView extends React.Component {
     this.state = {
       dayEventsMap: this.getDayEventsMap(props.events),
     };
+    this.timeout = false;
+    this.delta = 50;
   }
 
   getDayEventsMap = (events) => {
@@ -43,12 +45,49 @@ class YearView extends React.Component {
     }
   }
 
+  handleWheel = (e) => {
+    this.rtime = new Date();
+    if (e.deltaY < -10) {
+      if (this.rbcYearView.scrollTop == 0) {
+        if (this.timeout === false) {
+          this.timeout = true;
+          setTimeout(() => {
+            this.wheelend('prev');
+          }, this.delta);
+        }
+      }
+    }
+    if (e.deltaY > 10) {
+      if (this.rbcYearView.clientHeight + this.rbcYearView.scrollTop + 1 >= this.rbcYearView.scrollHeight) {
+        if (this.timeout === false) {
+          this.timeout = true;
+          setTimeout(() => {
+            this.wheelend('next');
+          }, this.delta);
+        }
+      }
+    }
+  }
+
+  wheelend = (direction) => {
+    if (new Date() - this.rtime < this.delta) {
+      setTimeout(() => { this.wheelend(direction); }, this.delta);
+    } else {
+      this.timeout = false;
+      if (direction == 'prev') {
+        this.props.onNavigate(navigate.PREVIOUS);
+      } else {
+        this.props.onNavigate(navigate.NEXT);
+      }
+    }
+  }
+
   render() {
     let { date: todayDate, localizer, className } = this.props;
     const { dayEventsMap } = this.state;
 
     return (
-      <div className={classnames('rbc-year-view', className)} ref={ref => this.rbcYearView = ref} >
+      <div className={classnames('rbc-year-view', className)} ref={ref => this.rbcYearView = ref} onWheel={this.handleWheel}>
         {MONTHS.map(item => {
           let year = dates.year(todayDate);
           let monthDate = new Date(`${year}-${item}`);

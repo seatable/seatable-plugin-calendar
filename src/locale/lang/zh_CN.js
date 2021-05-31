@@ -5,7 +5,7 @@ const zh_CN = {
   'Start_Date': '开始日期字段',
   'End_Date_Optional': '结束日期字段 (可选)',
   'Color_From': '颜色字段',
-  'Week_start': '起始周',
+  'Week_start': '一周起始',
   'Sunday': '周日',
   'Monday': '周一',
   'Unnamed_record': '未命名记录',

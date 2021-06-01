@@ -8,6 +8,9 @@ import { navigate } from '../../constants';
 import { DATE_UNIT, MONTHS } from '../../constants/date';
 import moment from 'moment';
 
+const PADDING_Y = 1000;
+const OFFSET_THRESHOLD = 200; // for vertical scroll
+
 class YearView extends React.Component {
 
   constructor(props) {
@@ -15,8 +18,7 @@ class YearView extends React.Component {
     this.state = {
       dayEventsMap: this.getDayEventsMap(props.events),
     };
-    this.timeout = false;
-    this.delta = 50;
+    this.handlingScroll = false; // false: the scroll is not to be handled by function 'handleScroll'
   }
 
   getDayEventsMap = (events) => {
@@ -43,65 +45,84 @@ class YearView extends React.Component {
       const newDayEventsMap = this.getDayEventsMap(this.props.events);
       this.setState({dayEventsMap: newDayEventsMap});
     }
-  }
-
-  handleWheel = (e) => {
-    this.rtime = new Date();
-    if (e.deltaY < -10) {
-      if (this.rbcYearView.scrollTop == 0) {
-        if (this.timeout === false) {
-          this.timeout = true;
-          setTimeout(() => {
-            this.wheelend('prev');
-          }, this.delta);
-        }
-      }
-    }
-    if (e.deltaY > 10) {
-      if (this.rbcYearView.clientHeight + this.rbcYearView.scrollTop + 1 >= this.rbcYearView.scrollHeight) {
-        if (this.timeout === false) {
-          this.timeout = true;
-          setTimeout(() => {
-            this.wheelend('next');
-          }, this.delta);
-        }
-      }
+    if (prevProps.date !== this.props.date) {
+      this.setInitialScrollTop();
     }
   }
 
-  wheelend = (direction) => {
-    if (new Date() - this.rtime < this.delta) {
-      setTimeout(() => { this.wheelend(direction); }, this.delta);
-    } else {
-      this.timeout = false;
-      if (direction == 'prev') {
-        this.props.onNavigate(navigate.PREVIOUS);
-      } else {
-        this.props.onNavigate(navigate.NEXT);
-      }
+  componentDidMount() {
+    this.setInitialScrollTop();
+  }
+
+  setInitialScrollTop = () => {
+    this.initialScrollTop = PADDING_Y + document.getElementById(this.currentYear - 1).scrollHeight + 20;
+    this.rbcYearView.scrollTop = this.initialScrollTop;
+    this.handlingScroll = false;
+  }
+
+  renderYear = (year) => {
+    const { localizer, className } = this.props;
+    const { dayEventsMap } = this.state;
+
+    return (
+      <div key={year} id={year}>
+        <h3 className="h4 text-center font-weight-normal my-0">{year}</h3>
+        <div className={classnames('rbc-year-view', className)}>
+          {MONTHS.map(item => {
+            let monthDate = new Date(`${year}-${item}`);
+            let month = dates.visibleYearDays(monthDate, localizer);
+            let weeks = chunk(month, 7);
+            return <div className="rbc-year-month-view" key={`rbc-year-month-${item}`}>
+              <YearMonth
+                {...this.props}
+                dayEventsMap={dayEventsMap}
+                weeks={weeks}
+                monthDate={monthDate}
+              />
+            </div>;
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  handleScroll = (e) => {
+    if (!this.handlingScroll) {
+      this.handlingScroll = true;
+      return;
+    }
+    let currentScrollTop = e.target.scrollTop;
+    let newDate;
+    if (currentScrollTop < this.initialScrollTop &&
+      this.initialScrollTop - currentScrollTop > OFFSET_THRESHOLD) {
+      newDate = moment(this.props.date).subtract(1, DATE_UNIT.YEAR).toDate();
+    }
+    if (currentScrollTop > this.initialScrollTop &&
+      currentScrollTop - this.initialScrollTop > document.getElementById(this.currentYear).scrollHeight) {
+      newDate = moment(this.props.date).add(1, DATE_UNIT.YEAR).toDate();
+    }
+    if (newDate) {
+      this.props.updateCurrentDate(newDate);
     }
   }
 
   render() {
-    let { date: todayDate, localizer, className } = this.props;
-    const { dayEventsMap } = this.state;
+    const { date: todayDate } = this.props;
+    const currentYear = dates.year(todayDate);
+    const style = {
+      paddingTop: PADDING_Y,
+      paddingBottom: PADDING_Y
+    };
+    const renderedYears = [currentYear - 1, currentYear, currentYear + 1];
+    this.currentYear = currentYear;
 
     return (
-      <div className={classnames('rbc-year-view', className)} ref={ref => this.rbcYearView = ref} onWheel={this.handleWheel}>
-        {MONTHS.map(item => {
-          let year = dates.year(todayDate);
-          let monthDate = new Date(`${year}-${item}`);
-          let month = dates.visibleYearDays(monthDate, localizer);
-          let weeks = chunk(month, 7);
-          return <div className="rbc-year-month-view" key={`rbc-year-month-${item}`}>
-            <YearMonth
-              {...this.props}
-              dayEventsMap={dayEventsMap}
-              weeks={weeks}
-              monthDate={monthDate}
-            />
-          </div>;
-        })}
+      <div className="flex-fill o-hidden d-flex">
+        <div className="flex-fill o-auto" ref={ref => this.rbcYearView = ref} onScroll={this.handleScroll}>
+          <div style={style}>
+            {renderedYears.map(this.renderYear)}
+          </div>
+        </div>
       </div>
     );
   }

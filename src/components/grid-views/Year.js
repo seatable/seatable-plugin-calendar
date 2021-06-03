@@ -1,15 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import moment from 'moment';
+import { throttle } from 'lodash';
 import YearMonth from './year-widgets/YearMonth';
 import { chunk } from '../../utils/common';
 import * as dates from '../../utils/dates';
 import { navigate } from '../../constants';
 import { DATE_UNIT, MONTHS } from '../../constants/date';
-import moment from 'moment';
 
-const PADDING_Y = 1000;
+//const PADDING_Y = 1000;
+const PADDING_Y = 1;
 const OFFSET_THRESHOLD = 200; // for vertical scroll
+const PRE_LOADED = 1; // the number of pre-loaded years
 
 class YearView extends React.Component {
 
@@ -63,11 +66,15 @@ class YearView extends React.Component {
   renderYear = (year) => {
     const { localizer, className } = this.props;
     const { dayEventsMap } = this.state;
+    const style = {
+      // make sure 1 year can take the height of '1 screen'(the height of `this.rbcYearsContainer`)
+      minHeight: this.rbcYearsContainer ? this.rbcYearsContainer.clientHeight : 0
+    };
 
     return (
       <div key={year} id={year}>
         <h3 className="h4 text-center font-weight-normal my-0">{year}</h3>
-        <div className={classnames('rbc-year-view', className)}>
+        <div className={classnames('rbc-year-view', className)} style={style}>
           {MONTHS.map(item => {
             let monthDate = new Date(`${year}-${item}`);
             let month = dates.visibleYearDays(monthDate, localizer);
@@ -86,12 +93,12 @@ class YearView extends React.Component {
     );
   }
 
-  handleScroll = (e) => {
+  handleScroll = () => {
     if (!this.handlingScroll) {
       this.handlingScroll = true;
       return;
     }
-    let currentScrollTop = e.target.scrollTop;
+    let currentScrollTop = this.rbcYearView.scrollTop;
     let newDate;
     if (currentScrollTop < this.initialScrollTop &&
       this.initialScrollTop - currentScrollTop > OFFSET_THRESHOLD) {
@@ -113,12 +120,16 @@ class YearView extends React.Component {
       paddingTop: PADDING_Y,
       paddingBottom: PADDING_Y
     };
-    const renderedYears = [currentYear - 1, currentYear, currentYear + 1];
+    const renderedYears = [currentYear];
+    for (let i = 0; i < PRE_LOADED; i++) {
+      renderedYears.unshift(currentYear - i - 1);
+      renderedYears.push(currentYear + i + 1);
+    }
     this.currentYear = currentYear;
 
     return (
-      <div className="flex-fill o-hidden d-flex">
-        <div className="flex-fill o-auto" ref={ref => this.rbcYearView = ref} onScroll={this.handleScroll}>
+      <div className="flex-fill o-hidden d-flex" ref={ref => this.rbcYearsContainer = ref}>
+        <div className="flex-fill o-auto" ref={ref => this.rbcYearView = ref} onScroll={throttle(this.handleScroll, 300)}>
           <div style={style}>
             {renderedYears.map(this.renderYear)}
           </div>

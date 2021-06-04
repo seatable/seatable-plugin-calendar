@@ -12,7 +12,7 @@ import { DATE_UNIT, MONTHS } from '../../constants/date';
 //const PADDING_Y = 1000;
 const PADDING_Y = 1;
 const OFFSET_THRESHOLD = 200; // for vertical scroll
-const PRE_LOADED = 1; // the number of pre-loaded years
+const PRE_LOADED = 2; // the number of pre-loaded years
 
 class YearView extends React.Component {
 

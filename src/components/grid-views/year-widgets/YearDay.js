@@ -9,20 +9,24 @@ class YearDay extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isShowEvents: false,
+      isShowEvents: false
     };
-    this.position = {};
   }
 
-  componentDidMount() {
-    let { offsetParent: rbcYearMonth, offsetLeft: rbcYearMonthLeft } = this.rbcYearDayItem;
-    let { offsetTop: rbcYearTop, offsetParent: rbcYear } = rbcYearMonth;
-    let { offsetTop, offsetLeft } = rbcYear;
-
-    this.position = {left: offsetLeft + rbcYearMonthLeft + 34, top: offsetTop + rbcYearTop};
+  getPosition = () => {
+    const { top, right } = this.rbcYearDayItem.getBoundingClientRect();
+    const innerWidth = window.innerWidth;
+    let posLeft = right + 5;
+    if (innerWidth > 1100) {
+      posLeft = posLeft - (innerWidth - 1100) / 2;
+    }
+    this.position = {top: top - 80, left: posLeft};
   }
 
   onEventsToggle = () => {
+    if (!this.state.isShowEvents) {
+      this.getPosition();
+    }
     this.setState({isShowEvents: !this.state.isShowEvents});
   }
 
@@ -40,7 +44,7 @@ class YearDay extends React.Component {
     return (
       <div className="rbc-year-day-item" ref={ref => this.rbcYearDayItem = ref}>
         <div className="rbc-year-day-content" onClick={this.onEventsToggle}>
-          <div className={classnames('rbc-year-day', {'rbc-off-range': isOffRange, 'rbc-current': isCurrentDay})} >{label}</div>
+          <div className={classnames('rbc-year-day', {'rbc-off-range': isOffRange, 'rbc-current': !isOffRange && isCurrentDay})}>{label}</div>
         </div>
         {dayEvents.length > 0 && <span className="day-events"></span>}
         {isShowEvents &&
@@ -52,7 +56,7 @@ class YearDay extends React.Component {
           selected={selected}
           components={components}
           localizer={localizer}
-          position={this.position}
+          position={this.position || {}}
           events={dayEvents}
           slotStart={day}
           onSelect={onRowExpand}

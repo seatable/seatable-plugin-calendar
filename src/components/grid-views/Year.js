@@ -49,7 +49,7 @@ class YearView extends React.Component {
       this.setState({dayEventsMap: newDayEventsMap});
     }
     if (prevProps.date !== this.props.date) {
-      setTimeout(this.setInitialScrollTop, 300);
+      //setTimeout(this.setInitialScrollTop, 300);
     }
   }
 
@@ -105,11 +105,12 @@ class YearView extends React.Component {
       newDate = moment(this.props.date).subtract(1, DATE_UNIT.YEAR).toDate();
     }
     if (currentScrollTop > this.initialScrollTop &&
-      currentScrollTop - this.initialScrollTop > document.getElementById(this.currentYear).scrollHeight - 32) {
+      currentScrollTop - this.initialScrollTop > document.getElementById(this.currentYear).scrollHeight + 10) {
       newDate = moment(this.props.date).add(1, DATE_UNIT.YEAR).toDate();
     }
     if (newDate) {
       this.props.updateCurrentDate(newDate);
+      this.handlingScroll = false;
     }
   }
 
@@ -129,7 +130,7 @@ class YearView extends React.Component {
 
     return (
       <div className="flex-fill o-hidden d-flex" ref={ref => this.rbcYearsContainer = ref}>
-        <div className="flex-fill o-auto" ref={ref => this.rbcYearView = ref} onScroll={throttle(this.handleScroll, 300)}>
+        <div className="flex-fill o-auto" ref={ref => this.rbcYearView = ref} onScroll={throttle(this.handleScroll, 280)}>
           <div style={style} className="position-relative">
             {renderedYears.map(this.renderYear)}
           </div>

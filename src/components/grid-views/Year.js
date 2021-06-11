@@ -66,6 +66,7 @@ class YearView extends React.Component {
   renderYear = (year) => {
     const { localizer, className } = this.props;
     const { dayEventsMap } = this.state;
+    const isCurrentYear = year == this.currentYear;
     const style = {
       // make sure 1 year can take the height of '1 screen'(the height of `this.rbcYearsContainer`)
       minHeight: this.rbcYearsContainer ? this.rbcYearsContainer.clientHeight : 0
@@ -76,6 +77,7 @@ class YearView extends React.Component {
         <h3 className="h4 text-center font-weight-normal my-0">{year}</h3>
         <div className={classnames('rbc-year-view', className)} style={style}>
           {MONTHS.map(item => {
+            const isCurrentMonth = isCurrentYear && parseInt(item) == this.currentMonth;
             let monthDate = new Date(`${year}-${item}`);
             let month = dates.visibleYearDays(monthDate, localizer);
             let weeks = chunk(month, 7);
@@ -85,6 +87,7 @@ class YearView extends React.Component {
                 dayEventsMap={dayEventsMap}
                 weeks={weeks}
                 monthDate={monthDate}
+                isCurrentMonth={isCurrentMonth}
               />
             </div>;
           })}
@@ -115,18 +118,20 @@ class YearView extends React.Component {
   }
 
   render() {
-    const { date: todayDate } = this.props;
-    const currentYear = dates.year(todayDate);
     const style = {
       paddingTop: PADDING_Y,
       paddingBottom: PADDING_Y
     };
+
+    const { date } = this.props;
+    const currentYear = dates.year(date);
     const renderedYears = [currentYear];
     for (let i = 0; i < PRE_LOADED; i++) {
       renderedYears.unshift(currentYear - i - 1);
       renderedYears.push(currentYear + i + 1);
     }
     this.currentYear = currentYear;
+    this.currentMonth = dates.month(date) + 1;
 
     return (
       <div className="flex-fill o-hidden d-flex" ref={ref => this.rbcYearsContainer = ref}>

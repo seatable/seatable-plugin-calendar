@@ -35,10 +35,10 @@ class YearDay extends React.Component {
   }
 
   render() {
-    let { day, monthDate, localizer, accessors, selected, getters, components, popupOffset, onRowExpand, dayEvents } = this.props;
+    let { day, monthDate, isCurrentMonth, localizer, accessors, selected, getters, components, popupOffset, onRowExpand, dayEvents } = this.props;
     let { isShowEvents } = this.state;
     let isOffRange = dates.month(day) !== dates.month(monthDate);
-    let isCurrentDay = dates.eq(day, new Date(), 'day');
+    let isCurrentDay = isCurrentMonth && dates.eq(day, new Date(), 'day');
     let label = localizer.format(day, 'yearMonthDateFormat');
 
     return (

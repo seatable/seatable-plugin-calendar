@@ -9,8 +9,6 @@ import * as dates from '../../utils/dates';
 import { navigate } from '../../constants';
 import { DATE_UNIT, MONTHS } from '../../constants/date';
 
-//const PADDING_Y = 1000;
-const PADDING_Y = 1;
 const OFFSET_THRESHOLD = 200; // for vertical scroll
 const PRE_LOADED = 2; // the number of pre-loaded years
 
@@ -55,6 +53,18 @@ class YearView extends React.Component {
 
   componentDidMount() {
     this.setInitialScrollTop();
+
+    // important: reduce the 'reflow'
+    const style = {
+      position: 'absolute',
+      width: '100%',
+      height: this.yearsParentContainer.scrollHeight,
+      top: 0,
+      bottom: 0
+    };
+    this.setState({
+      style: style
+    });
   }
 
   setInitialScrollTop = () => {
@@ -118,11 +128,6 @@ class YearView extends React.Component {
   }
 
   render() {
-    const style = {
-      paddingTop: PADDING_Y,
-      paddingBottom: PADDING_Y
-    };
-
     const { date } = this.props;
     const currentYear = dates.year(date);
     const renderedYears = [currentYear];
@@ -133,11 +138,14 @@ class YearView extends React.Component {
     this.currentYear = currentYear;
     this.currentMonth = dates.month(date) + 1;
 
+    const { style } = this.state;
     return (
       <div className="flex-fill o-hidden d-flex" ref={ref => this.rbcYearsContainer = ref}>
         <div className="flex-fill o-auto" ref={ref => this.rbcYearView = ref} onScroll={throttle(this.handleScroll, 280)}>
-          <div style={style} className="position-relative">
-            {renderedYears.map(this.renderYear)}
+          <div className="position-relative">
+            <div ref={ref => this.yearsParentContainer = ref} style={style}>
+              {renderedYears.map(this.renderYear)}
+            </div>
           </div>
         </div>
       </div>

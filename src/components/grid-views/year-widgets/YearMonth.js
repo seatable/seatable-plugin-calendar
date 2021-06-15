@@ -58,10 +58,6 @@ class YearMonth extends React.Component {
     );
   }
 
-  getContainer = () => {
-    return findDOMNode(this);
-  }
-
   render() {
     let { weeks } = this.props;
 

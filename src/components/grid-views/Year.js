@@ -78,8 +78,7 @@ class YearView extends React.Component {
     const { dayEventsMap } = this.state;
     const isCurrentYear = year == this.currentYear;
     const style = {
-      // make sure 1 year can take the height of '1 screen'(the height of `this.rbcYearsContainer`)
-      minHeight: this.rbcYearsContainer ? this.rbcYearsContainer.clientHeight : 0
+      minHeight: this.yearMinHeight
     };
 
     return (
@@ -137,6 +136,9 @@ class YearView extends React.Component {
     }
     this.currentYear = currentYear;
     this.currentMonth = dates.month(date) + 1;
+
+    // make sure 1 year can take the height of '1 screen'(the height of `this.rbcYearsContainer`)
+    this.yearMinHeight = this.rbcYearsContainer ? this.rbcYearsContainer.clientHeight : 0;
 
     const { style } = this.state;
     return (

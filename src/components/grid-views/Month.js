@@ -347,6 +347,8 @@ class MonthView extends React.Component {
         date={date}
         range={weekDates}
         events={weekEvents}
+        collaborators={this.props.collaborators}
+        CellType={this.props.CellType}
         maxRows={4}
         selected={selected}
         selectable={selectable}
@@ -447,6 +449,8 @@ class MonthView extends React.Component {
         localizer={localizer}
         position={overlay.position}
         events={overlay.events}
+        collaborators={this.props.collaborators}
+        CellType={this.props.CellType}
         slotStart={overlay.date}
         slotEnd={overlay.end}
         onSelect={this.onRowExpand}

@@ -157,6 +157,8 @@ class DayColumn extends React.Component {
           getters={getters}
           components={components}
           slotMetrics={slotMetrics}
+          collaborators={this.props.collaborators}
+          CellType={this.props.CellType}
         >
           <div className={classnames('rbc-events-container', {'rtl': rtl})}>
             {this.renderEvents()}
@@ -226,6 +228,8 @@ class DayColumn extends React.Component {
           style={style}
           event={event}
           label={label}
+          collaborators={this.props.collaborators}
+          CellType={this.props.CellType}
           key={'evt_' + idx}
           getters={getters}
           rtl={rtl}

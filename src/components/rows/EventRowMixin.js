@@ -30,7 +30,9 @@ export default {
       onDoubleClick,
       localizer,
       slotMetrics,
-      components
+      components,
+      collaborators,
+      CellType,
     } = props;
 
     let continuesPrior = slotMetrics.continuesPrior(event);
@@ -50,6 +52,8 @@ export default {
         slotStart={slotMetrics.first}
         slotEnd={slotMetrics.last}
         selected={isSelected(event, selected)}
+        collaborators={collaborators}
+        CellType={CellType}
       />
     );
   },

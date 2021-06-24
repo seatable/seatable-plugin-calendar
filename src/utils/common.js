@@ -204,3 +204,15 @@ export const generatorViewId = (views) => {
 };
 
 export const isMobile = (typeof (window) !== 'undefined') && (window.innerWidth < 768 || navigator.userAgent.toLowerCase().match(/(ipod|ipad|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|wince)/i) != null);
+
+export const isValidEmail = (email) => {
+  const reg = /^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,6}$/;
+  return reg.test(email);
+};
+
+export const getMediaUrl = () => {
+  if (window.dtable) {
+    return window.dtable.mediaUrl;
+  }
+  return window.dtablePluginConfig.mediaUrl;
+};

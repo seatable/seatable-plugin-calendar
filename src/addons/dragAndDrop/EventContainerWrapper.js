@@ -259,6 +259,8 @@ class EventContainerWrapper extends React.Component {
             <TimeGridEvent
               event={event}
               label={label}
+              collaborators={this.props.collaborators}
+              CellType={this.props.CellType}
               className="rbc-addons-dnd-drag-preview"
               style={{ top, height, width: 100 }}
               getters={getters}

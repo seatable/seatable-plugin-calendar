@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CellTitle from '../cells/cell-title';
 import addClass from 'dom-helpers/addClass';
 import removeClass from 'dom-helpers/removeClass';
 import getWidth from 'dom-helpers/width';
@@ -30,7 +31,7 @@ class Agenda extends React.Component {
   }
 
   render() {
-    let { length, date, events, accessors, localizer } = this.props;
+    let { length, date, events, accessors, localizer, CellType, collaborators } = this.props;
     let { messages } = localizer;
     let end = dates.add(date, length, 'day');
     let range = dates.range(date, end, 'day');
@@ -58,7 +59,7 @@ class Agenda extends React.Component {
             <div className='rbc-agenda-content' ref={this.contentRef}>
               <table className='rbc-agenda-table'>
                 <tbody ref={this.tbodyRef}>
-                  {range.map((day, idx) => this.renderDay(day, events, idx))}
+                  {range.map((day, idx) => this.renderDay(day, events,  CellType, collaborators, idx))}
                 </tbody>
               </table>
             </div>
@@ -70,7 +71,7 @@ class Agenda extends React.Component {
     );
   }
 
-  renderDay = (day, events, dayKey) => {
+  renderDay = (day, events,  CellType, collaborators, dayKey) => {
     let {
       selected,
       getters,
@@ -84,7 +85,7 @@ class Agenda extends React.Component {
     );
 
     return events.map((event, idx) => {
-      let title = accessors.title(event);
+      let title = <CellTitle event={event} collaborators={collaborators} CellType={CellType} />;
       let end = accessors.end(event);
       let start = accessors.start(event);
 

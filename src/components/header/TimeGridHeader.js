@@ -87,6 +87,8 @@ class TimeGridHeader extends React.Component {
         minRows={2}
         range={range}
         events={eventsToDisplay}
+        collaborators={this.props.collaborators}
+        CellType={this.props.CellType}
         resourceId={resourceId}
         className='rbc-allday-cell'
         selectable={selectable}
@@ -171,6 +173,8 @@ class TimeGridHeader extends React.Component {
               minRows={2}
               range={range}
               events={groupedEvents.get(id) || []}
+              collaborators={this.props.collaborators}
+              CellType={this.props.CellType}
               resourceId={resource && id}
               className='rbc-allday-cell'
               selectable={selectable}

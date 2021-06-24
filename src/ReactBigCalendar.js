@@ -5,7 +5,6 @@ import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
-import { getCollaboratorsName } from './utils/value-format-utils';
 import { CALENDAR_VIEWS, PLUGIN_NAME, SETTING_KEY } from './constants';
 import TableEvent from './model/event';
 import withDragAndDrop from './addons/dragAndDrop';
@@ -150,22 +149,10 @@ class ReactBigCalendar extends React.Component {
     }
   }
 
-  getEventTitle = (rawRow, columnType, columnName) => {
-    const { CellType, collaborators } = this.props;
-    const title = rawRow[columnName];
-    switch (columnType) {
-      case CellType.COLLABORATOR:
-        return getCollaboratorsName(collaborators, title);
-      default: return title;
-    }
-  }
-
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, colorColumn) => {
     const { optionColors, highlightColors, rowsColor, rowColorsMap, settings } = this.props;
-    const { type: titleColumnType, name: titleColumnName } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
-    const title = this.getEventTitle(rawRow, titleColumnType, titleColumnName);
     const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
     // start date must exist and be valid.
     if (!date || !isValidDateObject(new Date(date))) {
@@ -180,7 +167,7 @@ class ReactBigCalendar extends React.Component {
 
     const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
     const eventColors = TableEvent.getColors({row, colorColumn, configuredUseRowColor, optionColors, highlightColors, rowsColor, rowColorsMap});
-    return new TableEvent({row, date, endDate, title, ...eventColors});
+    return new TableEvent({row, date, endDate, titleColumn, ...eventColors});
   }
 
   onRowExpand = (row) => {
@@ -316,6 +303,8 @@ class ReactBigCalendar extends React.Component {
         startDateColumn={startDateColumn}
         configuredWeekStart={configuredWeekStart}
         localizer={localizer}
+        collaborators={this.props.collaborators}
+        CellType={this.props.CellType}
         events={events}
         views={this.calendarViews}
         view={this.state.selectedView}

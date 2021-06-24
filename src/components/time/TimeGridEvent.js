@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import CellTitle from '../cells/cell-title';
 
 function stringifyPercent(v) {
   return typeof v === 'string' ? v : v + '%';
@@ -28,6 +29,8 @@ function TimeGridEvent(props) {
     style,
     className,
     event,
+    collaborators,
+    CellType,
     accessors,
     rtl,
     selected,
@@ -39,7 +42,8 @@ function TimeGridEvent(props) {
     onDoubleClick,
     components: { event: Event, eventWrapper: EventWrapper }
   } = props;
-  let title = accessors.title(event);
+
+  let title = <CellTitle event={event} collaborators={collaborators} CellType={CellType} />;
   let tooltip = accessors.tooltip(event);
   let end = accessors.end(event);
   let start = accessors.start(event);

@@ -205,6 +205,8 @@ export default class TimeGrid extends Component {
         <TimeGridHeader
           range={range}
           events={allDayEvents}
+          collaborators={this.props.collaborators}
+          CellType={this.props.CellType}
           width={width}
           rtl={rtl}
           getNow={getNow}

@@ -73,7 +73,7 @@ class Calendar extends React.Component {
      *
      *  - start time
      *  - end time
-     *  - title
+     *  - titleColumn
      *  - whether its an 'all day' event or not
      *  - any resource the event may be related to
      *
@@ -83,7 +83,7 @@ class Calendar extends React.Component {
      *
      * ```js
      * Event {
-     *   title: string,
+     *   titleColumn: object,
      *   start: Date,
      *   end: Date,
      *   allDay?: boolean
@@ -968,6 +968,8 @@ class Calendar extends React.Component {
               {...props}
               ref={ref => this.currentView = ref}
               events={events}
+              collaborators={this.props.collaborators}
+              CellType={this.props.CellType}
               date={current}
               getNow={getNow}
               length={length}
@@ -992,6 +994,8 @@ class Calendar extends React.Component {
               <ExportedMonths
                 {...props}
                 events={events}
+                collaborators={this.props.collaborators}
+                CellType={this.props.CellType}
                 date={current}
                 getNow={getNow}
                 length={length}

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classnames from 'classnames';
+import CellTitle from './cell-title';
 import * as dates from '../../utils/dates';
 import { isMobile } from '../../utils/common';
 
@@ -39,10 +40,12 @@ class EventCell extends React.Component {
       components: { event: Event, eventWrapper: EventWrapper },
       slotStart,
       slotEnd,
+      collaborators,
+      CellType,
       ...props
     } = this.props;
 
-    let title = accessors.title(event);
+    let title = <CellTitle event={event} collaborators={collaborators} CellType={CellType} />;
     let tooltip = accessors.tooltip(event);
     let end = accessors.end(event);
     let start = accessors.start(event);

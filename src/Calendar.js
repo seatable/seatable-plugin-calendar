@@ -73,7 +73,7 @@ class Calendar extends React.Component {
      *
      *  - start time
      *  - end time
-     *  - title
+     *  - titleColumn
      *  - whether its an 'all day' event or not
      *  - any resource the event may be related to
      *
@@ -83,7 +83,7 @@ class Calendar extends React.Component {
      *
      * ```js
      * Event {
-     *   title: string,
+     *   titleColumn: object,
      *   start: Date,
      *   end: Date,
      *   allDay?: boolean

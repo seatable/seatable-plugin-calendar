@@ -11,7 +11,7 @@ import { CALENDAR_DIALOG_MODAL, MOBILE_CALENDAR_DIALOG_MODAL } from './constants
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
-import { generatorViewId, getDtableUuid, isMobile } from './utils/common';
+import { generatorViewId, getDtableUuid, getMediaUrl, isMobile } from './utils/common';
 import View from './model/view';
 
 import './locale';
@@ -79,13 +79,20 @@ class App extends React.Component {
       // local develop
       window.app = {};
       window.app.state = {};
-      window.dtable = {};
+      window.app.collaboratorsCache = {};
+      window.dtable = {lang: window.dtablePluginConfig.lang};
       await this.dtable.init(window.dtablePluginConfig);
       await this.dtable.syncWithServer();
+      await this.dtable.dtableWebAPI.login();
+      window.dtableWebAPI = this.dtable.dtableWebAPI;
+      window.app.getUserCommonInfo = this.getUserCommonInfo;
+
+      // init collaborators
       const relatedUsersRes = await this.getRelatedUsersFromServer(this.dtable.dtableStore);
       const userList = relatedUsersRes.data.user_list;
       window.app.collaborators = userList;
       window.app.state.collaborators = userList;
+
       this.dtable.subscribe('dtable-connect', () => { this.onDTableConnect(); });
     } else {
       // integrated to dtable app
@@ -98,6 +105,25 @@ class App extends React.Component {
 
   async getRelatedUsersFromServer(dtableStore) {
     return dtableStore.dtableAPI.getTableRelatedUsers();
+  }
+
+  getUserCommonInfo = (email, callback) => {
+    const dtableWebAPI = this.dtable.dtableWebAPI;
+    let dtableCollaborators = window.app.collaboratorsCache;
+    dtableWebAPI.getUserCommonInfo(email).then(res => {
+      const collaborator = res.data;
+      dtableCollaborators[email] = collaborator;
+      callback && callback();
+    }).catch(() => {
+      const mediaUrl = getMediaUrl();
+      const defaultAvatarUrl = `${mediaUrl}/avatars/default.png`;
+      const collaborator = {
+        name: email,
+        avatar_url: defaultAvatarUrl,
+      };
+      dtableCollaborators[email] = collaborator;
+      callback && callback();
+    });
   }
 
   onDTableConnect = () => {
@@ -135,7 +161,6 @@ class App extends React.Component {
 
     this.highlightColors = this.dtable.getHighlightColors();
     this.columnIconConfig = this.dtable.getColumnIconConfig();
-    this.collaborators = this.getRelatedUsersFromLocal();
     this.currentUser = this.getCurrentUserFromLocal();
     const selectedPluginView = views[selectedViewIdx];
     const rows = selectedPluginView ? this.getPluginViewRows(selectedPluginView.settings) : [];
@@ -166,15 +191,6 @@ class App extends React.Component {
   onPluginToggle = () => {
     this.setState({showDialog: false});
     window.app.onClosePlugin && window.app.onClosePlugin();
-  }
-
-  getRelatedUsersFromLocal = () => {
-    let { collaborators, state } = window.app;
-    if (!collaborators) {
-      // dtable app
-      return state && state.collaborators;
-    }
-    return collaborators; // local develop
   }
 
   getCurrentUserFromLocal = () => {
@@ -500,7 +516,6 @@ class App extends React.Component {
             optionColors={this.optionColors}
             rowColorsMap={this.rowColorsMap}
             highlightColors={this.highlightColors}
-            collaborators={this.collaborators}
             onRowExpand={this.onRowExpand}
             onInsertRow={this.onInsertRow}
             hideViewSettingPanel={this.hideViewSettingPanel}

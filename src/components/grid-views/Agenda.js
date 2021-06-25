@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CellTitle from '../cells/cell-title';
 import addClass from 'dom-helpers/addClass';
 import removeClass from 'dom-helpers/removeClass';
 import getWidth from 'dom-helpers/width';
@@ -84,7 +85,7 @@ class Agenda extends React.Component {
     );
 
     return events.map((event, idx) => {
-      let title = accessors.title(event);
+      let title = <CellTitle event={event} />;
       let end = accessors.end(event);
       let start = accessors.start(event);
 

@@ -204,3 +204,37 @@ export const generatorViewId = (views) => {
 };
 
 export const isMobile = (typeof (window) !== 'undefined') && (window.innerWidth < 768 || navigator.userAgent.toLowerCase().match(/(ipod|ipad|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|wince)/i) != null);
+
+export const isValidEmail = (email) => {
+  const reg = /^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,6}$/;
+  return reg.test(email);
+};
+
+export const getMediaUrl = () => {
+  if (window.dtable) {
+    return window.dtable.mediaUrl;
+  }
+  return window.dtablePluginConfig.mediaUrl;
+};
+
+export const getKnownCreatorByEmail = (email, collaborators, collaboratorsCache) => {
+  const mediaUrl = getMediaUrl();
+  const defaultAvatarUrl = `${mediaUrl}/avatars/default.png`;
+  if (email === 'anonymous') {
+    return {
+      name: 'anonymous',
+      avatar_url: defaultAvatarUrl,
+    };
+  }
+  let collaborator = Array.isArray(collaborators) && collaborators.find(collaborator => collaborator.email === email);
+  if (collaborator) return collaborator;
+  if (!isValidEmail(email)) {
+    collaborator = {
+      name: email,
+      avatar_url: defaultAvatarUrl,
+    };
+    collaboratorsCache[email] = collaborator;
+    return collaborator;
+  }
+  return collaboratorsCache[email] || null;
+};

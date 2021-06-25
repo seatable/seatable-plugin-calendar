@@ -8,6 +8,8 @@ export default {
   server: 'https://example.com',
   // id of the workspace with the dtable of the plugin (required, workspace must exist)
   workspaceID: '1',
+  username: 'example@example.com',
+  password: 'your password',
   // name of the dtable to add the plugin to (required, dtable must exist under this name)
   dtableName: 'Default',
   // default language ('en' or 'zh-cn' are common, see "src/locale/index.js" for all lang keys)

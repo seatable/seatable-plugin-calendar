@@ -30,7 +30,7 @@ export default {
       onDoubleClick,
       localizer,
       slotMetrics,
-      components,
+      components
     } = props;
 
     let continuesPrior = slotMetrics.continuesPrior(event);

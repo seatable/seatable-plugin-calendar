@@ -216,3 +216,25 @@ export const getMediaUrl = () => {
   }
   return window.dtablePluginConfig.mediaUrl;
 };
+
+export const getKnownCreatorByEmail = (email, collaborators, collaboratorsCache) => {
+  const mediaUrl = getMediaUrl();
+  const defaultAvatarUrl = `${mediaUrl}/avatars/default.png`;
+  if (email === 'anonymous') {
+    return {
+      name: 'anonymous',
+      avatar_url: defaultAvatarUrl,
+    };
+  }
+  let collaborator = Array.isArray(collaborators) && collaborators.find(collaborator => collaborator.email === email);
+  if (collaborator) return collaborator;
+  if (!isValidEmail(email)) {
+    collaborator = {
+      name: email,
+      avatar_url: defaultAvatarUrl,
+    };
+    collaboratorsCache[email] = collaborator;
+    return collaborator;
+  }
+  return collaboratorsCache[email] || null;
+};

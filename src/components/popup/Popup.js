@@ -88,8 +88,6 @@ class Popup extends React.Component {
               continuesAfter={dates.gte(accessors.start(event), slotEnd, 'day')}
               slotStart={slotStart}
               slotEnd={slotEnd}
-              collaborators={this.props.collaborators}
-              CellType={this.props.CellType}
             />
           ))}
         </div>

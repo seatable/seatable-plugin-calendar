@@ -133,8 +133,6 @@ class DateContentRow extends React.PureComponent {
       onDoubleClick,
       resourceId,
       slotMetrics: metrics,
-      collaborators: this.props.collaborators,
-      CellType: this.props.CellType,
     };
 
     return (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getMediaUrl, isValidEmail } from '../../utils/common';
+import { getKnownCreatorByEmail } from '../../utils/common';
 import { getCollaboratorsName } from '../../utils/value-format-utils';
 
 class CellTitle extends Component {
@@ -22,30 +22,17 @@ class CellTitle extends Component {
   }
 
   initCollaboratorState = (props) => {
-    const { event, CellType, collaborators } = props;
+    const { event } = props;
+    const { state, collaboratorsCache } = window.app;
+    const collaborators = (state && state.collaborators) || [];
     const { row, titleColumn } = event;
-    const mediaUrl = getMediaUrl();
-    const defaultAvatarUrl = `${mediaUrl}/avatars/default.png`;
-    let email, collaborator;
-    if (titleColumn.type === CellType.LAST_MODIFIER) {
+    let email;
+    if (titleColumn.type === 'last-modifier') {
       email = row._last_modifier;
-    } else if (titleColumn.type === CellType.CREATOR) {
+    } else if (titleColumn.type === 'creator') {
       email = row._creator;
     }
-
-    if (email === 'anonymous') {
-      collaborator = {
-        name: 'anonymous',
-        avatar_url: defaultAvatarUrl,
-      };
-    } else if (!isValidEmail(email)) {
-      collaborator = {
-        name: email,
-        avatar_url: defaultAvatarUrl,
-      };
-    } else {
-      collaborator = collaborators.find(collaborator => collaborator.email === email);
-    }
+    const collaborator = getKnownCreatorByEmail(email, collaborators, collaboratorsCache);
     if (collaborator) {
       return {
         isDataLoaded: true,
@@ -59,11 +46,11 @@ class CellTitle extends Component {
   }
 
   calculateCollaboratorData = (props) => {
-    const { event, CellType } = props;
+    const { event } = props;
     const { row, titleColumn } = event;
-    if (titleColumn.type === CellType.LAST_MODIFIER) {
+    if (titleColumn.type === 'last-modifier') {
       this.getCollaborator(row._last_modifier);
-    } else if (titleColumn.type === CellType.CREATOR) {
+    } else if (titleColumn.type === 'creator') {
       this.getCollaborator(row._creator);
     }
   }
@@ -73,64 +60,43 @@ class CellTitle extends Component {
       this.setState({isDataLoaded: true, collaborator: null});
       return;
     }
-    let { collaborators } = this.props;
-    let collaborator = collaborators && collaborators.find(c => c.email === value);
+    const { state, collaboratorsCache, getUserCommonInfo } = window.app;
+    const collaborators = (state && state.collaborators) || [];
+    const collaborator = getKnownCreatorByEmail(value, collaborators, collaboratorsCache);
     if (collaborator) {
       this.setState({isDataLoaded: true, collaborator});
       return;
     }
-
-    if (!isValidEmail(value)) {
-      let mediaUrl = getMediaUrl();
-      let defaultAvatarUrl = `${mediaUrl}/avatars/default.png`;
-      collaborator = {
-        name: value,
-        avatar_url: defaultAvatarUrl,
-      };
+    getUserCommonInfo(value, () => {
+      const collaborator = getKnownCreatorByEmail(value, collaborators, collaboratorsCache);
       this.setState({isDataLoaded: true, collaborator});
       return;
-    }
-
-    this.getUserCommonInfo(value).then(res => {
-      collaborator = res.data;
-      this.setState({isDataLoaded: true, collaborator});
-    }).catch(() => {
-      let mediaUrl = getMediaUrl();
-      let defaultAvatarUrl = `${mediaUrl}/avatars/default.png`;
-      collaborator = {
-        name: value,
-        avatar_url: defaultAvatarUrl,
-      };
-      this.setState({isDataLoaded: true, collaborator});
     });
   }
 
-  getUserCommonInfo = (email, avatarSize = '') => {
-    if (!window.dtableWebAPI) return Promise.reject();
-    return window.dtableWebAPI.getUserCommonInfo(email, avatarSize);
-  }
-
   renderCellTitle = () => {
-    const { CellType, collaborators, event } = this.props;
+    const { event } = this.props;
     const { isDataLoaded, collaborator } = this.state;
+    const { state } = window.app;
+    const collaborators = (state && state.collaborators) || [];
     const { row, titleColumn } = event;
     const { type, key, data } = titleColumn;
     const title = row[key];
     switch (type) {
-      case CellType.SINGLE_SELECT: {
+      case 'single-select': {
         if (!title || !data) return null;
         const options = data.options || [];
         const option = options.find(option => option.id === title);
         return option && option.name;
       }
-      case CellType.COLLABORATOR: {
+      case 'collaborator': {
         return getCollaboratorsName(collaborators, title);
       }
-      case CellType.CREATOR: {
+      case 'creator': {
         if (!row._creator || !isDataLoaded || !collaborator) return null;
         return collaborator.name;
       }
-      case CellType.LAST_MODIFIER: {
+      case 'last-modifier': {
         if (!row._last_modifier || !isDataLoaded || !collaborator) return null;
         return collaborator.name;
       }

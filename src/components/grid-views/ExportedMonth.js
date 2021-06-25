@@ -142,8 +142,6 @@ class ExportedMonth extends React.Component {
         date={date}
         range={weekDates}
         events={weekEvents}
-        collaborators={this.props.collaborators}
-        CellType={this.props.CellType}
         maxRows={4}
         selected={selected}
         selectable={selectable}

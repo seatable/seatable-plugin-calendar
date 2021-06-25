@@ -31,7 +31,7 @@ class Agenda extends React.Component {
   }
 
   render() {
-    let { length, date, events, accessors, localizer, CellType, collaborators } = this.props;
+    let { length, date, events, accessors, localizer } = this.props;
     let { messages } = localizer;
     let end = dates.add(date, length, 'day');
     let range = dates.range(date, end, 'day');
@@ -59,7 +59,7 @@ class Agenda extends React.Component {
             <div className='rbc-agenda-content' ref={this.contentRef}>
               <table className='rbc-agenda-table'>
                 <tbody ref={this.tbodyRef}>
-                  {range.map((day, idx) => this.renderDay(day, events,  CellType, collaborators, idx))}
+                  {range.map((day, idx) => this.renderDay(day, events, idx))}
                 </tbody>
               </table>
             </div>
@@ -71,7 +71,7 @@ class Agenda extends React.Component {
     );
   }
 
-  renderDay = (day, events,  CellType, collaborators, dayKey) => {
+  renderDay = (day, events, dayKey) => {
     let {
       selected,
       getters,
@@ -85,7 +85,7 @@ class Agenda extends React.Component {
     );
 
     return events.map((event, idx) => {
-      let title = <CellTitle event={event} collaborators={collaborators} CellType={CellType} />;
+      let title = <CellTitle event={event} />;
       let end = accessors.end(event);
       let start = accessors.start(event);
 

@@ -968,8 +968,6 @@ class Calendar extends React.Component {
               {...props}
               ref={ref => this.currentView = ref}
               events={events}
-              collaborators={this.props.collaborators}
-              CellType={this.props.CellType}
               date={current}
               getNow={getNow}
               length={length}
@@ -994,8 +992,6 @@ class Calendar extends React.Component {
               <ExportedMonths
                 {...props}
                 events={events}
-                collaborators={this.props.collaborators}
-                CellType={this.props.CellType}
                 date={current}
                 getNow={getNow}
                 length={length}

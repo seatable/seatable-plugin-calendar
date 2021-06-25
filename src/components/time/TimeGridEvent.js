@@ -29,8 +29,6 @@ function TimeGridEvent(props) {
     style,
     className,
     event,
-    collaborators,
-    CellType,
     accessors,
     rtl,
     selected,
@@ -43,7 +41,7 @@ function TimeGridEvent(props) {
     components: { event: Event, eventWrapper: EventWrapper }
   } = props;
 
-  let title = <CellTitle event={event} collaborators={collaborators} CellType={CellType} />;
+  let title = <CellTitle event={event} />;
   let tooltip = accessors.tooltip(event);
   let end = accessors.end(event);
   let start = accessors.start(event);

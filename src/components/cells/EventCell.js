@@ -40,12 +40,10 @@ class EventCell extends React.Component {
       components: { event: Event, eventWrapper: EventWrapper },
       slotStart,
       slotEnd,
-      collaborators,
-      CellType,
       ...props
     } = this.props;
 
-    let title = <CellTitle event={event} collaborators={collaborators} CellType={CellType} />;
+    let title = <CellTitle event={event} />;
     let tooltip = accessors.tooltip(event);
     let end = accessors.end(event);
     let start = accessors.start(event);

@@ -83,6 +83,7 @@ class Calendar extends React.Component {
      *
      * ```js
      * Event {
+     *   title: string,
      *   titleColumn: object,
      *   start: Date,
      *   end: Date,

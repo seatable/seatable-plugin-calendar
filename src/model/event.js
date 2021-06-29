@@ -151,6 +151,7 @@ const endImplementation = (eventStart, eventAllDay, rowDate) => {
  * @property {string} textColor [PRESENTATION] HTML/CSS color like "#RRGGBB"
  *
  * React Big Calendar event properties:
+ * @property {string} title
  * @property {object} titleColumn
  * @property {Date} start
  * @property {Date} end
@@ -203,6 +204,7 @@ export default class TableEvent {
     this.highlightColor = object.highlightColor || null;
     this.textColor = object.textColor || null;
     /* 2/2: React-Big-Calendar event properties */
+    this.title = object.title || null;
     this.titleColumn = object.titleColumn || null;
     this.start = object.date && new Date(object.date);
     this.allDay = allDayImplementation(this.start, object.date, object.endDate);

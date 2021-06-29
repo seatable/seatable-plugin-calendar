@@ -79,16 +79,9 @@ class CellTitle extends Component {
     const { isDataLoaded, collaborator } = this.state;
     const { state } = window.app;
     const collaborators = (state && state.collaborators) || [];
-    const { row, titleColumn } = event;
-    const { type, key, data } = titleColumn;
-    const title = row[key];
+    const { row, title, titleColumn } = event;
+    const { type } = titleColumn;
     switch (type) {
-      case 'single-select': {
-        if (!title || !data) return null;
-        const options = data.options || [];
-        const option = options.find(option => option.id === title);
-        return option && option.name;
-      }
       case 'collaborator': {
         return getCollaboratorsName(collaborators, title);
       }

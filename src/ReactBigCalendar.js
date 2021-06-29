@@ -151,8 +151,10 @@ class ReactBigCalendar extends React.Component {
 
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, colorColumn) => {
     const { optionColors, highlightColors, rowsColor, rowColorsMap, settings } = this.props;
+    const { name: titleColumnName } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
+    const title = rawRow[titleColumnName];
     const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
     // start date must exist and be valid.
     if (!date || !isValidDateObject(new Date(date))) {
@@ -167,7 +169,7 @@ class ReactBigCalendar extends React.Component {
 
     const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
     const eventColors = TableEvent.getColors({row, colorColumn, configuredUseRowColor, optionColors, highlightColors, rowsColor, rowColorsMap});
-    return new TableEvent({row, date, endDate, titleColumn, ...eventColors});
+    return new TableEvent({row, date, endDate, title, titleColumn, ...eventColors});
   }
 
   onRowExpand = (row) => {

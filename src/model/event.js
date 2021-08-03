@@ -132,10 +132,7 @@ const endImplementation = (eventStart, eventAllDay, rowDate) => {
   } else {
     end = eventStart;
   }
-  if ((eventAllDay !== true) && eventStart && (rowDate === undefined || end <= eventStart)) {
-    end = new Date(+eventStart);
-    end.setHours(eventStart.getHours() + TableEvent.FIXED_PERIOD_OF_TIME_IN_HOURS);
-  } else if (eventStart && (rowDate === undefined || end <= eventStart)) {
+  if (eventStart && (rowDate === undefined || end < eventStart)) {
     end = new Date(+eventStart);
   }
   return end;

@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import Header from '../../header/Header';
 import * as dates from '../../../utils/dates';
@@ -56,10 +55,6 @@ class YearMonth extends React.Component {
         })}
       </div>
     );
-  }
-
-  getContainer = () => {
-    return findDOMNode(this);
   }
 
   render() {

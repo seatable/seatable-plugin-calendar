@@ -34,6 +34,7 @@ import DateHeader from '../header/DateHeader';
 import { sortEvents } from '../../utils/eventLevels';
 
 class MonthView extends React.Component {
+
   constructor(...args) {
     super(...args);
     this._bgRows = [];
@@ -256,7 +257,7 @@ class MonthView extends React.Component {
   }
 
   isDateBetweenDateRange = (date) => {
-    return moment(date).isSameOrAfter(this.startDate) && moment(date).isSameOrBefore(this.endDate);
+    return dates.inRange(date, this.startDate, this.endDate, DATE_UNIT.MONTH);
   }
 
   scrollToTop = () => {

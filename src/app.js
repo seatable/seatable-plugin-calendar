@@ -11,7 +11,7 @@ import { CALENDAR_DIALOG_MODAL, MOBILE_CALENDAR_DIALOG_MODAL } from './constants
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
-import { generatorViewId, getDtableUuid, getMediaUrl, isMobile } from './utils/common';
+import { generatorViewId, getDtableUuid, getMediaUrl, isIOS, isMobile, isSafari } from './utils/common';
 import View from './model/view';
 
 import './locale';
@@ -63,6 +63,8 @@ class App extends React.Component {
     };
     this.dtable = new DTable();
     this.isMobile = isMobile;
+    this.isIosMobile = isMobile && isIOS;
+    this.isSafari = isSafari;
   }
 
   componentDidMount() {
@@ -522,6 +524,8 @@ class App extends React.Component {
             isExporting={this.state.isExporting}
             exportedMonths={this.state.exportedMonths}
             isMobile={this.isMobile}
+            isIosMobile={this.isIosMobile}
+            isSafari={this.isSafari}
           />
           {isViewSettingPanelOpen &&
             <ViewSetting

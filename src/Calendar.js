@@ -16,7 +16,7 @@ import { omit, defaults } from './utils/common';
 import { wrapAccessor } from './utils/accessors';
 import { mergeWithDefaults } from './utils/localizers/localizer';
 import * as dates from './utils/dates';
-import { navigate, CALENDAR_VIEWS, CALENDAR_HEADER_HEIGHT, CALENDAR_DIALOG_PADDINGTOP } from './constants';
+import { navigate, CALENDAR_VIEWS, CALENDAR_HEADER_HEIGHT, CALENDAR_DIALOG_PADDINGTOP, VIEWS_SUPPORT_SCROLL_ON_MOBILE } from './constants';
 import VIEWS from './components/grid-views';
 import ExportedMonths from './components/grid-views/ExportedMonths';
 import NoopWrapper from './components/wrapper/NoopWrapper';
@@ -851,7 +851,7 @@ class Calendar extends React.Component {
     if (isMobile) {
       const isValidDate = this.checkCurrentDate(updatedDate);
       if (!isValidDate) {
-        this.scrollToBoundary();
+        this.scrollToBoundary(action);
         return;
       }
     }
@@ -860,14 +860,14 @@ class Calendar extends React.Component {
   };
 
   checkCurrentDate = date => {
-    if (this.props.view === CALENDAR_VIEWS.MONTH) {
+    if (VIEWS_SUPPORT_SCROLL_ON_MOBILE.includes(this.props.view)) {
       return this.currentView && this.currentView.isDateBetweenDateRange(date);
     }
     return true;
   }
 
   scrollToBoundary = (action) => {
-    if (this.props.view === CALENDAR_VIEWS.MONTH) {
+    if (VIEWS_SUPPORT_SCROLL_ON_MOBILE.includes(this.props.view)) {
       if (!this.currentView) return;
       if (action === navigate.NEXT) {
         this.currentView.scrollToBottom();

@@ -1,88 +1,103 @@
-import React, { Fragment } from 'react';
-import { findDOMNode } from 'react-dom';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../../header/Header';
 import * as dates from '../../../utils/dates';
+import { chunk } from '../../../utils/common';
 import YearDay from './YearDay';
-import moment from 'moment';
 
-class YearMonth extends React.Component {
+class YearMonth extends React.PureComponent {
 
-  renderMonthHeaders() {
-    let { localizer, components, monthDate } = this.props;
-    let HeaderComponent = components.header || Header;
+  constructor(props) {
+    super(props);
+    const { year, month } = props;
+    this.monthDate = new Date(`${year}-${month}`);
+  }
 
+  renderMonthHeader() {
+    let { localizer } = this.props;
     return (
       <div className='rbc-year-month-header'>
-        <HeaderComponent
-          label={localizer.format(monthDate, 'monthFormat')}
+        <Header
+          label={localizer.format(this.monthDate, 'monthFormat')}
         />
       </div>
     );
   }
 
   renderWeekDayHeaders(row) {
-    let { localizer, components } = this.props;
-    let first = row[0];
-    let last = row[row.length - 1];
-    let HeaderComponent = components.header || Header;
-
-    return dates.range(first, last, 'day').map((day, idx) => (
+    let { localizer } = this.props;
+    return row.map((day, idx) => (
       <div key={'header_' + idx} className='rbc-header'>
-        <HeaderComponent
+        <Header
           label={localizer.format(day, 'yearMonthWeekdayFormat')}
         />
       </div>
     ));
   }
 
-  renderDay = (week, weekIdx) => {
-    let { monthDate, dayEventsMap } = this.props;
-    return (
-      <div className="rbc-year-day-container" key={`rbc-year-day-container-${weekIdx}`}>
-        {week.map((day, i) => {
-          const formatDate = moment(day).format('YYYY-MM-DD');
-          const dayEvents = dayEventsMap[formatDate] || [];
-          return (
-            <YearDay
-              key={`rbc-year-day-${weekIdx}-${i}`}
-              day={day}
-              monthDate={monthDate}
-              range={week}
-              dayEvents={dayEvents}
-              {...this.props}
-            />
-          );
-        })}
-      </div>
-    );
+  renderDays = (weeks, dayEventsMap, currentMonth, isCurrentMonth, dateOfToday) => {
+    return weeks.map(week => {
+      return (
+        <div className="rbc-row rbc-year-week" key={`rbc-year-week-${week[0] + ''}`}>
+          {week.map(date => {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const displayMonth = month > 9 ? month + '' : `0${month}`;
+            const displayDy = day > 9 ? day : `0${day}`;
+            const displayDate = `${year}-${displayMonth}-${displayDy}`;
+            const dayEvents = dayEventsMap[displayDate];
+            const isOffRange = displayMonth !== currentMonth;
+            const isCurrentDay = isCurrentMonth && day === dateOfToday;
+            const hasEvents = dayEvents && dayEvents.length > 0;
+            return (
+              <YearDay
+                key={`rbc-year-day-${displayDate}`}
+                isOffRange={isOffRange}
+                isCurrentDay={isCurrentDay}
+                hasEvents={hasEvents}
+                localizer={this.props.localizer}
+                label={day}
+                handleShowMore={this.handleShowMore.bind(this, date, dayEvents)}
+              />
+            );
+          })}
+        </div>
+      );
+    });
   }
 
-  getContainer = () => {
-    return findDOMNode(this);
+  handleShowMore = (date, events, overlay) => {
+    this.props.handleShowMore({
+      ...overlay,
+      date,
+      events,
+    });
   }
 
   render() {
-    let { weeks } = this.props;
-
+    const { localizer, dayEventsMap, month, isCurrentMonth, dateOfToday } = this.props;
+    const monthDates = dates.visibleYearDays(this.monthDate, localizer);
+    const weeks = chunk(monthDates, 7);
     return (
-      <Fragment>
-        {this.renderMonthHeaders()}
+      <div className="rbc-year-month">
+        {this.renderMonthHeader()}
         <div className='rbc-row'>
           {this.renderWeekDayHeaders(weeks[0])}
         </div>
-        {weeks.map(this.renderDay)}
-      </Fragment>
+        {this.renderDays(weeks, dayEventsMap, month, isCurrentMonth, dateOfToday)}
+      </div>
     );
   }
 }
 
 YearMonth.propTypes = {
-  weeks: PropTypes.array,
-  monthDate: PropTypes.object,
-  dayEventsMap: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
+  year: PropTypes.number,
+  month: PropTypes.string,
+  isCurrentMonth: PropTypes.bool,
+  dateOfToday: PropTypes.number,
+  dayEventsMap: PropTypes.object,
+  localizer: PropTypes.object,
 };
 
 export default YearMonth;

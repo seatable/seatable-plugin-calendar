@@ -406,18 +406,6 @@ button.rbc-input::-moz-focus-inner {
   line-height: normal;
 }
 
-.rbc-year-view {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 0;
-  width: 100%;
-  padding: 0 18px;
-  user-select: none;
-  -webkit-user-select: none;
-  overflow-y: auto;
-}
-
 .rbc-month-view {
   position: relative;
   height: 100%;
@@ -627,6 +615,8 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-overlay .rbc-event-content {
+  min-height: 22px;
+  line-height: 22px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1015,19 +1005,33 @@ button.rbc-input::-moz-focus-inner {
 
 /* year */
 .rbc-year-view {
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 0 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow-y: auto;
 }
 
-.rbc-year-view .rbc-year-month-view {
+.rbc-year-view .year-months-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.rbc-year-view .rbc-year-month {
   flex-shrink: 0;
   height: 204px;
   width: 240px;
-  margin-top: 5px;
-  margin-bottom: 5px;
   position: relative;
+}
+
+.rbc-year-view.mobile .rbc-year-month {
+  width: 100%;
 }
 
 .rbc-year-view .rbc-month-row {
@@ -1047,8 +1051,7 @@ button.rbc-input::-moz-focus-inner {
   color: #585858;
 }
 
-.rbc-year-view .rbc-year-day-container {
-  display: inline-flex;
+.rbc-year-view .rbc-year-week {
   position: relative;
   justify-content: space-between;
   flex: 1 0 0;

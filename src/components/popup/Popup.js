@@ -44,6 +44,11 @@ class Popup extends React.Component {
     this.popperRef = node;
   }
 
+  handleScroll = (evt) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
+
   render() {
     let {
       events,
@@ -74,7 +79,7 @@ class Popup extends React.Component {
           {localizer.format(slotStart, 'dayHeaderFormat')}
           <button className='close'><span aria-hidden="true" ref={ref => this.closeBtn = ref}>×</span></button>
         </div>
-        <div className="rbc-overlay-body">
+        <div className="rbc-overlay-body" onScroll={this.handleScroll}>
           {events.length === 0 ? <span>{intl.get('There_are_no_records')}</span> : events.map((event, idx) => (
             <EventCell
               key={idx}

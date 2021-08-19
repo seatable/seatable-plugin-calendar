@@ -55,7 +55,7 @@ class ReactBigCalendar extends React.Component {
 
   initCalendarViews = () => {
     if (this.props.isMobile) {
-      this.calendarViews = [CALENDAR_VIEWS.MONTH];
+      this.calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH];
     } else {
       this.calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.WEEK, CALENDAR_VIEWS.DAY, CALENDAR_VIEWS.AGENDA];
     }
@@ -155,12 +155,16 @@ class ReactBigCalendar extends React.Component {
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
     const title = rawRow[titleColumnName];
-    const date = startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey];
+    const date = this.getFormattedDateWithDifferentClient(
+      startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey]
+    );
     // start date must exist and be valid.
     if (!date || !isValidDateObject(new Date(date))) {
       return null;
     }
-    const endDate = this.getEventEndDate(rawRow, row, endDateColumnType, endDateColumnName, endDateColumnKey, date);
+    const endDate = this.getFormattedDateWithDifferentClient(
+      this.getEventEndDate(rawRow, row, endDateColumnType, endDateColumnName, endDateColumnKey, date)
+    );
     // end date if exists must be valid
     // NOTE: end date might be before start date, this is delegated to TableEvent()
     if (endDate && !isValidDateObject(new Date(endDate))) {
@@ -170,6 +174,17 @@ class ReactBigCalendar extends React.Component {
     const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
     const eventColors = TableEvent.getColors({row, colorColumn, configuredUseRowColor, optionColors, highlightColors, rowsColor, rowColorsMap});
     return new TableEvent({row, date, endDate, title, titleColumn, ...eventColors});
+  }
+
+  getFormattedDateWithDifferentClient = (date) => {
+    if (!date) {
+      return null;
+    }
+    const { isIosMobile, isSafari } = this.props;
+    if (isIosMobile || isSafari) {
+      return (date + '').split('-').join('/');
+    }
+    return date;
   }
 
   onRowExpand = (row) => {

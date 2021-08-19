@@ -21,13 +21,21 @@ export const CALENDAR_VIEWS = {
   YEAR: 'year'
 };
 
+export const VIEWS_SUPPORT_SCROLL_ON_MOBILE = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH];
+
 export const CALENDAR_HEADER_HEIGHT = 46;
+
+export const YEAR_MONTHS_ROW_HEIGHT = 216;
 
 export const MONTH_ROW_HEIGHT = 126;
 
 export const OVERSCAN_ROWS = 10;
 
 export const OFFSET_ROWS = 10;
+
+export const YEAR_OVERSCAN_ROWS = 3;
+
+export const YEAR_OFFSET_ROWS = 10;
 
 export const SETTING_KEY = {
   TABLE_NAME: 'table_name',

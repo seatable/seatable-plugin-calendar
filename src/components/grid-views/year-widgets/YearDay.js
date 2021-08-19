@@ -1,22 +1,13 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 class YearDay extends React.PureComponent {
 
-  getPosition = () => {
-    const { top, right } = this.rbcYearDayItem.getBoundingClientRect();
-    const innerWidth = window.innerWidth;
-    let posLeft = right + 5;
-    if (innerWidth > 1100) {
-      posLeft = posLeft - (innerWidth - 1100) / 2;
-    }
-    return {top: top - 80, left: posLeft};
-  }
-
   onEventsToggle = () => {
     this.props.handleShowMore({
-      position: this.getPosition()
+      cell: findDOMNode(this),
     });
   }
 
@@ -30,7 +21,6 @@ class YearDay extends React.PureComponent {
     return (
       <div
         className="rbc-year-day-item"
-        ref={ref => this.rbcYearDayItem = ref}
         onClick={this.onEventsToggle}
       >
         <div className="rbc-year-day-content">

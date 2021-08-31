@@ -180,7 +180,7 @@ class App extends React.Component {
   getPluginViewRows = (settings) => {
     const tables = this.dtable.getTables();
     const selectedTable = this.getSelectedTable(tables, settings);
-    const tableViews = this.dtable.getViews(selectedTable);
+    const tableViews = this.dtable.getNonArchiveViews(selectedTable);
     const selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
     return this.getRows(selectedTable, selectedTableView);
   }
@@ -431,7 +431,7 @@ class App extends React.Component {
     }
     let tables = this.dtable.getTables();
     let selectedTable = this.getSelectedTable(tables, settings);
-    let tableViews = this.dtable.getViews(selectedTable);
+    let tableViews = this.dtable.getNonArchiveViews(selectedTable);
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
     const viewRows = this.dtable.getViewRows(selectedTableView, selectedTable);
     return this.dtable.getViewRowsColor(viewRows, selectedTableView, selectedTable);
@@ -453,7 +453,7 @@ class App extends React.Component {
     let { settings } = selectedPluginView || { settings: {} };
     let tables = this.dtable.getTables();
     let selectedTable = this.getSelectedTable(tables, settings);
-    let tableViews = this.dtable.getViews(selectedTable);
+    let tableViews = this.dtable.getNonArchiveViews(selectedTable);
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
 
     let columns = this.dtable.getColumns(selectedTable);

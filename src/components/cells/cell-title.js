@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { CELL_TYPE, FORMULA_RESULT_TYPE } from 'dtable-sdk';
 import { getKnownCreatorByEmail } from '../../utils/common';
 import { getCollaboratorsName } from '../../utils/value-format-utils';
+
+const COLLABORATOR_COLUMN_TYPES = [CELL_TYPE.COLLABORATOR, CELL_TYPE.CREATOR, CELL_TYPE.LAST_MODIFIER];
 
 class CellTitle extends Component {
 
@@ -82,18 +85,29 @@ class CellTitle extends Component {
     const { row, title, titleColumn } = event;
     const { type } = titleColumn;
     switch (type) {
-      case 'collaborator': {
+      case CELL_TYPE.COLLABORATOR: {
         return getCollaboratorsName(collaborators, title);
       }
-      case 'creator': {
+      case CELL_TYPE.CREATOR: {
         if (!row._creator || !isDataLoaded || !collaborator) return null;
         return collaborator.name;
       }
-      case 'last-modifier': {
+      case CELL_TYPE.LAST_MODIFIER: {
         if (!row._last_modifier || !isDataLoaded || !collaborator) return null;
         return collaborator.name;
       }
-      default: return title;
+      case CELL_TYPE.FORMULA:
+      case CELL_TYPE.LINK_FORMULA: {
+        const { data } = titleColumn;
+        const { result_type, array_type } = data || {};
+        if (result_type === FORMULA_RESULT_TYPE.ARRAY && COLLABORATOR_COLUMN_TYPES.includes(array_type)) {
+          return getCollaboratorsName(collaborators, title);
+        }
+        return title;
+      }
+      default: {
+        return title;
+      }
     }
   }
 

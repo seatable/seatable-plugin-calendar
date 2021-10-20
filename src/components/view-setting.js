@@ -69,8 +69,9 @@ class ViewSetting extends React.Component {
       colorColumns = [],
       titleColumns = [];
     const titleColumnTypes = [
-      CellType.TEXT, CellType.SINGLE_SELECT, CellType.FORMULA,
-      CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER];
+      CellType.TEXT, CellType.SINGLE_SELECT, CellType.FORMULA, CellType.LINK_FORMULA,
+      CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER
+    ];
     columns && columns.forEach((c) => {
       const { type, name } = c;
       const columnOption = {

@@ -46,18 +46,32 @@ class Toolbar extends React.Component {
     this.props.onSelectView(view);
   };
 
+  handleSelectView = (e) => {
+    const view = e.target.value;
+    this.props.onSelectView(view);
+  };
+
   viewNamesGroup(messages) {
-    let { views: viewNames, activeView } = this.props;
+    let { views: viewNames, activeView, isMobile } = this.props;
     if (viewNames.length > 0) {
-      return viewNames.map(name => (
-        <div
-          key={name}
-          className={classnames({ 'rbc-view-type': true, 'rbc-active': activeView === name })}
-          onClick={this.onSelectView.bind(null, name)}
-        >
-          {intl.get(`.rbc.messages.${name}`).d(messages[name])}
-        </div>
-      ));
+      return isMobile ? (
+        <select value={activeView} onChange={this.handleSelectView} className="border-0 mobile-view-selector">
+          {viewNames.map(name => (
+            <option key={name} value={name}>
+              {intl.get(`.rbc.messages.${name}`).d(messages[name])}
+            </option>
+          ))}
+        </select>
+      ) :
+        viewNames.map(name => (
+          <div
+            key={name}
+            className={classnames({ 'rbc-view-type': true, 'rbc-active': activeView === name })}
+            onClick={this.onSelectView.bind(null, name)}
+          >
+            {intl.get(`.rbc.messages.${name}`).d(messages[name])}
+          </div>
+        ));
     }
   }
 }

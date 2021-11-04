@@ -55,7 +55,7 @@ class ReactBigCalendar extends React.Component {
 
   initCalendarViews = () => {
     if (this.props.isMobile) {
-      this.calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH];
+      this.calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.AGENDA];
     } else {
       this.calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.WEEK, CALENDAR_VIEWS.DAY, CALENDAR_VIEWS.AGENDA];
     }

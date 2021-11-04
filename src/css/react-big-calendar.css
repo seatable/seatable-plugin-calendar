@@ -1135,3 +1135,28 @@ button.rbc-input::-moz-focus-inner {
 .rbc-agenda-content {
   overflow-y: auto;
 }
+
+/* for mobile */
+.mobile-view-selector {
+  color: #4d4d4d;
+}
+
+.agenda-events-date {
+  padding: 20px 18px 8px;
+  border-bottom: 1px solid #0028641f;
+}
+
+.agenda-event-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #0028641f;
+  margin: 0 18px;
+}
+
+.agenda-event-item:last-child {
+  margin: 0;
+  padding: 10px 18px;
+}
+
+.rbc-agenda-view::-webkit-scrollbar {
+  display: none;
+}

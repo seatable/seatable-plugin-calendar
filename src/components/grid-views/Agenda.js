@@ -31,7 +31,7 @@ class Agenda extends React.Component {
   }
 
   render() {
-    let { length, date, events, accessors, localizer } = this.props;
+    let { length, date, events, accessors, localizer, isMobile } = this.props;
     let { messages } = localizer;
     let end = dates.add(date, length, 'day');
     let range = dates.range(date, end, 'day');
@@ -39,32 +39,42 @@ class Agenda extends React.Component {
     events = events.filter(event => inRange(event, date, end, accessors));
     events.sort((a, b) => +accessors.start(a) - +accessors.start(b));
 
+    const desktopView = (
+      <React.Fragment>
+        <table ref={this.headerRef} className='rbc-agenda-table'>
+          <thead>
+            <tr>
+              <th className='rbc-header' ref={this.dateColRef}>
+                {intl.get('.rbc.messages.date').d(messages.date)}
+              </th>
+              <th className='rbc-header' ref={this.timeColRef}>
+                {intl.get('.rbc.messages.time').d(messages.time)}
+              </th>
+              <th className='rbc-header'>{intl.get('.rbc.messages.event').d(messages.event)}</th>
+            </tr>
+          </thead>
+        </table>
+        <div className='rbc-agenda-content' ref={this.contentRef}>
+          <table className='rbc-agenda-table'>
+            <tbody ref={this.tbodyRef}>
+              {range.map((day, idx) => this.renderDay(day, events, idx))}
+            </tbody>
+          </table>
+        </div>
+      </React.Fragment>
+    );
+
+    const mobileView = (
+      <React.Fragment>
+        {range.map((day, idx) => this.renderDayForMobile(day, events, idx))}
+      </React.Fragment>
+    );
+
+    const renderedView = isMobile ? mobileView : desktopView;
+
     return (
       <div className='rbc-agenda-view'>
-        {events.length !== 0 ? (
-          <React.Fragment>
-            <table ref={this.headerRef} className='rbc-agenda-table'>
-              <thead>
-                <tr>
-                  <th className='rbc-header' ref={this.dateColRef}>
-                    {intl.get('.rbc.messages.date').d(messages.date)}
-                  </th>
-                  <th className='rbc-header' ref={this.timeColRef}>
-                    {intl.get('.rbc.messages.time').d(messages.time)}
-                  </th>
-                  <th className='rbc-header'>{intl.get('.rbc.messages.event').d(messages.event)}</th>
-                </tr>
-              </thead>
-            </table>
-            <div className='rbc-agenda-content' ref={this.contentRef}>
-              <table className='rbc-agenda-table'>
-                <tbody ref={this.tbodyRef}>
-                  {range.map((day, idx) => this.renderDay(day, events, idx))}
-                </tbody>
-              </table>
-            </div>
-          </React.Fragment>
-        ) : (
+        {events.length !== 0 ? renderedView : (
           <span className='rbc-agenda-empty'>{intl.get('.rbc.messages.noEventsInRange').d(messages.noEventsInRange)}</span>
         )}
       </div>
@@ -124,6 +134,61 @@ class Agenda extends React.Component {
         </tr>
       );
     }, []);
+  };
+
+  renderDayForMobile = (day, events, dayKey) => {
+    let {
+      selected,
+      getters,
+      accessors,
+      localizer,
+      components: { event: Event, date: AgendaDate }
+    } = this.props;
+
+    const dayEvents = events.filter(e =>
+      inRange(e, dates.startOf(day, 'day'), dates.endOf(day, 'day'), accessors)
+    );
+
+    if (!dayEvents.length) {
+      return null;
+    }
+
+    let dateLabel = localizer.format(day, 'agendaDateFormat');
+    let eventsDate =  AgendaDate ? (
+      <AgendaDate day={day} label={dateLabel} />
+    ) : dateLabel;
+
+
+    let eventItems = dayEvents.map((event, idx) => {
+      let title = <CellTitle event={event} />;
+      let end = accessors.end(event);
+      let start = accessors.start(event);
+
+      const userProps = getters.eventProp(
+        event,
+        start,
+        end,
+        isSelected(event, selected)
+      );
+
+      return (
+        <li
+          key={dayKey + '_' + idx}
+          className="agenda-event-item d-flex justify-content-between text-gray"
+          style={userProps.style}
+        >
+          {Event ? <Event event={event} title={title} /> : title}
+          {this.timeRangeLabel(day, event)}
+        </li>
+      );
+    }, []);
+
+    return (
+      <div key={dayKey}>
+        <h4 className="h6 font-weight-normal agenda-events-date m-0">{eventsDate}</h4>
+        <ul className="m-0 p-0">{eventItems}</ul>
+      </div>
+    );
   };
 
   timeRangeLabel = (day, event) => {

@@ -192,7 +192,7 @@ class Agenda extends React.Component {
   };
 
   timeRangeLabel = (day, event) => {
-    let { accessors, localizer, components } = this.props;
+    let { accessors, localizer, components, isMobile } = this.props;
 
     let labelClass = '',
       TimeComponent = components.time,
@@ -206,6 +206,16 @@ class Agenda extends React.Component {
         label = localizer.format(start, 'agendaTimeFormat');
       } else if (dates.eq(start, end, 'day')) {
         label = localizer.format({ start, end }, 'agendaTimeRangeFormat');
+        if (isMobile) {
+          const labelParts = label.split(' – ');
+          label = (
+            <React.Fragment>
+              {labelParts[0]}
+              <br />
+              {labelParts[1]}
+            </React.Fragment>
+          );
+        }
       } else if (dates.eq(day, start, 'day')) {
         label = localizer.format(start, 'agendaTimeFormat');
       } else if (dates.eq(day, end, 'day')) {

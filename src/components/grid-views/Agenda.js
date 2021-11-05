@@ -177,7 +177,13 @@ class Agenda extends React.Component {
           className="agenda-event-item d-flex justify-content-between text-gray"
           style={userProps.style}
         >
-          {Event ? <Event event={event} title={title} /> : title}
+          <div className="d-flex">
+            <span
+              className="agenda-event-decorator"
+              style={{'borderColor': event.bgColor, 'background': event.bgColor}}
+            ></span>
+            {Event ? <Event event={event} title={title} /> : title}
+          </div>
           {this.timeRangeLabel(day, event)}
         </li>
       );

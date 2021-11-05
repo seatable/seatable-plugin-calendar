@@ -1157,6 +1157,13 @@ button.rbc-input::-moz-focus-inner {
   padding: 10px 18px;
 }
 
+.agenda-event-decorator {
+  width: 3px;
+  border: 1px solid transparent;
+  border-radius: 1px;
+  margin-right: 5px;
+}
+
 .rbc-agenda-view::-webkit-scrollbar {
   display: none;
 }

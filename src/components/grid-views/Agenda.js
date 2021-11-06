@@ -184,7 +184,9 @@ class Agenda extends React.Component {
             ></span>
             {Event ? <Event event={event} title={title} /> : title}
           </div>
-          {this.timeRangeLabel(day, event)}
+          <div className="rbc-agenda-time-cell">
+            {this.timeRangeLabel(day, event)}
+          </div>
         </li>
       );
     }, []);

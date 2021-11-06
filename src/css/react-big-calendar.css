@@ -140,7 +140,8 @@ button.rbc-input::-moz-focus-inner {
 .rbc-toolbar .rbc-toolbar-label {
   padding: 0 10px;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 1.2;
 }
 
 .rbc-toolbar button {
@@ -1139,6 +1140,7 @@ button.rbc-input::-moz-focus-inner {
 /* for mobile */
 .mobile-view-selector {
   color: #4d4d4d;
+  background: #fff;
 }
 
 .agenda-events-date {

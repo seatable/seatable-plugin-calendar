@@ -32,7 +32,7 @@ class Toolbar extends React.Component {
         </div>
         <span className='rbc-toolbar-label'>{label}</span>
         <div className='rbc-btn-group view-type'>
-          <div className='view-type-list'>{this.viewNamesGroup(messages)}</div>
+          {this.viewNamesGroup(messages)}
         </div>
       </div>
     );
@@ -55,23 +55,26 @@ class Toolbar extends React.Component {
     let { views: viewNames, activeView, isMobile } = this.props;
     if (viewNames.length > 0) {
       return isMobile ? (
-        <select value={activeView} onChange={this.handleSelectView} className="border-0 mobile-view-selector">
+        <select value={activeView} onChange={this.handleSelectView} className="mobile-view-selector">
           {viewNames.map(name => (
             <option key={name} value={name}>
               {intl.get(`.rbc.messages.${name}`).d(messages[name])}
             </option>
           ))}
         </select>
-      ) :
-        viewNames.map(name => (
-          <div
-            key={name}
-            className={classnames({ 'rbc-view-type': true, 'rbc-active': activeView === name })}
-            onClick={this.onSelectView.bind(null, name)}
-          >
-            {intl.get(`.rbc.messages.${name}`).d(messages[name])}
-          </div>
-        ));
+      ) : (
+        <div className="view-type-list">
+          {viewNames.map(name => (
+            <div
+              key={name}
+              className={classnames({ 'rbc-view-type': true, 'rbc-active': activeView === name })}
+              onClick={this.onSelectView.bind(null, name)}
+            >
+              {intl.get(`.rbc.messages.${name}`).d(messages[name])}
+            </div>
+          ))}
+        </div>
+      );
     }
   }
 }

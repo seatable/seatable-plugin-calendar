@@ -2,7 +2,7 @@ import * as dates from '../dates';
 import { DateLocalizer } from './localizer';
 
 let dateRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'L', culture) + ' – ' + local.format(end, 'L', culture);
+  local.format(start, 'YYYY-MM-DD', culture) + ' – ' + local.format(end, 'YYYY-MM-DD', culture);
 
 let timeRangeFormat = ({ start, end }, culture, local) =>
   local.format(start, 'LT', culture) + ' – ' + local.format(end, 'LT', culture);

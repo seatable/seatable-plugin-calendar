@@ -961,6 +961,7 @@ class Calendar extends React.Component {
             onNavigate={this.handleNavigate}
             localizer={localizer}
             isToday={isToday}
+            isMobile={this.props.isMobile}
           />
         )}
         {startDateColumn ? (
@@ -988,6 +989,7 @@ class Calendar extends React.Component {
               onInsertRow={this.onInsertRow}
               updateCurrentDate={this.updateCurrentDate}
               changeDateByNavicate={this.state.changeDateByNavicate}
+              isMobile={this.props.isMobile}
             />
             {this.props.isExporting && (
               <ExportedMonths

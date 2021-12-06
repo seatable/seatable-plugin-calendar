@@ -470,6 +470,7 @@ class App extends React.Component {
         ref={ref => this.viewsTabs = ref}
         views={views}
         selectedViewIdx={selectedViewIdx}
+        isMobile={this.isMobile}
         onAddView={this.onAddView}
         onRenameView={this.onRenameView}
         onDeleteView={this.onDeleteView}

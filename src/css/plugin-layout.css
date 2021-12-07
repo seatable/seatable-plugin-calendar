@@ -144,26 +144,32 @@
 .calendar-plugin-container .views-scroll-control {
   display: flex;
   align-items: center;
-  margin-right: .25rem;
+  padding: 0 .25rem;
 }
 
 .calendar-plugin-container .scroll-control-btn {
-  padding: 0 .25rem;
+  cursor: default;
+}
+
+.calendar-plugin-container .scroll-control-btn:first-child {
+  margin-right: .1rem;
+}
+
+.calendar-plugin-container .scroll-active {
+  cursor: pointer;
 }
 
 .calendar-plugin-container .btn-scroll-icon {
   color: #c2c2c2;
   font-size: 12px;
   line-height: 24px;
-  cursor: default;
 }
 
 .calendar-plugin-container .scroll-active .btn-scroll-icon {
   color: #8c8c8c;
-  cursor: pointer;
 }
 
-.calendar-plugin-container .scroll-active .btn-scroll-icon:hover {
+.calendar-plugin-container .scroll-active:hover .btn-scroll-icon {
   color: #000;
   opacity: .75;
 }

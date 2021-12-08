@@ -113,6 +113,7 @@
   color: #444;
   cursor: default;
 }
+
 .calendar-plugin-container .btn-view-dropdown {
   width: 20px;
   height: 20px;
@@ -140,15 +141,52 @@
   height: 100%;
 }
 
+.calendar-plugin-container .views-scroll-control {
+  display: flex;
+  align-items: center;
+  padding: 0 .25rem;
+}
+
+.calendar-plugin-container .scroll-control-btn {
+  cursor: default;
+}
+
+.calendar-plugin-container .scroll-control-btn:first-child {
+  margin-right: .1rem;
+}
+
+.calendar-plugin-container .scroll-active {
+  cursor: pointer;
+}
+
+.calendar-plugin-container .btn-scroll-icon {
+  color: #c2c2c2;
+  font-size: 12px;
+  line-height: 24px;
+}
+
+.calendar-plugin-container .scroll-active .btn-scroll-icon {
+  color: #8c8c8c;
+}
+
+.calendar-plugin-container .scroll-active:hover .btn-scroll-icon {
+  color: #000;
+  opacity: .75;
+}
+
 .calendar-plugin-container .btn-add-view .dtable-icon-add-table {
   height: 24px;
   width: 24px;
   text-align: center;
   cursor: pointer;
   color: #000;
-  opacity: 0.5;
+  opacity: .5;
   font-weight: 500;
   line-height: 24px;
+}
+
+.calendar-plugin-container .btn-add-view .dtable-icon-add-table:hover {
+  opacity: .75;
 }
 
 .plugin-calendar-operators {
@@ -169,6 +207,10 @@
   text-align: center;
   cursor: pointer;
   color: #000;
-  opacity: 0.5;
+  opacity: .5;
   font-weight: 700;
+}
+
+.calendar-plugin-container .op-icon:hover {
+  opacity: .75;
 }

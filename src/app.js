@@ -211,7 +211,7 @@ class App extends React.Component {
     let { username, userId } = this.currentUser;
     this.dtable.forEachRow(tableName, viewName, (row) => {
       rows.push(row);
-    }, {username, userId});
+    }, {username, userId}, true);
     return rows;
   }
 

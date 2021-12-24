@@ -7,7 +7,7 @@
     "classnames": "^2.2.6",
     "clsx": "^1.1.1",
     "dom-helpers": "^5.1.4",
-    "dtable-sdk": "0.0.124",
+    "dtable-sdk": "0.0.126",
     "jszip": "^3.2.2",
     "moment": "^2.24.0",
     "react": "16.14.0",

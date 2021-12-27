@@ -209,9 +209,10 @@ class App extends React.Component {
     let { name: tableName } = table;
     let { name: viewName } = view;
     let { username, userId } = this.currentUser;
+    const convertLinkID = true;
     this.dtable.forEachRow(tableName, viewName, (row) => {
       rows.push(row);
-    }, {username, userId});
+    }, {username, userId, convertLinkID});
     return rows;
   }
 

@@ -105,6 +105,12 @@ class CellTitle extends Component {
         }
         return title;
       }
+      case CELL_TYPE.LINK: {
+        if (title) {
+          return title.join(',');
+        }
+        return null;
+      }
       default: {
         return title;
       }

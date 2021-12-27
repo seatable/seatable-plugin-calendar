@@ -106,8 +106,8 @@ class CellTitle extends Component {
         return title;
       }
       case CELL_TYPE.LINK: {
-        if (title) {
-          return title.join(',');
+        if (Array.isArray(title) && title.length > 0) {
+          return title.join(', ');
         }
         return null;
       }

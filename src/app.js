@@ -213,7 +213,6 @@ class App extends React.Component {
     this.dtable.forEachRow(tableName, viewName, (row) => {
       rows.push(row);
     }, {username, userId, convertLinkID});
-    console.log(rows)
     return rows;
   }
 

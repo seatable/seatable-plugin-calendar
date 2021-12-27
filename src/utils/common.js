@@ -1,3 +1,5 @@
+import { SORT_TYPE } from '../constants/sort-constants';
+
 // creates an object composed of the own and inherited enumerable property paths of object that are not omitted
 export function omit(object, propertyName) {
   let result = {};
@@ -242,4 +244,21 @@ export const getKnownCreatorByEmail = (email, collaborators, collaboratorsCache)
     return collaborator;
   }
   return collaboratorsCache[email] || null;
+};
+
+export const sortDate = (currCellVal, nextCellVal, sortType) => {
+  if (!currCellVal) {
+    return 1;
+  }
+
+  if (!nextCellVal) {
+    return -1;
+  }
+  if (currCellVal > nextCellVal) {
+    return sortType === SORT_TYPE.UP ? 1 : -1;
+  }
+  if (currCellVal < nextCellVal){
+    return sortType === SORT_TYPE.UP ? -1 : 1;
+  }
+  return 0;
 };

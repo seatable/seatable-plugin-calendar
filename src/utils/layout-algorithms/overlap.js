@@ -1,4 +1,4 @@
-import { sortDate } from 'dtable-store';
+import { sortDate } from '../common';
 
 class Event {
   constructor(data, { accessors, slotMetrics }) {

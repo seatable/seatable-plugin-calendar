@@ -224,6 +224,12 @@ export const getMediaUrl = () => {
   return window.dtablePluginConfig.mediaUrl;
 };
 
+export const isValidCollaboratorEmail = (email) => {
+  const reg = /^[A-Za-z0-9]+([-_.][A-Za-z0-9]+)*@([A-Za-z0-9]+[-.])+[A-Za-z0-9]{2,6}$/;
+
+  return reg.test(email);
+};
+
 export const getKnownCreatorByEmail = (email, collaborators, collaboratorsCache) => {
   const mediaUrl = getMediaUrl();
   const defaultAvatarUrl = `${mediaUrl}/avatars/default.png`;
@@ -235,7 +241,11 @@ export const getKnownCreatorByEmail = (email, collaborators, collaboratorsCache)
   }
   let collaborator = Array.isArray(collaborators) && collaborators.find(collaborator => collaborator.email === email);
   if (collaborator) return collaborator;
-  if (!isValidEmail(email)) {
+  const cachedCollaborator = collaboratorsCache[email];
+  if (cachedCollaborator) {
+    return cachedCollaborator;
+  }
+  if (!isValidCollaboratorEmail(email)) {
     collaborator = {
       name: email,
       avatar_url: defaultAvatarUrl,
@@ -243,7 +253,7 @@ export const getKnownCreatorByEmail = (email, collaborators, collaboratorsCache)
     collaboratorsCache[email] = collaborator;
     return collaborator;
   }
-  return collaboratorsCache[email] || null;
+  return null;
 };
 
 export const sortDate = (currCellVal, nextCellVal, sortType) => {

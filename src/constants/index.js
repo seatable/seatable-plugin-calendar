@@ -1,9 +1,15 @@
+import { CELL_TYPE } from 'dtable-sdk';
 import * as zIndexes from './zIndexes';
 export { zIndexes };
 
 export const PLUGIN_NAME = 'calendar';
 
 export const CALENDAR_DIALOG_PADDINGTOP = 18;
+
+export const TITLE_COLUMN_TYPES = [
+  CELL_TYPE.TEXT, CELL_TYPE.SINGLE_SELECT, CELL_TYPE.FORMULA, CELL_TYPE.LINK_FORMULA,
+  CELL_TYPE.COLLABORATOR, CELL_TYPE.CREATOR, CELL_TYPE.LAST_MODIFIER, CELL_TYPE.LINK,
+];
 
 export const navigate = {
   PREVIOUS: 'PREV',

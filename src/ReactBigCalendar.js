@@ -5,7 +5,7 @@ import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
-import { CALENDAR_VIEWS, PLUGIN_NAME, SETTING_KEY } from './constants';
+import { CALENDAR_VIEWS, PLUGIN_NAME, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
 import TableEvent from './model/event';
 import withDragAndDrop from './addons/dragAndDrop';
 
@@ -81,15 +81,12 @@ class ReactBigCalendar extends React.Component {
   }
 
   getTitleColumn = (columnName) => {
-    const { columns, CellType } = this.props;
-    const titleColumnTypes = [
-      CellType.TEXT, CellType.SINGLE_SELECT, CellType.FORMULA,
-      CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER];
-    if (!Array.isArray(columns)) return null;
+    const { columns } = this.props;
+    if (!Array.isArray(columns)) return {};
     if (columnName) {
-      return columns.find(c => c.name === columnName) || null;
+      return columns.find(c => c.name === columnName) || {};
     }
-    return columns.find(c => titleColumnTypes.indexOf(c.type) !== -1) || null;
+    return columns.find(c => TITLE_COLUMN_TYPES.includes(c.type)) || {};
   }
 
   getDateColumn = (columnName) => {

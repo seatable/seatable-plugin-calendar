@@ -2,7 +2,7 @@ import React, { Fragment }  from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import PluginSelect from './plugin-select';
-import { SETTING_KEY } from '../constants';
+import { SETTING_KEY, TITLE_COLUMN_TYPES } from '../constants';
 import '../locale';
 
 import '../css/view-setting.css';
@@ -68,10 +68,6 @@ class ViewSetting extends React.Component {
       endDateColumns = [],
       colorColumns = [],
       titleColumns = [];
-    const titleColumnTypes = [
-      CellType.TEXT, CellType.SINGLE_SELECT, CellType.FORMULA, CellType.LINK_FORMULA,
-      CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER, CellType.LINK,
-    ];
     columns && columns.forEach((c) => {
       const { type, name } = c;
       const columnOption = {
@@ -87,7 +83,7 @@ class ViewSetting extends React.Component {
       } else if (type === CellType.SINGLE_SELECT) {
         colorColumns.push(columnOption);
       }
-      if (titleColumnTypes.includes(type)) {
+      if (TITLE_COLUMN_TYPES.includes(type)) {
         titleColumns.push(columnOption);
       }
     });

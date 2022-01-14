@@ -1137,6 +1137,24 @@ button.rbc-input::-moz-focus-inner {
   overflow-y: auto;
 }
 
+.rbc-agenda-view .table-cell {
+  padding: 0 8px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.rbc-agenda-view .table-cell .dtable-ui.cell-formatter-container {
+  line-height: 1.5;
+}
+
+.rbc-agenda-view .table-cell .row-cell-empty {
+  height: 8px;
+  width: 20px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
 /* for mobile */
 .mobile-view-selector {
   color: #4d4d4d;

@@ -203,6 +203,8 @@ export default class TableEvent {
     /* 2/2: React-Big-Calendar event properties */
     this.title = object.title || null;
     this.titleColumn = object.titleColumn || null;
+    this.startDateColumn = object.startDateColumn;
+    this.endDateColumn = object.endDateColumn || null;
     this.start = object.date && new Date(object.date);
     this.allDay = allDayImplementation(this.start, object.date, object.endDate);
     this.end = endImplementation(this.start, this.allDay, object.endDate);

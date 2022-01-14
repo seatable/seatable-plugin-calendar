@@ -108,7 +108,7 @@ class ExportedMonth extends React.Component {
     let { localizer, date } = this.props,
       month = dates.visibleDays(date, localizer),
       weeks = chunk(month, 7);
-    renderWeeks = weeks.map(week => week[localizer.startOfWeek()]);
+    renderWeeks = weeks.map(week => week[0]);
     let weeksCount = renderWeeks.length; // usually there are 5 weeks in a month, but in months such as 2021-05, there are 6 weeks.
 
     return (
@@ -210,6 +210,8 @@ class ExportedMonth extends React.Component {
     return dates.range(first, last, 'day').map((day, idx) => (
       <div key={'header_' + idx} className='rbc-header'>
         <HeaderComponent
+          date={day}
+          localizer={localizer}
           label={localizer.format(day, 'weekdayFormat')}
         />
       </div>

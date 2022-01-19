@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import PluginSelect from './plugin-select';
 import { SETTING_KEY, TITLE_COLUMN_TYPES } from '../constants';
+import ColumnSetting from './column-setting';
 import '../locale';
 
 import '../css/view-setting.css';
@@ -184,12 +185,81 @@ class ViewSetting extends React.Component {
     this.props.onModifyViewSettings(newSettings);
   }
 
+  updateColumn = (targetColumnKey, targetShown) => {
+    const { settings } = this.props;
+    settings.columns = this.configuredColumns.map(item => {
+      if (item.key == targetColumnKey) {
+        item.shown = targetShown;
+      }
+      return item;
+    });
+    this.props.onModifyViewSettings(settings);
+  }
+
+  moveColumn = (targetColumnKey, targetIndexColumnKey) => {
+    const { settings } = this.props;
+    const configuredColumns = this.configuredColumns;
+    const targetColumn = configuredColumns.filter(column => column.key == targetColumnKey)[0];
+    const originalIndex = configuredColumns.indexOf(targetColumn);
+    const targetIndexColumn = configuredColumns.filter(column => column.key == targetIndexColumnKey)[0];
+    const targetIndex = configuredColumns.indexOf(targetIndexColumn);
+    configuredColumns.splice(originalIndex, 1);
+    configuredColumns.splice(targetIndex, 0, targetColumn);
+    settings.columns = configuredColumns;
+    this.props.onModifyViewSettings(settings);
+  }
+
+  getCurrentConfiguredColumns = () => {
+    const { columns, settings } = this.props;
+
+    let titleColumnName = settings[SETTING_KEY.COLUMN_TITLE];
+    const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
+    const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
+    const { titleColumns } = this.getSelectorColumns();
+
+    if (titleColumnName == undefined && titleColumns.length) {
+      titleColumnName = titleColumns[0].name;
+    }
+
+    const initialConfiguredColumns = columns.filter((item) => {
+      return item.name != titleColumnName &&
+        item.name != startDateColumnName &&
+        item.name != endDateColumnName;
+    })
+      .map((item, index) => {
+        return {
+          key: item.key,
+          shown: false
+        };
+      });
+
+    let configuredColumns = initialConfiguredColumns;
+    if (settings.columns) {
+      const baseConfiguredColumns = settings.columns.filter(item => {
+        return initialConfiguredColumns.some(c => item.key == c.key);
+      });
+      const addedColumns = initialConfiguredColumns
+        .filter(item => !baseConfiguredColumns.some(c => item.key == c.key))
+        .map(item => ({key: item.key, shown: false}));
+      configuredColumns = baseConfiguredColumns.concat(addedColumns);
+    }
+
+    return configuredColumns;
+  }
+
   render() {
     const {
       tableOptions, viewOptions,
       titleColumnOptions, dateColumnOptions, endDateColumnOptions,
       colorFieldOptions, weekStartOptions
     } = this.getSelectorOptions(this.getSelectorColumns());
+
+    const { columns, columnIconConfig } = this.props;
+    this.configuredColumns = this.getCurrentConfiguredColumns();
+    const configuredColumns = this.configuredColumns.map((item, index) => {
+      const targetItem = columns.filter(c => c.key == item.key)[0];
+      return Object.assign({}, targetItem, item);
+    });
 
     return (
       <div className="plugin-view-setting position-absolute d-flex flex-column" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
@@ -229,6 +299,22 @@ class ViewSetting extends React.Component {
               <div className="title">{intl.get('Week_start')}</div>
               {this.renderSelector(weekStartOptions, SETTING_KEY.WEEK_START)}
             </div>
+            {configuredColumns.length > 0 &&
+            <div className="setting-item">
+              <div className="title">{intl.get('Other_fields_shown_in_agenda')}</div>
+              {configuredColumns.map((column, index) => {
+                return (
+                  <ColumnSetting
+                    key={index}
+                    column={column}
+                    columnIconConfig={columnIconConfig}
+                    updateColumn={this.updateColumn}
+                    moveColumn={this.moveColumn}
+                  />
+                );
+              })}
+            </div>
+            }
           </div>
         </div>
       </div>

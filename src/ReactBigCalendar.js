@@ -92,12 +92,6 @@ class ReactBigCalendar extends React.Component {
   getDateColumn = (columnName) => {
     const { columns, CellType } = this.props;
     if (!Array.isArray(columns)) return null;
-    if (!columnName) {
-      return columns.find(c => {
-        return c.type === CellType.DATE ||
-          (c.type === CellType.FORMULA && c.data.result_type === 'date');
-      }) || null;
-    }
     return columns.find(c => c.name === columnName) || null;
   }
 
@@ -170,7 +164,7 @@ class ReactBigCalendar extends React.Component {
 
     const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
     const eventColors = TableEvent.getColors({row, colorColumn, configuredUseRowColor, optionColors, highlightColors, rowsColor, rowColorsMap});
-    return new TableEvent({row, date, endDate, title, titleColumn, startDateColumn, endDateColumn, ...eventColors});
+    return new TableEvent({row, date, endDate, title, titleColumn, ...eventColors});
   }
 
   getFormattedDateWithDifferentClient = (date) => {
@@ -314,6 +308,7 @@ class ReactBigCalendar extends React.Component {
     return (
       <DragAndDropCalendar
         {...props}
+        settings={settings}
         columns={columns}
         startDateColumn={startDateColumn}
         configuredWeekStart={configuredWeekStart}

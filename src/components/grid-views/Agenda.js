@@ -86,6 +86,7 @@ class Agenda extends React.Component {
     let {
       dtable, activeTable, collaborators,
       formulaRows, CellType, columns,
+      settings,
       selected,
       getters,
       accessors,
@@ -97,15 +98,10 @@ class Agenda extends React.Component {
       inRange(e, dates.startOf(day, 'day'), dates.endOf(day, 'day'), accessors)
     );
 
-    if (events.length) {
-      const { titleColumn, startDateColumn, endDateColumn } = events[0];
-      if (titleColumn) {
-        columns = columns.filter(item => item.key != titleColumn.key);
-      }
-      columns = columns.filter(item => item.key != startDateColumn.key);
-      if (endDateColumn) {
-        columns = columns.filter(item => item.key != endDateColumn.key);
-      }
+    let otherShownColumns = [];
+    if (settings.columns) {
+      otherShownColumns = settings.columns.filter(item => item.shown)
+        .map(item => columns.filter(column => column.key == item.key)[0]);
     }
 
     return events.map((event, idx) => {
@@ -145,7 +141,7 @@ class Agenda extends React.Component {
           </td>
           <td className='rbc-agenda-event-cell d-flex align-items-center'>
             {Event ? <Event event={event} title={title} /> : title}
-            {columns.map((column, index) => {
+            {otherShownColumns.map((column, index) => {
               return (
                 <TableCell
                   key={index}
@@ -170,6 +166,7 @@ class Agenda extends React.Component {
     let {
       dtable, activeTable, collaborators,
       formulaRows, CellType, columns,
+      settings,
       selected,
       getters,
       accessors,
@@ -181,24 +178,20 @@ class Agenda extends React.Component {
       inRange(e, dates.startOf(day, 'day'), dates.endOf(day, 'day'), accessors)
     );
 
-    if (dayEvents.length) {
-      const { titleColumn, startDateColumn, endDateColumn } = dayEvents[0];
-      if (titleColumn) {
-        columns = columns.filter(item => item.key != titleColumn.key);
-      }
-      columns = columns.filter(item => item.key != startDateColumn.key);
-      if (endDateColumn) {
-        columns = columns.filter(item => item.key != endDateColumn.key);
-      }
-    } else {
+    if (!dayEvents.length) {
       return null;
+    }
+
+    let otherShownColumns = [];
+    if (settings.columns) {
+      otherShownColumns = settings.columns.filter(item => item.shown)
+        .map(item => columns.filter(column => column.key == item.key)[0]);
     }
 
     let dateLabel = localizer.format(day, 'agendaDateFormat');
     let eventsDate =  AgendaDate ? (
       <AgendaDate day={day} label={dateLabel} />
     ) : dateLabel;
-
 
     let eventItems = dayEvents.map((event, idx) => {
       const { row } = event;
@@ -227,7 +220,7 @@ class Agenda extends React.Component {
             <div>
               {Event ? <Event event={event} title={title} /> : title}
               <div className="d-flex">
-                {columns.map((column, index) => {
+                {otherShownColumns.map((column, index) => {
                   return (
                     <TableCell
                       key={index}

@@ -62,3 +62,72 @@
 .calendar-view-setting-selector__menu .calendar-view-setting-selector__option--is-selected .null-option-name {
   color: #fff !important;
 }
+
+
+/* column manager */
+.column-setting-item {
+  position: relative;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+  padding: 0 10px;
+  border-radius: 4px;
+}
+
+.column-setting-item:hover {
+  background: #f0f0f0;
+}
+
+.column-setting-item.column-can-drop {
+  background: #e9e9e9;
+}
+
+.column-setting-item .drag-column-handle {
+  color: #c2c2c2;
+  font-size: 14px;
+  cursor: grab;
+}
+
+.column-setting-item .column-switch {
+  flex: 1;
+  display: flex;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.column-setting-item .column-switch .custom-switch {
+  width: 100%;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.column-setting-item .custom-switch .custom-switch-description {
+  width: 165px;
+  margin: 0;
+  padding-right: 5px;
+}
+
+.column-setting-item .custom-switch .dtable-font {
+  -webkit-transform: scale(.8);
+  transform: scale(.8);
+  display: inline-block;
+  line-height: 24px;
+  margin-right: 8px;
+  color: #666;
+}
+
+.column-setting-item .custom-switch .custom-switch-indicator {
+  width: 22px;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.column-setting-item .custom-switch .custom-switch-input:checked~.custom-switch-indicator:before {
+  left: 12px;
+}
+
+.column-setting-item .custom-switch .custom-switch-indicator:before {
+  height: 8px;
+  width: 8px;
+}

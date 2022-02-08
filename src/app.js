@@ -163,7 +163,6 @@ class App extends React.Component {
 
     this.highlightColors = this.dtable.getHighlightColors();
     this.columnIconConfig = this.dtable.getColumnIconConfig();
-    this.currentUser = this.getCurrentUserFromLocal();
     const selectedPluginView = views[selectedViewIdx];
     const rows = selectedPluginView ? this.getPluginViewRows(selectedPluginView.settings) : [];
     const rowsColor = this.getRowsColor(selectedPluginView.settings);
@@ -195,24 +194,14 @@ class App extends React.Component {
     window.app.onClosePlugin && window.app.onClosePlugin();
   }
 
-  getCurrentUserFromLocal = () => {
-    let username, userId;
-    if (window.dtable) {
-      username = window.dtable.username;
-      userId = window.dtable.userId;
-    }
-    return { username, userId };
-  }
-
   getRows = (table, view) => {
     let rows = [];
     let { name: tableName } = table;
     let { name: viewName } = view;
-    let { username, userId } = this.currentUser;
     const convertLinkID = true;
     this.dtable.forEachRow(tableName, viewName, (row) => {
       rows.push(row);
-    }, {username, userId, convertLinkID});
+    }, {convertLinkID});
     return rows;
   }
 

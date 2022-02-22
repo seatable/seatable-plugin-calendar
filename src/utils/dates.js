@@ -1,9 +1,18 @@
 /* eslint no-fallthrough: off */
-import moment from 'moment';
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { DATE_UNIT, MULTIPLIER_MILLI, MONTHS } from '../constants/date';
+// import dayjs from 'dayjs';
+dayjs.extend(isSameOrBefore);
+dayjs.extend(localizedFormat);
+dayjs.extend(advancedFormat);
+dayjs.extend(isoWeek);
 
 export function monthsInYear(year) {
-  return MONTHS.map(m => moment(`${year}-${m}`).startOf(DATE_UNIT.MONTH).toDate());
+  return MONTHS.map(m => dayjs(`${year}-${m}`).startOf(DATE_UNIT.MONTH).toDate());
 }
 
 export function firstVisibleDay(date, localizer) {
@@ -84,12 +93,12 @@ export function eqTime(dateA, dateB) {
 
 export function isJustDate(date) {
   if (!date) return false;
-  const momentDate = moment(date);
+  const dayjsDate = dayjs(date);
   return (
-    momentDate.hours() === 0 &&
-    momentDate.minutes() === 0 &&
-    momentDate.seconds() === 0 &&
-    momentDate.milliseconds() === 0
+    dayjsDate.hour() === 0 &&
+    dayjsDate.minute() === 0 &&
+    dayjsDate.second() === 0 &&
+    dayjsDate.millisecond() === 0
   );
 }
 
@@ -139,27 +148,27 @@ export function total(date, unit) {
 }
 
 export function week(date) {
-  let d = moment(date);
-  d.hours(0);
-  d.date(d.date() + 4 - (d.days() || 7));
-  return Math.ceil((d.diff(moment([d.year(), 0, 1])) / 8.64e7 + 1) / 7);
+  let d = dayjs(date);
+  d = d.hour(0);
+  d = d.date(d.date() + 4 - (d.days() || 7));
+  return Math.ceil((d.diff(dayjs([d.year(), 0, 1])) / 8.64e7 + 1) / 7);
 }
 
 export function today() {
-  return moment().startOf(DATE_UNIT.DAY).toDate();
+  return dayjs().startOf(DATE_UNIT.DAY).toDate();
 }
 
 export function yesterday() {
-  return moment().subtract(1, DATE_UNIT.DAY).startOf(DATE_UNIT.DAY).toDate();
+  return dayjs().subtract(1, DATE_UNIT.DAY).startOf(DATE_UNIT.DAY).toDate();
 }
 
 export function tomorrow() {
-  return moment().add(1, DATE_UNIT.DAY).startOf(DATE_UNIT.DAY).toDate();
+  return dayjs().add(1, DATE_UNIT.DAY).startOf(DATE_UNIT.DAY).toDate();
 }
 
 export function add(d, num, unit) {
   if (unit) {
-    return moment(d).add(num, unit).toDate();
+    return dayjs(d).add(num, unit).toDate();
   }
 
   throw new TypeError('Invalid units: "' + unit + '"');
@@ -241,11 +250,11 @@ export const lt =  createComparer(function(a, b){ return a < b; });
 export const lte = createComparer(function(a, b){ return a <= b; });
 
 export function min(){
-  return moment(Math.min.apply(Math, arguments)).toDate();
+  return dayjs(Math.min.apply(Math, arguments)).toDate();
 }
 
 export function max(){
-  return moment(Math.max.apply(Math, arguments)).toDate();
+  return dayjs(Math.max.apply(Math, arguments)).toDate();
 }
 
 export function inRange(day, min, max, unit){
@@ -285,26 +294,26 @@ export function century(d, val) {
 }
 
 export function getFormattedDate(d, format) {
-  return moment(d).format(format);
+  return dayjs(d).format(format);
 }
 
 export function getMonthStartDate(date) {
-  let mDate = moment(date);
+  let mDate = dayjs(date);
   let startOfMonth = mDate.startOf(DATE_UNIT.MONTH);
   return startOfMonth.subtract(startOfMonth.weekday(), DATE_UNIT.DAY).toDate();
 }
 
 export function getMonthEndDate(date) {
-  let mDate = moment(date);
+  let mDate = dayjs(date);
   let startOfMonth = mDate.endOf(DATE_UNIT.MONTH);
   return startOfMonth.add(6 - startOfMonth.weekday(), DATE_UNIT.DAY).toDate();
 }
 
 export function getDatesInRange(startDate, endDate, unit = DATE_UNIT.DAY) {
   let dates = [];
-  while(moment(startDate).isSameOrBefore(endDate)) {
+  while(dayjs(startDate).isSameOrBefore(endDate)) {
     dates.push(startDate);
-    startDate = moment(startDate).add(1, unit).toDate();
+    startDate = dayjs(startDate).add(1, unit).toDate();
   }
   return dates;
 }
@@ -313,13 +322,13 @@ export function getWeekDates(weekStartDate) {
   let dates = [], startDate = weekStartDate;
   for (let i = 0; i < 7; i++) {
     dates.push(startDate);
-    startDate = moment(startDate).add(1, DATE_UNIT.DAY).toDate();
+    startDate = dayjs(startDate).add(1, DATE_UNIT.DAY).toDate();
   }
   return dates;
 }
 
 export function isToday(date, unit) {
-  return moment().isSame(date, unit);
+  return dayjs().isSame(date, unit);
 }
 
 function createAccessor(method){

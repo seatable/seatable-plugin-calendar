@@ -52,5 +52,6 @@
   "Not_used": "Не используется",
   "Choose_the_time_range": "Выберите временной диапазон",
   "Out_of_range": "Можно выбрать не более 12 месяцев.",
-  "Row_color": "Цвет строки"
+  "Row_color": "Цвет строки",
+  "Other_fields_shown_in_agenda": "Other fields shown in the agenda view"
 }

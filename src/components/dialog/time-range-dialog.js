@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import 'moment/min/locales.min';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input, Alert } from 'reactstrap';
 import intl from 'react-intl-universal';
 import Picker from '@seafile/seafile-calendar/lib/Picker';
@@ -10,6 +8,7 @@ import { translateCalendar } from '../../utils/seafile-calendar-translate';
 import { zIndexes, DATE_UNIT, DATE_FORMAT } from '../../constants';
 
 import '@seafile/seafile-calendar/assets/index.css';
+import { formatDayjsLocale } from '../../utils/date-format-utils';
 
 const propTypes = {
   isExporting: PropTypes.bool,
@@ -21,8 +20,7 @@ class SelectExportTimeRangeDialog extends Component {
 
   constructor(props) {
     super(props);
-    const lang = window.dtable ? window.dtable.lang : 'zh-cn';
-    const now = moment().locale(lang);
+    const now = formatDayjsLocale();
     this.state = {
       dateRange: [now, now],
       outOfRange: false

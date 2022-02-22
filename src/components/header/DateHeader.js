@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import * as dates from '../../utils/dates';
 
 class DateHeader extends Component {
@@ -9,7 +9,7 @@ class DateHeader extends Component {
     return (
       nextProps.label !== this.props.label ||
       nextProps.drilldownView !== this.props.drilldownView ||
-      !moment(nextProps.date).isSame(this.props.date)
+      !dayjs(nextProps.date).isSame(this.props.date)
     );
   }
 
@@ -18,7 +18,7 @@ class DateHeader extends Component {
     if (!drilldownView) {
       return <span>{label}</span>;
     }
-    let mDate = moment(date);
+    let mDate = dayjs(date);
     let startOfMonthDate = mDate.startOf('month').toDate();
     let isStartOfMonth = dates.eq(date, startOfMonthDate, 'day');
     return (

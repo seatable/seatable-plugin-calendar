@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import SolarLunarConverter from './solar-lunar-converter';
 
 const solarLunarConverter = new SolarLunarConverter();
@@ -83,13 +83,13 @@ export function getFestival(date) {
   let mDate, lunarFestival, solarFestival, term;
   let lunarDate = solarLunarConverter.solorToLunar(date);
   if (lunarDate) {
-    mDate = moment(lunarDate);
+    mDate = dayjs(lunarDate);
     let lunarMonth = mDate.format('MM');
     let lunarDay = mDate.format('DD');
     lunarFestival = LUNAR__FESTIVAL[`${lunarMonth}${lunarDay}`];
   }
   if (!lunarFestival) {
-    mDate = moment(date);
+    mDate = dayjs(date);
     let solarMonth = mDate.format('MM');
     let solarDay = mDate.format('DD');
     solarFestival = SOLAR_FESTIVAL[`${solarMonth}${solarDay}`];
@@ -101,7 +101,7 @@ export function getFestival(date) {
 }
 
 function getTerm(date) {
-  let mDate = moment(date);
+  let mDate = dayjs(date);
   let year = mDate.year();
   let month = mDate.month() + 1;
   let day = mDate.date();

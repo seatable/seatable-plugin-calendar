@@ -1,9 +1,9 @@
 const de = {
-  'Calendar': 'Calendar',
+  'Calendar': 'Kalender',
   'Submit': 'Absenden',
   'Cancel': 'Abbrechen',
-  'Start_Date': 'Feld für Startdatum',
-  'End_Date_Optional': 'Feld für Enddatum (optional)',
+  'Start_Date': 'Spalte für Startdatum',
+  'End_Date_Optional': 'Spalte für Enddatum (optional)',
   'Color_From': 'Farbe',
   'Week_start': 'Wochenstart',
   'Sunday': 'Sonntag',
@@ -47,12 +47,13 @@ const de = {
   'Settings': 'Einstellungen',
   'Table': 'Tabelle',
   'View': 'Ansicht',
-  'Title': 'Feld für Titel',
+  'Title': 'Titelspalte',
   'No_options': 'Keine Optionen',
   'Not_used': 'Nicht genutzt',
   'Choose_the_time_range': 'Zeitraum auswählen',
   'Out_of_range': 'Der maximale Zeitraum sind 12 Monate.',
   'Row_color': 'Zeilenfarbe',
+  'Other_fields_shown_in_agenda': 'Andere Felder für die Anzeige in der Agenda Ansicht',
 };
 
 export default de;

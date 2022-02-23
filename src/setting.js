@@ -2,12 +2,12 @@ import intl from 'react-intl-universal';
 
 /** (1/5) initialize config object */
 let config = {
-  APIToken: 'dff4d16acdfe3042c25e5e52ea60c9831c79bf02',
-  server: 'https://dev.seafile.com/dtable-web',
-  username: 'xuejin.zhang@seafile.com',
-  password: '123456',
-  workspaceID: '4',
-  dtableName: 'test2',
+  APIToken: '65be605361e3fed0bd364a2596b134ed9a337e7f',
+  server: 'http://127.0.0.1:80',
+  username: 'test@seafiletest.com',
+  password: 'testtest',
+  workspaceID: '1',
+  dtableName: 'test-1',
   lang: 'zh-cn'
 };
 

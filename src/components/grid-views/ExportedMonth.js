@@ -2,7 +2,7 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import getPosition from 'dom-helpers/position';
 import chunk from 'lodash/chunk';
 import { getDtableLang, getDtablePermission } from '../../utils/common';
@@ -39,13 +39,13 @@ class ExportedMonth extends React.Component {
     let weekEventsMap = {};
     events.forEach((event) => {
       const { start, end } = event;
-      const m_end = moment(end);
-      let m_eventWeekStart = moment(dates.startOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
-      let m_eventWeekEnd = moment(dates.endOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
+      const m_end = dayjs(end);
+      let m_eventWeekStart = dayjs(dates.startOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
+      let m_eventWeekEnd = dayjs(dates.endOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
       this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       while(m_end.isAfter(m_eventWeekEnd)) {
-        m_eventWeekStart.add(7, DATE_UNIT.DAY);
-        m_eventWeekEnd.add(7, DATE_UNIT.DAY);
+        m_eventWeekStart = m_eventWeekStart.add(7, DATE_UNIT.DAY);
+        m_eventWeekEnd = m_eventWeekEnd.add(7, DATE_UNIT.DAY);
         this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       }
     });
@@ -128,7 +128,7 @@ class ExportedMonth extends React.Component {
     let { components, selectable, getNow, selected, date, localizer, longPressThreshold,
       accessors, getters } = this.props;
     const { needLimitMeasure, weekEventsMap } = this.state;
-    const formatWeekStartDate = moment(weekStartDate).format('YYYY-MM-DD');
+    const formatWeekStartDate = dayjs(weekStartDate).format('YYYY-MM-DD');
     let weekDates = dates.getWeekDates(weekStartDate);
     let weekEvents = weekEventsMap[formatWeekStartDate] || [];
 

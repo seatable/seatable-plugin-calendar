@@ -1,5 +1,5 @@
 const fr = {
-  'Calendar': 'Calendar',
+  'Calendar': 'Calendrier',
   'Submit': 'Soumettre',
   'Cancel': 'Annuler',
   'Start_Date': 'Colonne date de début',
@@ -53,6 +53,7 @@ const fr = {
   'Choose_the_time_range': 'Sélectionner la période',
   'Out_of_range': 'La période maximale est de 12 mois.',
   'Row_color': 'Couleur de la ligne',
+  'Other_fields_shown_in_agenda': 'Autres champs pour l\'affichage dans la vue Agenda',
 };
 
 export default fr;

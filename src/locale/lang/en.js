@@ -53,6 +53,7 @@ const en = {
   'Choose_the_time_range': 'Choose the time range',
   'Out_of_range': 'At most 12 months can be selected.',
   'Row_color': 'Row color',
+  'Other_fields_shown_in_agenda': 'Other fields shown in the agenda view',
 };
 
 export default en;

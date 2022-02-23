@@ -11,7 +11,10 @@ import { getInitState, getInitStateWithDates, getMonthStartDates, getMonthStartD
   getVisibleEndIndex, getVisibleStartIndexByDate, isNextYear } from '../../utils/year-view-utils';
 import { navigate, YEAR_MONTHS_ROW_HEIGHT } from '../../constants';
 import { DATE_UNIT } from '../../constants/date';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+dayjs.extend(isSameOrAfter);
+
 
 class YearView extends React.Component {
 
@@ -37,8 +40,8 @@ class YearView extends React.Component {
     // if current date is '2021-08-18'
     // the startDate will be '2017-01-01'
     // the endDate will be '2025-12-01'
-    this.startDate = moment(this.props.date).startOf(DATE_UNIT.YEAR).subtract(4, DATE_UNIT.YEAR);
-    this.endDate = moment(this.props.date).endOf(DATE_UNIT.YEAR).add(4, DATE_UNIT.YEAR).startOf(DATE_UNIT.MONTH);
+    this.startDate = dayjs(this.props.date).startOf(DATE_UNIT.YEAR).subtract(4, DATE_UNIT.YEAR);
+    this.endDate = dayjs(this.props.date).endOf(DATE_UNIT.YEAR).add(4, DATE_UNIT.YEAR).startOf(DATE_UNIT.MONTH);
   }
 
   componentDidMount() {
@@ -93,8 +96,8 @@ class YearView extends React.Component {
     let dayEventsMap = {};
     events.forEach((event) => {
       const { start, end } = event;
-      let m_start = moment(start);
-      let m_end = moment(end);
+      let m_start = dayjs(start);
+      let m_end = dayjs(end);
       while(m_end.isSameOrAfter(m_start, DATE_UNIT.DAY)) {
         const formattedStart = m_start.format('YYYY-MM-DD');
         if (dayEventsMap[formattedStart]) {
@@ -102,7 +105,7 @@ class YearView extends React.Component {
         } else {
           dayEventsMap[formattedStart] = [event];
         }
-        m_start = moment(m_start).add(1, DATE_UNIT.DAY);
+        m_start = dayjs(m_start).add(1, DATE_UNIT.DAY);
       }
     });
     return dayEventsMap;

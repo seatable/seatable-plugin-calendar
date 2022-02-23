@@ -52,5 +52,6 @@
   "Not_used": "不使用",
   "Choose_the_time_range": "选择时间范围",
   "Out_of_range": "最多可以选择12个月。",
-  "Row_color": "行颜色"
+  "Row_color": "行颜色",
+  "Other_fields_shown_in_agenda": "在议程视图中显示的其他字段"
 }

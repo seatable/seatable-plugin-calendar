@@ -2,7 +2,7 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import getPosition from 'dom-helpers/position';
 import { getDtableLang, getDtablePermission } from '../../utils/common';
 import * as dates from '../../utils/dates';
@@ -32,6 +32,9 @@ import DateContentRow from '../rows/DateContentRow';
 import Header from '../header/Header';
 import DateHeader from '../header/DateHeader';
 import { sortEvents } from '../../utils/eventLevels';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 class MonthView extends React.Component {
 
@@ -60,13 +63,14 @@ class MonthView extends React.Component {
     let weekEventsMap = {};
     events.forEach((event) => {
       const { start, end } = event;
-      const m_end = moment(end);
-      let m_eventWeekStart = moment(dates.startOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
-      let m_eventWeekEnd = moment(dates.endOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
+      const m_end = dayjs(end);
+      let m_eventWeekStart = dayjs(dates.startOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
+      let m_eventWeekEnd = dayjs(dates.endOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
       this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
+
       while(m_end.isAfter(m_eventWeekEnd)) {
-        m_eventWeekStart.add(7, DATE_UNIT.DAY);
-        m_eventWeekEnd.add(7, DATE_UNIT.DAY);
+        m_eventWeekStart = m_eventWeekStart.add(7, DATE_UNIT.DAY);
+        m_eventWeekEnd = m_eventWeekEnd.add(7, DATE_UNIT.DAY);
         this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       }
     });
@@ -157,8 +161,8 @@ class MonthView extends React.Component {
 
   initDateRange = () => {
     if (!this.props.isMobile) return;
-    this.startDate = dates.startOf(moment(this.props.date).startOf(DATE_UNIT.YEAR).subtract(2, DATE_UNIT.YEAR), DATE_UNIT.WEEK, this.props.localizer.startOfWeek());
-    this.endDate = dates.startOf(moment(this.props.date).endOf(DATE_UNIT.YEAR).add(2, DATE_UNIT.YEAR), DATE_UNIT.WEEK, this.props.localizer.startOfWeek());
+    this.startDate = dates.startOf(dayjs(this.props.date).startOf(DATE_UNIT.YEAR).subtract(2, DATE_UNIT.YEAR), DATE_UNIT.WEEK, this.props.localizer.startOfWeek());
+    this.endDate = dates.startOf(dayjs(this.props.date).endOf(DATE_UNIT.YEAR).add(2, DATE_UNIT.YEAR), DATE_UNIT.WEEK, this.props.localizer.startOfWeek());
   }
 
   onMonthViewScroll = (evt) => {
@@ -242,7 +246,7 @@ class MonthView extends React.Component {
 
   getVisibleBoundariesByDate = (date, allWeeksStartDates, monthRowsHeight) => {
     const datesCount = allWeeksStartDates.length;
-    const currentWeekStartDate = moment(dates.startOf(date, DATE_UNIT.WEEK, this.props.localizer.startOfWeek())).subtract(1, DATE_UNIT.WEEK);
+    const currentWeekStartDate = dayjs(dates.startOf(date, DATE_UNIT.WEEK, this.props.localizer.startOfWeek())).subtract(1, DATE_UNIT.WEEK);
     const renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
     const visibleStartIndex = getVisibleStartIndexByWeekStartDate(currentWeekStartDate, allWeeksStartDates);
     const visibleEndIndex = getVisibleEndIndex(visibleStartIndex, renderedRowsCount, datesCount);
@@ -334,7 +338,7 @@ class MonthView extends React.Component {
     let { components, selectable, getNow, selected, date, localizer, longPressThreshold,
       accessors, getters, isMobile } = this.props;
     const { needLimitMeasure, weekEventsMap } = this.state;
-    const formatWeekStartDate = moment(weekStartDate).format('YYYY-MM-DD');
+    const formatWeekStartDate = dayjs(weekStartDate).format('YYYY-MM-DD');
     let weekDates = dates.getWeekDates(weekStartDate);
     let weekEvents = weekEventsMap[formatWeekStartDate] || [];
 

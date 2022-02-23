@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const MIN_YEAR = 1891;
 const MAX_YEAR = 2100;
@@ -50,7 +50,7 @@ const LUNAR_INFO = [
 class SolarLunarConverter {
 
   solorToLunar(date) {
-    let mDate = moment(date);
+    let mDate = dayjs(date);
     if (mDate.isBefore(`${MIN_YEAR}-01-01`) || mDate.isAfter(`${MAX_YEAR}-01-01`)) {
       return null;
     }
@@ -113,7 +113,7 @@ class SolarLunarConverter {
 
   // 获取两个日期之间的天数
   getDaysBetweenSolarDate (date1, date2) {
-    return moment(date1).diff(date2, 'days');
+    return dayjs(date1).diff(date2, 'days');
   }
 
   getMonthsByLunarYear(yearData, monthData) {

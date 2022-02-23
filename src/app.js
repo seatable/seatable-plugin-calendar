@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import classnames from 'classnames';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
@@ -247,12 +247,12 @@ class App extends React.Component {
 
   exportSelectedMonths = (start, end) => {
     let exportedMonths = [];
-    const startMonth = moment(start, DATE_FORMAT.YEAR_MONTH);
-    const endMonth = moment(end, DATE_FORMAT.YEAR_MONTH);
+    const startMonth = dayjs(start, DATE_FORMAT.YEAR_MONTH);
+    const endMonth = dayjs(end, DATE_FORMAT.YEAR_MONTH);
     const diffMonthAmount = endMonth.diff(startMonth, 'months');
     for (let i = 0; i < diffMonthAmount + 1; i++) {
       // `push` the 1st day of each month, in the native Date object
-      exportedMonths.push(moment(startMonth).add(i, 'months').date(1).toDate());
+      exportedMonths.push(dayjs(startMonth).add(i, 'months').date(1).toDate());
     }
     this.setState({
       isExporting: true,

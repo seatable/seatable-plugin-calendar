@@ -1,7 +1,9 @@
 import { MONTH_ROW_HEIGHT, OVERSCAN_ROWS, OFFSET_ROWS } from '../constants';
 import { DATE_UNIT } from '../constants/date';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { startOf } from './dates';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+dayjs.extend(isSameOrBefore);
 
 export const getInitialState = (date, renderedRowsCount, localizer) => {
   let visibleStartIndex = OFFSET_ROWS + OVERSCAN_ROWS;
@@ -19,7 +21,7 @@ export const getInitialState = (date, renderedRowsCount, localizer) => {
 };
 
 export const getInitStateByDateRange = (startDate, endDate, currentDate, renderedRowsCount, localizer) => {
-  const currentWeekStartDate = moment(startOf(currentDate, DATE_UNIT.WEEK, localizer.startOfWeek())).subtract(1, DATE_UNIT.WEEK);
+  const currentWeekStartDate = dayjs(startOf(currentDate, DATE_UNIT.WEEK, localizer.startOfWeek())).subtract(1, DATE_UNIT.WEEK);
   const allWeeksStartDates = getWeeksStartDates(startDate, endDate);
   const datesCount = allWeeksStartDates.length;
   const visibleStartIndex = getVisibleStartIndexByWeekStartDate(currentWeekStartDate, allWeeksStartDates);
@@ -36,7 +38,7 @@ export const getInitStateByDateRange = (startDate, endDate, currentDate, rendere
 };
 
 export const getVisibleStartIndexByWeekStartDate = (visibleStartDate, allWeeksStartDates) => {
-  const m_visibleStartDate = moment(visibleStartDate);
+  const m_visibleStartDate = dayjs(visibleStartDate);
   return allWeeksStartDates.findIndex(weekStartDate => m_visibleStartDate.isSame(weekStartDate));
 };
 
@@ -60,10 +62,10 @@ export const getVisibleEndIndex = (visibleStartIndex, renderedRowsCount, datesCo
 };
 
 export const getAllWeeksStartDates = (date, renderedRowsCount, localizer) => {
-  const visibleStartWeekDate = moment(startOf(date, DATE_UNIT.WEEK, localizer.startOfWeek())).subtract(7, DATE_UNIT.DAY);
+  const visibleStartWeekDate = dayjs(startOf(date, DATE_UNIT.WEEK, localizer.startOfWeek())).subtract(7, DATE_UNIT.DAY);
   const weekOffset = OFFSET_ROWS + OVERSCAN_ROWS;
-  const gridStartWeekDate = moment(visibleStartWeekDate).subtract(weekOffset * 7, DATE_UNIT.DAY).toDate();
-  const gridEndWeekDate = moment(visibleStartWeekDate).add((renderedRowsCount + weekOffset) * 7, DATE_UNIT.DAY).toDate();
+  const gridStartWeekDate = dayjs(visibleStartWeekDate).subtract(weekOffset * 7, DATE_UNIT.DAY).toDate();
+  const gridEndWeekDate = dayjs(visibleStartWeekDate).add((renderedRowsCount + weekOffset) * 7, DATE_UNIT.DAY).toDate();
   return getWeeksStartDates(gridStartWeekDate, gridEndWeekDate);
 };
 
@@ -84,7 +86,7 @@ export const isNextMonth = (prevDate, weeks, visibleStartIndex) => {
   let nextWeekStartDate = weeks[visibleStartIndex + 2];
   if (!nextWeekStartDate) return true;
   let comparedDate = getWeekEndDate(nextWeekStartDate);
-  return !moment(comparedDate).isSame(prevDate, 'month');
+  return !dayjs(comparedDate).isSame(prevDate, 'month');
 };
 
 export const getNextMonthDate = (weeks, visibleStartIndex) => {
@@ -92,14 +94,14 @@ export const getNextMonthDate = (weeks, visibleStartIndex) => {
 };
 
 export const getWeekEndDate = (weekStartDate) => {
-  return moment(weekStartDate).add(6, DATE_UNIT.DAY).toDate();
+  return dayjs(weekStartDate).add(6, DATE_UNIT.DAY).toDate();
 };
 
 export const getVisibleStartIndexByDate = (date, weeks) => {
   let weeksLen = weeks.length;
   let index = 0;
   for (let i = 0; i < weeksLen; i++) {
-    if (moment(weeks[i]).isSame(date, DATE_UNIT.DAY)) {
+    if (dayjs(weeks[i]).isSame(date, DATE_UNIT.DAY)) {
       index = i;
       break;
     }
@@ -109,9 +111,9 @@ export const getVisibleStartIndexByDate = (date, weeks) => {
 
 function getWeeksStartDates(startDate, endDate) {
   let dates = [];
-  while(moment(startDate).isSameOrBefore(endDate)) {
+  while(dayjs(startDate).isSameOrBefore(endDate)) {
     dates.push(startDate);
-    startDate = moment(startDate).add(7, DATE_UNIT.DAY).toDate();
+    startDate = dayjs(startDate).add(7, DATE_UNIT.DAY).toDate();
   }
   return dates;
 }

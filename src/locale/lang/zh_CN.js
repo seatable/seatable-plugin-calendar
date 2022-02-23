@@ -53,6 +53,7 @@ const zh_CN = {
   'Choose_the_time_range': '选择时间范围',
   'Out_of_range': '最多可以选择12个月。',
   'Row_color': '行颜色',
+  'Other_fields_shown_in_agenda': '在议程视图中显示的其他字段',
 };
 
 export default zh_CN;

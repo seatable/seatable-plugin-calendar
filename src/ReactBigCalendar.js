@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
@@ -141,7 +141,7 @@ class ReactBigCalendar extends React.Component {
       case CellType.DATE: return row[columnKey];
       case CellType.FORMULA: return rawRow[columnName];
       case CellType.DURATION:
-        return moment(startDate).add(rawRow[columnName], 'seconds').format('YYYY-MM-DD HH:mm');
+        return dayjs(startDate).add(rawRow[columnName], 'seconds').format('YYYY-MM-DD HH:mm');
       default: return null;
     }
   }
@@ -198,7 +198,7 @@ class ReactBigCalendar extends React.Component {
 
   getFormattedDate = (date, originalFormat) => {
     const targetFormat = originalFormat && originalFormat.indexOf('HH:mm') > -1 ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD';
-    return moment(date).format(targetFormat);
+    return dayjs(date).format(targetFormat);
   }
 
   /**
@@ -263,9 +263,9 @@ class ReactBigCalendar extends React.Component {
         // an event can only be made all-day if it has a true end-date field when its start-date is with
         // time (with minute precision) [if an event is across two days, it is also displayed on top]
         if (endDateColumn && (endDateColumn !== startDateColumn) && endDateColumn.type === CellType.DATE) {
-          const startEndSameDay = moment(start).format('YYYY-MM-DD') === moment(end).format('YYYY-MM-DD');
+          const startEndSameDay = dayjs(start).format('YYYY-MM-DD') === dayjs(end).format('YYYY-MM-DD');
           if (startEndSameDay) {
-            end = moment(end).add(1, 'day').startOf('day').toDate();
+            end = dayjs(end).add(1, 'day').startOf('day').toDate();
           }
         }
       }
@@ -310,7 +310,7 @@ class ReactBigCalendar extends React.Component {
     const startDateColumn = this.getDateColumn(startDateColumnName);
 
     const configuredWeekStart = settings[SETTING_KEY.WEEK_START];
-    const localizer = momentLocalizer(moment, configuredWeekStart);
+    const localizer = momentLocalizer(dayjs, configuredWeekStart);
     return (
       <DragAndDropCalendar
         columns={columns}

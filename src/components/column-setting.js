@@ -12,7 +12,6 @@ class ColumnSetting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isChecked: false,
       isItemDropTipShow: false
     };
     this.enteredCounter = 0;

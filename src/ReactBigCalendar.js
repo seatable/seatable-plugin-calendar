@@ -298,7 +298,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   render() {
-    const { columns, settings, ...props } = this.props;
+    const { settings } = this.props;
     const { events } = this.state;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
@@ -307,9 +307,7 @@ class ReactBigCalendar extends React.Component {
     const localizer = momentLocalizer(dayjs, configuredWeekStart);
     return (
       <DragAndDropCalendar
-        {...props}
-        settings={settings}
-        columns={columns}
+        {...this.props}
         startDateColumn={startDateColumn}
         configuredWeekStart={configuredWeekStart}
         localizer={localizer}
@@ -321,14 +319,10 @@ class ReactBigCalendar extends React.Component {
         onRowExpand={this.onRowExpand}
         onSelectEvent={this.onSelectEvent}
         onInsertRow={this.onInsertRow}
-        hideViewSettingPanel={this.props.hideViewSettingPanel}
         selectable
         onSelectSlot={this.handleSelectSlot}
         onSelecting={this.handleSelecting}
         onEventDrop={this.moveEvent}
-        isExporting={this.props.isExporting}
-        exportedMonths={this.props.exportedMonths}
-        isMobile={this.props.isMobile}
       />
     );
   }

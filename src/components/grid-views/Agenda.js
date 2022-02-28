@@ -100,8 +100,12 @@ class Agenda extends React.Component {
 
     let otherShownColumns = [];
     if (settings.columns) {
+      let columnKeyMap = {};
+      columns.forEach(column => {
+        columnKeyMap[column.key] = column;
+      });
       otherShownColumns = settings.columns.filter(item => item.shown)
-        .map(item => columns.filter(column => column.key == item.key)[0]);
+        .map(item => columnKeyMap[item.key]);
     }
 
     return events.map((event, idx) => {
@@ -139,7 +143,8 @@ class Agenda extends React.Component {
           <td className='rbc-agenda-time-cell'>
             {this.timeRangeLabel(day, event)}
           </td>
-          <td className='rbc-agenda-event-cell d-flex align-items-center'>
+          <td className='rbc-agenda-event-cell'>
+            <div className="d-flex align-items-center">
             {Event ? <Event event={event} title={title} /> : title}
             {otherShownColumns.map((column, index) => {
               return (
@@ -156,6 +161,7 @@ class Agenda extends React.Component {
                 />
               );
             })}
+            </div>
           </td>
         </tr>
       );
@@ -184,8 +190,12 @@ class Agenda extends React.Component {
 
     let otherShownColumns = [];
     if (settings.columns) {
+      let columnKeyMap = {};
+      columns.forEach(column => {
+        columnKeyMap[column.key] = column;
+      });
       otherShownColumns = settings.columns.filter(item => item.shown)
-        .map(item => columns.filter(column => column.key == item.key)[0]);
+        .map(item => columnKeyMap[item.key]);
     }
 
     let dateLabel = localizer.format(day, 'agendaDateFormat');

@@ -145,22 +145,22 @@ class Agenda extends React.Component {
           </td>
           <td className='rbc-agenda-event-cell'>
             <div className="d-flex align-items-center">
-            {Event ? <Event event={event} title={title} /> : title}
-            {otherShownColumns.map((column, index) => {
-              return (
-                <TableCell
-                  key={index}
-                  className={index == 0 ? 'ml-1' : ''}
-                  row={row}
-                  column={column}
-                  collaborators={collaborators}
-                  dtable={dtable}
-                  CellType={CellType}
-                  tableID={activeTable._id}
-                  formulaRows={formulaRows}
-                />
-              );
-            })}
+              {Event ? <Event event={event} title={title} /> : title}
+              {otherShownColumns.map((column, index) => {
+                return (
+                  <TableCell
+                    key={index}
+                    className={index == 0 ? 'ml-1' : ''}
+                    row={row}
+                    column={column}
+                    collaborators={collaborators}
+                    dtable={dtable}
+                    CellType={CellType}
+                    tableID={activeTable._id}
+                    formulaRows={formulaRows}
+                  />
+                );
+              })}
             </div>
           </td>
         </tr>

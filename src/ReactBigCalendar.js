@@ -90,7 +90,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   getDateColumn = (columnName) => {
-    const { columns, CellType } = this.props;
+    const { columns } = this.props;
     if (!Array.isArray(columns)) return null;
     return columns.find(c => c.name === columnName) || null;
   }

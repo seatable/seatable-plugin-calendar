@@ -143,8 +143,8 @@ class Agenda extends React.Component {
           <td className='rbc-agenda-time-cell'>
             {this.timeRangeLabel(day, event)}
           </td>
-          <td className='rbc-agenda-event-cell'>
-            <div className="d-flex align-items-center">
+          <td className='rbc-agenda-event-cell py-0'>
+            <div className="d-flex align-items-center h-6">
               {Event ? <Event event={event} title={title} /> : title}
               {otherShownColumns.map((column, index) => {
                 return (

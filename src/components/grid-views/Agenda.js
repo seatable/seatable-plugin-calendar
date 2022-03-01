@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import intl from 'react-intl-universal';
 import CellTitle from '../cells/cell-title';
 import addClass from 'dom-helpers/addClass';
 import removeClass from 'dom-helpers/removeClass';
@@ -9,7 +10,7 @@ import * as dates from '../../utils/dates';
 import { inRange } from '../../utils/eventLevels';
 import { isSelected } from '../../utils/selection';
 import { navigate } from '../../constants';
-import intl from 'react-intl-universal';
+import TableCell from '../table-cell';
 
 class Agenda extends React.Component {
 
@@ -83,6 +84,9 @@ class Agenda extends React.Component {
 
   renderDay = (day, events, dayKey) => {
     let {
+      dtable, activeTable, collaborators,
+      formulaRows, CellType, columns,
+      settings,
       selected,
       getters,
       accessors,
@@ -94,7 +98,18 @@ class Agenda extends React.Component {
       inRange(e, dates.startOf(day, 'day'), dates.endOf(day, 'day'), accessors)
     );
 
+    let otherShownColumns = [];
+    if (settings.columns) {
+      let columnKeyMap = {};
+      columns.forEach(column => {
+        columnKeyMap[column.key] = column;
+      });
+      otherShownColumns = settings.columns.filter(item => item.shown)
+        .map(item => columnKeyMap[item.key]);
+    }
+
     return events.map((event, idx) => {
+      const { row } = event;
       let title = <CellTitle event={event} />;
       let end = accessors.end(event);
       let start = accessors.start(event);
@@ -128,8 +143,25 @@ class Agenda extends React.Component {
           <td className='rbc-agenda-time-cell'>
             {this.timeRangeLabel(day, event)}
           </td>
-          <td className='rbc-agenda-event-cell'>
-            {Event ? <Event event={event} title={title} /> : title}
+          <td className='rbc-agenda-event-cell py-0'>
+            <div className="d-flex align-items-center h-6">
+              {Event ? <Event event={event} title={title} /> : title}
+              {otherShownColumns.map((column, index) => {
+                return (
+                  <TableCell
+                    key={index}
+                    className={index == 0 ? 'ml-1' : ''}
+                    row={row}
+                    column={column}
+                    collaborators={collaborators}
+                    dtable={dtable}
+                    CellType={CellType}
+                    tableID={activeTable._id}
+                    formulaRows={formulaRows}
+                  />
+                );
+              })}
+            </div>
           </td>
         </tr>
       );
@@ -138,6 +170,9 @@ class Agenda extends React.Component {
 
   renderDayForMobile = (day, events, dayKey) => {
     let {
+      dtable, activeTable, collaborators,
+      formulaRows, CellType, columns,
+      settings,
       selected,
       getters,
       accessors,
@@ -153,13 +188,23 @@ class Agenda extends React.Component {
       return null;
     }
 
+    let otherShownColumns = [];
+    if (settings.columns) {
+      let columnKeyMap = {};
+      columns.forEach(column => {
+        columnKeyMap[column.key] = column;
+      });
+      otherShownColumns = settings.columns.filter(item => item.shown)
+        .map(item => columnKeyMap[item.key]);
+    }
+
     let dateLabel = localizer.format(day, 'agendaDateFormat');
     let eventsDate =  AgendaDate ? (
       <AgendaDate day={day} label={dateLabel} />
     ) : dateLabel;
 
-
     let eventItems = dayEvents.map((event, idx) => {
+      const { row } = event;
       let title = <CellTitle event={event} />;
       let end = accessors.end(event);
       let start = accessors.start(event);
@@ -177,12 +222,31 @@ class Agenda extends React.Component {
           className="agenda-event-item d-flex justify-content-between text-gray"
           style={userProps.style}
         >
-          <div className="d-flex">
+          <div className="d-flex text-truncate mr-3">
             <span
               className="agenda-event-decorator"
               style={{'borderColor': event.bgColor, 'background': event.bgColor}}
             ></span>
-            {Event ? <Event event={event} title={title} /> : title}
+            <div>
+              {Event ? <Event event={event} title={title} /> : title}
+              <div className="d-flex">
+                {otherShownColumns.map((column, index) => {
+                  return (
+                    <TableCell
+                      key={index}
+                      className={index == 0 ? 'pl-0' : ''}
+                      row={row}
+                      column={column}
+                      collaborators={collaborators}
+                      dtable={dtable}
+                      CellType={CellType}
+                      tableID={activeTable._id}
+                      formulaRows={formulaRows}
+                    />
+                  );
+                })}
+              </div>
+            </div>
           </div>
           <div className="rbc-agenda-time-cell">
             {this.timeRangeLabel(day, event)}

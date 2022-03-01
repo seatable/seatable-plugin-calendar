@@ -90,14 +90,8 @@ class ReactBigCalendar extends React.Component {
   }
 
   getDateColumn = (columnName) => {
-    const { columns, CellType } = this.props;
+    const { columns } = this.props;
     if (!Array.isArray(columns)) return null;
-    if (!columnName) {
-      return columns.find(c => {
-        return c.type === CellType.DATE ||
-          (c.type === CellType.FORMULA && c.data.result_type === 'date');
-      }) || null;
-    }
     return columns.find(c => c.name === columnName) || null;
   }
 
@@ -304,7 +298,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   render() {
-    const { columns, settings } = this.props;
+    const { settings } = this.props;
     const { events } = this.state;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
@@ -313,7 +307,7 @@ class ReactBigCalendar extends React.Component {
     const localizer = momentLocalizer(dayjs, configuredWeekStart);
     return (
       <DragAndDropCalendar
-        columns={columns}
+        {...this.props}
         startDateColumn={startDateColumn}
         configuredWeekStart={configuredWeekStart}
         localizer={localizer}
@@ -325,14 +319,10 @@ class ReactBigCalendar extends React.Component {
         onRowExpand={this.onRowExpand}
         onSelectEvent={this.onSelectEvent}
         onInsertRow={this.onInsertRow}
-        hideViewSettingPanel={this.props.hideViewSettingPanel}
         selectable
         onSelectSlot={this.handleSelectSlot}
         onSelecting={this.handleSelecting}
         onEventDrop={this.moveEvent}
-        isExporting={this.props.isExporting}
-        exportedMonths={this.props.exportedMonths}
-        isMobile={this.props.isMobile}
       />
     );
   }

@@ -4,11 +4,13 @@
   "private": true,
   "dependencies": {
     "@seafile/seafile-calendar": "0.0.18",
+    "babel-plugin-on-demand-loading": "0.0.9",
     "classnames": "^2.2.6",
     "clsx": "^1.1.1",
     "dayjs": "1.10.7",
     "dom-helpers": "^5.1.4",
     "dtable-sdk": "0.0.134",
+    "dtable-ui-component": "^0.1.82",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "react-intl-universal": "^2.2.2",

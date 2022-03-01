@@ -427,6 +427,20 @@ class App extends React.Component {
     return this.dtable.getViewRowsColor(viewRows, selectedTableView, selectedTable);
   }
 
+  getRelatedUsersFromLocal = () => {
+    let { collaborators, state } = window.app;
+    if (!collaborators) {
+      // dtable app
+      return state && state.collaborators;
+    }
+    return collaborators; // local develop
+  }
+
+  getTableFormulaRows = (table, view) => {
+    let rows = this.dtable.getViewRows(view, table);
+    return this.dtable.getTableFormulaResults(table, rows);
+  }
+
   render() {
     let { isLoading, showDialog, plugin_settings, selectedViewIdx,
       rows,
@@ -445,6 +459,9 @@ class App extends React.Component {
     let selectedTable = this.getSelectedTable(tables, settings);
     let tableViews = this.dtable.getNonArchiveViews(selectedTable);
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
+
+    let formulaRows = this.getTableFormulaRows(selectedTable, selectedTableView);
+    selectedTableView = Object.assign({}, selectedTableView, {formula_rows: formulaRows});
 
     let columns = this.dtable.getColumns(selectedTable);
 
@@ -505,6 +522,9 @@ class App extends React.Component {
             appendRow={this.appendRow}
             modifyRow={this.modifyRow}
             settings={settings}
+            dtable={this.dtable}
+            collaborators={this.getRelatedUsersFromLocal()}
+            formulaRows={formulaRows}
             CellType={this.cellType}
             optionColors={this.optionColors}
             rowColorsMap={this.rowColorsMap}

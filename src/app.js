@@ -459,12 +459,9 @@ class App extends React.Component {
     let selectedTable = this.getSelectedTable(tables, settings);
     let tableViews = this.dtable.getNonArchiveViews(selectedTable);
     let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
-
     let formulaRows = this.getTableFormulaRows(selectedTable, selectedTableView);
     selectedTableView = Object.assign({}, selectedTableView, {formula_rows: formulaRows});
-
-    let columns = this.dtable.getColumns(selectedTable);
-
+    let columns = this.dtable.getViewShownColumns(selectedTableView, selectedTable);
     const modalClassNames = classnames(
       'dtable-plugin',
       'calendar-plugin-container',

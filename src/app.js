@@ -357,6 +357,41 @@ class App extends React.Component {
     }
   }
 
+  // move view, update `selectedViewIdx`
+  onMoveView = (targetViewID, targetIndexViewID) => {
+    let { plugin_settings, selectedViewIdx } = this.state;
+    let { views: updatedViews } = plugin_settings;
+
+    let viewIDMap = {};
+    updatedViews.forEach((view, index) => {
+      viewIDMap[view._id] = view;
+    });
+    const targetView = viewIDMap[targetViewID];
+    const targetIndexView = viewIDMap[targetIndexViewID];
+    const selectedView = updatedViews[selectedViewIdx];
+
+    const originalIndex = updatedViews.indexOf(targetView);
+    const targetIndex = updatedViews.indexOf(targetIndexView);
+
+    if (originalIndex < targetIndex) {
+      updatedViews.splice(targetIndex, 0, targetView);
+      updatedViews.splice(originalIndex, 1);
+    } else {
+      updatedViews.splice(originalIndex, 1);
+      updatedViews.splice(targetIndex, 0, targetView);
+    }
+
+    const newSelectedViewIndex = updatedViews.indexOf(selectedView);
+
+    plugin_settings.views = updatedViews;
+    this.setState({
+      plugin_settings,
+      selectedViewIdx: newSelectedViewIndex
+    }, () => {
+      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+    });
+  }
+
   onSelectView = (viewId) => {
     let { plugin_settings } = this.state;
     let { views: updatedViews } = plugin_settings;
@@ -482,6 +517,7 @@ class App extends React.Component {
         onRenameView={this.onRenameView}
         onDeleteView={this.onDeleteView}
         onSelectView={this.onSelectView}
+        onMoveView={this.onMoveView}
       />
     );
 

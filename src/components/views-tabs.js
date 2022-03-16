@@ -327,7 +327,7 @@ class ViewsTabs extends React.Component {
     return (
       <div className="views-tabs d-flex">
         <div className="views-tabs-scroll" ref={ref => this.viewsTabsScroll = ref} onScroll={this.onViewsScroll}>
-          <div className="views d-inline-flex">
+          <div className="views d-inline-flex pr-1">
             {views.map((view, index) => {
               return (
                 <ViewTab

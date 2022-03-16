@@ -88,12 +88,6 @@ class ViewTab extends React.Component {
   onDragEnter = (event) => {
     event.stopPropagation();
     this.enteredCounter++;
-    if (this.enteredCounter !== 0) {
-      if (this.state.isItemDropTipShow) {
-        return ;
-      }
-      this.setState({isItemDropTipShow: true});
-    }
   }
 
   onDragOver = (event) => {
@@ -103,27 +97,38 @@ class ViewTab extends React.Component {
     event.stopPropagation();
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
+    this.setState({
+      dropRelativePosition: event.nativeEvent.offsetX <= event.target.clientWidth / 2 ?
+        'before' : 'after'
+    });
   }
 
   onDragLeave = (event) => {
     event.stopPropagation();
     this.enteredCounter--;
     if (this.enteredCounter === 0) {
-      this.setState({isItemDropTipShow: false});
+      this.setState({
+        dropRelativePosition: ''
+      });
     }
   }
 
   onDrop = (event) => {
     event.stopPropagation();
     event.preventDefault();
+
     this.enteredCounter = 0;
-    this.setState({isItemDropTipShow: false});
+    const { dropRelativePosition } = this.state;
+    this.setState({
+      dropRelativePosition: ''
+    });
+
     const droppedViewID = event.dataTransfer.getData('text/plain');
     const { _id } = this.props.view;
     if (droppedViewID == _id) {
       return;
     }
-    this.props.onMoveView(droppedViewID, _id);
+    this.props.onMoveView(droppedViewID, _id, dropRelativePosition);
   }
 
   render() {
@@ -131,7 +136,10 @@ class ViewTab extends React.Component {
     const { name } = view;
     const isActiveView = selectedViewIdx === index;
 
-    const { isShowViewDropdown, dropdownMenuPosition, isItemDropTipShow } = this.state;
+    const {
+      isShowViewDropdown, dropdownMenuPosition,
+      dropRelativePosition
+    } = this.state;
     return (
       <div
         ref={ref => this.itemRef = ref}
@@ -144,7 +152,8 @@ class ViewTab extends React.Component {
         className={classnames({
           'view-item': true,
           'active': isActiveView,
-          'view-item-can-drop': isItemDropTipShow
+          'view-item-can-drop-before': dropRelativePosition == 'before',
+          'view-item-can-drop-after': dropRelativePosition == 'after'
         })}
       >
         <div

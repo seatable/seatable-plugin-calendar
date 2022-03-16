@@ -358,7 +358,7 @@ class App extends React.Component {
   }
 
   // move view, update `selectedViewIdx`
-  onMoveView = (targetViewID, targetIndexViewID) => {
+  onMoveView = (targetViewID, targetIndexViewID, relativePosition) => {
     let { plugin_settings, selectedViewIdx } = this.state;
     let { views: updatedViews } = plugin_settings;
 
@@ -371,10 +371,17 @@ class App extends React.Component {
     const selectedView = updatedViews[selectedViewIdx];
 
     const originalIndex = updatedViews.indexOf(targetView);
-    const targetIndex = updatedViews.indexOf(targetIndexView);
+    let targetIndex = updatedViews.indexOf(targetIndexView);
+    // `relativePosition`: 'before'|'after'
+    targetIndex += relativePosition == 'before' ? 0 : 1;
 
     if (originalIndex < targetIndex) {
-      updatedViews.splice(targetIndex, 0, targetView);
+      if (targetIndex < updatedViews.length) {
+        updatedViews.splice(targetIndex, 0, targetView);
+      } else {
+        // drag it to the end
+        updatedViews.push(targetView);
+      }
       updatedViews.splice(originalIndex, 1);
     } else {
       updatedViews.splice(originalIndex, 1);

@@ -97,14 +97,22 @@
   position: relative;
 }
 
-.calendar-plugin-container .view-item-can-drop::before {
+.calendar-plugin-container .view-item-can-drop-before::before,
+.calendar-plugin-container .view-item-can-drop-after::after {
   content: '';
   border: 1px solid #555;
   border-radius: 1px;
   position: absolute;
   top: 4px;
-  left: 0;
   bottom: 4px;
+}
+
+.calendar-plugin-container .view-item-can-drop-before::before {
+  left: 0;
+}
+
+.calendar-plugin-container .view-item-can-drop-after::after {
+  right: -2px;
 }
 
 .calendar-plugin-container .view-item .view-item-content {

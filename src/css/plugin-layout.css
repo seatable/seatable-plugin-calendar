@@ -83,10 +83,6 @@
   height: 0;
 }
 
-.calendar-plugin-container .views-tabs .views {
-  height: 100%;
-}
-
 .calendar-plugin-container .view-item {
   height: 100%;
   padding: 0 16px;

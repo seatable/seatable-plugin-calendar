@@ -33,8 +33,7 @@ class ViewTab extends React.Component {
       dropdownMenuPosition: {
         top: 0,
         left: 0
-      },
-      isItemDropTipShow: false
+      }
     };
     this.enteredCounter = 0;
   }
@@ -327,21 +326,21 @@ class ViewsTabs extends React.Component {
     return (
       <div className="views-tabs d-flex">
         <div className="views-tabs-scroll d-flex pr-1" ref={ref => this.viewsTabsScroll = ref} onScroll={this.onViewsScroll}>
-            {views.map((view, index) => {
-              return (
-                <ViewTab
-                  key={index}
-                  view={view}
-                  index={index}
-                  selectedViewIdx={selectedViewIdx}
-                  setViewItem={this.setViewItem}
-                  onSelectView={this.props.onSelectView}
-                  onRenameViewToggle={this.onRenameViewToggle}
-                  onDeleteView={this.props.onDeleteView}
-                  onMoveView={this.props.onMoveView}
-                />
-              );
-            })}
+          {views.map((view, index) => {
+            return (
+              <ViewTab
+                key={index}
+                view={view}
+                index={index}
+                selectedViewIdx={selectedViewIdx}
+                setViewItem={this.setViewItem}
+                onSelectView={this.props.onSelectView}
+                onRenameViewToggle={this.onRenameViewToggle}
+                onDeleteView={this.props.onDeleteView}
+                onMoveView={this.props.onMoveView}
+              />
+            );
+          })}
         </div>
         {(!isMobile && (canScrollPrev || canScrollNext)) &&
           <div className="views-scroll-control">

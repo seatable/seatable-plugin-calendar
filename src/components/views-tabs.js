@@ -13,15 +13,16 @@ const SCROLL_TYPE = {
   NEXT: 'next',
 };
 
-const propTypes = {
-  views: PropTypes.array,
+const viewTabPropTypes = {
+  view: PropTypes.object,
+  index: PropTypes.number,
   selectedViewIdx: PropTypes.number,
-  isMobile: PropTypes.bool,
+  setViewItem: PropTypes.func,
   onSelectView: PropTypes.func,
   onDeleteView: PropTypes.func,
-  onAddView: PropTypes.func,
-  onRenameView: PropTypes.func,
-  onMoveView: PropTypes.func
+  onMoveView: PropTypes.func,
+  onRenameViewToggle: PropTypes.func,
+  canDelete: PropTypes.bool
 };
 
 class ViewTab extends React.Component {
@@ -131,7 +132,7 @@ class ViewTab extends React.Component {
   }
 
   render() {
-    const { view, index, selectedViewIdx } = this.props;
+    const { view, index, selectedViewIdx, canDelete } = this.props;
     const { name } = view;
     const isActiveView = selectedViewIdx === index;
 
@@ -178,7 +179,7 @@ class ViewTab extends React.Component {
                           <i className="item-icon dtable-font dtable-icon-rename"></i>
                           <span className="item-text">{intl.get('Rename_View')}</span>
                         </button>
-                        {index > 0 &&
+                        {canDelete &&
                         <button className="dropdown-item" onClick={this.onDeleteView}>
                           <i className="item-icon dtable-font dtable-icon-delete"></i>
                           <span className="item-text">{intl.get('Delete_View')}</span>
@@ -196,6 +197,17 @@ class ViewTab extends React.Component {
     );
   }
 }
+
+const propTypes = {
+  views: PropTypes.array,
+  selectedViewIdx: PropTypes.number,
+  isMobile: PropTypes.bool,
+  onSelectView: PropTypes.func,
+  onDeleteView: PropTypes.func,
+  onAddView: PropTypes.func,
+  onRenameView: PropTypes.func,
+  onMoveView: PropTypes.func
+};
 
 class ViewsTabs extends React.Component {
 
@@ -323,6 +335,7 @@ class ViewsTabs extends React.Component {
       canScrollPrev, canScrollNext
     } = this.state;
     let selectedGridView = views[selectedViewIdx] || {};
+    const canDelete = views.length > 1;
     return (
       <div className="views-tabs d-flex">
         <div className="views-tabs-scroll d-flex pr-1" ref={ref => this.viewsTabsScroll = ref} onScroll={this.onViewsScroll}>
@@ -333,6 +346,7 @@ class ViewsTabs extends React.Component {
                 view={view}
                 index={index}
                 selectedViewIdx={selectedViewIdx}
+                canDelete={canDelete}
                 setViewItem={this.setViewItem}
                 onSelectView={this.props.onSelectView}
                 onRenameViewToggle={this.onRenameViewToggle}
@@ -379,6 +393,7 @@ class ViewsTabs extends React.Component {
   }
 }
 
+ViewTab.propTypes = viewTabPropTypes;
 ViewsTabs.propTypes = propTypes;
 
 export default ViewsTabs;

@@ -1,7 +1,7 @@
 import React, { Fragment }  from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
-import PluginSelect from './plugin-select';
+import DtableSelect from './dtable-select';
 import { SETTING_KEY, TITLE_COLUMN_TYPES } from '../constants';
 import ColumnSetting from './column-setting';
 import '../locale';
@@ -142,12 +142,14 @@ class ViewSetting extends React.Component {
       settingKey === SETTING_KEY.COLUMN_TITLE)) {
       selectedOption = options[0] || undefined;
     }
-    return <PluginSelect
-      classNamePrefix={'calendar-view-setting-selector'}
-      value={selectedOption}
-      options={options}
-      onChange={this.onModifySettings}
-    />;
+    return (
+      <DtableSelect
+        classNamePrefix={'calendar-view-setting-selector'}
+        value={selectedOption}
+        options={options}
+        onChange={this.onModifySettings}
+      />
+    );
   }
 
   renderColorSelector = (options) => {
@@ -162,7 +164,7 @@ class ViewSetting extends React.Component {
       selectedOption = options[0];
     }
     return (
-      <PluginSelect
+      <DtableSelect
         classNamePrefix={'calendar-view-setting-selector'}
         value={selectedOption}
         options={options}

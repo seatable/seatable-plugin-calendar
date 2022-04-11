@@ -1,3 +1,5 @@
+import { isValidDateObject } from '../utils/dates';
+
 /**
  * TableEventRowTypedef
  *
@@ -75,6 +77,24 @@
  * }
  */
 
+
+const getValidDate = date => {
+  if (!date) {
+    return null;
+  }
+
+  let dateObject = new Date(date);
+  let dateString = date;
+
+  // given the date-in-row is without time precision
+  if (dateObject.toISOString().slice(0, 10) === date) {
+    dateString = `${date} 00:00:00`;
+    dateObject = new Date(dateString);
+  }
+
+  return isValidDateObject(dateObject) ? dateObject : null;
+};
+
 /**
  * event.allDay mapping of SeaTable TableEvent
  *
@@ -123,7 +143,11 @@ const allDayImplementation = (eventStart, rowDate, rowEndDate) => {
 const endImplementation = (eventStart, eventAllDay, rowDate) => {
   let end;
   if (rowDate) {
-    end = new Date(rowDate);
+    end = getValidDate(rowDate);
+    if (!end) {
+      return eventStart;
+    }
+
     // given the date-in-row is without minute precision
     if (end.toISOString().slice(0, 10) === rowDate) {
       end.setHours(12);
@@ -203,7 +227,7 @@ export default class TableEvent {
     /* 2/2: React-Big-Calendar event properties */
     this.title = object.title || null;
     this.titleColumn = object.titleColumn || null;
-    this.start = object.date && new Date(object.date);
+    this.start = getValidDate(object.date);
     this.allDay = allDayImplementation(this.start, object.date, object.endDate);
     this.end = endImplementation(this.start, this.allDay, object.endDate);
   }

@@ -3,7 +3,7 @@
   "version": "0.1.43",
   "private": true,
   "dependencies": {
-    "@seafile/seafile-calendar": "0.0.19",
+    "@seafile/seafile-calendar": "0.0.21",
     "babel-plugin-on-demand-loading": "0.0.9",
     "classnames": "^2.2.6",
     "clsx": "^1.1.1",

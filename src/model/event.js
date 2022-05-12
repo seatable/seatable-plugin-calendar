@@ -115,7 +115,7 @@ const getValidDate = date => {
  */
 const allDayImplementation = (eventStart, rowDate, rowEndDate) => {
   // rowDate is DATE, not DATETIME
-  if (eventStart && rowDate && (eventStart.toISOString().slice(0, 10) === rowDate)) {
+  if (eventStart && rowDate && (new Date(rowDate).toISOString().slice(0, 10) === rowDate)) {
     return true;
   }
   // rowDate is DATETIME, not DATE
@@ -141,15 +141,10 @@ const allDayImplementation = (eventStart, rowDate, rowEndDate) => {
  * @return {Date|undefined}
  */
 const endImplementation = (eventStart, eventAllDay, rowDate) => {
-  let end;
-  if (rowDate) {
-    end = getValidDate(rowDate);
-    if (!end) {
-      return eventStart;
-    }
-
+  let end = getValidDate(rowDate);
+  if (end) {
     // given the date-in-row is without minute precision
-    if (end.toISOString().slice(0, 10) === rowDate) {
+    if (new Date(rowDate).toISOString().slice(0, 10) === rowDate) {
       end.setHours(12);
       end.setMinutes(0);
     }

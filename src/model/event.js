@@ -86,13 +86,21 @@ const getValidDate = date => {
   let dateObject = new Date(date);
   let dateString = date;
 
-  // given the date-in-row is without time precision
+  // check if date without minute precision
   if (dateObject.toISOString().slice(0, 10) === date) {
     dateString = `${date} 00:00:00`;
     dateObject = new Date(dateString);
   }
 
   return isValidDateObject(dateObject) ? dateObject : null;
+};
+
+/**
+ * check if rowDate without minute precision
+ * @param {string} date
+ */
+const isDateWithoutMinutePrecision = date => {
+  return new Date(date).toISOString().slice(0, 10) === date;
 };
 
 /**
@@ -115,7 +123,7 @@ const getValidDate = date => {
  */
 const allDayImplementation = (eventStart, rowDate, rowEndDate) => {
   // rowDate is DATE, not DATETIME
-  if (eventStart && rowDate && (new Date(rowDate).toISOString().slice(0, 10) === rowDate)) {
+  if (eventStart && rowDate && (isDateWithoutMinutePrecision(rowDate))) {
     return true;
   }
   // rowDate is DATETIME, not DATE
@@ -143,8 +151,7 @@ const allDayImplementation = (eventStart, rowDate, rowEndDate) => {
 const endImplementation = (eventStart, eventAllDay, rowDate) => {
   let end = getValidDate(rowDate);
   if (end) {
-    // given the date-in-row is without minute precision
-    if (new Date(rowDate).toISOString().slice(0, 10) === rowDate) {
+    if (isDateWithoutMinutePrecision(rowDate)) {
       end.setHours(12);
       end.setMinutes(0);
     }

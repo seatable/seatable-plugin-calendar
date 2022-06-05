@@ -337,7 +337,7 @@ class ViewsTabs extends React.Component {
     let selectedGridView = views[selectedViewIdx] || {};
     const canDelete = views.length > 1;
     return (
-      <div className="views-tabs d-flex">
+      <div className="views-tabs d-flex h-100">
         <div className="views-tabs-scroll d-flex pr-1" ref={ref => this.viewsTabsScroll = ref} onScroll={this.onViewsScroll}>
           {views.map((view, index) => {
             return (

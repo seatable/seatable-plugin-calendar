@@ -76,7 +76,10 @@ class ViewSetting extends React.Component {
         value: name,
         iconClass: columnIconConfig[type],
       };
-      if (type === CellType.DATE || (type === CellType.FORMULA && c.data.result_type === 'date')) {
+      if (type === CellType.DATE ||
+        type === CellType.CTIME ||
+        type === CellType.MTIME ||
+        (type === CellType.FORMULA && c.data.result_type === 'date')) {
         dateColumns.push(columnOption);
         endDateColumns.push(columnOption);
       } else if (type === CellType.DURATION) {

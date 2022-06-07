@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
 import classnames from 'classnames';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DTable from 'dtable-sdk';
 import ReactBigCalendar from './ReactBigCalendar';
 import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT } from './constants';
-import { CALENDAR_DIALOG_MODAL, MOBILE_CALENDAR_DIALOG_MODAL } from './constants/zIndexes';
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
@@ -534,23 +532,17 @@ class App extends React.Component {
     }
 
     return (
-      <Modal
-        isOpen={true}
-        toggle={this.onPluginToggle}
-        className={modalClassNames}
-        size="lg"
-        zIndex={this.isMobile ? MOBILE_CALENDAR_DIALOG_MODAL : CALENDAR_DIALOG_MODAL}
-      >
-        <ModalHeader className="plugin-header flex-shrink-0 h-7">
+      <div className={modalClassNames} ref={ref => this.plugin = ref}>
+        <div className={`d-flex plugin-header flex-shrink-0 h-7 ${this.isMobile ? 'justify-content-between' : ''}`}>
           <div className="logo-title d-flex align-items-center">
             <img className="plugin-logo mr-2" src={icon} alt="" width="24" />
             <span className="plugin-title">{intl.get('Calendar')}</span>
           </div>
           {!this.isMobile && ViewsTabsEl}
           {this.renderBtnGroups()}
-        </ModalHeader>
+        </div>
         {this.isMobile && <div className="flex-shrink-0 h-7 d-flex pl-4 pr-4 border-bottom">{ViewsTabsEl}</div>}
-        <ModalBody className="calendar-plugin-content">
+        <div className="calendar-plugin-content">
           <ReactBigCalendar
             activeTable={selectedTable}
             activeView={selectedTableView}
@@ -578,7 +570,15 @@ class App extends React.Component {
             isIosMobile={this.isIosMobile}
             isSafari={this.isSafari}
           />
-          {isViewSettingPanelOpen &&
+          {isTimeRangeDialogOpen &&
+            <TimeRangeDialog
+              isExporting={this.state.isExporting}
+              onConfirmTimeRange={this.exportSelectedMonths}
+              toggleDialog={this.toggleTimeRangeDialog}
+            />
+          }
+        </div>
+        {isViewSettingPanelOpen &&
             <ViewSetting
               tables={tables}
               views={tableViews}
@@ -589,16 +589,8 @@ class App extends React.Component {
               onModifyViewSettings={this.onModifyViewSettings}
               toggleViewSettingPanel={this.toggleViewSettingPanel}
             />
-          }
-          {isTimeRangeDialogOpen &&
-            <TimeRangeDialog
-              isExporting={this.state.isExporting}
-              onConfirmTimeRange={this.exportSelectedMonths}
-              toggleDialog={this.toggleTimeRangeDialog}
-            />
-          }
-        </ModalBody>
-      </Modal>
+        }
+      </div>
     );
   }
 }

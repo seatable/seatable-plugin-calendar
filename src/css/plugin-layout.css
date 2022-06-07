@@ -4,60 +4,45 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  margin: 0;
-  margin-left: 50%;
-  -webkit-transform: translateX(-50%)!important;
-  transform: translateX(-50%)!important;
 }
 
 @media screen and (min-width: 768px) {
   .dtable-plugin.calendar-plugin-container {
-    max-width: 1100px;
-    margin-top: 1.75rem;
-    margin-bottom: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -1px 12px rgba(0, 0, 0, 0.3);
+    position: relative;
   }
-}
-
-.dtable-plugin.calendar-plugin-container .modal-content {
-  height: 100%;
-  border: 0;
-  border-radius: 0;
-}
-
-.dtable-plugin.calendar-plugin-container .calendar-plugin-header {
-  font-size: 24px;
 }
 
 .dtable-plugin.calendar-plugin-container .calendar-plugin-content {
   height: 100%;
   padding: 0;
   overflow: auto;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  width: 1100px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .calendar-plugin-container .plugin-header {
   align-items: center;
   padding: 0 1rem;
+  border-bottom: 1px solid #e7eaec;
   border-radius: 0;
 }
 
 @media screen and (min-width: 768px) {
-  .dtable-plugin.calendar-plugin-container .modal-content {
-    border: 1px solid #0003;
-    border-radius: 3px;
+  .dtable-plugin.calendar-plugin-container .calendar-plugin-content {
+    padding: 0 1rem;
   }
 
   .calendar-plugin-container .plugin-header {
-    border-radius: 3px 3px 0 0;
+    border-radius: 12px 12px 0 0;
   }
-}
-
-.calendar-plugin-container .modal-title {
-  display: flex;
-  flex: 1;
-  height: 100%;
-  width: 100%;
 }
 
 .calendar-plugin-container .logo-title {
@@ -207,10 +192,6 @@
 
 .plugin-calendar-operators {
   margin-left: 80px;
-}
-
-.plugin-calendar-mobile .modal-title {
-  justify-content: space-between;
 }
 
 .plugin-calendar-mobile .plugin-calendar-operators {

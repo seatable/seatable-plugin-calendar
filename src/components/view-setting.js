@@ -269,7 +269,7 @@ class ViewSetting extends React.Component {
     return (
       <div className="plugin-view-setting position-absolute d-flex flex-column mt-7" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
         <div className="setting-header-container d-flex justify-content-between align-items-center">
-          <h3 className="setting-header-title m-0">{intl.get('Settings')}</h3>
+          <h3 className="h5 m-0">{intl.get('Settings')}</h3>
           <button className="close op-icon" onClick={this.props.toggleViewSettingPanel}>
             <i className="dtable-font dtable-icon-x"></i>
           </button>

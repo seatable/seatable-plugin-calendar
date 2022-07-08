@@ -9,7 +9,7 @@
     "clsx": "^1.1.1",
     "dayjs": "1.10.7",
     "dom-helpers": "^5.1.4",
-    "dtable-sdk": "0.0.139",
+    "dtable-sdk": "^0.0.150",
     "dtable-ui-component": "0.1.88",
     "react": "16.14.0",
     "react-dom": "16.14.0",

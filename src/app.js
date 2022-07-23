@@ -294,7 +294,7 @@ class App extends React.Component {
           </span>
         }
         <span className="op-icon mr-2" onClick={this.toggleViewSettingPanel}>
-          <i className="dtable-font dtable-icon-settings"></i>
+          <i className="dtable-font dtable-icon-set-up"></i>
         </span>
         <span className="dtable-font dtable-icon-x op-icon" onClick={this.onPluginToggle}></span>
       </div>

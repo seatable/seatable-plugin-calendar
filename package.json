@@ -1,6 +1,6 @@
 {
   "name": "seatable-plugin-calendar",
-  "version": "0.1.52",
+  "version": "0.1.53",
   "private": true,
   "dependencies": {
     "@seafile/seafile-calendar": "0.0.21",
@@ -9,8 +9,8 @@
     "clsx": "^1.1.1",
     "dayjs": "1.10.7",
     "dom-helpers": "^5.1.4",
-    "dtable-sdk": "0.0.156",
-    "dtable-ui-component": "0.1.88",
+    "dtable-sdk": "0.1.0",
+    "dtable-ui-component": "0.1.100",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "react-intl-universal": "^2.2.2",

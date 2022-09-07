@@ -287,14 +287,14 @@ button.rbc-input::-moz-focus-inner {
 .rbc-btn-group .view-type-list .rbc-view-type {
   flex: 1;
   padding: 0 12px;
-  border-radius: 5px;
+  border-radius: 3px;
   background: transparent;
   white-space: nowrap;
 }
 
 .rbc-btn-group .view-type-list .rbc-view-type:hover {
-  color: #999;
   cursor: pointer;
+  background-color: #f0f0f0;
 }
 
 .rbc-btn-group .view-type-list .rbc-view-type.rbc-active {

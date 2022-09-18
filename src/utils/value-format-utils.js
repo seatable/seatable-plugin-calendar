@@ -88,6 +88,6 @@ export function getLinkDisplayValue (dtable, {column, value, collaborators}) {
       default:
         return value;
     }
-  })
-  return newCellValue.join(', ')
+  });
+  return newCellValue.join(', ');
 }

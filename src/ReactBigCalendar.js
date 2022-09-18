@@ -85,8 +85,7 @@ class ReactBigCalendar extends React.Component {
   getTitle = (row, column) => {
     const { dtable, collaborators } = this.props;
     const { type, name, data } = column;
-    console.log(column)
-    const value = row[name]
+    const value = row[name];
     if (type === CELL_TYPE.LINK) {
       let { display_column_key, array_type, array_data } = data;
       const display_column = {
@@ -94,8 +93,8 @@ class ReactBigCalendar extends React.Component {
         type: array_type || CELL_TYPE.TEXT,
         data: array_data || null
       };
-      column.data = { ...data, display_column }
-      return getLinkDisplayValue(dtable, {column, value, collaborators})
+      column.data = { ...data, display_column };
+      return getLinkDisplayValue(dtable, {column, value, collaborators});
     }
     return value;
   }

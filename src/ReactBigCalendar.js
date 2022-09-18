@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
+import { CELL_TYPE } from 'dtable-sdk';
 import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
+import { getLinkDisplayValue } from './utils/value-format-utils';
 import { isValidDateObject } from './utils/dates';
 import { CALENDAR_VIEWS, PLUGIN_NAME, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
 import TableEvent from './model/event';
@@ -80,6 +82,24 @@ class ReactBigCalendar extends React.Component {
     this.setState({selectedView: view});
   }
 
+  getTitle = (row, column) => {
+    const { dtable, collaborators } = this.props;
+    const { type, name, data } = column;
+    console.log(column)
+    const value = row[name]
+    if (type === CELL_TYPE.LINK) {
+      let { display_column_key, array_type, array_data } = data;
+      const display_column = {
+        key: display_column_key || '0000',
+        type: array_type || CELL_TYPE.TEXT,
+        data: array_data || null
+      };
+      column.data = { ...data, display_column }
+      return getLinkDisplayValue(dtable, {column, value, collaborators})
+    }
+    return value;
+  }
+
   getTitleColumn = (columnName) => {
     const { columns } = this.props;
     if (!Array.isArray(columns)) return {};
@@ -142,10 +162,9 @@ class ReactBigCalendar extends React.Component {
 
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, colorColumn) => {
     const { optionColors, highlightColors, rowsColor, rowColorsMap, settings } = this.props;
-    const { name: titleColumnName } = titleColumn || {};
     const { key: startDateColumnKey, name: startDateColumnName, type: startDateColumnType } = startDateColumn || {};
     const { key: endDateColumnKey, name: endDateColumnName, type: endDateColumnType } = endDateColumn || {};
-    const title = rawRow[titleColumnName];
+    const title = this.getTitle(rawRow, titleColumn);
     const date = this.getFormattedDateWithDifferentClient(
       startDateColumnType === 'formula' ? rawRow[startDateColumnName] : row[startDateColumnKey]
     );

@@ -5,7 +5,6 @@ import { CELL_TYPE } from 'dtable-sdk';
 import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
-import { getLinkDisplayValue } from './utils/value-format-utils';
 import { isValidDateObject } from './utils/dates';
 import { CALENDAR_VIEWS, PLUGIN_NAME, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
 import TableEvent from './model/event';
@@ -83,18 +82,11 @@ class ReactBigCalendar extends React.Component {
   }
 
   getTitle = (row, column) => {
-    const { dtable, collaborators } = this.props;
-    const { type, name, data } = column;
+    const { dtable, collaborators, formulaRows } = this.props;
+    const { type, name } = column;
     const value = row[name];
     if (type === CELL_TYPE.LINK) {
-      let { display_column_key, array_type, array_data } = data;
-      const display_column = {
-        key: display_column_key || '0000',
-        type: array_type || CELL_TYPE.TEXT,
-        data: array_data || null
-      };
-      column.data = { ...data, display_column };
-      return getLinkDisplayValue(dtable, {column, value, collaborators});
+      return dtable.getCellValueStringResult(row, column, {formulaRows, collaborators});
     }
     return value;
   }

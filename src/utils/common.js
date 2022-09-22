@@ -1,4 +1,3 @@
-import { CELL_TYPE } from 'dtable-sdk';
 import { SORT_TYPE } from '../constants/sort-constants';
 
 // creates an object composed of the own and inherited enumerable property paths of object that are not omitted

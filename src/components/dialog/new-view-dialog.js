@@ -10,12 +10,30 @@ const propTypes = {
 };
 
 class NewViewDialog extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       viewName: '',
       errMessage: '',
     };
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.onHotKey);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onHotKey);
+  }
+
+  onHotKey = (e) => {
+    // Enter
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      this.handleSubmit();
+      return;
+    }
   }
 
   handleChange = (event) => {

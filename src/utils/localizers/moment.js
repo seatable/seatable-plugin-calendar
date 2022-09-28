@@ -1,5 +1,6 @@
 import * as dates from '../dates';
 import { DateLocalizer } from './localizer';
+import { SETTING_VALUE } from '../../constants';
 
 let dateRangeFormat = ({ start, end }, culture, local) =>
   local.format(start, 'YYYY-MM-DD', culture) + ' – ' + local.format(end, 'YYYY-MM-DD', culture);
@@ -42,7 +43,7 @@ export let formats = {
   agendaTimeRangeFormat: timeRangeFormat
 };
 
-export default function(moment, configuredWeekStart) {
+export default function(moment, configuredWeekStart, startYearFirstWeek) {
   let locale = (m, c) => (c ? m.locale(c) : m);
 
   return new DateLocalizer({
@@ -55,6 +56,12 @@ export default function(moment, configuredWeekStart) {
     },
 
     format(value, format, culture) {
+      if (format === 'WW') {
+        // 'WW' use to calculate ISO week number
+        // 'ww' use to calculate week number
+        const weekNumFormat = startYearFirstWeek === SETTING_VALUE.YEAR_FIRST_FULL_WEEK ? format : format.toLowerCase();
+        return moment(value).format(weekNumFormat);
+      }
       return locale(moment(value), culture).format(format);
     }
   });

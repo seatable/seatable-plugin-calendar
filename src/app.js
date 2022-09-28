@@ -476,6 +476,10 @@ class App extends React.Component {
     return collaborators; // local develop
   }
 
+  getSelectedGridView = () => {
+    return this.calendar.getSelectedView();
+  }
+
   getTableFormulaRows = (table, view) => {
     let rows = this.dtable.getViewRows(view, table);
     return this.dtable.getTableFormulaResults(table, rows);
@@ -544,6 +548,7 @@ class App extends React.Component {
         {this.isMobile && <div className="flex-shrink-0 h-7 d-flex pl-4 pr-4 border-bottom">{ViewsTabsEl}</div>}
         <div className="calendar-plugin-content">
           <ReactBigCalendar
+            ref={ref => this.calendar = ref}
             activeTable={selectedTable}
             activeView={selectedTableView}
             selectedViewIdx={selectedViewIdx}
@@ -579,16 +584,17 @@ class App extends React.Component {
           }
         </div>
         {isViewSettingPanelOpen &&
-            <ViewSetting
-              tables={tables}
-              views={tableViews}
-              settings={settings}
-              columns={columns}
-              CellType={this.cellType}
-              columnIconConfig={this.columnIconConfig}
-              onModifyViewSettings={this.onModifyViewSettings}
-              toggleViewSettingPanel={this.toggleViewSettingPanel}
-            />
+          <ViewSetting
+            tables={tables}
+            views={tableViews}
+            settings={settings}
+            columns={columns}
+            CellType={this.cellType}
+            columnIconConfig={this.columnIconConfig}
+            selectedGridView={this.getSelectedGridView()}
+            onModifyViewSettings={this.onModifyViewSettings}
+            toggleViewSettingPanel={this.toggleViewSettingPanel}
+          />
         }
       </div>
     );

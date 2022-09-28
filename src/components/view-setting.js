@@ -2,7 +2,7 @@ import React, { Fragment }  from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import DtableSelect from './dtable-select';
-import { SETTING_KEY, TITLE_COLUMN_TYPES } from '../constants';
+import { CALENDAR_VIEWS, SETTING_KEY, SETTING_VALUE, TITLE_COLUMN_TYPES } from '../constants';
 import ColumnSetting from './column-setting';
 import '../locale';
 
@@ -15,6 +15,7 @@ const propTypes = {
   CellType: PropTypes.object,
   columnIconConfig: PropTypes.object,
   settings: PropTypes.object,
+  selectedGridView: PropTypes.string,
   onModifyViewSettings: PropTypes.func,
   toggleViewSettingPanel: PropTypes.func
 };
@@ -127,11 +128,15 @@ class ViewSetting extends React.Component {
 
     let weekStartOptions = [{name: intl.get('Sunday'), value: 0}, {name: intl.get('Monday'), value: 1}];
     weekStartOptions = this.createOptions(weekStartOptions, SETTING_KEY.WEEK_START, 'value');
-
+    let startYearFirstWeekOptions = [
+      { name: intl.get('First_day_of_the_year'), value: SETTING_VALUE.YEAR_FIRST_DAY },
+      { name: intl.get('First_full_week_of_the_year'), value: SETTING_VALUE.YEAR_FIRST_FULL_WEEK },
+    ];
+    startYearFirstWeekOptions = this.createOptions(startYearFirstWeekOptions, SETTING_KEY.START_YEAR_FIRST_WEEK, 'value');
     return {
       tableOptions, viewOptions,
       titleColumnOptions, dateColumnOptions, endDateColumnOptions,
-      colorFieldOptions, weekStartOptions
+      colorFieldOptions, weekStartOptions, startYearFirstWeekOptions,
     };
   }
 
@@ -142,7 +147,9 @@ class ViewSetting extends React.Component {
       settingKey === SETTING_KEY.TABLE_NAME ||
       settingKey === SETTING_KEY.VIEW_NAME ||
       settingKey === SETTING_KEY.WEEK_START ||
-      settingKey === SETTING_KEY.COLUMN_TITLE)) {
+      settingKey === SETTING_KEY.COLUMN_TITLE ||
+      settingKey === SETTING_KEY.START_YEAR_FIRST_WEEK
+    )) {
       selectedOption = options[0] || undefined;
     }
     return (
@@ -256,10 +263,10 @@ class ViewSetting extends React.Component {
     const {
       tableOptions, viewOptions,
       titleColumnOptions, dateColumnOptions, endDateColumnOptions,
-      colorFieldOptions, weekStartOptions
+      colorFieldOptions, weekStartOptions, startYearFirstWeekOptions
     } = this.getSelectorOptions(this.getSelectorColumns());
 
-    const { columns, columnIconConfig } = this.props;
+    const { columns, selectedGridView, columnIconConfig } = this.props;
     this.configuredColumns = this.getCurrentConfiguredColumns();
     const configuredColumns = this.configuredColumns.map((item, index) => {
       const targetItem = columns.filter(c => c.key == item.key)[0];
@@ -304,6 +311,12 @@ class ViewSetting extends React.Component {
               <div className="title">{intl.get('Week_start')}</div>
               {this.renderSelector(weekStartOptions, SETTING_KEY.WEEK_START)}
             </div>
+            {selectedGridView === CALENDAR_VIEWS.WEEK &&
+              <div className="setting-item">
+                <div className="title">{intl.get('Start_the_first_week_of_the_year_on')}</div>
+                {this.renderSelector(startYearFirstWeekOptions, SETTING_KEY.START_YEAR_FIRST_WEEK)}
+              </div>
+            }
             {configuredColumns.length > 0 &&
             <div className="setting-item">
               <div className="title">{intl.get('Other_fields_shown_in_agenda')}</div>

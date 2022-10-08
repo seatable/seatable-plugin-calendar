@@ -2,8 +2,8 @@ const fr = {
   'Calendar': 'Calendrier',
   'Submit': 'Soumettre',
   'Cancel': 'Annuler',
-  'Start_Date': 'Colonne date de début',
-  'End_Date_Optional': 'Colonne date de fin (facultatif)',
+  'Start_Date': 'Date de début',
+  'End_Date_Optional': 'Date de fin (facultatif)',
   'Color_From': 'Couleur',
   'Week_start': 'Début de semaine',
   'Sunday': 'Dimanche',
@@ -47,13 +47,16 @@ const fr = {
   'Settings': 'Paramètres',
   'Table': 'Tableau',
   'View': 'Vue',
-  'Title': 'Colonne titre',
+  'Title': 'Titre',
   'No_options': 'Il n\'y a pas d\'options.',
   'Not_used': 'Ne pas utilisé',
   'Choose_the_time_range': 'Sélectionner la période',
   'Out_of_range': 'La période maximale est de 12 mois.',
   'Row_color': 'Couleur de la ligne',
   'Other_fields_shown_in_agenda': 'Autres champs pour l\'affichage dans la vue Agenda',
+  'Start_the_first_week_of_the_year_on': 'Start the first week of the year on',
+  'First_day_of_the_year': 'First day of the year',
+  'First_full_week_of_the_year': 'First full week of the year',
 };
 
 export default fr;

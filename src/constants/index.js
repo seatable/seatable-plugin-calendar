@@ -51,7 +51,13 @@ export const SETTING_KEY = {
   COLUMN_END_DATE: 'column_end_date',
   COLUMN_COLOR: 'column_color',
   COLORED_BY_ROW_COLOR: 'colored_by_row_color',
-  WEEK_START: 'week_start'
+  WEEK_START: 'week_start',
+  START_YEAR_FIRST_WEEK: 'start_year_first_week', // 'year_first_day' | 'year_first_full_week'
+};
+
+export const SETTING_VALUE = {
+  YEAR_FIRST_DAY: 'year_first_day',
+  YEAR_FIRST_FULL_WEEK: 'year_first_full_week',
 };
 
 

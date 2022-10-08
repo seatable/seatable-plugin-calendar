@@ -54,6 +54,9 @@ const en = {
   'Out_of_range': 'At most 12 months can be selected.',
   'Row_color': 'Row color',
   'Other_fields_shown_in_agenda': 'Other fields shown in the agenda view',
+  'Start_the_first_week_of_the_year_on': 'Start the first week of the year on',
+  'First_day_of_the_year': 'First day of the year',
+  'First_full_week_of_the_year': 'First full week of the year',
 };
 
 export default en;

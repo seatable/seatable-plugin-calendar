@@ -54,6 +54,9 @@ const zh_CN = {
   'Out_of_range': '最多可以选择12个月。',
   'Row_color': '行颜色',
   'Other_fields_shown_in_agenda': '在议程视图中显示的其他字段',
+  'Start_the_first_week_of_the_year_on': '一年的第一周开始于',
+  'First_day_of_the_year': '一年的第一天',
+  'First_full_week_of_the_year': '一年的第一个完整周',
 };
 
 export default zh_CN;

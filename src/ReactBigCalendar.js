@@ -314,7 +314,8 @@ class ReactBigCalendar extends React.Component {
     const startDateColumn = this.getDateColumn(startDateColumnName);
 
     const configuredWeekStart = settings[SETTING_KEY.WEEK_START];
-    const localizer = momentLocalizer(dayjs, configuredWeekStart);
+    const startYearFirstWeek = settings[SETTING_KEY.START_YEAR_FIRST_WEEK];
+    const localizer = momentLocalizer(dayjs, configuredWeekStart, startYearFirstWeek);
     return (
       <DragAndDropCalendar
         {...this.props}

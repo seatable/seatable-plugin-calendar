@@ -104,8 +104,12 @@ class Agenda extends React.Component {
       columns.forEach(column => {
         columnKeyMap[column.key] = column;
       });
-      otherShownColumns = settings.columns.filter(item => item.shown)
-        .map(item => columnKeyMap[item.key]);
+      settings.columns.filter(item => item.shown)
+        .forEach(column => {
+          const shownColumn = columnKeyMap[column.key];
+          if (!shownColumn) return;
+          otherShownColumns.push(shownColumn);
+        });
     }
 
     return events.map((event, idx) => {
@@ -194,8 +198,12 @@ class Agenda extends React.Component {
       columns.forEach(column => {
         columnKeyMap[column.key] = column;
       });
-      otherShownColumns = settings.columns.filter(item => item.shown)
-        .map(item => columnKeyMap[item.key]);
+      settings.columns.filter(column => column.shown)
+        .forEach(column => {
+          const shownColumn = columnKeyMap[column.key];
+          if (!shownColumn) return;
+          otherShownColumns.push(shownColumn);
+        });
     }
 
     let dateLabel = localizer.format(day, 'agendaDateFormat');

@@ -234,9 +234,13 @@ class Cell extends React.Component {
 
   render() {
     const { column, className, autoWidth } = this.props;
+    let style = {};
+    if (!autoWidth && column) {
+      style.maxWidth = column.width;
+    }
     return (
-      <div className={`table-cell flex-shrink-0 text-truncate d-flex align-items-center ${className}`} style={autoWidth ? {} : {'maxWidth': column.width}}>
-        {this.renderFormatter()}
+      <div className={`table-cell flex-shrink-0 text-truncate d-flex align-items-center ${className}`} style={style}>
+        {column && this.renderFormatter()}
       </div>
     );
   }

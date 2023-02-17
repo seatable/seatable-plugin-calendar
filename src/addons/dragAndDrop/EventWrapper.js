@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import { accessor } from '../../utils/propTypes';
 import { accessor as get } from '../../utils/accessors';
 
@@ -74,7 +74,7 @@ class EventWrapper extends React.Component {
 
     if (event.__isPreview)
       return React.cloneElement(children, {
-        className: clsx(
+        className: classnames(
           children.props.className,
           'rbc-addons-dnd-drag-preview'
         ),
@@ -158,7 +158,7 @@ class EventWrapper extends React.Component {
         draggable.dragAndDropAction.event === event // and it's the current event
       ) {
         // add a new class to it
-        newProps.className = clsx(
+        newProps.className = classnames(
           children.props.className,
           'rbc-addons-dnd-dragged-event'
         );

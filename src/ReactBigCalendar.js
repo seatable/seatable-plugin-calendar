@@ -6,14 +6,12 @@ import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
-import { CALENDAR_VIEWS, PLUGIN_NAME, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
+import { KEY_SELECTED_CALENDAR_VIEW, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
 import TableEvent from './model/event';
 import withDragAndDrop from './addons/dragAndDrop';
 
 import './css/react-big-calendar.css';
 import './addons/dragAndDrop/styles.css';
-
-const LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW = `.${PLUGIN_NAME}.selectedCalendarView`;
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -23,11 +21,13 @@ const propTypes = {
   selectedViewIdx: PropTypes.number,
   columns: PropTypes.array,
   rows: PropTypes.array,
+  calendarViews: PropTypes.array,
   CellType: PropTypes.object,
   optionColors: PropTypes.array,
   highlightColors: PropTypes.object,
   settings: PropTypes.object,
   isMobile: PropTypes.bool,
+  getSelectedGridView: PropTypes.func,
   onRowExpand: PropTypes.func,
   onInsertRow: PropTypes.func,
   getRowById: PropTypes.func,
@@ -37,7 +37,6 @@ class ReactBigCalendar extends React.Component {
 
   constructor(props) {
     super(props);
-    this.initCalendarViews();
     this.state = {
       selectedView: this.getSelectedView(),
       events: this.getEvents(props),
@@ -54,30 +53,18 @@ class ReactBigCalendar extends React.Component {
     }
   }
 
-  initCalendarViews = () => {
-    if (this.props.isMobile) {
-      this.calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.AGENDA];
-    } else {
-      this.calendarViews = [CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.WEEK, CALENDAR_VIEWS.DAY, CALENDAR_VIEWS.AGENDA];
-    }
-  }
-
   getSelectedView = () => {
-    let selectedCalendarView = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW)) || {};
-    let { activeTable, activeView } = this.props;
-    let dtableUuid = getDtableUuid();
-    let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
-    let view = selectedCalendarView[key];
-    return -1 === this.calendarViews.indexOf(view) ? CALENDAR_VIEWS.MONTH : view;
+    const { activeTable, activeView } = this.props;
+    return this.props.getSelectedGridView(activeTable, activeView);
   }
 
   onSelectView = (view) => {
-    let selectedCalendarView = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW)) || {};
+    let selectedCalendarView = JSON.parse(localStorage.getItem(KEY_SELECTED_CALENDAR_VIEW)) || {};
     let { activeTable, activeView } = this.props;
     let dtableUuid = getDtableUuid();
     let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
     selectedCalendarView[key] = view;
-    localStorage.setItem(LOCALSTORAGE_KEY_SELECTED_CALENDAR_VIEW, JSON.stringify(selectedCalendarView));
+    localStorage.setItem(KEY_SELECTED_CALENDAR_VIEW, JSON.stringify(selectedCalendarView));
     this.setState({selectedView: view});
   }
 
@@ -308,7 +295,7 @@ class ReactBigCalendar extends React.Component {
   }
 
   render() {
-    const { settings } = this.props;
+    const { settings, calendarViews } = this.props;
     const { events } = this.state;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
@@ -323,7 +310,7 @@ class ReactBigCalendar extends React.Component {
         configuredWeekStart={configuredWeekStart}
         localizer={localizer}
         events={events}
-        views={this.calendarViews}
+        views={calendarViews}
         view={this.state.selectedView}
         onSelectView={this.onSelectView}
         defaultDate={new Date()}

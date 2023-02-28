@@ -4,6 +4,8 @@ export { zIndexes };
 
 export const PLUGIN_NAME = 'calendar';
 
+export const KEY_SELECTED_CALENDAR_VIEW = `.${PLUGIN_NAME}.selectedCalendarView`;
+
 export const CALENDAR_DIALOG_PADDINGTOP = 18;
 
 export const TITLE_COLUMN_TYPES = [

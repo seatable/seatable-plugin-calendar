@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import classnames from 'classnames';
 import DTable from 'dtable-sdk';
 import ReactBigCalendar from './ReactBigCalendar';
-import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT } from './constants';
+import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT, CALENDAR_VIEWS, KEY_SELECTED_CALENDAR_VIEW } from './constants';
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
@@ -63,6 +63,7 @@ class App extends React.Component {
     this.isMobile = isMobile;
     this.isIosMobile = isMobile && isIOS;
     this.isSafari = isSafari;
+    this.initCalendarViews();
   }
 
   componentDidMount() {
@@ -172,6 +173,19 @@ class App extends React.Component {
       rows,
       rowsColor
     });
+  }
+
+  initCalendarViews = () => {
+    if (this.isMobile) {
+      this.calendarViews = [
+        CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.AGENDA,
+      ];
+    } else {
+      this.calendarViews = [
+        CALENDAR_VIEWS.YEAR, CALENDAR_VIEWS.MONTH, CALENDAR_VIEWS.WEEK,
+        CALENDAR_VIEWS.DAY, CALENDAR_VIEWS.AGENDA,
+      ];
+    }
   }
 
   getPluginViewRows = (settings) => {
@@ -476,8 +490,15 @@ class App extends React.Component {
     return collaborators; // local develop
   }
 
-  getSelectedGridView = () => {
-    return this.calendar.getSelectedView();
+  getSelectedGridView = (table, view) => {
+    if (!table || !view) {
+      return CALENDAR_VIEWS.MONTH;
+    }
+    const keySelectedCalendarView = JSON.parse(localStorage.getItem(KEY_SELECTED_CALENDAR_VIEW)) || {};
+    const dtableUuid = getDtableUuid();
+    const key = `${dtableUuid}_${table._id}_${view._id}`;
+    const calendarView = keySelectedCalendarView[key];
+    return this.calendarViews.indexOf(calendarView) < 0 ? CALENDAR_VIEWS.MONTH : calendarView;
   }
 
   getTableFormulaRows = (table, view) => {
@@ -555,6 +576,7 @@ class App extends React.Component {
             columns={columns}
             rows={rows}
             rowsColor={rowsColor}
+            calendarViews={this.calendarViews}
             getRowById={this.dtable.getRowById}
             appendRow={this.appendRow}
             modifyRow={this.modifyRow}
@@ -566,6 +588,7 @@ class App extends React.Component {
             optionColors={this.optionColors}
             rowColorsMap={this.rowColorsMap}
             highlightColors={this.highlightColors}
+            getSelectedGridView={this.getSelectedGridView}
             onRowExpand={this.onRowExpand}
             onInsertRow={this.onInsertRow}
             hideViewSettingPanel={this.hideViewSettingPanel}
@@ -591,7 +614,7 @@ class App extends React.Component {
             columns={columns}
             CellType={this.cellType}
             columnIconConfig={this.columnIconConfig}
-            selectedGridView={this.getSelectedGridView()}
+            selectedGridView={this.getSelectedGridView(selectedTable, selectedTableView)}
             onModifyViewSettings={this.onModifyViewSettings}
             toggleViewSettingPanel={this.toggleViewSettingPanel}
           />

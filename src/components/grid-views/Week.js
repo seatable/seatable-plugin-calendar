@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 import TimeGrid from '../time/TimeGrid';
 import * as dates from '../../utils/dates';
 import { navigate } from '../../constants';
 
 class Week extends React.Component {
   render() {
-    let { date, ...props } = this.props;
+    let { date, min, ...props } = this.props;
     let range = Week.range(date, this.props);
-
-    return <TimeGrid {...props} range={range} eventOffset={15} />;
+    // The default start time for the Week view is 8:00 a.m.
+    min = dayjs().startOf('day').add(8, 'hour').toDate();
+    return <TimeGrid {...props} min={min} range={range} eventOffset={15} />;
   }
 }
 

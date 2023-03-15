@@ -8,6 +8,13 @@ const config = {
   dir: paths.appBuild + '/static/'
 };
 
+// verify zip output path against the file-system
+const zipPathFromZipFile = (file) => path.join(paths.zipPath, file);
+if (!fs.existsSync(zipPathFromZipFile('.'))) {
+  console.error(`fatal: paths.zipPath: '${paths.zipPath}' does not exists`);
+  process.exit(1);
+}
+
 const zip = new JSZip();
 
 // build file
@@ -49,7 +56,19 @@ zip.file('task/info.json', JSON.stringify(jsonFileContent, null, '  '));
 
 zip.generateAsync({type: 'nodebuffer'}).then(function(content) {
   let zip = `${pluginInfoContent.name}-${pluginInfoContent.version}.zip`;
-  fs.writeFile(paths.zipPath + '/' + zip, content, function(err) {
+  { /* do backups similar to cp(1) --backup=numbered */
+    const zipPath = zipPathFromZipFile(zip);
+    let number = 1;
+    let bakFile = zipPath + `.~${number}~`;
+    if (fs.existsSync(zipPath)) {
+      while (fs.existsSync(bakFile)) {
+        bakFile = zipPath + `.~${number++}~`;
+      }
+      console.log(`overwriting '${zip}' (backup: '${bakFile.replace(/^.*\/([^/]+)$/, '$1')}')`);
+      fs.renameSync(zipPath , bakFile);
+    }
+  }
+  fs.writeFile(zipPathFromZipFile(zip), content, function(err) {
     if (err) {
       console.log(zip + ' failed');
       console.log(err);

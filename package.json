@@ -16,8 +16,12 @@
     "react-select": "^3.1.0",
     "reactstrap": "^8.4.1"
   },
+  "engines": {
+    "node": "12.20.0",
+    "npm": "6.14.8"
+  },
   "scripts": {
-    "clean": "rm -rf plugin-zip && mkdir plugin-zip",
+    "clean": "git clean -fdxq -- ./plugin-zip/",
     "start": "npm run fix && node scripts/start.js",
     "build": "export CI=\"${CI-true}\" && npm run fix && CI=true npm run test && node scripts/build.js",
     "fix": "npm run translate && npm exec -- eslint --fix src/locale/lang",
@@ -25,7 +29,7 @@
     "translate": "node scripts/translate.js",
     "push-translate": "tx push -s",
     "pull-translate": "tx pull -a -f && npm run translate",
-    "build-plugin": "export GENERATE_SOURCEMAP=false && npm run clean && npm run build && node scripts/build-plugin.js"
+    "build-plugin": "export GENERATE_SOURCEMAP=false && npm run build && node scripts/build-plugin.js"
   },
   "browserslist": {
     "production": [

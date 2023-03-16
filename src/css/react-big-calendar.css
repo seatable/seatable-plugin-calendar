@@ -359,7 +359,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-event-label {
-  font-size: 80%;
+  font-size: 100%;
 }
 
 .rbc-event-overlaps {
@@ -727,7 +727,6 @@ button.rbc-input::-moz-focus-inner {
   left: 0;
   position: absolute;
   right: 0;
-  margin-right: 10px;
   top: 0;
 }
 
@@ -742,6 +741,7 @@ button.rbc-input::-moz-focus-inner {
   max-height: 100%;
   min-height: 20px;
   flex-flow: column wrap;
+  justify-content: center;
   align-items: flex-start;
   overflow: hidden;
   position: absolute;
@@ -757,9 +757,8 @@ button.rbc-input::-moz-focus-inner {
   width: 100%;
   flex: 1 1 0;
   word-wrap: break-word;
-  line-height: 1;
-  height: 100%;
-  min-height: 1em;
+  display: flex;
+  align-items: center;
 }
 
 .rbc-day-slot .rbc-time-slot {

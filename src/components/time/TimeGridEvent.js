@@ -49,13 +49,14 @@ function TimeGridEvent(props) {
   let userProps = getters.eventProp(event, start, end, selected);
 
   let { height, top, width, xOffset } = style;
+  const eventInSingleLine = height < 3.5 ? true : false;
   const inner = [
     <div key='1' className='rbc-event-label'>
       <span>
         {label}
       </span>
     </div>,
-    <div key='2' className='rbc-event-content'>
+    <div key='2' className={classnames('rbc-event-content', {'d-flex align-items-center text-nowrap':eventInSingleLine})} >
       {Event ? <Event event={event} title={title} /> : title}
     </div>
   ];

@@ -17,9 +17,7 @@ import intl from 'react-intl-universal';
 class DayColumn extends React.Component {
   state = {
     selecting: false,
-    timeIndicatorPosition: null
   };
-  intervalTriggered = false;
 
   constructor(...args) {
     super(...args);
@@ -29,15 +27,10 @@ class DayColumn extends React.Component {
 
   componentDidMount() {
     this.props.selectable && this._selectable();
-
-    if (this.props.isNow) {
-      this.setTimeIndicatorPositionUpdateInterval();
-    }
   }
 
   componentWillUnmount() {
     this._teardownSelectable();
-    this.clearTimeIndicatorInterval();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -46,66 +39,6 @@ class DayColumn extends React.Component {
       this._teardownSelectable();
 
     this.slotMetrics = this.slotMetrics.update(nextProps);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const getNowChanged = !dates.eq(
-      prevProps.getNow(),
-      this.props.getNow(),
-      'minutes'
-    );
-
-    if (prevProps.isNow !== this.props.isNow || getNowChanged) {
-      this.clearTimeIndicatorInterval();
-
-      if (this.props.isNow) {
-        const tail =
-          !getNowChanged &&
-          dates.eq(prevProps.date, this.props.date, 'minutes') &&
-          prevState.timeIndicatorPosition === this.state.timeIndicatorPosition;
-
-        this.setTimeIndicatorPositionUpdateInterval(tail);
-      }
-    } else if (
-      this.props.isNow &&
-      (!dates.eq(prevProps.min, this.props.min, 'minutes') ||
-        !dates.eq(prevProps.max, this.props.max, 'minutes'))
-    ) {
-      this.positionTimeIndicator();
-    }
-  }
-
-  /**
-   * @param tail {Boolean} - whether `positionTimeIndicator` call should be
-   *   deferred or called upon setting interval (`true` - if deferred);
-   */
-  setTimeIndicatorPositionUpdateInterval(tail = false) {
-    if (!this.intervalTriggered && !tail) {
-      this.positionTimeIndicator();
-    }
-
-    this._timeIndicatorTimeout = window.setTimeout(() => {
-      this.intervalTriggered = true;
-      this.positionTimeIndicator();
-      this.setTimeIndicatorPositionUpdateInterval();
-    }, 60000);
-  }
-
-  clearTimeIndicatorInterval() {
-    this.intervalTriggered = false;
-    window.clearTimeout(this._timeIndicatorTimeout);
-  }
-
-  positionTimeIndicator() {
-    const { min, max, getNow } = this.props;
-    const current = getNow();
-
-    if (current >= min && current <= max) {
-      const top = this.slotMetrics.getCurrentTimePosition(current);
-      this.setState({ timeIndicatorPosition: top });
-    } else {
-      this.clearTimeIndicatorInterval();
-    }
   }
 
   render() {
@@ -167,12 +100,6 @@ class DayColumn extends React.Component {
           <div className='rbc-slot-selection' style={{ top, height }}>
             <span>{localizer.format(selectDates, 'selectRangeFormat')}</span>
           </div>
-        )}
-        {isNow && (
-          <div
-            className='rbc-current-time-indicator'
-            style={{ top: `${this.state.timeIndicatorPosition}%` }}
-          />
         )}
       </div>
     );

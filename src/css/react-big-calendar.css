@@ -957,13 +957,32 @@ button.rbc-input::-moz-focus-inner {
   -webkit-user-select: none;
 }
 
+.rbc-current-time-indicator-container {
+  display: flex;
+  align-items: flex-start;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.rbc-current-time-indicator-label {
+  position: absolute;
+  bottom: -10px;
+  padding: 0 5px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #ff8000;
+  border-left: 0px !important;
+}
+
 .rbc-current-time-indicator {
   position: absolute;
   z-index: 3;
-  left: 0;
+  left: 50px;
   right: 0;
   height: 1px;
-  background-color: #74ad31;
+  background-color: #ff8000;
+  border-color: #ff8000;
   pointer-events: none;
 }
 

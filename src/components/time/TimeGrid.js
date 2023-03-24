@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import * as animationFrame from 'dom-helpers/animationFrame';
 import getWidth from 'dom-helpers/width';
+import dayjs from 'dayjs';
+import CurrentTimeIndicator from './CurrentTimeIndicator';
 import DayColumn from './DayColumn';
 import TimeGridHeader from '../header/TimeGridHeader';
 import TimeGutter from './TimeGutter';
@@ -242,6 +244,13 @@ export default class TimeGrid extends Component {
             className='rbc-time-gutter'
           />
           {this.renderEvents(range, rangeEvents, getNow())}
+          <CurrentTimeIndicator
+            contentRef={this.contentRef}
+            getNow={getNow}
+            localizer={localizer}
+            min={min}
+            max={max}
+          />
         </div>
       </div>
     );
@@ -340,5 +349,5 @@ TimeGrid.defaultProps = {
   timeslots: 2,
   min: dates.startOf(new Date(), 'day'),
   max: dates.endOf(new Date(), 'day'),
-  scrollToTime: dates.startOf(new Date(), 'day')
+  scrollToTime: dayjs().startOf('day').add(8, 'hour').toDate(),
 };

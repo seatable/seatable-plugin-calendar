@@ -1,6 +1,6 @@
 import * as dates from './dates';
 
-const getDstOffset = (start, end) =>
+export const getDstOffset = (start, end) =>
   start.getTimezoneOffset() - end.getTimezoneOffset();
 
 const getKey = (min, max, step, slots) =>

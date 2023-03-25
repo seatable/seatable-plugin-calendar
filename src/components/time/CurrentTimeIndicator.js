@@ -10,6 +10,7 @@ const propTypes = {
   localizer: PropTypes.object.isRequired,
   min: PropTypes.instanceOf(Date),
   max: PropTypes.instanceOf(Date),
+  width: PropTypes.number,
 };
 
 class CurrentTimeIndicator extends React.Component {
@@ -86,12 +87,13 @@ class CurrentTimeIndicator extends React.Component {
 
   render() {
     const { currentTime } = this.state;
+    const { width } = this.props;
     return (
       <div className='rbc-current-time-indicator-container' style={{ top: this.timeIndicatorTop }}>
         <div className='rbc-current-time-indicator-label'>
           {currentTime}
         </div>
-        <div className='rbc-current-time-indicator' />
+        <div className='rbc-current-time-indicator' style={{ left: width }} />
       </div>
     );
   }

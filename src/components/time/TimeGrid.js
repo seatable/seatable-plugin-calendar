@@ -250,6 +250,7 @@ export default class TimeGrid extends Component {
             localizer={localizer}
             min={min}
             max={max}
+            width={width}
           />
         </div>
       </div>

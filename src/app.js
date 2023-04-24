@@ -303,14 +303,14 @@ class App extends React.Component {
     return (
       <div className="d-flex align-items-center plugin-calendar-operators">
         {!this.isMobile &&
-          <span className="op-icon mr-2" onClick={this.toggleTimeRangeDialog}>
+          <span className="op-icon mr-1" onClick={this.toggleTimeRangeDialog}>
             <i className="dtable-font dtable-icon-print"></i>
           </span>
         }
-        <span className="op-icon mr-2" onClick={this.toggleViewSettingPanel}>
+        <span className="op-icon mr-1" onClick={this.toggleViewSettingPanel}>
           <i className="dtable-font dtable-icon-set-up"></i>
         </span>
-        <span className="dtable-font dtable-icon-x op-icon" onClick={this.onPluginToggle}></span>
+        <span className="dtable-font dtable-icon-x op-icon btn-close" onClick={this.onPluginToggle}></span>
       </div>
     );
   }

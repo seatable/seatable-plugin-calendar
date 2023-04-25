@@ -205,6 +205,9 @@
   cursor: pointer;
   color: #000;
   opacity: .5;
+}
+
+.calendar-plugin-container .op-icon.btn-close {
   font-weight: 700;
 }
 

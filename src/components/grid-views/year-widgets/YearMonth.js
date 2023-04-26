@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 import Header from '../../header/Header';
 import * as dates from '../../../utils/dates';
 import { chunk } from '../../../utils/common';
@@ -36,6 +37,7 @@ class YearMonth extends React.PureComponent {
   }
 
   renderDays = (weeks, dayEventsMap, currentMonth, isCurrentMonth, dateOfToday) => {
+    const now = new Date();
     return weeks.map(week => {
       return (
         <div className="rbc-row rbc-year-week" key={`rbc-year-week-${week[0] + ''}`}>
@@ -48,7 +50,7 @@ class YearMonth extends React.PureComponent {
             const displayDate = `${year}-${displayMonth}-${displayDy}`;
             const dayEvents = dayEventsMap[displayDate];
             const isOffRange = displayMonth !== currentMonth;
-            const isCurrentDay = isCurrentMonth && day === dateOfToday;
+            const isCurrentDay = isCurrentMonth && day === dateOfToday && dayjs(now).isSame(date, 'day');
             const hasEvents = dayEvents && dayEvents.length > 0;
             return (
               <YearDay

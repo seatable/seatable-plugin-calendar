@@ -54,7 +54,7 @@
   "Out_of_range": "Der maximale Zeitraum sind 12 Monate.",
   "Row_color": "Zeilenfarbe",
   "Other_fields_shown_in_agenda": "Andere Felder für die Anzeige in der Agenda Ansicht",
-  "Start_the_first_week_of_the_year_on": "Start the first week of the year on",
-  "First_day_of_the_year": "First day of the year",
-  "First_full_week_of_the_year": "First full week of the year"
+  "Start_the_first_week_of_the_year_on": "Die 1. Woche des Jahres beginnt am",
+  "First_day_of_the_year": "1. Tag des Jahres",
+  "First_full_week_of_the_year": "1. volle Woche des Jahres"
 }

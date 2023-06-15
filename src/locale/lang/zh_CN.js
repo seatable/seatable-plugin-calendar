@@ -45,7 +45,7 @@ const zh_CN = {
   'Name': '名称',
   'Name_is_required': '名称必须存在',
   'Settings': '设置',
-  'Table': '表格',
+  'Table': '子表',
   'View': '视图',
   'Title': '标题字段',
   'No_options': '没有选项',

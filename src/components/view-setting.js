@@ -1,9 +1,9 @@
 import React, { Fragment }  from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
+import { FieldDisplaySetting } from 'dtable-ui-component';
 import DtableSelect from './dtable-select';
 import { CALENDAR_VIEWS, SETTING_KEY, SETTING_VALUE, TITLE_COLUMN_TYPES } from '../constants';
-import ColumnSetting from './column-setting';
 import '../locale';
 
 import '../css/view-setting.css';
@@ -221,6 +221,16 @@ class ViewSetting extends React.Component {
     this.props.onModifyViewSettings(settings);
   }
 
+  onToggleColumnsVisibility = (columns, fieldAllShown) => {
+    const { settings } = this.props;
+    const updatedColumns = columns.map(column => ({
+      ...column,
+      shown: !fieldAllShown,
+    }));
+    settings.columns = updatedColumns;
+    this.props.onModifyViewSettings(settings);
+  }
+
   getCurrentConfiguredColumns = () => {
     const { columns, settings } = this.props;
 
@@ -266,12 +276,19 @@ class ViewSetting extends React.Component {
       colorFieldOptions, weekStartOptions, startYearFirstWeekOptions
     } = this.getSelectorOptions(this.getSelectorColumns());
 
-    const { columns, selectedGridView, columnIconConfig } = this.props;
+    const { columns, selectedGridView } = this.props;
     this.configuredColumns = this.getCurrentConfiguredColumns();
     const configuredColumns = this.configuredColumns.map((item, index) => {
       const targetItem = columns.filter(c => c.key == item.key)[0];
       return Object.assign({}, targetItem, item);
     });
+    const fieldAllShown = configuredColumns.every(column => column.shown);
+    const textProperties = {
+      titleValue: intl.get('Other_fields_shown_in_agenda'),
+      bannerValue: intl.get('Fields'),
+      hideValue: intl.get('Hide_all'),
+      showValue: intl.get('Show_all'),
+    };
 
     return (
       <div className="plugin-view-setting position-absolute d-flex flex-column mt-7" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
@@ -317,22 +334,17 @@ class ViewSetting extends React.Component {
                 {this.renderSelector(startYearFirstWeekOptions, SETTING_KEY.START_YEAR_FIRST_WEEK)}
               </div>
             }
-            {configuredColumns.length > 0 &&
+            <div className="split-line "></div>
             <div className="setting-item">
-              <div className="title">{intl.get('Other_fields_shown_in_agenda')}</div>
-              {configuredColumns.map((column, index) => {
-                return (
-                  <ColumnSetting
-                    key={index}
-                    column={column}
-                    columnIconConfig={columnIconConfig}
-                    updateColumn={this.updateColumn}
-                    moveColumn={this.moveColumn}
-                  />
-                );
-              })}
+              <FieldDisplaySetting
+                fields={configuredColumns}
+                textProperties={textProperties}
+                fieldAllShown={fieldAllShown}
+                onClickField={this.updateColumn}
+                onMoveField={this.moveColumn}
+                onToggleFieldsVisibility={() => this.onToggleColumnsVisibility(configuredColumns, fieldAllShown)}
+              />
             </div>
-            }
           </div>
         </div>
       </div>

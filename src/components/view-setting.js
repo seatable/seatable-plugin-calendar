@@ -308,10 +308,12 @@ class ViewSetting extends React.Component {
               <div className="title">{intl.get('View')}</div>
               {this.renderSelector(viewOptions, SETTING_KEY.VIEW_NAME)}
             </div>
+            <div className="split-line "></div>
             <div className="setting-item view-setting">
               <div className="title">{intl.get('Title')}</div>
               {this.renderSelector(titleColumnOptions, SETTING_KEY.COLUMN_TITLE)}
             </div>
+            <div className="split-line "></div>
             <div className="setting-item">
               <div className="title">{intl.get('Start_Date')}</div>
               {this.renderSelector(dateColumnOptions, SETTING_KEY.COLUMN_START_DATE)}
@@ -320,10 +322,12 @@ class ViewSetting extends React.Component {
               <div className="title">{intl.get('End_Date_Optional')}</div>
               {this.renderSelector(endDateColumnOptions, SETTING_KEY.COLUMN_END_DATE)}
             </div>
+            <div className="split-line "></div>
             <div className="setting-item">
               <div className="title">{intl.get('Color_From')}</div>
               {this.renderColorSelector(colorFieldOptions)}
             </div>
+            <div className="split-line "></div>
             <div className="setting-item">
               <div className="title">{intl.get('Week_start')}</div>
               {this.renderSelector(weekStartOptions, SETTING_KEY.WEEK_START)}

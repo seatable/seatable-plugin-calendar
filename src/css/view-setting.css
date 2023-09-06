@@ -54,6 +54,11 @@
   color: rgba(0, 0, 0, .25) !important;
 }
 
+.plugin-view-setting .setting-body .split-line {
+  margin-bottom: 14px;
+  border-bottom: 1px solid #ddd;
+}
+
 .calendar-view-setting-selector__menu .calendar-view-setting-selector__option--is-selected .null-option-name {
   color: #fff !important;
 }

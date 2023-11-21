@@ -25,11 +25,11 @@ class Popup extends React.Component {
       }
       this.setState({ topOffset, leftOffset });
     }
-    document.addEventListener('click', this.onHidePopup);
+    document.addEventListener('click', this.onHidePopup, true);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.onHidePopup);
+    document.removeEventListener('click', this.onHidePopup, true);
   }
 
   onHidePopup = (event) => {

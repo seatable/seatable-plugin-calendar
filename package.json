@@ -1,6 +1,6 @@
 {
   "name": "seatable-plugin-calendar",
-  "version": "0.1.64",
+  "version": "0.1.65",
   "private": true,
   "dependencies": {
     "@seafile/seafile-calendar": "0.0.24",

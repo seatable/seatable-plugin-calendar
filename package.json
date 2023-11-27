@@ -8,7 +8,7 @@
     "classnames": "^2.2.6",
     "dayjs": "1.10.7",
     "dom-helpers": "^5.1.4",
-    "dtable-sdk": "0.2.3",
+    "dtable-sdk": "4.3.0",
     "dtable-ui-component": "0.3.26",
     "react": "17.0.2",
     "react-dom": "17.0.2",

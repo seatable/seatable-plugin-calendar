@@ -1,4 +1,4 @@
-import { CELL_TYPE } from 'dtable-sdk';
+import { CellType } from 'dtable-utils';
 import * as zIndexes from './zIndexes';
 export { zIndexes };
 
@@ -9,8 +9,8 @@ export const KEY_SELECTED_CALENDAR_VIEW = `.${PLUGIN_NAME}.selectedCalendarView`
 export const CALENDAR_DIALOG_PADDINGTOP = 18;
 
 export const TITLE_COLUMN_TYPES = [
-  CELL_TYPE.TEXT, CELL_TYPE.SINGLE_SELECT, CELL_TYPE.FORMULA, CELL_TYPE.LINK_FORMULA,
-  CELL_TYPE.COLLABORATOR, CELL_TYPE.CREATOR, CELL_TYPE.LAST_MODIFIER, CELL_TYPE.LINK,
+  CellType.TEXT, CellType.SINGLE_SELECT, CellType.FORMULA, CellType.LINK_FORMULA,
+  CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER, CellType.LINK,
 ];
 
 export const navigate = {

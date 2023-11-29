@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { CellType, getTableById, getLinkCellValue, getRowsByIds } from 'dtable-utils';
 import {
   TextFormatter,
   NumberFormatter,
@@ -30,7 +31,6 @@ const propTypes = {
   column: PropTypes.object.isRequired,
   row: PropTypes.object.isRequired,
   collaborators: PropTypes.array,
-  dtable: PropTypes.object.isRequired,
   tableID: PropTypes.string.isRequired,
   formulaRows: PropTypes.object,
   autoWidth: PropTypes.bool
@@ -64,14 +64,14 @@ class Cell extends React.Component {
   }
 
   getUserCommonInfo = (email, avatar_size) => {
-    if (window.dtableWebAPI) {
-      return window.dtableWebAPI.getUserCommonInfo(email, avatar_size);
+    if (window.dtableSDK.dtableWebAPI) {
+      return window.dtableSDK.dtableWebAPI.getUserCommonInfo(email, avatar_size);
     }
     return Promise.reject();
   }
 
   calculateCollaboratorData = (props) => {
-    const { row, column, CellType } = props;
+    const { row, column } = props;
     if (column.type === CellType.LAST_MODIFIER) {
       this.getCollaborator(row._last_modifier);
     } else if (column.type === CellType.CREATOR) {
@@ -118,7 +118,7 @@ class Cell extends React.Component {
   }
 
   renderFormatter = () => {
-    const { column, row, collaborators, dtable, tableID, CellType } = this.props;
+    const { column, row, collaborators, tableID } = this.props;
     const { isDataLoaded, collaborator } = this.state;
     let { type: columnType, key: columnKey, data: columnData } = column;
     const cellValue = row[columnKey];
@@ -197,10 +197,15 @@ class Cell extends React.Component {
         return <FormulaFormatter value={formulaValue} column={column} collaborators={collaborators} />;
       }
       case CellType.LINK: {
-        let linkMetaData = {
-          getLinkedCellValue: dtable.getLinkCellValue.bind(dtable),
-          getLinkedRows: dtable.getRowsByID.bind(dtable),
-          getLinkedTable: dtable.getTableById.bind(dtable),
+        const tables = window.dtableSDK.getTables();
+        const links = window.dtableSDK.getLinks();
+        const linkMetaData = {
+          getLinkedTable: (tableId) => getTableById(tables, tableId),
+          getLinkedCellValue: (linkId, table1Id, table2Id, rowId) => getLinkCellValue(links, linkId, table1Id, table2Id, rowId),
+          getLinkedRows: (tableId, rowsIds) => {
+            const table = getTableById(tables, tableId);
+            return getRowsByIds(table, rowsIds);
+          },
           expandLinkedTableRow: function(row, tableId) {
             return false;
           }

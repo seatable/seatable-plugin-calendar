@@ -1,6 +1,8 @@
 {
-  "presets": ["react-app"],
+  "presets": [
+    ["react-app", { "absoluteRuntime" : false }]
+  ],
   "plugins": [
     ["on-demand-loading", {"library": "dtable-ui-component"}]
- ]
+  ]
 }

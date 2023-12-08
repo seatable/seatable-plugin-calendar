@@ -1,6 +1,7 @@
 import React, { Fragment }  from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
+import { CellType, COLUMNS_ICON_CONFIG } from 'dtable-utils';
 import { FieldDisplaySetting } from 'dtable-ui-component';
 import DtableSelect from './dtable-select';
 import { CALENDAR_VIEWS, SETTING_KEY, SETTING_VALUE, TITLE_COLUMN_TYPES } from '../constants';
@@ -12,8 +13,6 @@ const propTypes = {
   tables: PropTypes.array,
   views: PropTypes.array,
   columns: PropTypes.array,
-  CellType: PropTypes.object,
-  columnIconConfig: PropTypes.object,
   settings: PropTypes.object,
   selectedGridView: PropTypes.string,
   onModifyViewSettings: PropTypes.func,
@@ -65,7 +64,7 @@ class ViewSetting extends React.Component {
   };
 
   getSelectorColumns = () => {
-    const { columns, CellType, columnIconConfig } = this.props;
+    const { columns } = this.props;
     let dateColumns = [],
       endDateColumns = [],
       colorColumns = [],
@@ -75,9 +74,10 @@ class ViewSetting extends React.Component {
       const columnOption = {
         name,
         value: name,
-        iconClass: columnIconConfig[type],
+        iconClass: COLUMNS_ICON_CONFIG[type],
       };
-      if (type === CellType.DATE ||
+      if (
+        type === CellType.DATE ||
         type === CellType.CTIME ||
         type === CellType.MTIME ||
         (type === CellType.FORMULA && c.data.result_type === 'date')) {

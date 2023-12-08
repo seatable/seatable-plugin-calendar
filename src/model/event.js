@@ -1,3 +1,4 @@
+import { SELECT_OPTION_COLORS, HIGHLIGHT_COLORS } from 'dtable-utils';
 import { isValidDateObject } from '../utils/dates';
 
 /**
@@ -190,13 +191,11 @@ export default class TableEvent {
    *
    * @param {TableEventRowTypedef} row
    * @param {?TableEventDTableColumnDefinitionTypedef} colorColumn
-   * @param {Array.<Object>} optionColors dtable option-colors
-   * @param {Array.<string>} highlightColors dtable highlight-colors
    * @return {{highlightColor: ?string, bgColor: ?string, textColor: ?string}}
    */
-  static getColors({row, colorColumn, configuredUseRowColor, optionColors, highlightColors, rowsColor, rowColorsMap}) {
+  static getColors({row, colorColumn, configuredUseRowColor, rowsColor, rowColorsMap}) {
     const colors = {bgColor: null, textColor: null, highlightColor: null};
-    const defaultOptionColor = optionColors[2];
+    const defaultOptionColor = SELECT_OPTION_COLORS[2];
     if (configuredUseRowColor) {
       const bgColor = rowsColor[row._id];
       colors.bgColor = bgColor;
@@ -213,7 +212,7 @@ export default class TableEvent {
       colors.bgColor = defaultOptionColor.COLOR;
       colors.textColor = defaultOptionColor.TEXT_COLOR;
     }
-    colors.highlightColor = highlightColors[colors.bgColor];
+    colors.highlightColor = HIGHLIGHT_COLORS[colors.bgColor];
     return colors;
   }
 

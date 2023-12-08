@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { CELL_TYPE, FORMULA_RESULT_TYPE } from 'dtable-sdk';
+import { CellType, FORMULA_RESULT_TYPE } from 'dtable-utils';
 import { getKnownCreatorByEmail } from '../../utils/common';
 import { getCollaboratorsName } from '../../utils/value-format-utils';
 
-const COLLABORATOR_COLUMN_TYPES = [CELL_TYPE.COLLABORATOR, CELL_TYPE.CREATOR, CELL_TYPE.LAST_MODIFIER];
+const COLLABORATOR_COLUMN_TYPES = [CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER];
 
 class CellTitle extends Component {
 
@@ -85,19 +85,19 @@ class CellTitle extends Component {
     const { row, title, titleColumn } = event;
     const { type } = titleColumn;
     switch (type) {
-      case CELL_TYPE.COLLABORATOR: {
+      case CellType.COLLABORATOR: {
         return getCollaboratorsName(collaborators, title);
       }
-      case CELL_TYPE.CREATOR: {
+      case CellType.CREATOR: {
         if (!row._creator || !isDataLoaded || !collaborator) return null;
         return collaborator.name;
       }
-      case CELL_TYPE.LAST_MODIFIER: {
+      case CellType.LAST_MODIFIER: {
         if (!row._last_modifier || !isDataLoaded || !collaborator) return null;
         return collaborator.name;
       }
-      case CELL_TYPE.FORMULA:
-      case CELL_TYPE.LINK_FORMULA: {
+      case CellType.FORMULA:
+      case CellType.LINK_FORMULA: {
         const { data } = titleColumn;
         const { result_type, array_type } = data || {};
         if (result_type === FORMULA_RESULT_TYPE.ARRAY && COLLABORATOR_COLUMN_TYPES.includes(array_type)) {
@@ -105,7 +105,7 @@ class CellTitle extends Component {
         }
         return title;
       }
-      case CELL_TYPE.LINK: {
+      case CellType.LINK: {
         if (title) return title;
         return null;
       }

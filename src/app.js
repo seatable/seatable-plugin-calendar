@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
 import classnames from 'classnames';
-import DTable from 'dtable-sdk';
+import {
+  CellType, SELECT_OPTION_COLORS, getTableByName, getViewByName, getNonArchiveViews,
+  getViewShownColumns,
+} from 'dtable-utils';
 import ReactBigCalendar from './ReactBigCalendar';
 import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT, CALENDAR_VIEWS, KEY_SELECTED_CALENDAR_VIEW } from './constants';
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
-import { generatorViewId, getDtableUuid, getMediaUrl, isIOS, isMobile, isSafari } from './utils/common';
+import { generatorViewId, getDtableUuid, isIOS, isMobile, isSafari } from './utils/common';
 import View from './model/view';
 
 import './locale';
@@ -42,7 +45,8 @@ const DEFAULT_PLUGIN_SETTINGS = {
 const KEY_SELECTED_VIEW_IDS = `${PLUGIN_NAME}-selectedViewIds`;
 
 const propTypes = {
-  showDialog: PropTypes.bool
+  isDevelopment: PropTypes.bool,
+  showDialog: PropTypes.bool,
 };
 
 class App extends React.Component {
@@ -59,7 +63,6 @@ class App extends React.Component {
       rowsColor: {},
       isTimeRangeDialogOpen: false
     };
-    this.dtable = new DTable();
     this.isMobile = isMobile;
     this.isIosMobile = isMobile && isIOS;
     this.isSafari = isSafari;
@@ -76,55 +79,13 @@ class App extends React.Component {
   }
 
   async initPluginDTableData() {
-    if (window.app === undefined) {
+    if (this.props.isDevelopment) {
       // local develop
-      window.app = {};
-      window.app.state = {};
-      window.app.collaboratorsCache = {};
-      window.dtable = {lang: window.dtablePluginConfig.lang};
-      await this.dtable.init(window.dtablePluginConfig);
-      await this.dtable.syncWithServer();
-      await this.dtable.dtableWebAPI.login();
-      window.dtableWebAPI = this.dtable.dtableWebAPI;
-      window.app.getUserCommonInfo = this.getUserCommonInfo;
-
-      // init collaborators
-      const relatedUsersRes = await this.getRelatedUsersFromServer(this.dtable.dtableStore);
-      const userList = relatedUsersRes.data.user_list;
-      window.app.collaborators = userList;
-      window.app.state.collaborators = userList;
-
-      this.dtable.subscribe('dtable-connect', () => { this.onDTableConnect(); });
-    } else {
-      // integrated to dtable app
-      this.dtable.initInBrowser(window.app.dtableStore);
+      window.dtableSDK.subscribe('dtable-connect', () => { this.onDTableConnect(); });
     }
-    this.unsubscribeLocalDtableChanged = this.dtable.subscribe('local-dtable-changed', () => { this.onDTableChanged(); });
-    this.unsubscribeRemoteDtableChanged = this.dtable.subscribe('remote-dtable-changed', () => { this.onDTableChanged(); });
+    this.unsubscribeLocalDtableChanged = window.dtableSDK.subscribe('local-dtable-changed', () => { this.onDTableChanged(); });
+    this.unsubscribeRemoteDtableChanged = window.dtableSDK.subscribe('remote-dtable-changed', () => { this.onDTableChanged(); });
     this.resetData(true);
-  }
-
-  async getRelatedUsersFromServer(dtableStore) {
-    return dtableStore.dtableAPI.getTableRelatedUsers();
-  }
-
-  getUserCommonInfo = (email, callback) => {
-    const dtableWebAPI = this.dtable.dtableWebAPI;
-    let dtableCollaborators = window.app.collaboratorsCache;
-    dtableWebAPI.getUserCommonInfo(email).then(res => {
-      const collaborator = res.data;
-      dtableCollaborators[email] = collaborator;
-      callback && callback();
-    }).catch(() => {
-      const mediaUrl = getMediaUrl();
-      const defaultAvatarUrl = `${mediaUrl}/avatars/default.png`;
-      const collaborator = {
-        name: email,
-        avatar_url: defaultAvatarUrl,
-      };
-      dtableCollaborators[email] = collaborator;
-      callback && callback();
-    });
   }
 
   onDTableConnect = () => {
@@ -137,7 +98,7 @@ class App extends React.Component {
 
   resetData = (init = false) => {
     let { isViewSettingPanelOpen } = this.state;
-    let plugin_settings = this.dtable.getPluginSettings(PLUGIN_NAME) || {};
+    let plugin_settings = window.dtableSDK.getPluginSettings(PLUGIN_NAME) || {};
     if (!plugin_settings || Object.keys(plugin_settings).length === 0 || !plugin_settings.views) {
       plugin_settings = DEFAULT_PLUGIN_SETTINGS;
     }
@@ -151,17 +112,12 @@ class App extends React.Component {
       isViewSettingPanelOpen = !this.isValidViewSettings(views[selectedViewIdx].settings);
     }
 
-    this.cellType = this.dtable.getCellType();
-    this.optionColors = this.dtable.getOptionColors();
-
     let rowColorsMap = {};
-    this.optionColors.forEach((optionColor) => {
+    SELECT_OPTION_COLORS.forEach((optionColor) => {
       rowColorsMap[optionColor.COLOR] = optionColor.TEXT_COLOR;
     });
     this.rowColorsMap = rowColorsMap;
 
-    this.highlightColors = this.dtable.getHighlightColors();
-    this.columnIconConfig = this.dtable.getColumnIconConfig();
     const selectedPluginView = views[selectedViewIdx];
     const rows = selectedPluginView ? this.getPluginViewRows(selectedPluginView.settings) : [];
     const rowsColor = this.getRowsColor(selectedPluginView.settings);
@@ -189,15 +145,13 @@ class App extends React.Component {
   }
 
   getPluginViewRows = (settings) => {
-    const tables = this.dtable.getTables();
-    const selectedTable = this.getSelectedTable(tables, settings);
-    const tableViews = this.dtable.getNonArchiveViews(selectedTable);
-    const selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
+    const selectedTable = this.getSelectedTable(settings);
+    const selectedTableView = this.getSelectedView(selectedTable, settings);
     return this.getRows(selectedTable, selectedTableView);
   }
 
   getSelectedViewIds = (key) => {
-    let selectedViewIds = window.localStorage.getItem(key);
+    const selectedViewIds = window.localStorage.getItem(key);
     return selectedViewIds ? JSON.parse(selectedViewIds) : {};
   }
 
@@ -207,22 +161,21 @@ class App extends React.Component {
   }
 
   getRows = (table, view) => {
+    const { name: tableName } = table;
+    const { name: viewName } = view;
     let rows = [];
-    let { name: tableName } = table;
-    let { name: viewName } = view;
-    const convertLinkID = true;
-    this.dtable.forEachRow(tableName, viewName, (row) => {
+    window.dtableSDK.forEachRow(tableName, viewName, (row) => {
       rows.push(row);
-    }, {convertLinkID});
+    }, { convertLinkID: true });
     return rows;
   }
 
   updateSettings = (table, start_date_column_key, label_column_key, end_date_column_key) => {
+    const { _id } = table;
     let { plugin_settings } = this.state;
-    let { _id } = table;
     plugin_settings[_id] = {start_date_column_key, end_date_column_key, label_column_key};
     this.setState({plugin_settings}, () => {
-      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+      window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
   }
 
@@ -233,28 +186,28 @@ class App extends React.Component {
   }
 
   onInsertRow = (rowData, activeTable, activeView, rowId) => {
-    let initData = this.dtable.getInsertedRowInitData(activeView, activeTable, rowId);
-    let newRowData = Object.assign({}, initData, rowData);
-    this.dtable.appendRow(activeTable, newRowData, activeView);
-    let viewRows = this.dtable.getViewRows(activeView, activeTable);
-    let insertedRow = viewRows[viewRows.length - 1];
+    const initData = window.dtableSDK.getInsertedRowInitData(activeView, activeTable, rowId);
+    const newRowData = Object.assign({}, initData, rowData);
+    window.dtableSDK.appendRow(activeTable, newRowData, activeView);
+    const viewRows = window.dtableSDK.getViewRows(activeView, activeTable);
+    const insertedRow = viewRows[viewRows.length - 1];
     if (insertedRow && window.app.expandRow) {
       window.app.expandRow(insertedRow, activeTable);
     }
   }
 
   toggleViewSettingPanel = () => {
-    this.setState({isViewSettingPanelOpen: !this.state.isViewSettingPanelOpen});
+    this.setState({ isViewSettingPanelOpen: !this.state.isViewSettingPanelOpen });
   }
 
   hideViewSettingPanel = () => {
     if (this.state.isViewSettingPanelOpen) {
-      this.setState({isViewSettingPanelOpen: false});
+      this.setState({ isViewSettingPanelOpen: false });
     }
   }
 
   toggleTimeRangeDialog = () => {
-    this.setState({isTimeRangeDialogOpen: !this.state.isTimeRangeDialogOpen});
+    this.setState({ isTimeRangeDialogOpen: !this.state.isTimeRangeDialogOpen });
   }
 
   exportSelectedMonths = (start, end) => {
@@ -331,7 +284,7 @@ class App extends React.Component {
       isViewSettingPanelOpen
     }, () => {
       this.storeSelectedViewId(updatedViews[selectedViewIdx]._id);
-      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+      window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
       this.viewsTabs && this.viewsTabs.setViewsTabsScroll();
     });
   }
@@ -344,7 +297,7 @@ class App extends React.Component {
     this.setState({
       plugin_settings
     }, () => {
-      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+      window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
   }
 
@@ -364,7 +317,7 @@ class App extends React.Component {
         isViewSettingPanelOpen
       }, () => {
         this.storeSelectedViewId(updatedViews[selectedViewIdx]._id);
-        this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+        window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
       });
     }
   }
@@ -407,7 +360,7 @@ class App extends React.Component {
       plugin_settings,
       selectedViewIdx: newSelectedViewIndex
     }, () => {
-      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+      window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
   }
 
@@ -436,12 +389,9 @@ class App extends React.Component {
     return settings && Object.keys(settings).length > 0;
   }
 
-  getSelectedTable = (tables, settings = {}) => {
-    let selectedTable = this.dtable.getTableByName(settings[SETTING_KEY.TABLE_NAME]);
-    if (!selectedTable) {
-      return tables[0];
-    }
-    return selectedTable;
+  getSelectedTable = (settings = {}) => {
+    const tables = window.dtableSDK.getTables();
+    return getTableByName(tables, settings[SETTING_KEY.TABLE_NAME]) || tables[0];
   }
 
   onModifyViewSettings = (updated) => {
@@ -452,20 +402,25 @@ class App extends React.Component {
     updatedViews[selectedViewIdx] = updatedView;
     plugin_settings.views = updatedViews;
     this.setState({plugin_settings}, () => {
-      this.dtable.updatePluginSettings(PLUGIN_NAME, plugin_settings);
+      window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
   }
 
   getSelectedView = (table, settings = {}) => {
-    return this.dtable.getViewByName(table, settings[SETTING_KEY.VIEW_NAME]);
+    const selectedView = getViewByName(table.views, settings[SETTING_KEY.VIEW_NAME]);
+    if (!selectedView) {
+      const tableViews = getNonArchiveViews(table.views);
+      return tableViews[0];
+    }
+    return selectedView;
   }
 
   modifyRow = (table, row, updated) => {
-    this.dtable.modifyRow(table, row, updated);
+    window.dtableSDK.modifyRow(table, row, updated);
   }
 
   appendRow = (table, rowData) => {
-    this.dtable.appendRow(table, rowData);
+    window.dtableSDK.appendRow(table, rowData);
   }
 
   getRowsColor = (settings) => {
@@ -473,12 +428,10 @@ class App extends React.Component {
     if (!configuredUseRowColor) {
       return {};
     }
-    let tables = this.dtable.getTables();
-    let selectedTable = this.getSelectedTable(tables, settings);
-    let tableViews = this.dtable.getNonArchiveViews(selectedTable);
-    let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
-    const viewRows = this.dtable.getViewRows(selectedTableView, selectedTable);
-    return this.dtable.getViewRowsColor(viewRows, selectedTableView, selectedTable);
+    const selectedTable = this.getSelectedTable(settings);
+    const selectedTableView = this.getSelectedView(selectedTable, settings);
+    const viewRows = window.dtableSDK.getViewRows(selectedTableView, selectedTable);
+    return window.dtableSDK.getViewRowsColor(viewRows, selectedTableView, selectedTable);
   }
 
   getRelatedUsersFromLocal = () => {
@@ -502,31 +455,29 @@ class App extends React.Component {
   }
 
   getTableFormulaRows = (table, view) => {
-    let rows = this.dtable.getViewRows(view, table);
-    return this.dtable.getTableFormulaResults(table, rows);
+    const rows = window.dtableSDK.getViewRows(view, table);
+    return window.dtableSDK.getTableFormulaResults(table, rows);
   }
 
   render() {
-    let { isLoading, showDialog, plugin_settings, selectedViewIdx,
-      rows,
-      rowsColor,
-      isViewSettingPanelOpen,
-      isTimeRangeDialogOpen
+    const {
+      isLoading, showDialog, plugin_settings, selectedViewIdx,
+      rows, rowsColor, isViewSettingPanelOpen, isTimeRangeDialogOpen,
     } = this.state;
     if (isLoading || !showDialog) {
       return '';
     }
 
-    let { views } = plugin_settings;
-    let selectedPluginView = views[selectedViewIdx];
-    let { settings } = selectedPluginView || { settings: {} };
-    let tables = this.dtable.getTables();
-    let selectedTable = this.getSelectedTable(tables, settings);
-    let tableViews = this.dtable.getNonArchiveViews(selectedTable);
-    let selectedTableView = this.getSelectedView(selectedTable, settings) || tableViews[0];
-    let formulaRows = this.getTableFormulaRows(selectedTable, selectedTableView);
+    const { views } = plugin_settings;
+    const selectedPluginView = views[selectedViewIdx];
+    const { settings } = selectedPluginView || { settings: {} };
+    const tables = window.dtableSDK.getTables();
+    const selectedTable = this.getSelectedTable(settings);
+    const tableViews = getNonArchiveViews(selectedTable.views);
+    let selectedTableView = this.getSelectedView(selectedTable, settings);
+    const formulaRows = this.getTableFormulaRows(selectedTable, selectedTableView);
     selectedTableView = Object.assign({}, selectedTableView, {formula_rows: formulaRows});
-    let columns = this.dtable.getViewShownColumns(selectedTableView, selectedTable);
+    const columns = getViewShownColumns(selectedTableView, selectedTable.columns);
     const modalClassNames = classnames(
       'dtable-plugin',
       'calendar-plugin-container',
@@ -549,7 +500,7 @@ class App extends React.Component {
     );
 
     // set default value for 'color field' in settings
-    const singleSelectColumn = columns.filter(item => item.type == this.cellType.SINGLE_SELECT)[0];
+    const singleSelectColumn = columns.filter(item => item.type == CellType.SINGLE_SELECT)[0];
     if (singleSelectColumn) {
       if (!settings[SETTING_KEY.COLORED_BY_ROW_COLOR] && settings[SETTING_KEY.COLUMN_COLOR] == undefined) {
         settings[SETTING_KEY.COLUMN_COLOR] = singleSelectColumn.name;
@@ -577,17 +528,12 @@ class App extends React.Component {
             rows={rows}
             rowsColor={rowsColor}
             calendarViews={this.calendarViews}
-            getRowById={this.dtable.getRowById}
             appendRow={this.appendRow}
             modifyRow={this.modifyRow}
             settings={settings}
-            dtable={this.dtable}
             collaborators={this.getRelatedUsersFromLocal()}
             formulaRows={formulaRows}
-            CellType={this.cellType}
-            optionColors={this.optionColors}
             rowColorsMap={this.rowColorsMap}
-            highlightColors={this.highlightColors}
             getSelectedGridView={this.getSelectedGridView}
             onRowExpand={this.onRowExpand}
             onInsertRow={this.onInsertRow}
@@ -612,8 +558,6 @@ class App extends React.Component {
             views={tableViews}
             settings={settings}
             columns={columns}
-            CellType={this.cellType}
-            columnIconConfig={this.columnIconConfig}
             selectedGridView={this.getSelectedGridView(selectedTable, selectedTableView)}
             onModifyViewSettings={this.onModifyViewSettings}
             toggleViewSettingPanel={this.toggleViewSettingPanel}

@@ -76,7 +76,7 @@ class MonthView extends React.Component {
     });
     this.sortWeeksEvents(weekEventsMap, accessors);
     return weekEventsMap;
-  }
+  };
 
   updateWeekEvents = (weekEventsMap, m_eventWeekStart, event) => {
     const formatEventWeekStart = m_eventWeekStart.format('YYYY-MM-DD');
@@ -85,14 +85,14 @@ class MonthView extends React.Component {
     } else {
       weekEventsMap[formatEventWeekStart] = [event];
     }
-  }
+  };
 
   sortWeeksEvents = (weekEventsMap, accessors) => {
     Object.keys(weekEventsMap).forEach((weekStart) => {
       let events = weekEventsMap[weekStart];
       weekEventsMap[weekStart].events = events.sort((prevEvent, nextEvent) => sortEvents(prevEvent, nextEvent, accessors));
     });
-  }
+  };
 
   componentDidMount() {
     if (this.rbcMonthRows) {
@@ -163,7 +163,7 @@ class MonthView extends React.Component {
     if (!this.props.isMobile) return;
     this.startDate = dates.startOf(dayjs(this.props.date).startOf(DATE_UNIT.YEAR).subtract(2, DATE_UNIT.YEAR), DATE_UNIT.WEEK, this.props.localizer.startOfWeek());
     this.endDate = dates.startOf(dayjs(this.props.date).endOf(DATE_UNIT.YEAR).add(2, DATE_UNIT.YEAR), DATE_UNIT.WEEK, this.props.localizer.startOfWeek());
-  }
+  };
 
   onMonthViewScroll = (evt) => {
     if (!this.isScrolling) {
@@ -179,7 +179,7 @@ class MonthView extends React.Component {
     } else {
       this.onScrollOnDesktop(scrollTop, date, allWeeksStartDates, monthRowsHeight);
     }
-  }
+  };
 
   onScrollOnDesktop = (scrollTop, currentDate, allWeeksStartDates, monthRowsHeight) => {
     const renderedRowsCount = getRenderedRowsCount(monthRowsHeight);
@@ -198,7 +198,7 @@ class MonthView extends React.Component {
     }
     const visibleEndIndex = visibleStartIndex + renderedRowsCount;
     this.updateScroll(scrollTop, visibleStartIndex, visibleEndIndex, allWeeksStartDates);
-  }
+  };
 
   onScrollOnMobile = (scrollTop, currentDate, allWeeksStartDates, monthRowsHeight) => {
     const datesCount = allWeeksStartDates.length;
@@ -215,7 +215,7 @@ class MonthView extends React.Component {
       overscanStartIndex,
       overscanEndIndex,
     });
-  }
+  };
 
   updateScroll = (scrollTop, visibleStartIndex, visibleEndIndex, allWeeksStartDates) => {
     let overscanStartIndex = getOverscanStartIndex(visibleStartIndex);
@@ -229,7 +229,7 @@ class MonthView extends React.Component {
     }, () => {
       this.rbcMonthRows.scrollTop = scrollTop;
     });
-  }
+  };
 
   updateScrollByDateOnMobile = (date, allWeeksStartDates) => {
     const monthRowsHeight = this.rbcMonthRows.offsetHeight;
@@ -242,7 +242,7 @@ class MonthView extends React.Component {
     }, () => {
       this.rbcMonthRows.scrollTop = visibleStartIndex * MONTH_ROW_HEIGHT;
     });
-  }
+  };
 
   getVisibleBoundariesByDate = (date, allWeeksStartDates, monthRowsHeight) => {
     const datesCount = allWeeksStartDates.length;
@@ -258,11 +258,11 @@ class MonthView extends React.Component {
       overscanStartIndex,
       overscanEndIndex,
     };
-  }
+  };
 
   isDateBetweenDateRange = (date) => {
     return dates.inRange(date, this.startDate, this.endDate, DATE_UNIT.MONTH);
-  }
+  };
 
   scrollToTop = () => {
     let scrollTop = this.rbcMonthRows.scrollTop;
@@ -270,7 +270,7 @@ class MonthView extends React.Component {
       return;
     }
     this.rbcMonthRows.scrollTop = 0;
-  }
+  };
 
   scrollToBottom = () => {
     const { scrollHeight, offsetHeight, scrollTop } = this.rbcMonthRows;
@@ -279,7 +279,7 @@ class MonthView extends React.Component {
       return;
     }
     this.rbcMonthRows.scrollTop = restScrollTop;
-  }
+  };
 
   handleShowMore = (events, date, cell, slot, target) => {
     //cancel any pending selections so only the event click goes through.
@@ -303,11 +303,11 @@ class MonthView extends React.Component {
 
   onHidePopup = () => {
     this.setState({popup: false, overlay: {}});
-  }
+  };
 
   onInsertRow = (date) => {
     this.props.onInsertRow(dates.getFormattedDate(date, 'YYYY-MM-DD'));
-  }
+  };
 
   render() {
     let { className, isMobile } = this.props;
@@ -416,7 +416,7 @@ class MonthView extends React.Component {
 
   renderFestivalCell = (date) => {
     return this.renderFestival(date);
-  }
+  };
 
   renderHeaders(row) {
     let { localizer, components, isMobile } = this.props;

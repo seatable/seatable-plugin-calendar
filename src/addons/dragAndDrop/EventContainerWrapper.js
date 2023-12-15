@@ -26,7 +26,7 @@ class EventContainerWrapper extends React.Component {
     localizer: PropTypes.object.isRequired,
     slotMetrics: PropTypes.object.isRequired,
     resource: PropTypes.any,
-  }
+  };
 
   static contextTypes = {
     draggable: PropTypes.shape({
@@ -37,7 +37,7 @@ class EventContainerWrapper extends React.Component {
       dragAndDropAction: PropTypes.object,
       dragFromOutsideItem: PropTypes.func,
     }),
-  }
+  };
 
   constructor(...args) {
     super(...args);
@@ -97,7 +97,7 @@ class EventContainerWrapper extends React.Component {
     );
 
     this.update(event, slotMetrics.getRange(currentSlot, end, false, true));
-  }
+  };
 
   handleResize(point, boundaryBox) {
     let start, end;
@@ -130,7 +130,7 @@ class EventContainerWrapper extends React.Component {
       allDay: false,
       resource,
     });
-  }
+  };
 
   _selectable = () => {
     let node = findDOMNode(this);
@@ -200,7 +200,7 @@ class EventContainerWrapper extends React.Component {
       this.reset();
       this.context.draggable.onEnd(null);
     });
-  }
+  };
 
   handleInteractionEnd = () => {
     const { resource } = this.props;
@@ -213,13 +213,13 @@ class EventContainerWrapper extends React.Component {
       end: event.end,
       resourceId: resource,
     });
-  }
+  };
 
   _teardownSelectable = () => {
     if (!this._selector) return;
     this._selector.teardown();
     this._selector = null;
-  }
+  };
 
   render() {
     const {

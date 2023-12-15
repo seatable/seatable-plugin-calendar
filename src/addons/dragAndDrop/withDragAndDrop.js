@@ -82,7 +82,7 @@ export default function withDragAndDrop(Calendar) {
       components: PropTypes.object,
       elementProps: PropTypes.object,
       step: PropTypes.number,
-    }
+    };
 
     static defaultProps = {
       // TODO: pick these up from Calendar.defaultProps
@@ -90,11 +90,11 @@ export default function withDragAndDrop(Calendar) {
       draggableAccessor: null,
       resizableAccessor: null,
       step: 30,
-    }
+    };
 
     static contextTypes = {
       dragDropManager: PropTypes.object,
-    }
+    };
 
     static childContextTypes = {
       draggable: PropTypes.shape({
@@ -107,7 +107,7 @@ export default function withDragAndDrop(Calendar) {
         resizableAccessor: accessor,
         dragAndDropAction: PropTypes.object,
       }),
-    }
+    };
 
     constructor(...args) {
       super(...args);
@@ -140,7 +140,7 @@ export default function withDragAndDrop(Calendar) {
 
     defaultOnDragOver = event => {
       event.preventDefault();
-    }
+    };
 
     handleBeginAction = (event, action, direction, currentEventEl) => {
       const { onDragStart } = this.props;
@@ -148,11 +148,11 @@ export default function withDragAndDrop(Calendar) {
       if (onDragStart) {
         onDragStart({ event, action, direction });
       }
-    }
+    };
 
     handleInteractionStart = () => {
       if (this.state.interacting === false) this.setState({ interacting: true });
-    }
+    };
 
     handleInteractionEnd = interactionInfo => {
       const { action, event } = this.state;
@@ -171,7 +171,7 @@ export default function withDragAndDrop(Calendar) {
       interactionInfo.event = event;
       if (action === 'move') this.props.onEventDrop(interactionInfo);
       if (action === 'resize') this.props.onEventResize(interactionInfo);
-    }
+    };
 
     render() {
       const { selectable, elementProps, ...props } = this.props;

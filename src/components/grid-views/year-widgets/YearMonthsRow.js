@@ -23,7 +23,7 @@ class YearMonthsRow extends React.PureComponent {
       months.push(_month > 9 ? _month + '' : `0${_month}`);
     }
     return months;
-  }
+  };
 
   render() {
     const { year, yearOfToday, sMonthOfToday, dateOfToday, dayEventsMap, localizer } = this.props;

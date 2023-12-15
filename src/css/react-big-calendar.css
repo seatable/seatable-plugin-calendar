@@ -330,7 +330,6 @@ button.rbc-input::-moz-focus-inner {
   margin: 0;
   padding: 2px 5px;
   border-radius: 3px;
-  color: #000;
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -1186,7 +1185,7 @@ button.rbc-input::-moz-focus-inner {
 
 /* for mobile */
 .mobile-view-selector {
-  color: #4d4d4d;
+  color: #212529;
   background: #fff;
   height: 26px;
   font-size: 14px;

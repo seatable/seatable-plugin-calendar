@@ -47,7 +47,7 @@ class SelectExportTimeRangeDialog extends Component {
         }
       </Picker>
     );
-  }
+  };
 
   renderRangeCalendar = () => {
     const { dateRange } = this.state;
@@ -62,7 +62,7 @@ class SelectExportTimeRangeDialog extends Component {
         showOk={true}
       />
     );
-  }
+  };
 
   onOpenChange = (open) => {
     if (!open) {
@@ -78,28 +78,28 @@ class SelectExportTimeRangeDialog extends Component {
         return;
       }
     }
-  }
+  };
 
   onDatePickerChange = (dates) => {
     this.setState({
       dateRange: dates,
       outOfRange: false
     });
-  }
+  };
 
   onChangeSelectedRangeDates = (dates) => {
     this.setState({
       dateRange: dates,
       outOfRange: false
     });
-  }
+  };
 
   toggle = () => {
     if (this.props.isExporting) {
       return;
     }
     this.props.toggleDialog();
-  }
+  };
 
   handleSubmit = () => {
     if (this.props.isExporting) {
@@ -109,7 +109,7 @@ class SelectExportTimeRangeDialog extends Component {
     const startDate = dateRange[0].format(DATE_FORMAT.YEAR_MONTH);
     const endDate = dateRange[1].format(DATE_FORMAT.YEAR_MONTH);
     this.props.onConfirmTimeRange(startDate, endDate);
-  }
+  };
 
   render() {
     const { isExporting } = this.props;

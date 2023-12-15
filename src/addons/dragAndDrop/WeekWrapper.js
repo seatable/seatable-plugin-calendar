@@ -30,7 +30,7 @@ class WeekWrapper extends React.Component {
     getters: PropTypes.object.isRequired,
     components: PropTypes.object.isRequired,
     resourceId: PropTypes.any,
-  }
+  };
 
   static contextTypes = {
     draggable: PropTypes.shape({
@@ -41,7 +41,7 @@ class WeekWrapper extends React.Component {
       onBeginAction: PropTypes.func,
       dragFromOutsideItem: PropTypes.func,
     }),
-  }
+  };
 
   constructor(...args) {
     super(...args);
@@ -106,7 +106,7 @@ class WeekWrapper extends React.Component {
     );
 
     this.update(event, start, end);
-  }
+  };
 
   handleDropFromOutside = (point, rowBox) => {
     if (!this.context.draggable.onDropFromOutside) return;
@@ -121,7 +121,7 @@ class WeekWrapper extends React.Component {
       end: dates.add(start, 1, 'day'),
       allDay: false,
     });
-  }
+  };
 
   handleDragOverFromOutside = ({ x, y }, node) => {
     if (!this.context.draggable.dragFromOutsideItem) return;
@@ -131,7 +131,7 @@ class WeekWrapper extends React.Component {
       node,
       this.context.draggable.dragFromOutsideItem()
     );
-  }
+  };
 
   handleResize(point, node) {
     const { event, direction } = this.context.draggable.dragAndDropAction;
@@ -259,7 +259,7 @@ class WeekWrapper extends React.Component {
       this.reset();
       this.context.draggable.onEnd(null);
     });
-  }
+  };
 
   handleInteractionEnd = () => {
     const { resourceId, isAllDay } = this.props;
@@ -273,13 +273,13 @@ class WeekWrapper extends React.Component {
       resourceId,
       isAllDay,
     });
-  }
+  };
 
   _teardownSelectable = () => {
     if (!this._selector) return;
     this._selector.teardown();
     this._selector = null;
-  }
+  };
 
   render() {
     const { children, accessors } = this.props;

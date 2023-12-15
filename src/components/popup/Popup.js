@@ -38,16 +38,16 @@ class Popup extends React.Component {
       this.closeBtn === event.target) {
       this.props.onHidePopup();
     }
-  }
+  };
 
   setPopperRef = (node) => {
     this.popperRef = node;
-  }
+  };
 
   handleScroll = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-  }
+  };
 
   render() {
     let {

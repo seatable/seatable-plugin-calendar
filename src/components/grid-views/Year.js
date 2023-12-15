@@ -42,7 +42,7 @@ class YearView extends React.Component {
     // the endDate will be '2025-12-01'
     this.startDate = dayjs(this.props.date).startOf(DATE_UNIT.YEAR).subtract(4, DATE_UNIT.YEAR);
     this.endDate = dayjs(this.props.date).endOf(DATE_UNIT.YEAR).add(4, DATE_UNIT.YEAR).startOf(DATE_UNIT.MONTH);
-  }
+  };
 
   componentDidMount() {
     if (!this.rbcYearView) return;
@@ -109,7 +109,7 @@ class YearView extends React.Component {
       }
     });
     return dayEventsMap;
-  }
+  };
 
   onYearViewScroll = (event) => {
     event.preventDefault();
@@ -126,7 +126,7 @@ class YearView extends React.Component {
     } else {
       this.onScrollOnDesktop(scrollTop, offsetHeight);
     }
-  }
+  };
 
   onScrollOnDesktop = (scrollTop, viewportHeight) => {
     const { date } = this.props;
@@ -162,7 +162,7 @@ class YearView extends React.Component {
     }, () => {
       this.rbcYearView.scrollTop = scrollTop;
     });
-  }
+  };
 
   onScrollOnMobile = (scrollTop, viewportHeight) => {
     const { date } = this.props;
@@ -185,7 +185,7 @@ class YearView extends React.Component {
       overscanStartIndex,
       overscanEndIndex,
     });
-  }
+  };
 
   updateScrollByDateOnMobile = (date) => {
     const { offsetHeight } = this.rbcYearView;
@@ -196,11 +196,11 @@ class YearView extends React.Component {
     }, () => {
       this.rbcYearView.scrollTop = initState.visibleStartIndex * YEAR_MONTHS_ROW_HEIGHT;
     });
-  }
+  };
 
   isDateBetweenDateRange = (date) => {
     return dates.inRange(date, this.startDate, this.endDate, DATE_UNIT.MONTH);
-  }
+  };
 
   scrollToTop = () => {
     let scrollTop = this.rbcYearView.scrollTop;
@@ -208,7 +208,7 @@ class YearView extends React.Component {
       return;
     }
     this.rbcYearView.scrollTop = 0;
-  }
+  };
 
   scrollToBottom = () => {
     const { scrollHeight, offsetHeight, scrollTop } = this.rbcYearView;
@@ -217,7 +217,7 @@ class YearView extends React.Component {
       return;
     }
     this.rbcYearView.scrollTop = restScrollTop;
-  }
+  };
 
   handleShowMore = ({cell, events, date}) => {
     if (!this.state.popup) {
@@ -230,11 +230,11 @@ class YearView extends React.Component {
         popup: true,
       });
     }
-  }
+  };
 
   onHidePopup = () => {
     this.setState({popup: false, overlay: {}});
-  }
+  };
 
   render() {
     const { className, isMobile } = this.props;

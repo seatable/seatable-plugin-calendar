@@ -864,7 +864,7 @@ class Calendar extends React.Component {
       return this.currentView && this.currentView.isDateBetweenDateRange(date);
     }
     return true;
-  }
+  };
 
   scrollToBoundary = (action) => {
     if (VIEWS_SUPPORT_SCROLL_ON_MOBILE.includes(this.props.view)) {
@@ -875,7 +875,7 @@ class Calendar extends React.Component {
         this.currentView.scrollToTop();
       }
     }
-  }
+  };
 
   onSelectView = view => {
     if (view !== this.props.view && isValidView(view, this.props)) {
@@ -912,11 +912,11 @@ class Calendar extends React.Component {
     const { startDateColumn, onInsertRow } = this.props;
     const { name } = startDateColumn;
     onInsertRow({[name]: date});
-  }
+  };
 
   updateCurrentDate = (date) => {
     this.setState({date, changeDateByNavicate: false});
-  }
+  };
 
   render() {
     let {

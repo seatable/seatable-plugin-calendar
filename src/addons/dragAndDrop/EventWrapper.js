@@ -14,7 +14,7 @@ class EventWrapper extends React.Component {
       resizableAccessor: accessor,
       dragAndDropAction: PropTypes.object,
     }),
-  }
+  };
 
   static propTypes = {
     type: PropTypes.oneOf(['date', 'time']),
@@ -27,33 +27,33 @@ class EventWrapper extends React.Component {
     continuesAfter: PropTypes.bool,
     isDragging: PropTypes.bool,
     isResizing: PropTypes.bool,
-  }
+  };
 
   handleResizeUp = e => {
     if (e.button !== 0) return;
     e.stopPropagation();
     this.context.draggable.onBeginAction(this.props.event, 'resize', 'UP');
-  }
+  };
   handleResizeDown = e => {
     if (e.button !== 0) return;
     e.stopPropagation();
     this.context.draggable.onBeginAction(this.props.event, 'resize', 'DOWN');
-  }
+  };
   handleResizeLeft = e => {
     if (e.button !== 0) return;
     e.stopPropagation();
     this.context.draggable.onBeginAction(this.props.event, 'resize', 'LEFT');
-  }
+  };
   handleResizeRight = e => {
     if (e.button !== 0) return;
     e.stopPropagation();
     this.context.draggable.onBeginAction(this.props.event, 'resize', 'RIGHT');
-  }
+  };
   handleStartDragging = e => {
     if (e.button === 0) {
       this.context.draggable.onBeginAction(this.props.event, 'move', '', this.props.children);
     }
-  }
+  };
 
   renderAnchor(direction) {
     const cls = direction === 'Up' || direction === 'Down' ? 'ns' : 'ew';

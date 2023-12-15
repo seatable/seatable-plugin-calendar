@@ -15,11 +15,11 @@ class EventCell extends React.Component {
       borderLeft: highlightColor && `3px solid ${highlightColor}`,
       color: textColor,
     };
-  }
+  };
 
   onRowExpand = (data) => {
     this.props.onRowExpand(data.row);
-  }
+  };
 
 
   render() {

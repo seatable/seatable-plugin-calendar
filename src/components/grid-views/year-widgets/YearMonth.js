@@ -67,7 +67,7 @@ class YearMonth extends React.PureComponent {
         </div>
       );
     });
-  }
+  };
 
   handleShowMore = (date, events, overlay) => {
     this.props.handleShowMore({
@@ -75,7 +75,7 @@ class YearMonth extends React.PureComponent {
       date,
       events,
     });
-  }
+  };
 
   render() {
     const { localizer, dayEventsMap, month, isCurrentMonth, dateOfToday } = this.props;

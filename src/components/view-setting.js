@@ -93,7 +93,7 @@ class ViewSetting extends React.Component {
       }
     });
     return { dateColumns, endDateColumns, colorColumns, titleColumns };
-  }
+  };
 
   getSelectorOptions = ({ dateColumns, endDateColumns, colorColumns, titleColumns }) => {
     const { tables, views } = this.props;
@@ -138,7 +138,7 @@ class ViewSetting extends React.Component {
       titleColumnOptions, dateColumnOptions, endDateColumnOptions,
       colorFieldOptions, weekStartOptions, startYearFirstWeekOptions,
     };
-  }
+  };
 
   renderSelector = (options, settingKey) => {
     let { settings } = this.state;
@@ -160,7 +160,7 @@ class ViewSetting extends React.Component {
         onChange={this.onModifySettings}
       />
     );
-  }
+  };
 
   renderColorSelector = (options) => {
     const { settings } = this.props;
@@ -181,7 +181,7 @@ class ViewSetting extends React.Component {
         onChange={this.onSelectColoredBy}
       />
     );
-  }
+  };
 
   onSelectColoredBy = (selectedOption) => {
     const { setting_key, value } = selectedOption;
@@ -195,7 +195,7 @@ class ViewSetting extends React.Component {
     }
     const newSettings = Object.assign({}, this.props.settings, update);
     this.props.onModifyViewSettings(newSettings);
-  }
+  };
 
   updateColumn = (targetColumnKey, targetShown) => {
     const { settings } = this.props;
@@ -206,7 +206,7 @@ class ViewSetting extends React.Component {
       return item;
     });
     this.props.onModifyViewSettings(settings);
-  }
+  };
 
   moveColumn = (targetColumnKey, targetIndexColumnKey) => {
     const { settings } = this.props;
@@ -219,7 +219,7 @@ class ViewSetting extends React.Component {
     configuredColumns.splice(targetIndex, 0, targetColumn);
     settings.columns = configuredColumns;
     this.props.onModifyViewSettings(settings);
-  }
+  };
 
   onToggleColumnsVisibility = (columns, fieldAllShown) => {
     const { settings } = this.props;
@@ -229,7 +229,7 @@ class ViewSetting extends React.Component {
     }));
     settings.columns = updatedColumns;
     this.props.onModifyViewSettings(settings);
-  }
+  };
 
   getCurrentConfiguredColumns = () => {
     const { columns, settings } = this.props;
@@ -267,7 +267,7 @@ class ViewSetting extends React.Component {
     }
 
     return configuredColumns;
-  }
+  };
 
   render() {
     const {

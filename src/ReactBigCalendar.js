@@ -52,7 +52,7 @@ class ReactBigCalendar extends React.Component {
   getSelectedView = () => {
     const { activeTable, activeView } = this.props;
     return this.props.getSelectedGridView(activeTable, activeView);
-  }
+  };
 
   onSelectView = (view) => {
     let selectedCalendarView = JSON.parse(localStorage.getItem(KEY_SELECTED_CALENDAR_VIEW)) || {};
@@ -62,7 +62,7 @@ class ReactBigCalendar extends React.Component {
     selectedCalendarView[key] = view;
     localStorage.setItem(KEY_SELECTED_CALENDAR_VIEW, JSON.stringify(selectedCalendarView));
     this.setState({selectedView: view});
-  }
+  };
 
   getTitle = (row, column) => {
     const { collaborators, formulaRows } = this.props;
@@ -72,7 +72,7 @@ class ReactBigCalendar extends React.Component {
       return getCellValueStringResult(row, column, { formulaRows, collaborators });
     }
     return value;
-  }
+  };
 
   getTitleColumn = (columnName) => {
     const { columns } = this.props;
@@ -81,13 +81,13 @@ class ReactBigCalendar extends React.Component {
       return columns.find(c => c.name === columnName) || {};
     }
     return columns.find(c => TITLE_COLUMN_TYPES.includes(c.type)) || {};
-  }
+  };
 
   getDateColumn = (columnName) => {
     const { columns } = this.props;
     if (!Array.isArray(columns)) return null;
     return columns.find(c => c.name === columnName) || null;
-  }
+  };
 
   getColorColumn = (columnName) => {
     const { columns } = this.props;
@@ -96,7 +96,7 @@ class ReactBigCalendar extends React.Component {
       return columns.find(c => c.name === columnName) || null;
     }
     return null; // for 'Not used': settings[SETTING_KEY.COLUMN_COLOR] is `''`
-  }
+  };
 
   getEvents = (props) => {
     const { activeTable, rows, settings } = props;
@@ -121,7 +121,7 @@ class ReactBigCalendar extends React.Component {
       }
     });
     return events;
-  }
+  };
 
   getEventEndDate = (rawRow, row, columnType, columnName, columnKey, startDate) => {
     switch (columnType) {
@@ -131,7 +131,7 @@ class ReactBigCalendar extends React.Component {
         return dayjs(startDate).add(rawRow[columnName], 'seconds').format('YYYY-MM-DD HH:mm');
       default: return null;
     }
-  }
+  };
 
   getEvent = (rawRow, row, titleColumn, startDateColumn, endDateColumn, colorColumn) => {
     const { rowsColor, rowColorsMap, settings } = this.props;
@@ -157,7 +157,7 @@ class ReactBigCalendar extends React.Component {
     const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
     const eventColors = TableEvent.getColors({row, colorColumn, configuredUseRowColor, rowsColor, rowColorsMap});
     return new TableEvent({row, date, endDate, title, titleColumn, ...eventColors});
-  }
+  };
 
   getFormattedDateWithDifferentClient = (date) => {
     if (!date) {
@@ -168,11 +168,11 @@ class ReactBigCalendar extends React.Component {
       return (date + '').split('-').join('/');
     }
     return date;
-  }
+  };
 
   onRowExpand = (row) => {
     this.props.onRowExpand(row, this.props.activeTable);
-  }
+  };
 
   onSelectEvent = ({row}) => this.onRowExpand(row);
 
@@ -180,12 +180,12 @@ class ReactBigCalendar extends React.Component {
     let { activeTable, activeView, onInsertRow, rows } = this.props;
     let row_id = rows.length > 0 ? rows[rows.length - 1]._id : '';
     onInsertRow(rowData, activeTable, activeView, row_id);
-  }
+  };
 
   getFormattedDate = (date, originalFormat) => {
     const targetFormat = originalFormat && originalFormat.indexOf('HH:mm') > -1 ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD';
     return dayjs(date).format(targetFormat);
-  }
+  };
 
   /**
    * create new event row
@@ -221,7 +221,7 @@ class ReactBigCalendar extends React.Component {
       }
     }
     appendRow(activeTable, rowData);
-  }
+  };
 
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     const { events } = this.state;
@@ -279,20 +279,20 @@ class ReactBigCalendar extends React.Component {
     this.setState({
       events: nextEvents
     });
-  }
+  };
 
   handleSelectSlot = ({ action, start, end}) => {
     if (action === 'select') {
       this.createEvent({start, end});
     }
-  }
+  };
 
   handleSelecting = ({ start, end }) => {
     const { settings } = this.props;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
     return startDateColumn.type === CellType.DATE;
-  }
+  };
 
   render() {
     const { settings, calendarViews } = this.props;

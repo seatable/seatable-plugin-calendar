@@ -9,11 +9,11 @@ class YearDay extends React.PureComponent {
     this.props.handleShowMore({
       cell: findDOMNode(this),
     });
-  }
+  };
 
   hideDayEvents = () => {
     this.setState({isShowEvents: false});
-  }
+  };
 
   render() {
     const { isOffRange, isCurrentDay, hasEvents, label } = this.props;

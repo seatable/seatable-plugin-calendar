@@ -90,11 +90,11 @@ class App extends React.Component {
 
   onDTableConnect = () => {
     this.resetData();
-  }
+  };
 
   onDTableChanged = () => {
     this.resetData();
-  }
+  };
 
   resetData = (init = false) => {
     let { isViewSettingPanelOpen } = this.state;
@@ -129,7 +129,7 @@ class App extends React.Component {
       rows,
       rowsColor
     });
-  }
+  };
 
   initCalendarViews = () => {
     if (this.isMobile) {
@@ -142,23 +142,23 @@ class App extends React.Component {
         CALENDAR_VIEWS.DAY, CALENDAR_VIEWS.AGENDA,
       ];
     }
-  }
+  };
 
   getPluginViewRows = (settings) => {
     const selectedTable = this.getSelectedTable(settings);
     const selectedTableView = this.getSelectedView(selectedTable, settings);
     return this.getRows(selectedTable, selectedTableView);
-  }
+  };
 
   getSelectedViewIds = (key) => {
     const selectedViewIds = window.localStorage.getItem(key);
     return selectedViewIds ? JSON.parse(selectedViewIds) : {};
-  }
+  };
 
   onPluginToggle = () => {
     this.setState({showDialog: false});
     window.app.onClosePlugin && window.app.onClosePlugin();
-  }
+  };
 
   getRows = (table, view) => {
     const { name: tableName } = table;
@@ -168,7 +168,7 @@ class App extends React.Component {
       rows.push(row);
     }, { convertLinkID: true });
     return rows;
-  }
+  };
 
   updateSettings = (table, start_date_column_key, label_column_key, end_date_column_key) => {
     const { _id } = table;
@@ -177,13 +177,13 @@ class App extends React.Component {
     this.setState({plugin_settings}, () => {
       window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
-  }
+  };
 
   onRowExpand = (row, table) => {
     if (window.app.expandRow) {
       window.app.expandRow(row, table);
     }
-  }
+  };
 
   onInsertRow = (rowData, activeTable, activeView, rowId) => {
     const initData = window.dtableSDK.getInsertedRowInitData(activeView, activeTable, rowId);
@@ -194,21 +194,21 @@ class App extends React.Component {
     if (insertedRow && window.app.expandRow) {
       window.app.expandRow(insertedRow, activeTable);
     }
-  }
+  };
 
   toggleViewSettingPanel = () => {
     this.setState({ isViewSettingPanelOpen: !this.state.isViewSettingPanelOpen });
-  }
+  };
 
   hideViewSettingPanel = () => {
     if (this.state.isViewSettingPanelOpen) {
       this.setState({ isViewSettingPanelOpen: false });
     }
-  }
+  };
 
   toggleTimeRangeDialog = () => {
     this.setState({ isTimeRangeDialogOpen: !this.state.isTimeRangeDialogOpen });
-  }
+  };
 
   exportSelectedMonths = (start, end) => {
     let exportedMonths = [];
@@ -250,7 +250,7 @@ class App extends React.Component {
         this.toggleTimeRangeDialog();
       });
     });
-  }
+  };
 
   renderBtnGroups = () => {
     return (
@@ -266,7 +266,7 @@ class App extends React.Component {
         <span className="dtable-font dtable-icon-x op-icon btn-close" onClick={this.onPluginToggle}></span>
       </div>
     );
-  }
+  };
 
   onAddView = (viewName) => {
     let { plugin_settings } = this.state;
@@ -287,7 +287,7 @@ class App extends React.Component {
       window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
       this.viewsTabs && this.viewsTabs.setViewsTabsScroll();
     });
-  }
+  };
 
   onRenameView = (viewName) => {
     let { plugin_settings, selectedViewIdx } = this.state;
@@ -299,7 +299,7 @@ class App extends React.Component {
     }, () => {
       window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
-  }
+  };
 
   onDeleteView = (viewId) => {
     let { plugin_settings, selectedViewIdx } = this.state;
@@ -320,7 +320,7 @@ class App extends React.Component {
         window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
       });
     }
-  }
+  };
 
   // move view, update `selectedViewIdx`
   onMoveView = (targetViewID, targetIndexViewID, relativePosition) => {
@@ -362,7 +362,7 @@ class App extends React.Component {
     }, () => {
       window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
-  }
+  };
 
   onSelectView = (viewId) => {
     let { plugin_settings } = this.state;
@@ -376,23 +376,23 @@ class App extends React.Component {
       this.setState({selectedViewIdx: viewIdx, isViewSettingPanelOpen, rows, rowsColor});
       this.storeSelectedViewId(viewId);
     }
-  }
+  };
 
   storeSelectedViewId = (viewId) => {
     let dtableUuid = getDtableUuid();
     let selectedViewIds = this.getSelectedViewIds(KEY_SELECTED_VIEW_IDS);
     selectedViewIds[dtableUuid] = viewId;
     window.localStorage.setItem(KEY_SELECTED_VIEW_IDS, JSON.stringify(selectedViewIds));
-  }
+  };
 
   isValidViewSettings = (settings) => {
     return settings && Object.keys(settings).length > 0;
-  }
+  };
 
   getSelectedTable = (settings = {}) => {
     const tables = window.dtableSDK.getTables();
     return getTableByName(tables, settings[SETTING_KEY.TABLE_NAME]) || tables[0];
-  }
+  };
 
   onModifyViewSettings = (updated) => {
     let { plugin_settings, selectedViewIdx } = this.state;
@@ -404,7 +404,7 @@ class App extends React.Component {
     this.setState({plugin_settings}, () => {
       window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
-  }
+  };
 
   getSelectedView = (table, settings = {}) => {
     const selectedView = getViewByName(table.views, settings[SETTING_KEY.VIEW_NAME]);
@@ -413,15 +413,15 @@ class App extends React.Component {
       return tableViews[0];
     }
     return selectedView;
-  }
+  };
 
   modifyRow = (table, row, updated) => {
     window.dtableSDK.modifyRow(table, row, updated);
-  }
+  };
 
   appendRow = (table, rowData) => {
     window.dtableSDK.appendRow(table, rowData);
-  }
+  };
 
   getRowsColor = (settings) => {
     const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
@@ -432,7 +432,7 @@ class App extends React.Component {
     const selectedTableView = this.getSelectedView(selectedTable, settings);
     const viewRows = window.dtableSDK.getViewRows(selectedTableView, selectedTable);
     return window.dtableSDK.getViewRowsColor(viewRows, selectedTableView, selectedTable);
-  }
+  };
 
   getRelatedUsersFromLocal = () => {
     let { collaborators, state } = window.app;
@@ -441,7 +441,7 @@ class App extends React.Component {
       return state && state.collaborators;
     }
     return collaborators; // local develop
-  }
+  };
 
   getSelectedGridView = (table, view) => {
     if (!table || !view) {
@@ -452,12 +452,12 @@ class App extends React.Component {
     const key = `${dtableUuid}_${table._id}_${view._id}`;
     const calendarView = keySelectedCalendarView[key];
     return this.calendarViews.indexOf(calendarView) < 0 ? CALENDAR_VIEWS.MONTH : calendarView;
-  }
+  };
 
   getTableFormulaRows = (table, view) => {
     const rows = window.dtableSDK.getViewRows(view, table);
     return window.dtableSDK.getTableFormulaResults(table, rows);
-  }
+  };
 
   render() {
     const {

@@ -77,13 +77,13 @@ class CurrentTimeIndicator extends React.Component {
     } else {
       this.clearTimeIndicatorInterval();
     }
-  }
+  };
 
   getCurrentTime = () => {
     const { getNow, localizer } = this.props;
     const currentTime = getNow();
     return localizer.format(currentTime, 'timeGutterFormat');
-  }
+  };
 
   render() {
     const { currentTime } = this.state;

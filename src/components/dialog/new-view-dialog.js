@@ -34,7 +34,7 @@ class NewViewDialog extends React.Component {
       this.handleSubmit();
       return;
     }
-  }
+  };
 
   handleChange = (event) => {
     let value = event.target.value;
@@ -42,11 +42,11 @@ class NewViewDialog extends React.Component {
       return;
     }
     this.setState({viewName: value});
-  }
+  };
 
   toggle = () => {
     this.props.onNewViewCancel();
-  }
+  };
 
   handleSubmit = () => {
     let { viewName } = this.state;
@@ -57,7 +57,7 @@ class NewViewDialog extends React.Component {
     }
     this.props.onNewViewConfirm(viewName);
     this.props.onNewViewCancel();
-  }
+  };
 
   render() {
     return (

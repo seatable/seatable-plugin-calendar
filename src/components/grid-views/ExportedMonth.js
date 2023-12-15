@@ -51,7 +51,7 @@ class ExportedMonth extends React.Component {
     });
     this.sortWeeksEvents(weekEventsMap, accessors);
     return weekEventsMap;
-  }
+  };
 
   updateWeekEvents = (weekEventsMap, m_eventWeekStart, event) => {
     const formatEventWeekStart = m_eventWeekStart.format('YYYY-MM-DD');
@@ -60,14 +60,14 @@ class ExportedMonth extends React.Component {
     } else {
       weekEventsMap[formatEventWeekStart] = [event];
     }
-  }
+  };
 
   sortWeeksEvents = (weekEventsMap, accessors) => {
     Object.keys(weekEventsMap).forEach((weekStart) => {
       let events = weekEventsMap[weekStart];
       weekEventsMap[weekStart].events = events.sort((prevEvent, nextEvent) => sortEvents(prevEvent, nextEvent, accessors));
     });
-  }
+  };
 
   getContainer = () => {
     return findDOMNode(this);
@@ -95,11 +95,11 @@ class ExportedMonth extends React.Component {
 
   onHidePopup = () => {
     this.setState({popup: false, overlay: {}});
-  }
+  };
 
   onInsertRow = (date) => {
     this.props.onInsertRow(dates.getFormattedDate(date, 'YYYY-MM-DD'));
-  }
+  };
 
   render() {
     let { className } = this.props;

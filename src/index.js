@@ -41,7 +41,7 @@ class TaskList {
       dtableCollaborators[email] = collaborator;
       callback && callback();
     });
-  }
+  };
 
   static async execute() {
     await this.init();

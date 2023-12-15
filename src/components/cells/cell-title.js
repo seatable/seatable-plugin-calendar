@@ -46,7 +46,7 @@ class CellTitle extends Component {
       isDataLoaded: false,
       collaborator: null,
     };
-  }
+  };
 
   calculateCollaboratorData = (props) => {
     const { event } = props;
@@ -56,7 +56,7 @@ class CellTitle extends Component {
     } else if (titleColumn.type === 'creator') {
       this.getCollaborator(row._creator);
     }
-  }
+  };
 
   getCollaborator = (value) => {
     if (!value) {
@@ -75,7 +75,7 @@ class CellTitle extends Component {
       this.setState({isDataLoaded: true, collaborator});
       return;
     });
-  }
+  };
 
   renderCellTitle = () => {
     const { event } = this.props;
@@ -113,7 +113,7 @@ class CellTitle extends Component {
         return title;
       }
     }
-  }
+  };
 
   render() {
     return (

@@ -56,7 +56,7 @@ import { isValidDateObject } from '../utils/dates';
  *             {
  *                 "name": "Fun",
  *                 "color": "#FFDDE5",
- *                 "textColor": "#202428",
+ *                 "textColor": "#212529",
  *                 "id": "482632"
  *             },
  *             {

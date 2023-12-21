@@ -2,8 +2,7 @@ import React, { Fragment }  from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import { CellType, COLUMNS_ICON_CONFIG } from 'dtable-utils';
-import { FieldDisplaySetting } from 'dtable-ui-component';
-import DtableSelect from './dtable-select';
+import { FieldDisplaySetting, DTableSelect } from 'dtable-ui-component';
 import { CALENDAR_VIEWS, SETTING_KEY, SETTING_VALUE, TITLE_COLUMN_TYPES } from '../constants';
 import '../locale';
 
@@ -153,7 +152,7 @@ class ViewSetting extends React.Component {
       selectedOption = options[0] || undefined;
     }
     return (
-      <DtableSelect
+      <DTableSelect
         classNamePrefix={'calendar-view-setting-selector'}
         value={selectedOption}
         options={options}
@@ -174,7 +173,7 @@ class ViewSetting extends React.Component {
       selectedOption = options[0];
     }
     return (
-      <DtableSelect
+      <DTableSelect
         classNamePrefix={'calendar-view-setting-selector'}
         value={selectedOption}
         options={options}

@@ -14,12 +14,10 @@ import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
 import { generatorViewId, getDtableUuid, isIOS, isMobile, isSafari } from './utils/common';
 import View from './model/view';
-
+import icon from './image/icon.png';
 import './locale';
 
 import './css/plugin-layout.css';
-
-import icon from './image/icon.png';
 
 /**
  * the data structure of settings

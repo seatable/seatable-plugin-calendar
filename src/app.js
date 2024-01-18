@@ -4,8 +4,8 @@ import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
 import classnames from 'classnames';
 import {
-  CellType, SELECT_OPTION_COLORS, getTableByName, getViewByName, getNonArchiveViews,
-  getViewShownColumns,
+  CellType, SELECT_OPTION_COLORS, getTableByName, getViewByName,
+  getNonArchiveViews, getNonPrivateViews, getViewShownColumns,
 } from 'dtable-utils';
 import ReactBigCalendar from './ReactBigCalendar';
 import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT, CALENDAR_VIEWS, KEY_SELECTED_CALENDAR_VIEW } from './constants';
@@ -407,7 +407,7 @@ class App extends React.Component {
   getSelectedView = (table, settings = {}) => {
     const selectedView = getViewByName(table.views, settings[SETTING_KEY.VIEW_NAME]);
     if (!selectedView) {
-      const tableViews = getNonArchiveViews(table.views);
+      const tableViews = getNonPrivateViews(getNonArchiveViews(table.views));
       return tableViews[0];
     }
     return selectedView;
@@ -471,7 +471,7 @@ class App extends React.Component {
     const { settings } = selectedPluginView || { settings: {} };
     const tables = window.dtableSDK.getTables();
     const selectedTable = this.getSelectedTable(settings);
-    const tableViews = getNonArchiveViews(selectedTable.views);
+    const tableViews = getNonPrivateViews(getNonArchiveViews(selectedTable.views));
     let selectedTableView = this.getSelectedView(selectedTable, settings);
     const formulaRows = this.getTableFormulaRows(selectedTable, selectedTableView);
     selectedTableView = Object.assign({}, selectedTableView, {formula_rows: formulaRows});

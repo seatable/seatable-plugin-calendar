@@ -62,7 +62,7 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
   intlFormat('yearHeaderFormat');
   intlFormat('dayHeaderFormat');
 
-  intlFormat('agendaDateFormat', 'ddd MMM DD');
+  intlFormat('agendaDateFormat', 'ddd MMM Do');
 
   /* additional decorator formats */
   intlFormat('yearMonthWeekdayFormat', 'dd');
@@ -76,6 +76,6 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
   return subject;
 };
 
-export default function (moment, configuredWeekStart, startYearFirstWeek) {
+export default function localizer(moment, configuredWeekStart, startYearFirstWeek) {
   return intlDayHeaderFormatDecorator(momentLocalizer(moment, configuredWeekStart, startYearFirstWeek), moment);
 }

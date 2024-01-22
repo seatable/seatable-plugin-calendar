@@ -61,6 +61,7 @@ class TimeGridHeader extends React.Component {
       );
     });
   }
+
   renderRow = resource => {
     let {
       events,

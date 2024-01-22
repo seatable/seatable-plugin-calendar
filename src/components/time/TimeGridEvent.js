@@ -56,7 +56,7 @@ function TimeGridEvent(props) {
         {label}
       </span>
     </div>,
-    <div key='2' className={classnames('rbc-event-content', {'d-flex align-items-center text-nowrap':eventInSingleLine})} >
+    <div key='2' className={classnames('rbc-event-content', {'d-flex align-items-center text-nowrap': eventInSingleLine})} >
       {Event ? <Event event={event} title={title} /> : title}
     </div>
   ];

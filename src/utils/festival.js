@@ -109,7 +109,7 @@ function getTerm(date) {
   if (firstTermDay === day) {
     return SOLAR_TERM[month * 2 - 2];
   }
-  let secondTermDay = getTerm2Day(year,(month * 2));
+  let secondTermDay = getTerm2Day(year, (month * 2));
   if (secondTermDay === day) {
     return SOLAR_TERM[month * 2 - 1];
   }

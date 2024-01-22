@@ -147,8 +147,8 @@ class Agenda extends React.Component {
           <td className='rbc-agenda-time-cell'>
             {this.timeRangeLabel(day, event)}
           </td>
-          <td className='rbc-agenda-event-cell py-0'>
-            <div className="d-flex align-items-center h-6">
+          <td className='py-0 rbc-agenda-event-cell'>
+            <div className="h-6 d-flex align-items-center text-overflow">
               {Event ? <Event event={event} title={title} /> : title}
               {otherShownColumns.map((column, index) => {
                 return (
@@ -228,7 +228,7 @@ class Agenda extends React.Component {
           className="agenda-event-item d-flex justify-content-between text-gray"
           style={userProps.style}
         >
-          <div className="d-flex text-truncate mr-3">
+          <div className="mr-3 d-flex text-truncate">
             <span
               className="agenda-event-decorator"
               style={{'borderColor': event.bgColor, 'background': event.bgColor}}
@@ -261,8 +261,8 @@ class Agenda extends React.Component {
 
     return (
       <div key={dayKey}>
-        <h4 className="h6 font-weight-normal agenda-events-date m-0">{eventsDate}</h4>
-        <ul className="m-0 p-0">{eventItems}</ul>
+        <h4 className="m-0 h6 font-weight-normal agenda-events-date">{eventsDate}</h4>
+        <ul className="p-0 m-0">{eventItems}</ul>
       </div>
     );
   };
@@ -350,7 +350,8 @@ Agenda.propTypes = {
   accessors: PropTypes.object.isRequired,
   components: PropTypes.object.isRequired,
   getters: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired
+  localizer: PropTypes.object.isRequired,
+  isMobile: PropTypes.bool,
 };
 
 Agenda.defaultProps = {

@@ -16,7 +16,7 @@
   ".rbc.localizer.moment.monthFormat": "MMM",
   ".rbc.localizer.moment.yearHeaderFormat": "YYYY年",
   ".rbc.localizer.moment.dayHeaderFormat": "MMMDD日 星期dd",
-  ".rbc.localizer.moment.agendaDateFormat": "ddd MMM DD",
+  ".rbc.localizer.moment.agendaDateFormat": "ddd MMM Do",
   ".rbc.localizer.moment.yearMonthWeekdayFormat": "dd",
   ".rbc.localizer.moment.yearMonthDateFormat": "D",
   ".rbc.localizer.moment.weekOfYearFormat": "WW",

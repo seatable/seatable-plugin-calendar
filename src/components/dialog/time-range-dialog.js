@@ -6,9 +6,8 @@ import Picker from '@seafile/seafile-calendar/lib/Picker';
 import RangeCalendar from '@seafile/seafile-calendar/lib/RangeCalendar';
 import { translateCalendar } from '../../utils/seafile-calendar-translate';
 import { zIndexes, DATE_UNIT, DATE_FORMAT } from '../../constants';
-
-import '@seafile/seafile-calendar/assets/index.css';
 import { formatDayjsLocale } from '../../utils/date-format-utils';
+import '@seafile/seafile-calendar/assets/index.css';
 
 const propTypes = {
   isExporting: PropTypes.bool,
@@ -16,7 +15,7 @@ const propTypes = {
   onConfirmTimeRange: PropTypes.func,
 };
 
-class SelectExportTimeRangeDialog extends Component {
+class TimeRangeDialog extends Component {
 
   constructor(props) {
     super(props);
@@ -130,6 +129,6 @@ class SelectExportTimeRangeDialog extends Component {
   }
 }
 
-SelectExportTimeRangeDialog.propTypes = propTypes;
+TimeRangeDialog.propTypes = propTypes;
 
-export default SelectExportTimeRangeDialog;
+export default TimeRangeDialog;

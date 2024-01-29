@@ -18,6 +18,7 @@ import icon from './image/icon.png';
 import './locale';
 
 import './css/plugin-layout.css';
+import { toaster } from 'dtable-ui-component';
 
 /**
  * the data structure of settings
@@ -59,7 +60,8 @@ class App extends React.Component {
       isViewSettingPanelOpen: false,
       rows: [],
       rowsColor: {},
-      isTimeRangeDialogOpen: false
+      isTimeRangeDialogOpen: false,
+      exportedMonths: [],
     };
     this.isMobile = isMobile;
     this.isIosMobile = isMobile && isIOS;
@@ -217,6 +219,14 @@ class App extends React.Component {
       // `push` the 1st day of each month, in the native Date object
       exportedMonths.push(dayjs(startMonth).add(i, 'months').date(1).toDate());
     }
+    const prtContent = document.getElementById('exported-months');
+
+    if(!document.head?.innerHTML || !prtContent?.innerHTML) {
+      toaster.danger('当前选中日期范围内没有记录');
+      exportedMonths.length = 0;
+      return;
+    }
+    
     this.setState({
       isExporting: true,
       exportedMonths: exportedMonths
@@ -224,7 +234,6 @@ class App extends React.Component {
       const iframeID = 'iframe-for-print';
       const printIframe = document.getElementById(iframeID) || document.body.appendChild(document.createElement('iframe'));
       const printWindow = printIframe.contentWindow;
-      const prtContent = document.getElementById('exported-months');
       const removeIframe = function() {
         printWindow.document.open();
         printWindow.document.close();

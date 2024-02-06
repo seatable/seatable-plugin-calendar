@@ -48,6 +48,9 @@ const de = {
   'Table': 'Tabelle',
   'View': 'Ansicht',
   'Title': 'Titel',
+  'Fields': 'Spalten',
+  'Hide_all': 'Alle ausblenden',
+  'Show_all': 'Alle anzeigen',
   'No_options': 'Keine Optionen',
   'Not_used': 'Nicht genutzt',
   'Choose_the_time_range': 'Zeitraum auswählen',
@@ -57,8 +60,7 @@ const de = {
   'Start_the_first_week_of_the_year_on': 'Die 1. Woche des Jahres beginnt am',
   'First_day_of_the_year': '1. Tag des Jahres',
   'First_full_week_of_the_year': '1. volle Woche des Jahres',
-  'Exporting_failed': 'Keine Einträge im ausgewählten Datumsbereich.'
-
+  'Exporting_failed': 'No Records within the selected date range.',
 };
 
 export default de;

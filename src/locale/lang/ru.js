@@ -48,6 +48,9 @@ const ru = {
   'Table': 'Таблица',
   'View': 'Вид',
   'Title': 'Поле заголовка',
+  'Fields': 'Fields',
+  'Hide_all': 'Скрыть все',
+  'Show_all': 'Show all',
   'No_options': 'Нет опций',
   'Not_used': 'Не используется',
   'Choose_the_time_range': 'Выберите временной диапазон',
@@ -57,7 +60,7 @@ const ru = {
   'Start_the_first_week_of_the_year_on': 'Start the first week of the year on',
   'First_day_of_the_year': 'First day of the year',
   'First_full_week_of_the_year': 'First full week of the year',
-  'Exporting_failed': 'No Records within the selected date range.'
+  'Exporting_failed': 'No Records within the selected date range.',
 };
 
 export default ru;

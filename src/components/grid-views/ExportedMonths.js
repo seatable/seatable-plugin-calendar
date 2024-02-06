@@ -50,6 +50,7 @@ ExportedMonths.propTypes = {
   calendarHeaderHeight: PropTypes.number,
   onHidePopup: PropTypes.func,
   onInsertRow: PropTypes.func,
+  exportedMonths: PropTypes.array
 };
 
 export default ExportedMonths;

@@ -60,6 +60,7 @@ const zh_CN = {
   'Start_the_first_week_of_the_year_on': '一年的第一周开始于',
   'First_day_of_the_year': '一年的第一天',
   'First_full_week_of_the_year': '一年的第一个完整周',
+  'Exporting_failed': '当前选中日期范围内没有记录'
 };
 
 export default zh_CN;

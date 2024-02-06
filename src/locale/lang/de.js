@@ -57,6 +57,8 @@ const de = {
   'Start_the_first_week_of_the_year_on': 'Die 1. Woche des Jahres beginnt am',
   'First_day_of_the_year': '1. Tag des Jahres',
   'First_full_week_of_the_year': '1. volle Woche des Jahres',
+  'Exporting_failed': 'Keine Einträge im ausgewählten Datumsbereich.'
+
 };
 
 export default de;

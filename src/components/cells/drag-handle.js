@@ -7,7 +7,9 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
   const leftHandle = resizeDirection === 'left' && !continuesPrior && continuesAfter;
   const rightHandle = resizeDirection === 'right' && continuesPrior && !continuesAfter;
 
-  if (!(leftHandle || rightHandle)) {
+  const normalHandle = !continuesAfter && !continuesPrior;
+
+  if (!(leftHandle || rightHandle || normalHandle)) {
     display = { display: 'none' };
   }
 
@@ -20,10 +22,6 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
     transform: `translate3d(${resizeTransform.x}px, ${resizeTransform.y}px, 0)`,
   } : undefined;
 
-  const bg = {
-    backgroundColor: 'lightgrey',
-  };
-
   const classNames = {
     'left': 'resize-handle-left',
     'right': 'resize-handle-right',
@@ -34,11 +32,10 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
       {...resizeAttributes}
       {...resizeListeners}
       ref={resizeSetNodeRef}
-      style={{ ...resizeTransformPosition, ...bg, ...display }}
+      style={{ ...resizeTransformPosition, ...display }}
     >
     </div>
   );
-
 }
 
 DragHandle.propTypes = {

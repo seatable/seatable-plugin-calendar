@@ -287,63 +287,26 @@ class ReactBigCalendar extends React.Component {
     Object.setPrototypeOf(updatedEvent, TableEvent.prototype);
     const nextEvents = [...events];
     nextEvents.splice(idx, 1, updatedEvent);
-    this.setState({
-      events: nextEvents
+    requestAnimationFrame(() => {
+      this.setState({
+        events: nextEvents
+      });
     });
+    
   };
 
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     const { events } = this.state;
     const idx = events.indexOf(event);
 
-    // const { updatedData, start: startTime, end: endTime } = this.computeUpdatedData({ event, start, end, isAllDay: droppedOnAllDaySlot });
-    // const { activeTable, modifyRow } = this.props;
-    let updatedData = {};
-    const { activeTable, modifyRow, settings } = this.props;
-    const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
-    const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
-    let startDateColumn = this.getDateColumn(startDateColumnName);
-    let endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
-    if (startDateColumn) {
-      const { type, data } = startDateColumn;
-      if (type === CellType.FORMULA) {
-        return;
-      }
-      const startDateFormat = data && data.format;
-      const startDateMinutePrecision = startDateFormat && startDateFormat.indexOf('HH:mm') > -1;
-      updatedData[startDateColumn.name] = this.getFormattedDate(start, startDateFormat);
-      if (!droppedOnAllDaySlot && startDateMinutePrecision && event.allDay) {
-        event.allDay = false;
-        end = new Date(start.valueOf());
-        end.setHours(end.getHours() + TableEvent.FIXED_PERIOD_OF_TIME_IN_HOURS);
-      }
-      if (droppedOnAllDaySlot && startDateMinutePrecision) {
-        // an event can only be made all-day if it has a true end-date field when its start-date is with
-        // time (with minute precision) [if an event is across two days, it is also displayed on top]
-        if (endDateColumn && (endDateColumn !== startDateColumn) && endDateColumn.type === CellType.DATE) {
-          const startEndSameDay = dayjs(start).format('YYYY-MM-DD') === dayjs(end).format('YYYY-MM-DD');
-          if (startEndSameDay) {
-            end = dayjs(end).add(1, 'day').startOf('day').toDate();
-          }
-        }
-      }
-    }
-    if (endDateColumn) {
-      const { type, data } = endDateColumn;
-      if (type === CellType.FORMULA) {
-        end = event.end; // the end date get from the formula column is read only.
-      }
-      if (type === CellType.DATE) {
-        const endDateFormat = data && data.format;
-        updatedData[endDateColumn.name] = this.getFormattedDate(end, endDateFormat);
-      }
-    }
+    const { updatedData, start: startTime, end: endTime } = this.computeUpdatedData({ event, start, end, isAllDay: droppedOnAllDaySlot });
+    const { activeTable, modifyRow } = this.props;
     modifyRow(activeTable, event.row, updatedData);
 
     const updatedEvent = {
       ...event,
-      start,
-      end,
+      start: startTime,
+      end: endTime,
       ...{ row: getRowById(activeTable, event.row._id) }
     };
     const nextEvents = [...events];

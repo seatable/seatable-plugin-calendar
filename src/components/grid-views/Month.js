@@ -36,7 +36,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DndContext } from '@dnd-kit/core';
 import { pointerWithin, rectIntersection } from '@dnd-kit/core';
 import { throttle } from 'lodash-es';
-
+import { isEmptyObject } from 'dtable-utils';
 
 dayjs.extend(customParseFormat);
 
@@ -312,7 +312,6 @@ class MonthView extends React.Component {
     this.props.onInsertRow(dates.getFormattedDate(date, 'YYYY-MM-DD'));
   };
 
-
   measureRowLimit() {
     this.setState({ needLimitMeasure: false });
   }
@@ -505,13 +504,13 @@ class MonthView extends React.Component {
     return { start: newStart, end: newEnd };
   };
 
-  handleDnd = (event, newTime) => {
+  handleEventDrag = (event, newTime) => {
     // i just use date as the dropped item id, cause they are unique
     const { start, end } = this.getNewEventTime(event, newTime);
     this.props.onEventDrop({ event, start, end, allDay: event.allDay });
   };
 
-  handleResize = (event, newTime, type) => {
+  handleEventResize = (event, newTime, type) => {
     let start, end;
     if (type === 'leftResize') {
       start = newTime;
@@ -532,43 +531,41 @@ class MonthView extends React.Component {
     const event = dropData.event;
     if (!e.over || !event) return;
     if (dropData.type === 'dnd') {
-      this.handleDnd(event, e.over.id);
+      this.handleEventDrag(event, e.over.id);
     } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
-      this.handleResize(event, e.over.id, dropData.type);
+      this.handleEventResize(event, e.over.id, dropData.type);
     } else {
-      console.log('invalid dnd type' + dropData.type);
+      console.log('invalid type' + dropData.type);
     }
   };
 
-  // handleEventResize = (e) => {
-  //   if (!e.over) return;
+  handleEventResizing = (e) => {
+    if (!e.over) return;
+    const operateType = e.active.data.current?.type;
+    if (operateType?.includes('dnd') || !operateType ) return;
 
-  //   const operateType = e.active.data.current?.type;
-  //   if (operateType?.includes('dnd') || !operateType ) return;
+    const resizingData = e.active.data.current;
+    if (isEmptyObject(resizingData)) return;
 
-  //   const currentEventData = e.active.data.current;
+    let newTime = e.over.id;
+    let start, end;
+    if (resizingData.type === 'leftResize') {
+      start = newTime;
+      end = resizingData.event.end;
+    } else if ( resizingData.type === 'rightResize') {
+      end = newTime;
+      start = resizingData.event.start;
+    } else {
+      console.log('invalid type' + resizingData.type);
+    }
+    if (start > end) return;
+    this.props.onEventResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
+  };
 
-  //   if (isEmptyObject(currentEventData)) return;
-
-  //   let newTime = e.over.id;
-  //   let start, end;
-  //   if (currentEventData.type === 'leftResize') {
-  //     start = newTime;
-  //     end = currentEventData.event.end;
-  //   } else if ( currentEventData.type === 'rightResize') {
-  //     end = newTime;
-  //     start = currentEventData.event.start;
-  //   } else {
-  //     console.log('invalid dnd type' + currentEventData.type);
-  //   }
-    
-  //   if (start > end) return;
-    
-  //   // i just use date as the dropped item id, cause they are unique
-  //   this.props.onEventResize({ event: currentEventData.event, start, end, isAllDay: currentEventData.event.allDay });
-  // };
-
+  
   render() {
+    // const throttleHandleEventDrop = throttle(this.handleEventDrop, 500);
+    // const throttleHandleEventResize = throttle(this.handleEventResizing, 500);
     let { className, isMobile } = this.props;
     let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
     let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
@@ -586,8 +583,8 @@ class MonthView extends React.Component {
         <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
           <DndContext 
             collisionDetection={this.customCollisionDetectionAlgorithm}
-            onDragEnd={throttle(this.handleEventDrop, 100)}
-            // onDragMove={throttle(this.handleEventResize, 100)}
+            onDragEnd={this.handleEventDrop}
+            onDragMove={this.handleEventResizing}
           >
             <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom, }}>
               <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>

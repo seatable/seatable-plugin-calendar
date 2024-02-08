@@ -9,10 +9,30 @@ import { DragHandle } from './drag-handle';
 
 
 function EventCell(props) {
+  
+  let {
+    style,
+    className,
+    event,
+    selected,
+    isAllDay,
+    onDoubleClick,
+    localizer,
+    accessors,
+    getters,
+    children,
+    components: { event: Event, eventWrapper: EventWrapper },
+    slotStart,
+    slotEnd,
+    continuesPrior, 
+    continuesAfter,
+    ...restProps
+  } = props;
 
   // dnd, a.k.a drag and drop
   const { attributes: dndAttributes, listeners: dndListeners, setNodeRef: dndSetNodeRef, transform: dndTransform } = useDraggable({
-    id: props.event.row._id,
+    id: props.event.row._id + continuesAfter + continuesPrior + '-dnd',
+    // id: Math.random().toString(36).substring(7),
     data: { ...props, type: 'dnd' },
   });
   
@@ -33,25 +53,6 @@ function EventCell(props) {
   const onRowExpand = (data) => {
     props.onRowExpand(data.row);
   };
-
-  let {
-    style,
-    className,
-    event,
-    selected,
-    isAllDay,
-    onDoubleClick,
-    localizer,
-    continuesPrior,
-    continuesAfter,
-    accessors,
-    getters,
-    children,
-    components: { event: Event, eventWrapper: EventWrapper },
-    slotStart,
-    slotEnd,
-    ...restProps
-  } = props;
 
   let title = <CellTitle event={event} />;
   let tooltip = accessors.tooltip(event);
@@ -89,15 +90,21 @@ function EventCell(props) {
     </div>
   );
 
+  const normalEvent = !continuesAfter && !continuesPrior;
+  const eventCrossWeeksStartHandler = (continuesAfter && !continuesPrior);
+  const eventCrossWeeksEndHandler = (continuesPrior && !continuesAfter);
+
   return (
     <EventWrapper {...restProps} type='date'>
-      <DragHandle 
-        continuesPrior={continuesPrior}
-        continuesAfter={continuesAfter}
-        rowId={event.row._id}
-        data={props}
-        resizeDirection='left'
-      ></DragHandle>
+      {  (normalEvent || eventCrossWeeksStartHandler)  && 
+        <DragHandle 
+          continuesPrior={continuesPrior}
+          continuesAfter={continuesAfter}
+          rowId={event.row._id}
+          data={props}
+          resizeDirection='left'
+        ></DragHandle>
+      }
       <div
         ref={dndSetNodeRef}
         {...restProps}
@@ -115,14 +122,16 @@ function EventCell(props) {
       >
         {typeof children === 'function' ? children(content) : content}
       </div>
-      <DragHandle 
-        continuesPrior={continuesPrior}
-        continuesAfter={continuesAfter}
-        rowId={event.row._id}
-        data={props}
-        resizeDirection='right'
-      ></DragHandle>
-      
+      {
+        (normalEvent || eventCrossWeeksEndHandler) && 
+        <DragHandle 
+          continuesPrior={continuesPrior}
+          continuesAfter={continuesAfter}
+          rowId={event.row._id}
+          data={props}
+          resizeDirection='right'
+        ></DragHandle>
+      }
     </EventWrapper>
   );
 }

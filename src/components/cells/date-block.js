@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 
 export function DateBlock({ className, blockStyle, value, range }) {
 
-  const [initialStartTime, setInitialStartTime] = useState(null); 
+  // const [initialStartTime, setInitialStartTime] = useState(null); 
+  // const [initialEndTime, setInitialEndTime] = useState(null);
 
   const { isOver, setNodeRef, active, } =  useDroppable({
     id: value,
@@ -14,24 +15,29 @@ export function DateBlock({ className, blockStyle, value, range }) {
     }
   });
 
-  let current;
+  // let current;
   // active is current dragging item
   if (active) {
-    current = active.data.current;
+    // current = active.data.current;
 
-    //  record initial start time, compare with dropped date, to determine bg color
-    if (!initialStartTime) setInitialStartTime(current.event.start);
+    // const isLeftHandleStartDragging = current.type === 'leftResize' && !initialStartTime;
+    // const isRightHandleStartDragging = current.type === 'rightResize' && !initialEndTime;
 
-    const isDnd = current.type === 'dnd';
+    // //  record initial start time, compare with dropped date, to determine bg color
+    // if (isLeftHandleStartDragging) setInitialStartTime(current.event.start);
+    // if (isRightHandleStartDragging) setInitialEndTime(current.event.end);
 
+    // const isDnd = current.type === 'dnd';
+    
     // if left resize, dropped date must greater than event start date, and if right resize, dropped date must less than event end date
     // if !initialStartTime, still shows bg color
-    const isCorrectTimeResize = !initialStartTime || ( current.type === 'leftResize' && current.event.start >= initialStartTime) || (current.type === 'rightResize' && current.event.end <= initialStartTime);
-
+    // const isCorrectTimeResize =  isLeftHandleStartDragging
+    //                             || isRightHandleStartDragging
+    //                             || (current.type === 'leftResize' && current.event.start >= initialStartTime)
+    //                             || (current.type === 'rightResize' && current.event.end <= initialStartTime);
     const isOverClassName = ' rbc-day-bg-is-over';
-    
     // dnd or correct resize shows bg color
-    if (isOver && ( isDnd || isCorrectTimeResize )) {
+    if (isOver) {
       className += isOverClassName;
     }
   }

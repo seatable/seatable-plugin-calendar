@@ -112,7 +112,7 @@ class SolarLunarConverter {
   }
 
   // 获取两个日期之间的天数
-  getDaysBetweenSolarDate (date1, date2) {
+  getDaysBetweenSolarDate(date1, date2) {
     return dayjs(date1).diff(date2, 'days');
   }
 
@@ -135,7 +135,7 @@ class SolarLunarConverter {
     return (months[len - 1] === 0 ? months[len - 2] : months[len - 1]);
   }
 
-  //农历月份天数数组
+  // 农历月份天数数组
   getLunarMonths(yearData) {
     let leapMonth = yearData[0];
     let bit = yearData[3].toString(2);

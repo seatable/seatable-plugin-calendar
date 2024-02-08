@@ -42,10 +42,10 @@ class ReactBigCalendar extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.rows !== this.props.rows) {
       const newEvents = this.getEvents(this.props);
-      this.setState({events: newEvents});
+      this.setState({ events: newEvents });
     }
     if (this.props.selectedViewIdx !== prevProps.selectedViewIdx) {
-      this.setState({selectedView: this.getSelectedView()});
+      this.setState({ selectedView: this.getSelectedView() });
     }
   }
 
@@ -61,7 +61,7 @@ class ReactBigCalendar extends React.Component {
     let key = `${dtableUuid}_${activeTable._id}_${activeView._id}`;
     selectedCalendarView[key] = view;
     localStorage.setItem(KEY_SELECTED_CALENDAR_VIEW, JSON.stringify(selectedCalendarView));
-    this.setState({selectedView: view});
+    this.setState({ selectedView: view });
   };
 
   getTitle = (row, column) => {
@@ -155,8 +155,8 @@ class ReactBigCalendar extends React.Component {
     }
 
     const configuredUseRowColor = settings[SETTING_KEY.COLORED_BY_ROW_COLOR];
-    const eventColors = TableEvent.getColors({row, colorColumn, configuredUseRowColor, rowsColor, rowColorsMap});
-    return new TableEvent({row, date, endDate, title, titleColumn, ...eventColors});
+    const eventColors = TableEvent.getColors({ row, colorColumn, configuredUseRowColor, rowsColor, rowColorsMap });
+    return new TableEvent({ row, date, endDate, title, titleColumn, ...eventColors });
   };
 
   getFormattedDateWithDifferentClient = (date) => {
@@ -174,7 +174,7 @@ class ReactBigCalendar extends React.Component {
     this.props.onRowExpand(row, this.props.activeTable);
   };
 
-  onSelectEvent = ({row}) => this.onRowExpand(row);
+  onSelectEvent = ({ row }) => this.onRowExpand(row);
 
   onInsertRow = (rowData) => {
     let { activeTable, activeView, onInsertRow, rows } = this.props;
@@ -281,9 +281,9 @@ class ReactBigCalendar extends React.Component {
     });
   };
 
-  handleSelectSlot = ({ action, start, end}) => {
+  handleSelectSlot = ({ action, start, end }) => {
     if (action === 'select') {
-      this.createEvent({start, end});
+      this.createEvent({ start, end });
     }
   };
 

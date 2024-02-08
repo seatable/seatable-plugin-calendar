@@ -12,7 +12,7 @@ class YearDay extends React.PureComponent {
   };
 
   hideDayEvents = () => {
-    this.setState({isShowEvents: false});
+    this.setState({ isShowEvents: false });
   };
 
   render() {
@@ -24,7 +24,7 @@ class YearDay extends React.PureComponent {
         onClick={this.onEventsToggle}
       >
         <div className="rbc-year-day-content">
-          <div className={classnames('rbc-year-day', {'rbc-off-range': isOffRange, 'rbc-current': isCurrentDay})} >{label}</div>
+          <div className={classnames('rbc-year-day', { 'rbc-off-range': isOffRange, 'rbc-current': isCurrentDay })} >{label}</div>
         </div>
         {hasEvents && <span className="day-events"></span>}
       </div>

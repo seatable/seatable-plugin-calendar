@@ -48,11 +48,11 @@ class ViewSetting extends React.Component {
     let { setting_key, value } = selectedOption;
     let updated;
     if (setting_key === SETTING_KEY.TABLE_NAME) {
-      updated = {[setting_key]: value};  // Need init settings after select new table.
+      updated = { [setting_key]: value };  // Need init settings after select new table.
     } else {
-      updated = Object.assign({}, settings, {[setting_key]: value});
+      updated = Object.assign({}, settings, { [setting_key]: value });
     }
-    this.setState(({settings: updated}));
+    this.setState(({ settings: updated }));
     if (!this.timer) {
       this.timer = setTimeout(() => {
         this.props.onModifyViewSettings(updated);
@@ -125,7 +125,7 @@ class ViewSetting extends React.Component {
       }
     );
 
-    let weekStartOptions = [{name: intl.get('Sunday'), value: 0}, {name: intl.get('Monday'), value: 1}];
+    let weekStartOptions = [{ name: intl.get('Sunday'), value: 0 }, { name: intl.get('Monday'), value: 1 }];
     weekStartOptions = this.createOptions(weekStartOptions, SETTING_KEY.WEEK_START, 'value');
     let startYearFirstWeekOptions = [
       { name: intl.get('First_day_of_the_year'), value: SETTING_VALUE.YEAR_FIRST_DAY },
@@ -261,7 +261,7 @@ class ViewSetting extends React.Component {
       });
       const addedColumns = initialConfiguredColumns
         .filter(item => !baseConfiguredColumns.some(c => item.key == c.key))
-        .map(item => ({key: item.key, shown: false}));
+        .map(item => ({ key: item.key, shown: false }));
       configuredColumns = baseConfiguredColumns.concat(addedColumns);
     }
 
@@ -290,7 +290,7 @@ class ViewSetting extends React.Component {
     };
 
     return (
-      <div className="plugin-view-setting position-absolute d-flex flex-column mt-7" style={{zIndex: 4}} ref={ref => this.ViewSetting = ref}>
+      <div className="plugin-view-setting position-absolute d-flex flex-column mt-7" style={{ zIndex: 4 }} ref={ref => this.ViewSetting = ref}>
         <div className="setting-header-container d-flex justify-content-between align-items-center">
           <h3 className="h5 m-0">{intl.get('Settings')}</h3>
           <button className="close op-icon" onClick={this.props.toggleViewSettingPanel}>

@@ -61,7 +61,7 @@ class ViewTab extends React.Component {
 
   onHideViewDropdown = () => {
     if (this.state.isShowViewDropdown) {
-      this.setState({isShowViewDropdown: false});
+      this.setState({ isShowViewDropdown: false });
     }
   };
 
@@ -308,11 +308,11 @@ class ViewsTabs extends React.Component {
   };
 
   onNewViewToggle = () => {
-    this.setState({isShowNewViewDialog: !this.state.isShowNewViewDialog});
+    this.setState({ isShowNewViewDialog: !this.state.isShowNewViewDialog });
   };
 
   onNewViewCancel = () => {
-    this.setState({isShowNewViewDialog: false});
+    this.setState({ isShowNewViewDialog: false });
   };
 
   onAddView = (viewName) => {
@@ -321,11 +321,11 @@ class ViewsTabs extends React.Component {
   };
 
   onRenameViewToggle = () => {
-    this.setState({isShowRenameViewDialog: !this.state.isShowRenameViewDialog});
+    this.setState({ isShowRenameViewDialog: !this.state.isShowRenameViewDialog });
   };
 
   hideRenameViewDialog = () => {
-    this.setState({isShowRenameViewDialog: false});
+    this.setState({ isShowRenameViewDialog: false });
   };
 
   render() {

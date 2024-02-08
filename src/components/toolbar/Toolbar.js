@@ -24,7 +24,7 @@ class Toolbar extends React.Component {
             </span>
           </div>
           <span
-            className={classnames('rbc-tool-btn text-truncate', {'today-btn-disabled': isToday})}
+            className={classnames('rbc-tool-btn text-truncate', { 'today-btn-disabled': isToday })}
             onClick={!isToday ? this.navigate.bind(null, navigate.TODAY) : undefined}
           >
             {intl.get('.rbc.messages.today').d(messages.today)}

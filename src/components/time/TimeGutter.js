@@ -10,7 +10,7 @@ export default class TimeGutter extends Component {
     super(...args);
 
     const { min, max, timeslots, step } = this.props;
-    this.slotMetrics = TimeSlotUtils.getSlotMetrics({min, max, timeslots, step});
+    this.slotMetrics = TimeSlotUtils.getSlotMetrics({ min, max, timeslots, step });
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -25,14 +25,14 @@ export default class TimeGutter extends Component {
     const currentDay = dayjs().format('YYYY-MM-DD');
     const formatTime = dayjs(`${currentDay} ${time}`);
 
-    //When the current time with slot scale is less than 30 minutes, the slot scale is not displayed
+    // When the current time with slot scale is less than 30 minutes, the slot scale is not displayed
     const diffMinutes = Math.abs(dayjs().diff(formatTime, 'minutes'));
     if (diffMinutes < 30) {
       return;
     }
     const isNow = this.slotMetrics.dateIsInGroup(getNow(), idx);
     return (
-      <span className={classnames('rbc-label', {'rbc-now': isNow})}>
+      <span className={classnames('rbc-label', { 'rbc-now': isNow })}>
         {localizer.format(value, 'timeGutterFormat')}
       </span>
     );

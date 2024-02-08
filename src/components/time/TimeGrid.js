@@ -70,7 +70,7 @@ export default class TimeGrid extends Component {
     }
 
     this.applyScroll();
-    //this.checkOverflow()
+    // this.checkOverflow()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -89,7 +89,7 @@ export default class TimeGrid extends Component {
   };
 
   onRowExpand = (...args) => {
-    //cancel any pending selections so only the event click goes through.
+    // cancel any pending selections so only the event click goes through.
     this.clearSelection();
     notify(this.props.onRowExpand, args);
   };

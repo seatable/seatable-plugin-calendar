@@ -21,7 +21,7 @@ class YearView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      scroll: {scrollLeft: 0, scrollTop: 0},
+      scroll: { scrollLeft: 0, scrollTop: 0 },
       popup: false,
       dayEventsMap: this.getDayEventsMap(props.events),
       localizer: props.localizer,
@@ -58,7 +58,7 @@ class YearView extends React.Component {
       this.renderMonthStartDates = getMonthStartDates(initDate, renderedRowsCount);
       initState = getInitState(renderedRowsCount, this.renderMonthStartDates);
     }
-    this.setState({...initState}, () => {
+    this.setState({ ...initState }, () => {
       this.rbcYearView.scrollTop = initState.visibleStartIndex * YEAR_MONTHS_ROW_HEIGHT;
     });
   }
@@ -66,7 +66,7 @@ class YearView extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.events !== this.props.events) {
       const newDayEventsMap = this.getDayEventsMap(this.props.events);
-      this.setState({dayEventsMap: newDayEventsMap});
+      this.setState({ dayEventsMap: newDayEventsMap });
     }
     if (prevProps.configuredWeekStart !== this.props.configuredWeekStart) {
       this.setState({
@@ -86,7 +86,7 @@ class YearView extends React.Component {
       const initDate = new Date(new Date(date).getFullYear(), 0);
       this.renderMonthStartDates = getMonthStartDates(initDate, renderedRowsCount);
       const initState = getInitState(renderedRowsCount, this.renderMonthStartDates);
-      this.setState({...initState}, () => {
+      this.setState({ ...initState }, () => {
         this.rbcYearView.scrollTop = initState.visibleStartIndex * YEAR_MONTHS_ROW_HEIGHT;
       });
     }
@@ -98,7 +98,7 @@ class YearView extends React.Component {
       const { start, end } = event;
       let m_start = dayjs(start);
       let m_end = dayjs(end);
-      while(m_end.isSameOrAfter(m_start, DATE_UNIT.DAY)) {
+      while (m_end.isSameOrAfter(m_start, DATE_UNIT.DAY)) {
         const formattedStart = m_start.format('YYYY-MM-DD');
         if (dayEventsMap[formattedStart]) {
           dayEventsMap[formattedStart].push(event);
@@ -219,21 +219,21 @@ class YearView extends React.Component {
     this.rbcYearView.scrollTop = restScrollTop;
   };
 
-  handleShowMore = ({cell, events, date}) => {
+  handleShowMore = ({ cell, events, date }) => {
     if (!this.state.popup) {
       const position = getPosition(cell, findDOMNode(this));
       const scrollTop = this.rbcYearView.scrollTop;
       let { top } = position;
       position.top = top - scrollTop;
       this.setState({
-        overlay: {position, events: events || [], date},
+        overlay: { position, events: events || [], date },
         popup: true,
       });
     }
   };
 
   onHidePopup = () => {
-    this.setState({popup: false, overlay: {}});
+    this.setState({ popup: false, overlay: {} });
   };
 
   render() {
@@ -247,7 +247,7 @@ class YearView extends React.Component {
     }
     return (
       <div className={classnames('rbc-year-view', className, isMobile && 'mobile')} onScroll={this.onYearViewScroll} ref={ref => this.rbcYearView = ref} >
-        <div style={{paddingTop: offsetTop, paddingBottom: offsetBottom}}>
+        <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom }}>
           {renderMonthsRows.map(monthStartDate => {
             const year = monthStartDate.getFullYear();
             const month = monthStartDate.getMonth() + 1;
@@ -292,7 +292,7 @@ YearView.propTypes = {
 YearView.range = (date, { localizer }) => {
   let start = dates.firstVisibleDay(date, localizer);
   let end = dates.lastVisibleDay(date, localizer);
-  return {start, end};
+  return { start, end };
 };
 
 YearView.navigate = (date, action) => {

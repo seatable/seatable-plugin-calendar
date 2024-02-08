@@ -20,7 +20,7 @@ class ExportedMonth extends React.Component {
     super(...args);
     this._bgRows = [];
     this._pendingSelection = [];
-    this.slotRowRef = React.createRef();
+    // this.slotRowRef = React.createRef();
     this.state = {
       needLimitMeasure: false,
       popup: false,
@@ -113,7 +113,7 @@ class ExportedMonth extends React.Component {
 
     return (
       <div className={classnames('rbc-month-view-exported', className)}>
-        <h3 className="mb-3 h4 text-center font-weight-normal">{ExportedMonth.title(date, { localizer })}</h3>
+        <h3 className="mb-3 text-center h4 font-weight-normal">{ExportedMonth.title(date, { localizer })}</h3>
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
         </div>
@@ -135,7 +135,8 @@ class ExportedMonth extends React.Component {
     return (
       <DateContentRow
         key={formatWeekStartDate}
-        ref={weekIdx === 0 ? this.slotRowRef : undefined}
+        uuid={formatWeekStartDate}
+        // ref={weekIdx === 0 ? this.slotRowRef : undefined}
         container={this.getContainer}
         className='rbc-month-row'
         getNow={getNow}

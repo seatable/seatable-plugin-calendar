@@ -763,7 +763,7 @@ class Calendar extends React.Component {
       }
     };
 
-    return {
+    const context = {
       viewNames: names,
       localizer: mergeWithDefaults(localizer, culture, formats, msgs),
       getters: {
@@ -791,6 +791,8 @@ class Calendar extends React.Component {
         resourceTitle: wrapAccessor(resourceTitleAccessor)
       }
     };
+
+    return context; 
   }
 
   getView2ComponentMap = () => {
@@ -990,6 +992,9 @@ class Calendar extends React.Component {
               updateCurrentDate={this.updateCurrentDate}
               changeDateByNavicate={this.state.changeDateByNavicate}
               isMobile={this.props.isMobile}
+              onEventDrop={this.props.onEventDrop}
+              onEventResize={this.props.onEventResize}
+
             />
             {this.props.isExporting && (
               <ExportedMonths

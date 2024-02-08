@@ -373,3 +373,5 @@ function createComparer(operator) {
 export function isValidDateObject(date) {
   return date && date instanceof Date && !isNaN(date.getTime());
 }
+
+// export function isGreater() {}

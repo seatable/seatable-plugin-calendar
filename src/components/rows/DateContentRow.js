@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import getHeight from 'dom-helpers/height';
@@ -10,23 +10,23 @@ import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import BackgroundCells from '../cells/BackgroundCells';
 
-class DateContentRow extends React.PureComponent {
+const slotMetrics  = DateSlotMetrics.getSlotMetrics();
 
-  constructor(...args) {
-    super(...args);
-    this.slotMetrics = DateSlotMetrics.getSlotMetrics();
-  }
+function DateContentRow(props) {
 
-  handleSelectSlot = slot => {
-    const { range, onSelectSlot } = this.props;
+  const dateContentRowRef = useRef(null);
+  const headingRowRef = useRef(null);
+  const eventRowRef = useRef(null);
+
+  const handleSelectSlot = slot => {
+    const { range, onSelectSlot } = props;
     onSelectSlot(range.slice(slot.start, slot.end + 1), slot);
   };
 
-  handleShowMore = (slot, target) => {
-    const { range, onShowMore } = this.props;
-    let metrics = this.slotMetrics(this.props);
-    let row = qsa(findDOMNode(this), '.rbc-row-bg')[0];
-
+  const handleShowMore = (slot, target) => {
+    const { range, onShowMore } = props;
+    let metrics = slotMetrics(props);
+    let row = qsa(dateContentRowRef.current, '.rbc-row-bg')[0];
     let cell;
     if (row) cell = row.children[slot - 1];
 
@@ -34,30 +34,13 @@ class DateContentRow extends React.PureComponent {
     onShowMore(events, range[slot - 1], cell, slot, target);
   };
 
-  createHeadingRef = r => {
-    this.headingRow = r;
+  const getContainer = () => {
+    const { container } = props;
+    return container ? container() : dateContentRowRef.current;
   };
 
-  createEventRef = r => {
-    this.eventRow = r;
-  };
-
-  getContainer = () => {
-    const { container } = this.props;
-    return container ? container() : findDOMNode(this);
-  };
-
-  getRowLimit() {
-    let eventHeight = getHeight(this.eventRow);
-    let headingHeight = this.headingRow ? getHeight(this.headingRow) : 0;
-    let eventSpace = getHeight(findDOMNode(this)) - headingHeight;
-
-    return Math.max(Math.floor(eventSpace / eventHeight), 1);
-  }
-
-  renderHeadingCell = (date, index) => {
-    let { renderHeader, getNow } = this.props;
-
+  const renderHeadingCell = (date, index) => {
+    let { renderHeader, getNow } = props;
     return renderHeader({
       date,
       key: `header_${index}`,
@@ -70,17 +53,17 @@ class DateContentRow extends React.PureComponent {
     });
   };
 
-  renderDummy = () => {
-    let { className, range, renderHeader } = this.props;
+  const renderDummy = () => {
+    let { className, range, renderHeader } = props;
     return (
       <div className={className}>
         <div className='rbc-row-content'>
           {renderHeader && (
-            <div className='rbc-row' ref={this.createHeadingRef}>
-              {range.map(this.renderHeadingCell)}
+            <div className='rbc-row' ref={headingRowRef}>
+              {range.map(renderHeadingCell)}
             </div>
           )}
-          <div className='rbc-row' ref={this.createEventRef}>
+          <div className='rbc-row' ref={eventRowRef}>
             <div className='rbc-row-segment'>
               <div className='rbc-event'>
                 <div className='rbc-event-content'>&nbsp;</div>
@@ -92,95 +75,96 @@ class DateContentRow extends React.PureComponent {
     );
   };
 
-  render() {
-    const {
-      date,
-      rtl,
-      range,
-      className,
-      selected,
-      selectable,
-      renderForMeasure,
-      accessors,
-      getters,
-      components,
-      getNow,
-      renderHeader,
-      renderFestival,
-      onRowExpand,
-      localizer,
-      onSelectStart,
-      onSelectEnd,
-      onDoubleClick,
-      resourceId,
-      longPressThreshold,
-      isAllDay,
-      isMobile,
-    } = this.props;
-    if (renderForMeasure) return this.renderDummy();
-    let metrics = this.slotMetrics(this.props);
-    let { levels, extra } = metrics;
+  const {
+    date,
+    rtl,
+    range,
+    className,
+    selected,
+    selectable,
+    renderForMeasure,
+    accessors,
+    getters,
+    components,
+    getNow,
+    renderHeader,
+    renderFestival,
+    onRowExpand,
+    localizer,
+    onSelectStart,
+    onSelectEnd,
+    onDoubleClick,
+    resourceId,
+    longPressThreshold,
+    isAllDay,
+    isMobile,
+  } = props;
 
-    let WeekWrapper = components.weekWrapper;
+  if (renderForMeasure) return renderDummy();
+    
+  let metrics = slotMetrics(props);
+  
+  let { levels, extra } = metrics;
 
-    const eventRowProps = {
-      selected,
-      accessors,
-      getters,
-      localizer,
-      components,
-      onRowExpand,
-      onDoubleClick,
-      resourceId,
-      slotMetrics: metrics
-    };
+  let WeekWrapper = components.weekWrapper;
 
-    return (
-      <div className={className}>
-        <BackgroundCells
-          date={date}
-          getNow={getNow}
-          rtl={rtl}
-          range={range}
-          selectable={selectable}
-          container={this.getContainer}
-          getters={getters}
-          onSelectStart={onSelectStart}
-          onSelectEnd={onSelectEnd}
-          onSelectSlot={this.handleSelectSlot}
-          components={components}
-          longPressThreshold={longPressThreshold}
-        />
-        <div className='rbc-row-content'>
-          {renderHeader && (
-            <div className='rbc-row rbc-header-row' ref={this.createHeadingRef}>
-              {range.map(this.renderHeadingCell)}
+  const eventRowProps = {
+    selected,
+    accessors,
+    getters,
+    localizer,
+    components,
+    onRowExpand,
+    onDoubleClick,
+    resourceId,
+    slotMetrics: metrics
+  };
+
+  return (
+    <div className={className} ref={dateContentRowRef} >
+      <BackgroundCells
+        date={date}
+        getNow={getNow}
+        rtl={rtl}
+        range={range}
+        selectable={selectable}
+        container={getContainer}
+        getters={getters}
+        onSelectStart={onSelectStart}
+        onSelectEnd={onSelectEnd}
+        onSelectSlot={handleSelectSlot}
+        components={components}
+        longPressThreshold={longPressThreshold}
+      />
+      <div className='rbc-row-content'>
+        {renderHeader && (
+          <div className='rbc-row rbc-header-row' ref={headingRowRef}>
+            {range.map(renderHeadingCell)}
+          </div>
+        )}
+        <WeekWrapper isAllDay={isAllDay} {...eventRowProps}>
+          {renderFestival && (
+            <div className='rbc-row'>
+              {range.map((date, index) => {
+                return <div key={index} className="rbc-festival-row-segment">{renderFestival(date)}</div>;
+              })}
             </div>
           )}
-          <WeekWrapper isAllDay={isAllDay} {...eventRowProps}>
-            {renderFestival && (
-              <div className='rbc-row'>
-                {range.map((date, index) => {
-                  return <div key={index} className="rbc-festival-row-segment">{renderFestival(date)}</div>;
-                })}
-              </div>
-            )}
-            {levels.map((segs, idx) => (
-              <EventRow key={idx} segments={segs} {...eventRowProps} />
-            ))}
-            {((!isMobile && !!extra.length) || isMobile) && (
-              <EventEndingRow
-                segments={extra}
-                onShowMore={this.handleShowMore}
-                isMobile={isMobile}
-                {...eventRowProps}
-              />
-            )}
-          </WeekWrapper>
-        </div>
+          {levels.map((segs, idx) => (
+            <EventRow key={idx} segments={segs} {...eventRowProps} />
+          ))}
+          {((!isMobile && !!extra.length) || isMobile) && (
+            <EventEndingRow
+              segments={extra}
+              onShowMore={handleShowMore}
+              isMobile={isMobile}
+              {...eventRowProps}
+            />
+          )}
+        </WeekWrapper>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 DateContentRow.propTypes = {
@@ -210,7 +194,8 @@ DateContentRow.propTypes = {
   localizer: PropTypes.object.isRequired,
   minRows: PropTypes.number.isRequired,
   maxRows: PropTypes.number.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  uuid: PropTypes.string,
 };
 
 DateContentRow.defaultProps = {

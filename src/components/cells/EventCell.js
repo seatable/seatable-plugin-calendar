@@ -4,11 +4,24 @@ import classnames from 'classnames';
 import CellTitle from './cell-title';
 import * as dates from '../../utils/dates';
 import { isMobile } from '../../utils/common';
+import { useDraggable } from '@dnd-kit/core';
+import { DragHandle } from './drag-handle';
 
-class EventCell extends React.Component {
 
-  getRbcEventStyle = () => {
-    const { event } = this.props;
+function EventCell(props) {
+
+  // dnd, a.k.a drag and drop
+  const { attributes: dndAttributes, listeners: dndListeners, setNodeRef: dndSetNodeRef, transform: dndTransform } = useDraggable({
+    id: props.event.row._id,
+    data: { ...props, type: 'dnd' },
+  });
+  
+  const dndTransformPosition = dndTransform ? {
+    transform: `translate3d(${dndTransform.x}px, ${dndTransform.y}px, 0)`,
+  } : undefined;
+
+  const getRbcEventStyle = () => {
+    const { event } = props;
     const { bgColor, highlightColor, textColor } = event;
     return {
       background: bgColor,
@@ -17,47 +30,49 @@ class EventCell extends React.Component {
     };
   };
 
-  onRowExpand = (data) => {
-    this.props.onRowExpand(data.row);
+  const onRowExpand = (data) => {
+    props.onRowExpand(data.row);
   };
 
+  let {
+    style,
+    className,
+    event,
+    selected,
+    isAllDay,
+    onDoubleClick,
+    localizer,
+    continuesPrior,
+    continuesAfter,
+    accessors,
+    getters,
+    children,
+    components: { event: Event, eventWrapper: EventWrapper },
+    slotStart,
+    slotEnd,
+    ...restProps
+  } = props;
 
-  render() {
-    let {
-      style,
-      className,
-      event,
-      selected,
-      isAllDay,
-      onRowExpand,
-      onDoubleClick,
-      localizer,
-      continuesPrior,
-      continuesAfter,
-      accessors,
-      getters,
-      children,
-      components: { event: Event, eventWrapper: EventWrapper },
-      slotStart,
-      slotEnd,
-      ...props
-    } = this.props;
+  let title = <CellTitle event={event} />;
+  let tooltip = accessors.tooltip(event);
+  let end = accessors.end(event);
+  let start = accessors.start(event);
+  let allDay = accessors.allDay(event);
 
-    let title = <CellTitle event={event} />;
-    let tooltip = accessors.tooltip(event);
-    let end = accessors.end(event);
-    let start = accessors.start(event);
-    let allDay = accessors.allDay(event);
-
-    let showAsAllDay =
+  let showAsAllDay =
       isAllDay ||
       allDay ||
       dates.diff(start, dates.ceil(end, 'day'), 'day') > 1;
 
-    let userProps = getters.eventProp(event, start, end, selected);
+  let userProps = getters.eventProp(event, start, end, selected);
 
-    const content = (
-      <div className='rbc-event-content' title={tooltip || undefined}>
+  const content = (
+    <div>   
+      <div 
+        {...dndListeners}
+        {...dndAttributes} 
+        className='rbc-event-content' 
+        title={tooltip || undefined}>
         {Event ? (
           <Event
             event={event}
@@ -71,29 +86,45 @@ class EventCell extends React.Component {
           />
         ) : (title)}
       </div>
-    );
+    </div>
+  );
 
-    return (
-      <EventWrapper {...this.props} type='date'>
-        <div
-          {...props}
-          tabIndex={0}
-          style={{ ...userProps.style, ...style, ...this.getRbcEventStyle() }}
-          className={classnames('rbc-event', className, userProps.className, {
-            'rbc-selected': selected,
-            'rbc-event-mobile': isMobile,
-            'rbc-event-allday': showAsAllDay,
-            'rbc-event-continues-prior': continuesPrior,
-            'rbc-event-continues-after': continuesAfter
-          })}
-          onClick={e => this.onRowExpand(event, e)}
-          onDoubleClick={e => onDoubleClick && onDoubleClick(event, e)}
-        >
-          {typeof children === 'function' ? children(content) : content}
-        </div>
-      </EventWrapper>
-    );
-  }
+  return (
+    <EventWrapper {...restProps} type='date'>
+      <DragHandle 
+        continuesPrior={continuesPrior}
+        continuesAfter={continuesAfter}
+        rowId={event.row._id}
+        data={props}
+        resizeDirection='left'
+      ></DragHandle>
+      <div
+        ref={dndSetNodeRef}
+        {...restProps}
+        tabIndex={0}
+        style={{ ...userProps.style, ...style, ...getRbcEventStyle(), ...dndTransformPosition }}
+        className={classnames('rbc-event', className, userProps.className, {
+          'rbc-selected': selected,
+          'rbc-event-mobile': isMobile,
+          'rbc-event-allday': showAsAllDay,
+          'rbc-event-continues-prior': continuesPrior,
+          'rbc-event-continues-after': continuesAfter
+        })}
+        onClick={e => onRowExpand(event, e)}
+        onDoubleClick={e => onDoubleClick && onDoubleClick(event, e)}
+      >
+        {typeof children === 'function' ? children(content) : content}
+      </div>
+      <DragHandle 
+        continuesPrior={continuesPrior}
+        continuesAfter={continuesAfter}
+        rowId={event.row._id}
+        data={props}
+        resizeDirection='right'
+      ></DragHandle>
+      
+    </EventWrapper>
+  );
 }
 
 EventCell.propTypes = {

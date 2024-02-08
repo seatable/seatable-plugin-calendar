@@ -13,7 +13,9 @@ import withDragAndDrop from './addons/dragAndDrop';
 import './css/react-big-calendar.css';
 import './addons/dragAndDrop/styles.css';
 
-const DragAndDropCalendar = withDragAndDrop(Calendar);
+const DragAndDropCalendar =
+ Calendar;
+// withDragAndDrop(Calendar);
 
 const propTypes = {
   activeTable: PropTypes.object,
@@ -223,9 +225,79 @@ class ReactBigCalendar extends React.Component {
     appendRow(activeTable, rowData);
   };
 
+  computeUpdatedData = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
+    const { settings } = this.props;
+    const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
+    const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
+    const startDateColumn = this.getDateColumn(startDateColumnName);
+    const endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
+    
+    let updatedData = {};
+    if (startDateColumn) {
+      const { type, data } = startDateColumn;
+      if (type === CellType.FORMULA) {
+        return;
+      }
+      const startDateFormat = data && data.format;
+      const startDateMinutePrecision = startDateFormat && startDateFormat.indexOf('HH:mm') > -1;
+      updatedData[startDateColumn.name] = this.getFormattedDate(start, startDateFormat);
+      if (!droppedOnAllDaySlot && startDateMinutePrecision && event.allDay) {
+        event.allDay = false;
+        end = new Date(start.valueOf());
+        end.setHours(end.getHours() + TableEvent.FIXED_PERIOD_OF_TIME_IN_HOURS);
+      }
+      if (droppedOnAllDaySlot && startDateMinutePrecision) {
+        // an event can only be made all-day if it has a true end-date field when its start-date is with
+        // time (with minute precision) [if an event is across two days, it is also displayed on top]
+        if (endDateColumn && (endDateColumn !== startDateColumn) && endDateColumn.type === CellType.DATE) {
+          const startEndSameDay = dayjs(start).format('YYYY-MM-DD') === dayjs(end).format('YYYY-MM-DD');
+          if (startEndSameDay) {
+            end = dayjs(end).add(1, 'day').startOf('day').toDate();
+          }
+        }
+      }
+    }
+    if (endDateColumn) {
+      const { type, data } = endDateColumn;
+      if (type === CellType.FORMULA) {
+        end = event.end; // the end date get from the formula column is read only.
+      }
+      if (type === CellType.DATE) {
+        const endDateFormat = data && data.format;
+        updatedData[endDateColumn.name] = this.getFormattedDate(end, endDateFormat);
+      }
+    }
+    return { updatedData, start, end };
+  };
+
+  // do not modify row utils drop handle drop on the date block，just update view
+  updateEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
+    const { events } = this.state;
+    const { activeTable } = this.props;
+
+    const idx = events.indexOf(event);
+
+    const { start: startTime, end: endTime } = this.computeUpdatedData({ event, start, end, isAllDay: droppedOnAllDaySlot });
+    const updatedEvent = {
+      ...event,
+      start: startTime,
+      end: endTime,
+      ...{ row: getRowById(activeTable, event.row._id) }
+    };
+    Object.setPrototypeOf(updatedEvent, TableEvent.prototype);
+    const nextEvents = [...events];
+    nextEvents.splice(idx, 1, updatedEvent);
+    this.setState({
+      events: nextEvents
+    });
+  };
+
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     const { events } = this.state;
     const idx = events.indexOf(event);
+
+    // const { updatedData, start: startTime, end: endTime } = this.computeUpdatedData({ event, start, end, isAllDay: droppedOnAllDaySlot });
+    // const { activeTable, modifyRow } = this.props;
     let updatedData = {};
     const { activeTable, modifyRow, settings } = this.props;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
@@ -321,6 +393,7 @@ class ReactBigCalendar extends React.Component {
         onSelectSlot={this.handleSelectSlot}
         onSelecting={this.handleSelecting}
         onEventDrop={this.moveEvent}
+        onEventResize={this.updateEvent}
       />
     );
   }

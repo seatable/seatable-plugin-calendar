@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import EventCell from '../cells/EventCell';
 import { isSelected } from '../../utils/selection';
 
-export default {
+const mixins = {
   propTypes: {
     slotMetrics: PropTypes.object.isRequired,
     selected: PropTypes.object,
@@ -54,6 +54,7 @@ export default {
     );
   },
 
+  // randerSpan component wraps both empty space and events，compute width of them
   renderSpan(slots, len, key, content = ' ') {
     let per = (Math.abs(len) / slots) * 100 + '%';
 
@@ -62,10 +63,11 @@ export default {
         key={key}
         className='rbc-row-segment'
         // IE10/11 need max-width. flex-basis doesn't respect box-sizing
-        style={{ WebkitFlexBasis: per, flexBasis: per, maxWidth: per }}
+        style={{ WebkitFlexBasis: per, flexBasis: per, maxWidth: per, position: 'relative' }}
       >
         {content}
       </div>
     );
   }
 };
+export default mixins;

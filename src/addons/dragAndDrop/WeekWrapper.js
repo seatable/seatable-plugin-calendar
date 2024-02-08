@@ -209,8 +209,7 @@ class WeekWrapper extends React.Component {
 
       return (
         action === 'move' ||
-        (action === 'resize' &&
-          (!isAllDay || pointInBox(getBoundsForNode(node), point)))
+        (action === 'resize' && (!isAllDay || pointInBox(getBoundsForNode(node), point)))
       );
     });
 

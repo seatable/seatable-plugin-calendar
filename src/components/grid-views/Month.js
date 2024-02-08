@@ -33,6 +33,10 @@ import Header from '../header/Header';
 import DateHeader from '../header/DateHeader';
 import { sortEvents } from '../../utils/eventLevels';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { DndContext } from '@dnd-kit/core';
+import { pointerWithin, rectIntersection } from '@dnd-kit/core';
+import { throttle } from 'lodash-es';
+
 
 dayjs.extend(customParseFormat);
 
@@ -42,7 +46,6 @@ class MonthView extends React.Component {
     super(...args);
     this._bgRows = [];
     this._pendingSelection = [];
-    this.slotRowRef = React.createRef();
     this.state = {
       needLimitMeasure: false,
       popup: false,
@@ -309,29 +312,49 @@ class MonthView extends React.Component {
     this.props.onInsertRow(dates.getFormattedDate(date, 'YYYY-MM-DD'));
   };
 
-  render() {
-    let { className, isMobile } = this.props;
-    let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
-    let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
-    if (allWeeksStartDates) {
-      renderWeeks = allWeeksStartDates.slice(overscanStartIndex, overscanEndIndex);
-      offsetTop = overscanStartIndex * MONTH_ROW_HEIGHT;
-      offsetBottom = (allWeeksStartDates.length - overscanEndIndex) * MONTH_ROW_HEIGHT;
-    }
-    let weeksCount = renderWeeks.length;
-    return (
-      <div className={classnames('rbc-month-view', className)} ref={ref => this.currentView = ref}>
-        <div className='rbc-month-header'>
-          {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
-        </div>
-        <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
-          <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom }}>
-            {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
-          </div>
-        </div>
-        {this.state.popup && this.renderOverlay()}
-      </div>
-    );
+
+  measureRowLimit() {
+    this.setState({ needLimitMeasure: false });
+  }
+
+  handleSelectSlot = (range, slotInfo) => {
+    this._pendingSelection = this._pendingSelection.concat(range);
+
+    clearTimeout(this._selectTimer);
+    this._selectTimer = setTimeout(() => this.selectDates(slotInfo));
+  };
+
+  handleHeadingClick = (date, view, e) => {
+    e.preventDefault();
+    this.clearSelection();
+    notify(this.props.onDrillDown, [date, view]);
+  };
+
+  handleDoubleClickEvent = (...args) => {
+    this.clearSelection();
+    notify(this.props.onDoubleClickEvent, args);
+  };
+
+  selectDates(slotInfo) {
+    let slots = this._pendingSelection.slice();
+
+    this._pendingSelection = [];
+
+    slots.sort((a, b) => +a - +b);
+
+    notify(this.props.onSelectSlot, {
+      slots,
+      start: slots[0],
+      end: slots[slots.length - 1],
+      action: slotInfo.action,
+      bounds: slotInfo.bounds,
+      box: slotInfo.box
+    });
+  }
+
+  clearSelection() {
+    clearTimeout(this._selectTimer);
+    this._pendingSelection = [];
   }
 
   renderWeek = (weekStartDate, weekIdx) => {
@@ -345,7 +368,8 @@ class MonthView extends React.Component {
     return (
       <DateContentRow
         key={formatWeekStartDate}
-        ref={weekIdx === 0 ? this.slotRowRef : undefined}
+        uuid={formatWeekStartDate}
+        // ref={weekIdx === 0 ? this.slotRowRef : undefined}
         container={this.getContainer}
         className='rbc-month-row'
         getNow={getNow}
@@ -461,49 +485,122 @@ class MonthView extends React.Component {
     );
   }
 
-  measureRowLimit() {
-    this.setState({ needLimitMeasure: false });
-  }
-
-  handleSelectSlot = (range, slotInfo) => {
-    this._pendingSelection = this._pendingSelection.concat(range);
-
-    clearTimeout(this._selectTimer);
-    this._selectTimer = setTimeout(() => this.selectDates(slotInfo));
+  customCollisionDetectionAlgorithm =  (args) => {
+    // First, let's see if there are any collisions with the pointer
+    const pointerCollisions = pointerWithin(args);
+    
+    // Collision detection algorithms return an array of collisions
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions;
+    }
+    
+    // If there are no collisions with the pointer, return rectangle intersections
+    return rectIntersection(args);
+  };
+  
+  getNewEventTime = (event, newStartDate) => {
+    const dateRange = dates.range(event.start, event.end, 'day');
+    const newStart = newStartDate;
+    const newEnd = dates.add(newStartDate, dateRange.length - 1, 'day');
+    return { start: newStart, end: newEnd };
   };
 
-  handleHeadingClick = (date, view, e) => {
-    e.preventDefault();
-    this.clearSelection();
-    notify(this.props.onDrillDown, [date, view]);
+  handleDnd = (event, newTime) => {
+    // i just use date as the dropped item id, cause they are unique
+    const { start, end } = this.getNewEventTime(event, newTime);
+    this.props.onEventDrop({ event, start, end, allDay: event.allDay });
   };
 
-  handleDoubleClickEvent = (...args) => {
-    this.clearSelection();
-    notify(this.props.onDoubleClickEvent, args);
+  handleResize = (event, newTime, type) => {
+    let start, end;
+    if (type === 'leftResize') {
+      start = newTime;
+      end = event.end;
+    } else if ( type === 'rightResize') {
+      end = newTime;
+      start = event.start;
+    } else {
+      console.log('invalid resize type' + type);
+    }
+    if (start > end) return;
+    // i just use date as the dropped item id, cause they are unique    
+    this.props.onEventDrop({ event, start, end, isAllDay: event.allDay });
   };
 
-  selectDates(slotInfo) {
-    let slots = this._pendingSelection.slice();
+  handleEventDrop = (e) => {
+    const dropData = e.active.data.current;
+    const event = dropData.event;
+    if (!e.over || !event) return;
+    if (dropData.type === 'dnd') {
+      this.handleDnd(event, e.over.id);
+    } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
+      this.handleResize(event, e.over.id, dropData.type);
+    } else {
+      console.log('invalid dnd type' + dropData.type);
+    }
+  };
 
-    this._pendingSelection = [];
+  // handleEventResize = (e) => {
+  //   if (!e.over) return;
 
-    slots.sort((a, b) => +a - +b);
+  //   const operateType = e.active.data.current?.type;
+  //   if (operateType?.includes('dnd') || !operateType ) return;
 
-    notify(this.props.onSelectSlot, {
-      slots,
-      start: slots[0],
-      end: slots[slots.length - 1],
-      action: slotInfo.action,
-      bounds: slotInfo.bounds,
-      box: slotInfo.box
-    });
+  //   const currentEventData = e.active.data.current;
+
+  //   if (isEmptyObject(currentEventData)) return;
+
+  //   let newTime = e.over.id;
+  //   let start, end;
+  //   if (currentEventData.type === 'leftResize') {
+  //     start = newTime;
+  //     end = currentEventData.event.end;
+  //   } else if ( currentEventData.type === 'rightResize') {
+  //     end = newTime;
+  //     start = currentEventData.event.start;
+  //   } else {
+  //     console.log('invalid dnd type' + currentEventData.type);
+  //   }
+    
+  //   if (start > end) return;
+    
+  //   // i just use date as the dropped item id, cause they are unique
+  //   this.props.onEventResize({ event: currentEventData.event, start, end, isAllDay: currentEventData.event.allDay });
+  // };
+
+  render() {
+    let { className, isMobile } = this.props;
+    let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
+    let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
+    if (allWeeksStartDates) {
+      renderWeeks = allWeeksStartDates.slice(overscanStartIndex, overscanEndIndex);
+      offsetTop = overscanStartIndex * MONTH_ROW_HEIGHT;
+      offsetBottom = (allWeeksStartDates.length - overscanEndIndex) * MONTH_ROW_HEIGHT;
+    }
+    let weeksCount = renderWeeks.length;
+    return (
+      <div className={classnames('rbc-month-view', className)} ref={ref => this.currentView = ref}>
+        <div className='rbc-month-header'>
+          {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
+        </div>
+        <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
+          <DndContext 
+            collisionDetection={this.customCollisionDetectionAlgorithm}
+            onDragEnd={throttle(this.handleEventDrop, 100)}
+            // onDragMove={throttle(this.handleEventResize, 100)}
+          >
+            <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom, }}>
+              <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
+              </div>
+            </div>
+          </DndContext>
+        </div>
+        {this.state.popup && this.renderOverlay()}
+      </div>
+    );
   }
 
-  clearSelection() {
-    clearTimeout(this._selectTimer);
-    this._pendingSelection = [];
-  }
 }
 
 MonthView.propTypes = {
@@ -543,6 +640,8 @@ MonthView.propTypes = {
   calendarHeaderHeight: PropTypes.number,
   onHidePopup: PropTypes.func,
   onInsertRow: PropTypes.func,
+  onEventDrop: PropTypes.func,
+  onEventResize: PropTypes.func,
 };
 
 MonthView.range = (date, { localizer }) => {

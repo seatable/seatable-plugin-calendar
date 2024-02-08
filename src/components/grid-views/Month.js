@@ -35,7 +35,6 @@ import { sortEvents } from '../../utils/eventLevels';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DndContext } from '@dnd-kit/core';
 import { pointerWithin, rectIntersection } from '@dnd-kit/core';
-import { throttle } from 'lodash-es';
 import { isEmptyObject } from 'dtable-utils';
 
 dayjs.extend(customParseFormat);

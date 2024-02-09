@@ -36,6 +36,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DndContext } from '@dnd-kit/core';
 import { pointerWithin, rectIntersection } from '@dnd-kit/core';
 import { isEmptyObject } from 'dtable-utils';
+import { throttle } from 'lodash-es';
 
 dayjs.extend(customParseFormat);
 
@@ -509,20 +510,8 @@ class MonthView extends React.Component {
     this.props.onEventDrop({ event, start, end, allDay: event.allDay });
   };
 
-  handleEventResize = (event, newTime, type) => {
-    let start, end;
-    if (type === 'leftResize') {
-      start = newTime;
-      end = event.end;
-    } else if ( type === 'rightResize') {
-      end = newTime;
-      start = event.start;
-    } else {
-      console.log('invalid resize type' + type);
-    }
-    if (start > end) return;
-    // i just use date as the dropped item id, cause they are unique    
-    this.props.onEventDrop({ event, start, end, isAllDay: event.allDay });
+  handleEventResizeDrop = () => {
+    this.props.onResizeDrop();
   };
 
   handleEventDrop = (e) => {
@@ -532,7 +521,7 @@ class MonthView extends React.Component {
     if (dropData.type === 'dnd') {
       this.handleEventDrag(event, e.over.id);
     } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
-      this.handleEventResize(event, e.over.id, dropData.type);
+      this.handleEventResizeDrop();
     } else {
       console.log('invalid type' + dropData.type);
     }
@@ -563,8 +552,8 @@ class MonthView extends React.Component {
 
   
   render() {
-    // const throttleHandleEventDrop = throttle(this.handleEventDrop, 500);
-    // const throttleHandleEventResize = throttle(this.handleEventResizing, 500);
+    const throttleHandleEventDrop = throttle(this.handleEventDrop, 50);
+    const throttleHandleEventResize = throttle(this.handleEventResizing, 50);
     let { className, isMobile } = this.props;
     let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
     let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
@@ -582,8 +571,8 @@ class MonthView extends React.Component {
         <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
           <DndContext 
             collisionDetection={this.customCollisionDetectionAlgorithm}
-            onDragEnd={this.handleEventDrop}
-            onDragMove={this.handleEventResizing}
+            onDragEnd={throttleHandleEventDrop}
+            onDragMove={throttleHandleEventResize}
           >
             <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom, }}>
               <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>

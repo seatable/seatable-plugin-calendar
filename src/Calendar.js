@@ -994,7 +994,7 @@ class Calendar extends React.Component {
               isMobile={this.props.isMobile}
               onEventDrop={this.props.onEventDrop}
               onEventResize={this.props.onEventResize}
-
+              onResizeDrop={this.props.onResizeDrop}
             />
             {this.props.isExporting && (
               <ExportedMonths

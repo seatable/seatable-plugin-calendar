@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useRef } from 'react';
 import classnames from 'classnames';
 import CellTitle from './cell-title';
 import * as dates from '../../utils/dates';
 import { isMobile } from '../../utils/common';
 import { useDraggable } from '@dnd-kit/core';
 import { DragHandle } from './drag-handle';
-
+import { v4 as uuidv4 } from 'uuid';
 
 function EventCell(props) {
   
@@ -29,11 +29,11 @@ function EventCell(props) {
     ...restProps
   } = props;
 
+  const uniqueId = useRef(uuidv4());
   // dnd, a.k.a drag and drop
   const { attributes: dndAttributes, listeners: dndListeners, setNodeRef: dndSetNodeRef, transform: dndTransform } = useDraggable({
-    id: props.event.row._id + continuesAfter + continuesPrior + '-dnd',
-    // id: Math.random().toString(36).substring(7),
-    data: { ...props, type: 'dnd' },
+    id: uniqueId.current + '-dnd',
+    data: { ...props, type: 'dnd', uuid: uniqueId.current },
   });
   
   const dndTransformPosition = dndTransform ? {

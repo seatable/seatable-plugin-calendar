@@ -1,21 +1,13 @@
 import { useDraggable } from '@dnd-kit/core';
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-
+import { v4 as uuidv4 } from 'uuid';
 export function DragHandle({ display, rowId, data, resizeDirection, continuesPrior, continuesAfter }) {
 
-  const leftHandle = resizeDirection === 'left' && !continuesPrior && continuesAfter;
-  const rightHandle = resizeDirection === 'right' && continuesPrior && !continuesAfter;
-
-  const normalHandle = !continuesAfter && !continuesPrior;
-
-  if (!(leftHandle || rightHandle || normalHandle)) {
-    display = { display: 'none' };
-  }
-
+  const uniqueId = useRef(uuidv4());
   const { attributes: resizeAttributes, listeners: resizeListeners, setNodeRef: resizeSetNodeRef, transform: resizeTransform } = useDraggable({
-    id: rowId + `-${resizeDirection}-resize-handle`,
-    data: { ...data, type: resizeDirection + 'Resize' },
+    id: uniqueId.current + `-${resizeDirection}-handle`,
+    data: { ...data, type: resizeDirection + 'Resize', uuid: uniqueId.current },
   });
 
   const resizeTransformPosition = resizeTransform ? {
@@ -32,7 +24,7 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
       {...resizeAttributes}
       {...resizeListeners}
       ref={resizeSetNodeRef}
-      style={{ ...resizeTransformPosition, ...display }}
+      style={{ ...resizeTransformPosition }}
     >
     </div>
   );

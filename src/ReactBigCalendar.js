@@ -368,6 +368,7 @@ class ReactBigCalendar extends React.Component {
         onEventDragDrop={this.moveEvent}
         onEventDragResize={this.updateEvent}
         onResizeDrop={this.handleResizeDrop}
+        onEventDrop={this.moveEvent}
       />
     );
   }

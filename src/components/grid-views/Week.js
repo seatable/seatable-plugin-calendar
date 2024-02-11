@@ -22,10 +22,8 @@ Week.navigate = (date, action) => {
   switch (action) {
     case navigate.PREVIOUS:
       return dates.add(date, -1, 'week');
-
     case navigate.NEXT:
       return dates.add(date, 1, 'week');
-
     default:
       return date;
   }
@@ -35,7 +33,6 @@ Week.range = (date, { localizer }) => {
   let firstOfWeek = localizer.startOfWeek();
   let start = dates.startOf(date, 'week', firstOfWeek);
   let end = dates.endOf(date, 'week', firstOfWeek);
-
   return dates.range(start, end);
 };
 

@@ -992,8 +992,8 @@ class Calendar extends React.Component {
               updateCurrentDate={this.updateCurrentDate}
               changeDateByNavicate={this.state.changeDateByNavicate}
               isMobile={this.props.isMobile}
-              onEventDrop={this.props.onEventDrop}
-              onEventResize={this.props.onEventResize}
+              onEventDragDrop={this.props.onEventDragDrop}
+              onEventDragResize={this.props.onEventDragResize}
               onResizeDrop={this.props.onResizeDrop}
             />
             {this.props.isExporting && (

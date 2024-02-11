@@ -507,7 +507,7 @@ class MonthView extends React.Component {
   handleEventDrag = (event, newTime) => {
     // i just use date as the dropped item id, cause they are unique
     const { start, end } = this.getNewEventTime(event, newTime);
-    this.props.onEventDrop({ event, start, end, allDay: event.allDay });
+    this.props.onEventDragDrop({ event, start, end, allDay: event.allDay });
   };
 
   handleEventResizeDrop = () => {
@@ -547,7 +547,7 @@ class MonthView extends React.Component {
       console.log('invalid type' + resizingData.type);
     }
     if (start > end) return;
-    this.props.onEventResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
+    this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
   };
 
   

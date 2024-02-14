@@ -15,6 +15,10 @@ import { notify } from '../../utils/helpers';
 import Resources from '../../utils/Resources';
 import { inRange, sortEvents } from '../../utils/eventLevels';
 import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
+import { DndContext } from '@dnd-kit/core';
+import { pointerWithin, rectIntersection } from '@dnd-kit/core';
+import { isEmptyObject } from 'dtable-utils';
+import { throttle } from 'lodash-es';
 
 export default class TimeGrid extends Component {
   constructor(props) {
@@ -147,6 +151,74 @@ export default class TimeGrid extends Component {
     );
   }
 
+  customCollisionDetectionAlgorithm =  (args) => {
+    // First, let's see if there are any collisions with the pointer
+    const pointerCollisions = pointerWithin(args);
+    
+    // Collision detection algorithms return an array of collisions
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions;
+    }
+    
+    // If there are no collisions with the pointer, return rectangle intersections
+    return rectIntersection(args);
+  };
+
+  getNewEventTime = (event, newStartDate) => {
+    const dateRange = dates.range(event.start, event.end, 'day');
+    const newStart = newStartDate;
+    const newEnd = dates.add(newStartDate, dateRange.length - 1, 'day');
+    return { start: newStart, end: newEnd };
+  };
+
+  handleEventDrag = (event, newTime) => {
+    // i just use date as the dropped item id, cause they are unique
+    const { start, end } = this.getNewEventTime(event, newTime);
+    this.props.onEventDragDrop({ event, start, end, allDay: event.allDay });
+  };
+
+  handleEventResizeDrop = () => {
+    this.props.onResizeDrop();
+  };
+
+  handleEventDrop = (e) => {
+    const dropData = e.active.data.current;
+    const event = dropData.event;
+    if (!e.over || !event) return;
+    if (dropData.type === 'dnd') {
+      this.handleEventDrag(event, e.over.id);
+    } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
+      this.handleEventResizeDrop();
+    } else {
+      console.log('invalid type' + dropData.type);
+    }
+  };
+
+  handleEventResizing = (e) => {
+    if (!e.over) return;
+    const operateType = e.active.data.current?.type;
+    if (operateType?.includes('dnd') || !operateType ) return;
+
+    const resizingData = e.active.data.current;
+    if (isEmptyObject(resizingData)) return;
+
+    let newTime = e.over.id;
+    let start, end;
+    if (resizingData.type === 'leftResize') {
+      start = newTime;
+      end = resizingData.event.end;
+    } else if ( resizingData.type === 'rightResize') {
+      end = newTime;
+      start = resizingData.event.start;
+    } else {
+      console.log('invalid type' + resizingData.type);
+    }
+    if (start > end) return;
+    this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
+  };
+
+  
+
   render() {
     let {
       events,
@@ -195,6 +267,8 @@ export default class TimeGrid extends Component {
 
     allDayEvents.sort((a, b) => sortEvents(a, b, accessors));
 
+    const throttleHandleEventDrop = throttle(this.handleEventDrop, 50);
+    const throttleHandleEventResize = throttle(this.handleEventResizing, 50);
     return (
       <div
         className={classnames(
@@ -204,55 +278,62 @@ export default class TimeGrid extends Component {
           }
         )}
       >
-        <TimeGridHeader
-          range={range}
-          events={allDayEvents}
-          width={width}
-          rtl={rtl}
-          getNow={getNow}
-          localizer={localizer}
-          selected={selected}
-          resources={this.memoizedResources(resources, accessors)}
-          selectable={this.props.selectable}
-          accessors={accessors}
-          getters={getters}
-          components={components}
-          scrollRef={this.scrollRef}
-          isOverflowing={this.state.isOverflowing}
-          longPressThreshold={longPressThreshold}
-          onSelectSlot={this.handleSelectAllDaySlot}
-          onRowExpand={this.onRowExpand}
-          onDoubleClickEvent={this.props.onDoubleClickEvent}
-          onDrillDown={this.props.onDrillDown}
-          getDrilldownView={this.props.getDrilldownView}
-        />
-        <div
-          ref={this.contentRef}
-          className='rbc-time-content'
-          onScroll={this.handleScroll}
+        
+        <DndContext
+          collisionDetection={this.customCollisionDetectionAlgorithm}
+          onDragEnd={throttleHandleEventDrop}
+          onDragMove={throttleHandleEventResize}
         >
-          <TimeGutter
-            date={start}
-            ref={this.gutterRef}
-            localizer={localizer}
-            min={dates.merge(start, min)}
-            max={dates.merge(start, max)}
-            step={this.props.step}
-            getNow={this.props.getNow}
-            timeslots={this.props.timeslots}
-            components={components}
-            className='rbc-time-gutter'
-          />
-          {this.renderEvents(range, rangeEvents, getNow())}
-          <CurrentTimeIndicator
-            contentRef={this.contentRef}
+          <TimeGridHeader
+            range={range}
+            events={allDayEvents}
+            width={width}
+            rtl={rtl}
             getNow={getNow}
             localizer={localizer}
-            min={min}
-            max={max}
-            width={width}
+            selected={selected}
+            resources={this.memoizedResources(resources, accessors)}
+            selectable={this.props.selectable}
+            accessors={accessors}
+            getters={getters}
+            components={components}
+            scrollRef={this.scrollRef}
+            isOverflowing={this.state.isOverflowing}
+            longPressThreshold={longPressThreshold}
+            onSelectSlot={this.handleSelectAllDaySlot}
+            onRowExpand={this.onRowExpand}
+            onDoubleClickEvent={this.props.onDoubleClickEvent}
+            onDrillDown={this.props.onDrillDown}
+            getDrilldownView={this.props.getDrilldownView}
           />
-        </div>
+          <div
+            ref={this.contentRef}
+            className='rbc-time-content'
+            onScroll={this.handleScroll}
+          >
+            <TimeGutter
+              date={start}
+              ref={this.gutterRef}
+              localizer={localizer}
+              min={dates.merge(start, min)}
+              max={dates.merge(start, max)}
+              step={this.props.step}
+              getNow={this.props.getNow}
+              timeslots={this.props.timeslots}
+              components={components}
+              className='rbc-time-gutter'
+            />
+            {this.renderEvents(range, rangeEvents, getNow())}
+            <CurrentTimeIndicator
+              contentRef={this.contentRef}
+              getNow={getNow}
+              localizer={localizer}
+              min={min}
+              max={max}
+              width={width}
+            />
+          </div>
+        </DndContext>
       </div>
     );
   }

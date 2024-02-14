@@ -142,26 +142,26 @@ function DateContentRow(props) {
             {range.map(renderHeadingCell)}
           </div>
         )}
-        <WeekWrapper isAllDay={isAllDay} {...eventRowProps}>
-          {renderFestival && (
-            <div className='rbc-row'>
-              {range.map((date, index) => {
-                return <div key={index} className="rbc-festival-row-segment">{renderFestival(date)}</div>;
-              })}
-            </div>
-          )}
-          {levels.map((segs, idx) => (
-            <EventRow key={idx} segments={segs} {...eventRowProps} />
-          ))}
-          {((!isMobile && !!extra.length) || isMobile) && (
-            <EventEndingRow
-              segments={extra}
-              onShowMore={handleShowMore}
-              isMobile={isMobile}
-              {...eventRowProps}
-            />
-          )}
-        </WeekWrapper>
+        {/* <WeekWrapper isAllDay={isAllDay} {...eventRowProps}> */}
+        {renderFestival && (
+          <div className='rbc-row'>
+            {range.map((date, index) => {
+              return <div key={index} className="rbc-festival-row-segment">{renderFestival(date)}</div>;
+            })}
+          </div>
+        )}
+        {levels.map((segs, idx) => (
+          <EventRow key={idx} segments={segs} {...eventRowProps} />
+        ))}
+        {((!isMobile && !!extra.length) || isMobile) && (
+          <EventEndingRow
+            segments={extra}
+            onShowMore={handleShowMore}
+            isMobile={isMobile}
+            {...eventRowProps}
+          />
+        )}
+        {/* </WeekWrapper> */}
       </div>
     </div>
   );

@@ -811,6 +811,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-time-slot {
   flex: 1 0 0;
+  display: flex;
 }
 
 .rbc-time-slot.rbc-now {
@@ -1236,7 +1237,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-day-bg-is-over {
-  background-color: rgba(255, 217, 200, 0.5);;
+  background-color: rgba(255, 217, 200, 0.5);
 }
 
 .resize-handle-left {
@@ -1253,4 +1254,12 @@ button.rbc-input::-moz-focus-inner {
   cursor: col-resize;
   top: 0;
   right: 0;
+}
+
+.empty-time-slot {
+  flex: 1 0;
+}
+
+.empty-time-slot-is-drag-over {
+  background-color:  rgba(255, 217, 200, 0.5);
 }

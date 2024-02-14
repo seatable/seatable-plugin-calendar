@@ -152,15 +152,10 @@ export default class TimeGrid extends Component {
   }
 
   customCollisionDetectionAlgorithm =  (args) => {
-    // First, let's see if there are any collisions with the pointer
     const pointerCollisions = pointerWithin(args);
-    
-    // Collision detection algorithms return an array of collisions
     if (pointerCollisions.length > 0) {
       return pointerCollisions;
     }
-    
-    // If there are no collisions with the pointer, return rectangle intersections
     return rectIntersection(args);
   };
 
@@ -216,8 +211,6 @@ export default class TimeGrid extends Component {
     if (start > end) return;
     this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
   };
-
-  
 
   render() {
     let {

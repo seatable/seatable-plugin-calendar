@@ -83,18 +83,18 @@ class DayColumn extends React.Component {
             components={components}
           />
         ))}
-        <EventContainer
+        {/* <EventContainer
           localizer={localizer}
           resource={resource}
           accessors={accessors}
           getters={getters}
           components={components}
           slotMetrics={slotMetrics}
-        >
-          <div className={classnames('rbc-events-container', { 'rtl': rtl })}>
-            {this.renderEvents()}
-          </div>
-        </EventContainer>
+        > */}
+        <div className={classnames('rbc-events-container', { 'rtl': rtl })}>
+          {this.renderEvents()}
+        </div>
+        {/* </EventContainer> */}
 
         {selecting && (
           <div className='rbc-slot-selection' style={{ top, height }}>

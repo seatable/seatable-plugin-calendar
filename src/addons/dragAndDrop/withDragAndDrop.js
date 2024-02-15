@@ -192,7 +192,7 @@ export default function withDragAndDrop(Calendar) {
       props.className = classnames(
         props.className,
         'rbc-addons-dnd',
-        !!interacting && 'rbc-addons-dnd-is-dragging'
+        // !!interacting && 'rbc-addons-dnd-is-dragging'
       );
 
       return (

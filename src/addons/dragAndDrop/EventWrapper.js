@@ -157,16 +157,16 @@ class EventWrapper extends React.Component {
       }
       */
 
-      if (
-        draggable.dragAndDropAction.interacting && // if an event is being dragged right now
-        draggable.dragAndDropAction.event === event // and it's the current event
-      ) {
-        // add a new class to it
-        newProps.className = classnames(
-          children.props.className,
-          'rbc-addons-dnd-dragged-event'
-        );
-      }
+      // if (
+      //   draggable.dragAndDropAction.interacting && // if an event is being dragged right now
+      //   draggable.dragAndDropAction.event === event // and it's the current event
+      // ) {
+      //   // add a new class to it
+      //   newProps.className = classnames(
+      //     children.props.className,
+      //     'rbc-addons-dnd-dragged-event'
+      //   );
+      // }
 
       children = React.cloneElement(children, newProps);
     }

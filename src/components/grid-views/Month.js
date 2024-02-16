@@ -550,7 +550,6 @@ class MonthView extends React.Component {
     this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
   };
 
-  
   render() {
     const throttleHandleEventDrop = throttle(this.handleEventDrop, 10);
     const throttleHandleEventResize = throttle(this.handleEventResizing, 10);

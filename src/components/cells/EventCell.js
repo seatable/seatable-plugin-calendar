@@ -38,7 +38,7 @@ function EventCell(props) {
   
   const dndTransformPosition = dndTransform ? {
     transform: `translate3d(${dndTransform.x}px, ${dndTransform.y}px, 0)`,
-  } : undefined;
+  } : {};
 
   const getRbcEventStyle = () => {
     const { event } = props;
@@ -72,7 +72,10 @@ function EventCell(props) {
       <div 
         {...dndListeners}
         {...dndAttributes} 
-        className='rbc-event-content' 
+        className='rbc-event-content'
+        style={{
+          touchAction: 'none'
+        }}
         title={tooltip || undefined}>
         {Event ? (
           <Event
@@ -97,7 +100,7 @@ function EventCell(props) {
   return (
     // <EventWrapper {...restProps} type='date'>
     <div>
-      {  (normalEvent || eventCrossWeeksStartHandler)  && 
+      {  (normalEvent || eventCrossWeeksStartHandler)  &&
         <DragHandle 
           continuesPrior={continuesPrior}
           continuesAfter={continuesAfter}

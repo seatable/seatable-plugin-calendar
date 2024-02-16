@@ -552,8 +552,8 @@ class MonthView extends React.Component {
 
   
   render() {
-    const throttleHandleEventDrop = throttle(this.handleEventDrop, 50);
-    const throttleHandleEventResize = throttle(this.handleEventResizing, 50);
+    const throttleHandleEventDrop = throttle(this.handleEventDrop, 10);
+    const throttleHandleEventResize = throttle(this.handleEventResizing, 10);
     let { className, isMobile } = this.props;
     let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
     let renderWeeks = [], offsetTop = 0, offsetBottom = 0;

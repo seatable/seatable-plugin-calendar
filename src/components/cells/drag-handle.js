@@ -24,7 +24,9 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
       {...attributes}
       {...listeners}
       ref={setNodeRef}
-      style={{ ...resizeTransformPosition }}
+      style={{ ...resizeTransformPosition, ...{
+        touchAction: 'none'
+      } }}
     >
     </div>
   );

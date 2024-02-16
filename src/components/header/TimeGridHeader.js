@@ -100,6 +100,7 @@ class TimeGridHeader extends React.Component {
         onDoubleClick={this.props.onDoubleClickEvent}
         onSelectSlot={this.props.onSelectSlot}
         longPressThreshold={this.props.longPressThreshold}
+        setIsOverAllDaySlot={this.props.setIsOverAllDaySlot}
       />
     );
   };
@@ -126,9 +127,9 @@ class TimeGridHeader extends React.Component {
     } = this.props;
 
     let style = {};
-    if (isOverflowing) {
-      style[rtl ? 'marginLeft' : 'marginRight'] = `${scrollbarSize()}px`;
-    }
+    // if (isOverflowing) {
+    //   style[rtl ? 'marginLeft' : 'marginRight'] = `${scrollbarSize()}px`;
+    // }
 
     const groupedEvents = resources.groupEvents(events);
 
@@ -184,6 +185,7 @@ class TimeGridHeader extends React.Component {
               onDoubleClick={this.props.onDoubleClickEvent}
               onSelectSlot={this.props.onSelectSlot}
               longPressThreshold={this.props.longPressThreshold}
+              // setIsOverAllDaySlot={this.props.setIsOverAllDaySlot}
             />
           </div>
         ))}

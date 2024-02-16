@@ -5,13 +5,13 @@ import { v4 as uuidv4 } from 'uuid';
 export function DragHandle({ display, rowId, data, resizeDirection, continuesPrior, continuesAfter }) {
 
   const uniqueId = useRef(uuidv4());
-  const { attributes: resizeAttributes, listeners: resizeListeners, setNodeRef: resizeSetNodeRef, transform: resizeTransform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: uniqueId.current + `-${resizeDirection}-handle`,
     data: { ...data, type: resizeDirection + 'Resize', uuid: uniqueId.current },
   });
 
-  const resizeTransformPosition = resizeTransform ? {
-    transform: `translate3d(${resizeTransform.x}px, ${resizeTransform.y}px, 0)`,
+  const resizeTransformPosition = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   } : undefined;
 
   const classNames = {
@@ -21,9 +21,9 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
 
   return (
     <div className={classNames[resizeDirection]}
-      {...resizeAttributes}
-      {...resizeListeners}
-      ref={resizeSetNodeRef}
+      {...attributes}
+      {...listeners}
+      ref={setNodeRef}
       style={{ ...resizeTransformPosition }}
     >
     </div>

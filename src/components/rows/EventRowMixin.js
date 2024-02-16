@@ -30,7 +30,8 @@ const mixins = {
       onDoubleClick,
       localizer,
       slotMetrics,
-      components
+      components,
+      isAllDay,
     } = props;
 
     let continuesPrior = slotMetrics.continuesPrior(event);
@@ -50,6 +51,7 @@ const mixins = {
         slotStart={slotMetrics.first}
         slotEnd={slotMetrics.last}
         selected={isSelected(event, selected)}
+        isAllDay={isAllDay}
       />
     );
   },

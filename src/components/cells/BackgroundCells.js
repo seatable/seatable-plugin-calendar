@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import Selection, { getBoundsForNode, isEvent } from '../selection/Selection';
 import * as dates from '../../utils/dates';
 import { getSlotAtX, pointInBox } from '../../utils/selection';
-import { DateBlock } from './date-block';
+import  DateBlock  from './date-block';
 
 
 function BackgroundCells(props) {
@@ -15,17 +15,19 @@ function BackgroundCells(props) {
   const _initial = useRef(null);
 
   const [selecting, setSelecting] = useState(false);
-  const [prevProps, setPrevProps] = useState(null);
+  const [prevSelectable, setPrevSelectable] = useState(null);
+
+  const selectable = props.selectable;
 
   // depending on props，trigger effect once props changed
-  // evaluate the frist time after componet mounted
+  // evaluated the frist time after componet mounted
   useEffect(() => {
-    if (props.selectable && !prevProps?.selectable) _selectable();
-    if (!props.selectable && prevProps?.selectable) _teardownSelectable();
-    setPrevProps(props);
+    if (selectable && !prevSelectable) _selectable();
+    if (!selectable && prevSelectable) _teardownSelectable();
+    setPrevSelectable(selectable);
     return () => _teardownSelectable();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props]);
+  }, [selectable]);
 
   
   function _selectable() {
@@ -100,6 +102,7 @@ function BackgroundCells(props) {
           <Wrapper key={index} value={date} range={range}>
             <DateBlock 
               blockStyle={style} 
+              setIsOverAllDaySlot={props.setIsOverAllDaySlot}
               className={classnames(
                 'rbc-day-bg',
                 className,

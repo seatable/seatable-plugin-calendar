@@ -18,13 +18,13 @@ import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
 import { DndContext } from '@dnd-kit/core';
 import { pointerWithin, rectIntersection } from '@dnd-kit/core';
 import { isEmptyObject } from 'dtable-utils';
-import { throttle } from 'lodash-es';
+import { drop, throttle } from 'lodash-es';
 
 export default class TimeGrid extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { gutterWidth: undefined, isOverflowing: null };
+    this.state = { gutterWidth: undefined, isOverflowing: null, isDraggingToAllDaySlot: false };
 
     this.scrollRef = React.createRef();
     this.contentRef = React.createRef();
@@ -159,16 +159,47 @@ export default class TimeGrid extends Component {
     return rectIntersection(args);
   };
 
-  getNewEventTime = (event, newStartDate) => {
-    const dateRange = dates.range(event.start, event.end, 'day');
-    const newStart = newStartDate;
-    const newEnd = dates.add(newStartDate, dateRange.length - 1, 'day');
+  getNewEventTime = (event, newStartDate, isJustDate, isAllDay, direction) => {
+    let unit;
+    isJustDate ? unit = 'day' : unit = 'minute';
+    let dateRange = dates.range(event.start, event.end, unit);
+    let newStart, newEnd;
+    // drag from allDaySlot to allDaySlot
+    if (isJustDate && isAllDay) {
+      newStart = newStartDate;
+      newEnd = dates.add(newStartDate, dateRange.length - 1, unit);
+    } else  if (isJustDate && !isAllDay) {
+      // from timeSlot to allDaySlot
+      newStart = newStartDate;
+      newEnd = newStartDate;
+    } else if (!isJustDate && !isAllDay) {
+      // from timeSlot to timeSlot
+      if (direction) {
+        // top/bottom resize
+        if (direction === 'top') {
+          newStart = newStartDate;
+          newEnd = event.end;
+        } else {
+          newStart = event.start;
+          newEnd = newStartDate;
+        }
+      } else {
+        newStart = newStartDate;
+        newEnd = dates.add(newStartDate, dateRange.length - 1, unit);
+      }
+     
+    } else {
+      // drag from allDaySlot to timeSlot, initially set a 30 minutes duration
+      newStart = newStartDate;
+      newEnd = dates.add(newStartDate, 30, 'minutes');
+    }
     return { start: newStart, end: newEnd };
   };
 
-  handleEventDrag = (event, newTime) => {
-    // i just use date as the dropped item id, cause they are unique
-    const { start, end } = this.getNewEventTime(event, newTime);
+  handleEventDragDrop = (event, newTime, isAllDay, direction) => {
+    // use date as the dropped item id, cause they are unique
+    if (dates.isJustDate(newTime) && dates.eq(event.start, newTime) && isAllDay) return;
+    const { start, end } = this.getNewEventTime(event, newTime, dates.isJustDate(newTime), isAllDay, direction);
     this.props.onEventDragDrop({ event, start, end, allDay: event.allDay });
   };
 
@@ -179,9 +210,18 @@ export default class TimeGrid extends Component {
   handleEventDrop = (e) => {
     const dropData = e.active.data.current;
     const event = dropData.event;
+    // e.over is the drop target data, event is the dragged item data
     if (!e.over || !event) return;
-    if (dropData.type === 'dnd') {
-      this.handleEventDrag(event, e.over.id);
+    if (dropData.type === 'dnd' || dropData.type === 'grid-event-resize') {
+    // use date as the dropped item id, cause they are unique,(e.over.id here)
+    // dropData.direction handle weather start/end time need to be updated
+    
+      // fix the bug that when drag down, time is 30 mins less
+      let newTime = e.over.id;
+      if (dropData.mouseDirection === 'down') {
+        newTime = dates.add(newTime, 30, 'minutes');
+      }
+      this.handleEventDragDrop(event, newTime, dropData.isAllDay, dropData.direction);    
     } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
       this.handleEventResizeDrop();
     } else {
@@ -192,7 +232,7 @@ export default class TimeGrid extends Component {
   handleEventResizing = (e) => {
     if (!e.over) return;
     const operateType = e.active.data.current?.type;
-    if (operateType?.includes('dnd') || !operateType ) return;
+    if (!operateType || operateType === 'grid-event-resize' || operateType?.includes('dnd')  ) return;
 
     const resizingData = e.active.data.current;
     if (isEmptyObject(resizingData)) return;
@@ -210,6 +250,10 @@ export default class TimeGrid extends Component {
     }
     if (start > end) return;
     this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
+  };
+
+  setIsOverAllDaySlot = (v) => {
+    this.setState({ isDraggingToAllDaySlot: v });
   };
 
   render() {
@@ -262,6 +306,7 @@ export default class TimeGrid extends Component {
 
     const throttleHandleEventDrop = throttle(this.handleEventDrop, 50);
     const throttleHandleEventResize = throttle(this.handleEventResizing, 50);
+
     return (
       <div
         className={classnames(
@@ -271,60 +316,63 @@ export default class TimeGrid extends Component {
           }
         )}
       >
-        
         <DndContext
           collisionDetection={this.customCollisionDetectionAlgorithm}
           onDragEnd={throttleHandleEventDrop}
           onDragMove={throttleHandleEventResize}
         >
-          <TimeGridHeader
-            range={range}
-            events={allDayEvents}
-            width={width}
-            rtl={rtl}
-            getNow={getNow}
-            localizer={localizer}
-            selected={selected}
-            resources={this.memoizedResources(resources, accessors)}
-            selectable={this.props.selectable}
-            accessors={accessors}
-            getters={getters}
-            components={components}
-            scrollRef={this.scrollRef}
-            isOverflowing={this.state.isOverflowing}
-            longPressThreshold={longPressThreshold}
-            onSelectSlot={this.handleSelectAllDaySlot}
-            onRowExpand={this.onRowExpand}
-            onDoubleClickEvent={this.props.onDoubleClickEvent}
-            onDrillDown={this.props.onDrillDown}
-            getDrilldownView={this.props.getDrilldownView}
-          />
-          <div
-            ref={this.contentRef}
-            className='rbc-time-content'
-            onScroll={this.handleScroll}
-          >
-            <TimeGutter
-              date={start}
-              ref={this.gutterRef}
-              localizer={localizer}
-              min={dates.merge(start, min)}
-              max={dates.merge(start, max)}
-              step={this.props.step}
-              getNow={this.props.getNow}
-              timeslots={this.props.timeslots}
-              components={components}
-              className='rbc-time-gutter'
-            />
-            {this.renderEvents(range, rangeEvents, getNow())}
-            <CurrentTimeIndicator
-              contentRef={this.contentRef}
+          <div className='rbc-time-container'>
+            <TimeGridHeader
+              range={range}
+              events={allDayEvents}
+              width={width}
+              rtl={rtl}
               getNow={getNow}
               localizer={localizer}
-              min={min}
-              max={max}
-              width={width}
+              selected={selected}
+              resources={this.memoizedResources(resources, accessors)}
+              selectable={this.props.selectable}
+              accessors={accessors}
+              getters={getters}
+              components={components}
+              scrollRef={this.scrollRef}
+              isOverflowing={this.state.isOverflowing}
+              longPressThreshold={longPressThreshold}
+              onSelectSlot={this.handleSelectAllDaySlot}
+              onRowExpand={this.onRowExpand}
+              onDoubleClickEvent={this.props.onDoubleClickEvent}
+              onDrillDown={this.props.onDrillDown}
+              getDrilldownView={this.props.getDrilldownView}
+              setIsOverAllDaySlot={this.setIsOverAllDaySlot}
             />
+            <div
+              ref={this.contentRef}
+              className="rbc-time-content"
+              id='rbc-time-content'
+              onScroll={this.handleScroll}
+            >
+              <TimeGutter
+                date={start}
+                ref={this.gutterRef}
+                localizer={localizer}
+                min={dates.merge(start, min)}
+                max={dates.merge(start, max)}
+                step={this.props.step}
+                getNow={this.props.getNow}
+                timeslots={this.props.timeslots}
+                components={components}
+                className='rbc-time-gutter'
+              />
+              {this.renderEvents(range, rangeEvents, getNow())}
+              <CurrentTimeIndicator
+                contentRef={this.contentRef}
+                getNow={getNow}
+                localizer={localizer}
+                min={min}
+                max={max}
+                width={width}
+              />
+            </div>
           </div>
         </DndContext>
       </div>

@@ -1,8 +1,9 @@
 import { useDroppable } from '@dnd-kit/core';
+import { set } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
-export function DateBlock({ className, blockStyle, value, range }) {
+export default function DateBlock({ className, blockStyle, value, range, setIsOverAllDaySlot }) {
 
   // const [initialStartTime, setInitialStartTime] = useState(null); 
   // const [initialEndTime, setInitialEndTime] = useState(null);

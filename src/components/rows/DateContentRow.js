@@ -117,7 +117,8 @@ function DateContentRow(props) {
     onRowExpand,
     onDoubleClick,
     resourceId,
-    slotMetrics: metrics
+    slotMetrics: metrics,
+    isAllDay
   };
 
   return (
@@ -135,6 +136,7 @@ function DateContentRow(props) {
         onSelectSlot={handleSelectSlot}
         components={components}
         longPressThreshold={longPressThreshold}
+        setIsOverAllDaySlot={props.setIsOverAllDaySlot}
       />
       <div className='rbc-row-content'>
         {renderHeader && (

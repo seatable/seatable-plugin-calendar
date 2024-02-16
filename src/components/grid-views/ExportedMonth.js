@@ -20,7 +20,7 @@ class ExportedMonth extends React.Component {
     super(...args);
     this._bgRows = [];
     this._pendingSelection = [];
-    // this.slotRowRef = React.createRef();
+    this.slotRowRef = React.createRef();
     this.state = {
       needLimitMeasure: false,
       popup: false,
@@ -136,7 +136,7 @@ class ExportedMonth extends React.Component {
       <DateContentRow
         key={formatWeekStartDate}
         uuid={formatWeekStartDate}
-        // ref={weekIdx === 0 ? this.slotRowRef : undefined}
+        ref={weekIdx === 0 ? this.slotRowRef : undefined}
         container={this.getContainer}
         className='rbc-month-row'
         getNow={getNow}

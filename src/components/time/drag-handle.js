@@ -18,13 +18,6 @@ function TimeGridEventDragHandle({ direction, resizeEventHeight, resizeEventTop,
     }
   );
 
-  const position = transform ? 
-    {
-      // transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    } : 
-    {};
-
-
   const startY = useRef(0);
   const isDragging = useRef(false);
 
@@ -80,7 +73,6 @@ function TimeGridEventDragHandle({ direction, resizeEventHeight, resizeEventTop,
     className={`time-gird-event-drag-handle ${cls}`}
     {...listeners}
     {...attributes}
-    style={position}
     ref={setNodeRef}
     onMouseDown={handleMouseDown}
   ></div>;

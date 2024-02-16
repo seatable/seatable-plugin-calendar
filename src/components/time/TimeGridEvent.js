@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useDraggable } from '@dnd-kit/core';
 import TimeGridEventDragHandle from './drag-handle';
 
-// height of a single slot as well as a half hour
+// height of a single slot, a half hour
 const minimalHeightUnit = 2.0833333333333357;
 
 function stringifyPercent(v) {
@@ -31,7 +31,6 @@ const getRbcEventStyle = (props) => {
 
 /* eslint-disable react/prop-types */
 function TimeGridEvent(props) {
-
 
   const {
     style,
@@ -65,7 +64,7 @@ function TimeGridEvent(props) {
 
   function computeSingleSlotHeight() {
     const container = document.querySelector('#rbc-time-content');
-    // 24 top borders height,
+    // minus 24 top borders height,
     const containerHeight = container.clientHeight - 24;
     const singleSlotHeight = containerHeight * minimalHeightUnit / 100;
     setSingleSlotHeight(singleSlotHeight);

@@ -4,7 +4,6 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as dates from '../../utils/dates';
 
-
 export function TimeSlot({ value }) {
 
   const currentSlotValue = useRef(null);

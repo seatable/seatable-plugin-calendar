@@ -242,7 +242,7 @@ export default class TimeGrid extends Component {
     if (resizingData.type === 'leftResize') {
       start = newTime;
       end = resizingData.event.end;
-    } else if ( resizingData.type === 'rightResize') {
+    } else if (resizingData.type === 'rightResize') {
       end = newTime;
       start = resizingData.event.start;
     } else {
@@ -304,8 +304,8 @@ export default class TimeGrid extends Component {
 
     allDayEvents.sort((a, b) => sortEvents(a, b, accessors));
 
-    const throttleHandleEventDrop = throttle(this.handleEventDrop, 50);
-    const throttleHandleEventResize = throttle(this.handleEventResizing, 50);
+    const throttleHandleEventDrop = throttle(this.handleEventDrop, 10);
+    const throttleHandleEventResize = throttle(this.handleEventResizing, 10);
 
     return (
       <div

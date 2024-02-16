@@ -144,7 +144,6 @@ function DateContentRow(props) {
             {range.map(renderHeadingCell)}
           </div>
         )}
-        {/* <WeekWrapper isAllDay={isAllDay} {...eventRowProps}> */}
         {renderFestival && (
           <div className='rbc-row'>
             {range.map((date, index) => {
@@ -163,7 +162,6 @@ function DateContentRow(props) {
             {...eventRowProps}
           />
         )}
-        {/* </WeekWrapper> */}
       </div>
     </div>
   );

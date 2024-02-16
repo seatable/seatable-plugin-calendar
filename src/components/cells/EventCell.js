@@ -98,7 +98,6 @@ function EventCell(props) {
   const eventCrossWeeksEndHandler = (continuesPrior && !continuesAfter);
 
   return (
-    // <EventWrapper {...restProps} type='date'>
     <div>
       {  (normalEvent || eventCrossWeeksStartHandler)  &&
         <DragHandle 
@@ -137,7 +136,6 @@ function EventCell(props) {
         ></DragHandle>
       }
     </div>
-    // </EventWrapper>
   );
 }
 

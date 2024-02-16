@@ -368,7 +368,6 @@ class MonthView extends React.Component {
       <DateContentRow
         key={formatWeekStartDate}
         uuid={formatWeekStartDate}
-        // ref={weekIdx === 0 ? this.slotRowRef : undefined}
         container={this.getContainer}
         className='rbc-month-row'
         getNow={getNow}

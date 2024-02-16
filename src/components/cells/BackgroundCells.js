@@ -116,25 +116,12 @@ function BackgroundCells(props) {
               range={range}
             >
             </DateBlock>
-            {/* <div
-              style={style}
-              className={classnames(
-                'rbc-day-bg',
-                className,
-                {
-                  'rbc-selected-cell': selected,
-                  'rbc-today': dates.eq(date, current, 'day'),
-                  'rbc-off-range-bg': currentDate && dates.month(currentDate) !== dates.month(date)
-                }
-              )}
-            /> */}
           </Wrapper>
         );
       })}
     </div>
   );
 }
-
 
 BackgroundCells.propTypes = {
   date: PropTypes.instanceOf(Date),

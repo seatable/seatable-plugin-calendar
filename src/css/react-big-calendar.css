@@ -58,7 +58,6 @@ button.rbc-input::-moz-focus-inner {
   white-space: nowrap;
 }
 
-
 .rbc-rtl {
   direction: rtl;
 }
@@ -788,8 +787,6 @@ button.rbc-input::-moz-focus-inner {
 .event-drag-handle-bottom {
   bottom: 0;
 }
-
-
 
 .rbc-time-view-resources .rbc-time-gutter,
 .rbc-time-view-resources .rbc-time-header-gutter {

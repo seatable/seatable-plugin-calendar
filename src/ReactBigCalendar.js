@@ -295,7 +295,6 @@ class ReactBigCalendar extends React.Component {
         events: nextEvents
       });
     });
-    
   };
 
   handleResizeDrop = () => {

@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 
 export default function DateBlock({ className, blockStyle, value, range, setIsOverAllDaySlot }) {
 
-  const { isOver, setNodeRef, active, } =  useDroppable({
+  const { isOver, over, setNodeRef, active, } =  useDroppable({
     id: value,
     data: {
       date: value,

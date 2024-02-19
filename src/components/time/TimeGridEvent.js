@@ -56,6 +56,7 @@ function TimeGridEvent(props) {
     setEventTop(props.style.top);
   }, [props.style.top]);
 
+  // evaluate just once after mounted
   useEffect(() => {
     computeSingleSlotHeight();
     window.addEventListener('resize', computeSingleSlotHeight);
@@ -97,7 +98,6 @@ function TimeGridEvent(props) {
     // rise zIndex after drag start
     zIndex: 1000,
   } : {};
-
 
   let title = <CellTitle event={event} />;
   let tooltip = accessors.tooltip(event);

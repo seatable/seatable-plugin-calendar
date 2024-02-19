@@ -16,15 +16,19 @@ import Resources from '../../utils/Resources';
 import { inRange, sortEvents } from '../../utils/eventLevels';
 import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
 import { DndContext } from '@dnd-kit/core';
-import { pointerWithin, rectIntersection } from '@dnd-kit/core';
+import { rectIntersection } from '@dnd-kit/core';
 import { isEmptyObject } from 'dtable-utils';
-import { drop, throttle } from 'lodash-es';
+import { throttle } from 'lodash-es';
 
 export default class TimeGrid extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { gutterWidth: undefined, isOverflowing: null, isDraggingToAllDaySlot: false };
+    this.state = { 
+      gutterWidth: undefined, 
+      isOverflowing: null, 
+      isDraggingToAllDaySlot: false,
+    };
 
     this.scrollRef = React.createRef();
     this.contentRef = React.createRef();
@@ -151,12 +155,46 @@ export default class TimeGrid extends Component {
     );
   }
 
-  customCollisionDetectionAlgorithm =  (args) => {
-    const pointerCollisions = pointerWithin(args);
-    if (pointerCollisions.length > 0) {
-      return pointerCollisions;
+  isOverBoundrys = (boundaryWIdth, nodeRect, targetRect) => {
+    if (nodeRect.right > targetRect.left) {
+      if (nodeRect.right - targetRect.left < boundaryWIdth) {
+        return false;
+      } 
+      return true;
+    } else if (nodeRect.left < targetRect.right) {
+      if (targetRect.right - nodeRect.left < boundaryWIdth) {
+        return false;
+      } 
+      return true;
     }
-    return rectIntersection(args);
+    return false;
+  };  
+
+  timeSlotDetectionAlgorithm = ({
+    active,
+    collisionRect,
+    droppableRects,
+    droppableContainers,
+    pointerCoordinates,
+  }) => {
+    this.clearIsOveredNodes();
+    const collisions = rectIntersection({ active, collisionRect, droppableRects, droppableContainers, pointerCoordinates });
+    const boundaryWIdth = (collisionRect.right - collisionRect.left) * 0.7;
+    const currentNodes = collisions.filter(v => {
+      return this.isOverBoundrys(boundaryWIdth, v.data.droppableContainer.rect.current, collisionRect);
+    });
+    currentNodes.forEach(v => { v.data.droppableContainer.node.current.classList.add('empty-time-slot-is-drag-over');});
+    this.prevNodes = currentNodes;
+    return collisions;  
+  };
+
+  clearIsOveredNodes = () => {
+    if (this.prevNodes?.length) {
+      this.prevNodes.forEach(v => {
+        v.data.droppableContainer.node.current.classList.remove('empty-time-slot-is-drag-over');
+      });
+    }
+    this.prevNodes = [];
   };
 
   getNewEventTime = (event, newStartDate, isJustDate, isAllDay, direction) => {
@@ -215,9 +253,7 @@ export default class TimeGrid extends Component {
     if (dropData.type === 'dnd' || dropData.type === 'grid-event-resize') {
     // use date as the dropped item id, cause they are unique,(e.over.id here)
     // dropData.direction handle weather start/end time need to be updated
-    
-      // fix the bug that when drag down, time is 30 mins less
-      let newTime = e.over.id;
+      let newTime = e.over.id;      // fix the bug that when drag down, time is 30 mins less
       if (dropData.mouseDirection === 'down') {
         newTime = dates.add(newTime, 30, 'minutes');
       }
@@ -227,6 +263,7 @@ export default class TimeGrid extends Component {
     } else {
       console.log('invalid type' + dropData.type);
     }
+    this.clearIsOveredNodes();
   };
 
   handleEventResizing = (e) => {
@@ -250,10 +287,6 @@ export default class TimeGrid extends Component {
     }
     if (start > end) return;
     this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
-  };
-
-  setIsOverAllDaySlot = (v) => {
-    this.setState({ isDraggingToAllDaySlot: v });
   };
 
   render() {
@@ -317,7 +350,7 @@ export default class TimeGrid extends Component {
         )}
       >
         <DndContext
-          collisionDetection={this.customCollisionDetectionAlgorithm}
+          collisionDetection={this.timeSlotDetectionAlgorithm}
           onDragEnd={throttleHandleEventDrop}
           onDragMove={throttleHandleEventResize}
         >

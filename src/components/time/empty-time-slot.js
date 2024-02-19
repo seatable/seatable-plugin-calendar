@@ -23,8 +23,6 @@ export function TimeSlot({ value }) {
     type: 'TimeSlot'
   });
 
-  const bg = 'empty-time-slot-is-drag-over';
-
   let cls = 'empty-time-slot';
   
   return <div className={cls} ref={setNodeRef}></div>;

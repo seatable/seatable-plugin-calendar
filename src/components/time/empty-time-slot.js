@@ -26,10 +26,6 @@ export function TimeSlot({ value }) {
   const bg = 'empty-time-slot-is-drag-over';
 
   let cls = 'empty-time-slot';
-  // grid-event-resize do not add bg
-  if (isOver && active && active.data.current.type !== 'grid-event-resize'){
-    cls += ` ${bg}`;
-  }
   
   return <div className={cls} ref={setNodeRef}></div>;
 }

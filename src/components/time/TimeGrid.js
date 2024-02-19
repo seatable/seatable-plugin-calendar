@@ -155,20 +155,35 @@ export default class TimeGrid extends Component {
     );
   }
 
-  isOverBoundrys = (boundaryWIdth, nodeRect, targetRect) => {
-    if (nodeRect.right > targetRect.left) {
+  isOverHorizontalBoundrys = (boundaryWIdth, nodeRect, targetRect) => {
+    if (nodeRect.right > targetRect.left && nodeRect.left < targetRect.left) {
       if (nodeRect.right - targetRect.left < boundaryWIdth) {
         return false;
       } 
       return true;
-    } else if (nodeRect.left < targetRect.right) {
+    } else if (nodeRect.left < targetRect.right && nodeRect.right > targetRect.right) {
       if (targetRect.right - nodeRect.left < boundaryWIdth) {
         return false;
       } 
       return true;
     }
     return false;
-  };  
+  }; 
+  
+  isOverVerticalBoundrys = (boundaryHeight, nodeRect, targetRect) => {
+    if (nodeRect.bottom > targetRect.top && nodeRect.top < targetRect.top ) {
+      if (targetRect.top - nodeRect.bottom > boundaryHeight) {
+        return true;
+      }
+      return false;
+    } else if (nodeRect.bottom > targetRect.bottom && nodeRect.top < targetRect.bottom ) {
+      if (targetRect.bottom - nodeRect.top > boundaryHeight) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
 
   timeSlotDetectionAlgorithm = ({
     active,
@@ -177,12 +192,17 @@ export default class TimeGrid extends Component {
     droppableContainers,
     pointerCoordinates,
   }) => {
+    // custom detection Algorith for is overed slots background
     this.clearIsOveredNodes();
     const collisions = rectIntersection({ active, collisionRect, droppableRects, droppableContainers, pointerCoordinates });
-    const boundaryWIdth = (collisionRect.right - collisionRect.left) * 0.7;
+
+    const boundaryWidth = (collisionRect.right - collisionRect.left) * 0.5;
+    const boundaryheight = (droppableContainers[0].rect.current.height) * 0.5;
+
     const currentNodes = collisions.filter(v => {
-      return this.isOverBoundrys(boundaryWIdth, v.data.droppableContainer.rect.current, collisionRect);
+      return this.isOverHorizontalBoundrys(boundaryWidth, v.data.droppableContainer.rect.current, collisionRect) && this.isOverVerticalBoundrys(boundaryheight, v.data.droppableContainer.rect.current, collisionRect);
     });
+    // currentNodes.shift();
     currentNodes.forEach(v => { v.data.droppableContainer.node.current.classList.add('empty-time-slot-is-drag-over');});
     this.prevNodes = currentNodes;
     return collisions;  

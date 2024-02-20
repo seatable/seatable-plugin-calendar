@@ -625,6 +625,9 @@ MonthView.propTypes = {
   onInsertRow: PropTypes.func,
   onEventDrop: PropTypes.func,
   onEventResize: PropTypes.func,
+  onResizeDrop: PropTypes.func,
+  onEventDragResize: PropTypes.func,
+  onEventDragDrop: PropTypes.func,
 };
 
 MonthView.range = (date, { localizer }) => {

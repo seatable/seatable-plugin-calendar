@@ -102,7 +102,6 @@ function BackgroundCells(props) {
           <Wrapper key={index} value={date} range={range}>
             <DateBlock 
               blockStyle={style} 
-              setIsOverAllDaySlot={props.setIsOverAllDaySlot}
               className={classnames(
                 'rbc-day-bg',
                 className,

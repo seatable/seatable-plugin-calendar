@@ -364,7 +364,7 @@ class ReactBigCalendar extends React.Component {
         selectable
         onSelectSlot={this.handleSelectSlot}
         onSelecting={this.handleSelecting}
-        onEventDragDrop={this.moveEvent}
+        onEventDragDrop={this.moveEvent} // repeat use moveEvent to keep compatibility with old code in “withDragAndDrop”
         onEventDragResize={this.updateEvent}
         onResizeDrop={this.handleResizeDrop}
         onEventDrop={this.moveEvent}

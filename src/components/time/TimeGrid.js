@@ -202,7 +202,6 @@ export default class TimeGrid extends Component {
     const currentNodes = collisions.filter(v => {
       return this.isOverHorizontalBoundrys(boundaryWidth, v.data.droppableContainer.rect.current, collisionRect) && this.isOverVerticalBoundrys(boundaryheight, v.data.droppableContainer.rect.current, collisionRect);
     });
-    // currentNodes.shift();
     currentNodes.forEach(v => { v.data.droppableContainer.node.current.classList.add('empty-time-slot-is-drag-over');});
     this.prevNodes = currentNodes;
     return collisions;  

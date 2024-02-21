@@ -5,7 +5,6 @@ import { useDraggable } from '@dnd-kit/core';
 import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'lodash-es';
 
-
 function TimeGridEventDragHandle({ direction, resizeEventHeight, resizeEventTop, singleSlotHeight, event }) {
 
   const uniqueId = useRef(uuidv4());

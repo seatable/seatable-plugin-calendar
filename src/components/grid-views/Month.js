@@ -51,7 +51,7 @@ class MonthView extends React.Component {
       popup: false,
       hoverDate: null,
       hoverDateCellPosition: {},
-      weekEventsMap: this.getWeekEventsMap(this.props.events, this.props.accessors)
+      weekEventsMap: this.getWeekEventsMap(this.props.events, this.props.accessors),
     };
     this.rbcDateCells = {};
     this.lang = getDtableLang();
@@ -60,6 +60,7 @@ class MonthView extends React.Component {
     this.isScrolling = false;
     this.festivals = {};
     this.initDateRange();
+    this.shouldSortEvents = true;
   }
 
   getWeekEventsMap = (events, accessors) => {
@@ -77,7 +78,10 @@ class MonthView extends React.Component {
         this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       }
     });
-    this.sortWeeksEvents(weekEventsMap, accessors);
+
+    if (this.shouldSortEvents) {
+      this.sortWeeksEvents(weekEventsMap, accessors);
+    }
     return weekEventsMap;
   };
 
@@ -511,6 +515,10 @@ class MonthView extends React.Component {
 
   handleEventResizeDrop = () => {
     this.props.onResizeDrop();
+    // sort after resize end
+    setTimeout(() => {
+      this.setShouldSort(true);
+    }, 500);
   };
 
   handleEventDrop = (e) => {
@@ -549,6 +557,10 @@ class MonthView extends React.Component {
     this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
   };
 
+  setShouldSort = (bool) => { 
+    this.shouldSortEvents = bool;
+  };
+
   render() {
     const throttleHandleEventDrop = throttle(this.handleEventDrop, 50);
     const throttleHandleEventResize = throttle(this.handleEventResizing, 50);
@@ -571,6 +583,7 @@ class MonthView extends React.Component {
             collisionDetection={this.customCollisionDetectionAlgorithm}
             onDragEnd={throttleHandleEventDrop}
             onDragMove={throttleHandleEventResize}
+            onDragStart={() => this.setShouldSort(false)}
           >
             <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom, }}>
               <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>

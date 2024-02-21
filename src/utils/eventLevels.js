@@ -18,7 +18,7 @@ export function eventSegments(event, range, accessors) {
   let span = dates.diff(start, end, 'day') ;
 
   // fix end date doesn't has a span
-  if (dates.eq(end, event.end)) {
+  if (dates.eq(end, event.end) && !dates.eq(last, event.end)) {
     span += 1;
   }
   
@@ -51,6 +51,7 @@ export function eventLevels(rowSegments, limit = Infinity) {
       (levels[j] || (levels[j] = [])).push(seg);
     }
   }
+
 
   for (i = 0; i < levels.length; i++) {
     levels[i].sort((a, b) => a.left - b.left); //eslint-disable-line

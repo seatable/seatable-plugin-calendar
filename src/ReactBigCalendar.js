@@ -272,6 +272,8 @@ class ReactBigCalendar extends React.Component {
 
   // do not modify row utils drop handle drop on the date block，just update view
   updateEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
+    if (!this.currentResizingEvt) this.currentResizingEvt = event; 
+    if (event.row._id !== this.currentResizingEvt.row._id) return;
     const { events } = this.state;
     const { activeTable } = this.props;
     const idx = events.findIndex(evt => evt.row._id === event.row._id);
@@ -301,6 +303,7 @@ class ReactBigCalendar extends React.Component {
     const { activeTable, modifyRow } = this.props;
     const { event, updatedData } = this.resizingUpdatedData;
     modifyRow(activeTable, event.row, updatedData);
+    this.currentResizingEvt = null;
   };
 
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {

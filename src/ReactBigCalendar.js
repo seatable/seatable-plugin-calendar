@@ -14,8 +14,8 @@ import './css/react-big-calendar.css';
 import './addons/dragAndDrop/styles.css';
 
 const DragAndDropCalendar =
-//  Calendar;
-withDragAndDrop(Calendar);
+ Calendar;
+// withDragAndDrop(Calendar);
 
 const propTypes = {
   activeTable: PropTypes.object,
@@ -364,7 +364,7 @@ class ReactBigCalendar extends React.Component {
         onRowExpand={this.onRowExpand}
         onSelectEvent={this.onSelectEvent}
         onInsertRow={this.onInsertRow}
-        selectable
+        selectable='ignoreEvents'
         onSelectSlot={this.handleSelectSlot}
         onSelecting={this.handleSelecting}
         onEventDragDrop={this.moveEvent} // repeat use moveEvent to keep compatibility with old code in “withDragAndDrop”

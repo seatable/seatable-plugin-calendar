@@ -4,13 +4,10 @@ import CellTitle from '../cells/cell-title';
 import { v4 as uuidv4 } from 'uuid';
 import { useDraggable } from '@dnd-kit/core';
 import TimeGridEventDragHandle from './drag-handle';
+import { stringifyPercent } from '../../utils/common';
 
 // height of a single slot, a half hour
 const minimalHeightUnit = 2.0833333333333357;
-
-function stringifyPercent(v) {
-  return typeof v === 'string' ? v : v + '%';
-}
 
 /**
  * duplication from EventCell.getRbcEventStyle for colored style of week/day events
@@ -99,7 +96,13 @@ function TimeGridEvent(props) {
     zIndex: 1000,
   } : {};
 
-  let title = <CellTitle event={event} />;
+  function changeTitle(title, label) {
+    if (this.dndSetNodeRef.current) {
+      this.dndSetNodeRef.current.title = title ? (typeof label === 'string' ? label + ': ' : '') + title : undefined;
+    }
+  }
+
+  let title = <CellTitle event={event} changeTitle={(title) => {changeTitle(title, label);}} />;
   let tooltip = accessors.tooltip(event);
   let end = accessors.end(event);
   let start = accessors.start(event);

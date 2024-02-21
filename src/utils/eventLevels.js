@@ -14,8 +14,14 @@ export function eventSegments(event, range, accessors) {
   let start = dates.max(dates.startOf(accessors.start(event), 'day'), first);
   let end = dates.min(dates.ceil(accessors.end(event), 'day'), last);
   let padding = range.findIndex(x => dates.eq(x, start, 'day'));
-  let span = dates.diff(start, end, 'day');
 
+  let span = dates.diff(start, end, 'day') ;
+
+  // fix end date doesn't has a span
+  if (dates.eq(end, event.end)) {
+    span += 1;
+  }
+  
   span = Math.min(span, slots);
   span = Math.max(span, 1);
 

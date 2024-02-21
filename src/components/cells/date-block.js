@@ -12,7 +12,7 @@ export default function DateBlock({ className, blockStyle, value, range }) {
   });
 
   // active is current dragging item
-  if (active) {
+  if (active && !active.data.current.type.toLowerCase().includes('resize')) {
     const isOverClassName = ' rbc-day-bg-is-over';
     // dnd or correct resize shows bg color
     if (isOver) {

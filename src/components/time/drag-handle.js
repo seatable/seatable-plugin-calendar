@@ -79,7 +79,11 @@ function TimeGridEventDragHandle({ direction, resizeEventHeight, resizeEventTop,
 }
 
 TimeGridEventDragHandle.propTypes = {
-  direction: PropTypes.oneOf(['top', 'bottom']).isRequired
+  direction: PropTypes.oneOf(['top', 'bottom']).isRequired,
+  resizeEventHeight: PropTypes.func.isRequired,
+  resizeEventTop: PropTypes.func.isRequired,
+  singleSlotHeight: PropTypes.number.isRequired,
+  event: PropTypes.object.isRequired
 };
 
 export default TimeGridEventDragHandle;

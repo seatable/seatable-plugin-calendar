@@ -106,7 +106,7 @@ function DateContentRow(props) {
   
   let { levels, extra } = metrics;
 
-  let WeekWrapper = components.weekWrapper;
+  // let WeekWrapper = components.weekWrapper;
 
   const eventRowProps = {
     selected,
@@ -136,7 +136,6 @@ function DateContentRow(props) {
         onSelectSlot={handleSelectSlot}
         components={components}
         longPressThreshold={longPressThreshold}
-        setIsOverAllDaySlot={props.setIsOverAllDaySlot}
       />
       <div className='rbc-row-content'>
         {renderHeader && (

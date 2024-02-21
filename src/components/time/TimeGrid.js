@@ -15,8 +15,7 @@ import { notify } from '../../utils/helpers';
 import Resources from '../../utils/Resources';
 import { inRange, sortEvents } from '../../utils/eventLevels';
 import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
-import { DndContext } from '@dnd-kit/core';
-import { rectIntersection } from '@dnd-kit/core';
+import { DndContext, rectIntersection, pointerWithin } from '@dnd-kit/core';
 import { isEmptyObject } from 'dtable-utils';
 import { throttle } from 'lodash-es';
 
@@ -192,6 +191,16 @@ export default class TimeGrid extends Component {
     droppableContainers,
     pointerCoordinates,
   }) => {
+    // allDayslot use pointerWithin
+    if (active.data.current.type === 'dnd' && active.data.current.isAllDay) {
+      return pointerWithin({
+        active,
+        collisionRect,
+        droppableRects,
+        droppableContainers,
+        pointerCoordinates,
+      });
+    }
     // custom detection Algorith for is overed slots background
     this.clearIsOveredNodes();
     const collisions = rectIntersection({ active, collisionRect, droppableRects, droppableContainers, pointerCoordinates });
@@ -374,56 +383,57 @@ export default class TimeGrid extends Component {
           onDragMove={throttleHandleEventResize}
         >
           <div className='rbc-time-container'>
-            <TimeGridHeader
-              range={range}
-              events={allDayEvents}
-              width={width}
-              rtl={rtl}
-              getNow={getNow}
-              localizer={localizer}
-              selected={selected}
-              resources={this.memoizedResources(resources, accessors)}
-              selectable={this.props.selectable}
-              accessors={accessors}
-              getters={getters}
-              components={components}
-              scrollRef={this.scrollRef}
-              isOverflowing={this.state.isOverflowing}
-              longPressThreshold={longPressThreshold}
-              onSelectSlot={this.handleSelectAllDaySlot}
-              onRowExpand={this.onRowExpand}
-              onDoubleClickEvent={this.props.onDoubleClickEvent}
-              onDrillDown={this.props.onDrillDown}
-              getDrilldownView={this.props.getDrilldownView}
-              setIsOverAllDaySlot={this.setIsOverAllDaySlot}
-            />
-            <div
-              ref={this.contentRef}
-              className="rbc-time-content"
-              id='rbc-time-content'
-              onScroll={this.handleScroll}
-            >
-              <TimeGutter
-                date={start}
-                ref={this.gutterRef}
-                localizer={localizer}
-                min={dates.merge(start, min)}
-                max={dates.merge(start, max)}
-                step={this.props.step}
-                getNow={this.props.getNow}
-                timeslots={this.props.timeslots}
-                components={components}
-                className='rbc-time-gutter'
-              />
-              {this.renderEvents(range, rangeEvents, getNow())}
-              <CurrentTimeIndicator
-                contentRef={this.contentRef}
+            <div className='rbc-time-overflow-controller'>
+              <TimeGridHeader
+                range={range}
+                events={allDayEvents}
+                width={width}
+                rtl={rtl}
                 getNow={getNow}
                 localizer={localizer}
-                min={min}
-                max={max}
-                width={width}
+                selected={selected}
+                resources={this.memoizedResources(resources, accessors)}
+                selectable={this.props.selectable}
+                accessors={accessors}
+                getters={getters}
+                components={components}
+                scrollRef={this.scrollRef}
+                isOverflowing={this.state.isOverflowing}
+                longPressThreshold={longPressThreshold}
+                onSelectSlot={this.handleSelectAllDaySlot}
+                onRowExpand={this.onRowExpand}
+                onDoubleClickEvent={this.props.onDoubleClickEvent}
+                onDrillDown={this.props.onDrillDown}
+                getDrilldownView={this.props.getDrilldownView}
               />
+              <div
+                ref={this.contentRef}
+                className="rbc-time-content"
+                id='rbc-time-content'
+                onScroll={this.handleScroll}
+              >
+                <TimeGutter
+                  date={start}
+                  ref={this.gutterRef}
+                  localizer={localizer}
+                  min={dates.merge(start, min)}
+                  max={dates.merge(start, max)}
+                  step={this.props.step}
+                  getNow={this.props.getNow}
+                  timeslots={this.props.timeslots}
+                  components={components}
+                  className='rbc-time-gutter'
+                />
+                {this.renderEvents(range, rangeEvents, getNow())}
+                <CurrentTimeIndicator
+                  contentRef={this.contentRef}
+                  getNow={getNow}
+                  localizer={localizer}
+                  min={min}
+                  max={max}
+                  width={width}
+                />
+              </div>
             </div>
           </div>
         </DndContext>
@@ -516,7 +526,10 @@ TimeGrid.propTypes = {
   onDoubleClickEvent: PropTypes.func,
   onDrillDown: PropTypes.func,
   getDrilldownView: PropTypes.func.isRequired,
-  dayLayoutAlgorithm: DayLayoutAlgorithmPropType
+  dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
+  onEventDragDrop: PropTypes.func,
+  onResizeDrop: PropTypes.func,
+  onEventDragResize: PropTypes.func,
 };
 
 TimeGrid.defaultProps = {

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import scrollbarSize from 'dom-helpers/scrollbarSize';
 import classnames from 'classnames';
 import Header from './Header';
 import ResourceHeader from './ResourceHeader';
@@ -100,7 +99,6 @@ class TimeGridHeader extends React.Component {
         onDoubleClick={this.props.onDoubleClickEvent}
         onSelectSlot={this.props.onSelectSlot}
         longPressThreshold={this.props.longPressThreshold}
-        setIsOverAllDaySlot={this.props.setIsOverAllDaySlot}
       />
     );
   };
@@ -185,7 +183,6 @@ class TimeGridHeader extends React.Component {
               onDoubleClick={this.props.onDoubleClickEvent}
               onSelectSlot={this.props.onSelectSlot}
               longPressThreshold={this.props.longPressThreshold}
-              // setIsOverAllDaySlot={this.props.setIsOverAllDaySlot}
             />
           </div>
         ))}

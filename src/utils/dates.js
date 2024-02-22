@@ -242,12 +242,12 @@ export function endOf(d, unit, firstOfWeek){
   return d;
 }
 
-export const eq = createComparer(function(a, b){ return a === b; });
-export const neq = createComparer(function(a, b){ return a !== b; });
-export const gt =  createComparer(function(a, b){ return a > b; });
-export const gte = createComparer(function(a, b){ return a >= b; });
-export const lt =  createComparer(function(a, b){ return a < b; });
-export const lte = createComparer(function(a, b){ return a <= b; });
+export const eq = createComparer(function (a, b){ return a === b; });
+export const neq = createComparer(function (a, b){ return a !== b; });
+export const gt =  createComparer(function (a, b){ return a > b; });
+export const gte = createComparer(function (a, b){ return a >= b; });
+export const lt =  createComparer(function (a, b){ return a < b; });
+export const lte = createComparer(function (a, b){ return a <= b; });
 
 export function min(){
   return dayjs(Math.min.apply(Math, arguments)).toDate();
@@ -311,7 +311,7 @@ export function getMonthEndDate(date) {
 
 export function getDatesInRange(startDate, endDate, unit = DATE_UNIT.DAY) {
   let dates = [];
-  while(dayjs(startDate).isSameOrBefore(endDate)) {
+  while (dayjs(startDate).isSameOrBefore(endDate)) {
     dates.push(startDate);
     startDate = dayjs(startDate).add(1, unit).toDate();
   }
@@ -332,8 +332,8 @@ export function isToday(date, unit) {
 }
 
 function createAccessor(method){
-  let hourLength = (function(method) {
-    switch(method) {
+  let hourLength = (function (method) {
+    switch (method) {
       case 'Milliseconds':
         return 3600000;
       case 'Seconds':
@@ -347,7 +347,7 @@ function createAccessor(method){
     }
   })(method);
 
-  return function(d, val){
+  return function (d, val){
     if (val === undefined)
       return d['get' + method]();
 
@@ -356,8 +356,8 @@ function createAccessor(method){
 
     // eslint-disable-next-line
     if(hourLength && dateOut['get'+method]() !== val && (method === 'Hours' || val >= hourLength && (dateOut.getHours() - d.getHours() < Math.floor(val / hourLength)))){
-      //Skip DST hour, if it occurs
-      dateOut['set'+method](val + hourLength);
+      // Skip DST hour, if it occurs
+      dateOut['set' + method](val + hourLength);
     }
 
     return dateOut;

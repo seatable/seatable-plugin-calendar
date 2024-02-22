@@ -3,7 +3,7 @@ import momentLocalizer from './moment';
 import * as dates from '../dates';
 
 // 'de' week-range-format decoration
-let weekRangeFormatDe = ({start, end}, culture, local) =>
+let weekRangeFormatDe = ({ start, end }, culture, local) =>
   local.format(start, dates.eq(start, end, 'month') ? 'DD.' : 'DD. MMMM', culture) +
   ' – ' +
   local.format(end, 'DD. MMMM', culture);
@@ -24,7 +24,7 @@ let weekRangeFormatDe = ({start, end}, culture, local) =>
  * @param moment (from moment.js)
  */
 const intlDayHeaderFormatDecorator = (subject, moment) => {
-  const _formats = {...subject.formats};
+  const _formats = { ...subject.formats };
   const _format = subject.format;
   const intlLocaleCulture = () => {
     let culture = intl.options.currentLocale;

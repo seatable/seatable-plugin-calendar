@@ -111,7 +111,7 @@ export const getVisibleStartIndexByDate = (date, weeks) => {
 
 function getWeeksStartDates(startDate, endDate) {
   let dates = [];
-  while(dayjs(startDate).isSameOrBefore(endDate)) {
+  while (dayjs(startDate).isSameOrBefore(endDate)) {
     dates.push(startDate);
     startDate = dayjs(startDate).add(7, DATE_UNIT.DAY).toDate();
   }

@@ -156,7 +156,7 @@ class App extends React.Component {
   };
 
   onPluginToggle = () => {
-    this.setState({showDialog: false});
+    this.setState({ showDialog: false });
     window.app.onClosePlugin && window.app.onClosePlugin();
   };
 
@@ -173,8 +173,8 @@ class App extends React.Component {
   updateSettings = (table, start_date_column_key, label_column_key, end_date_column_key) => {
     const { _id } = table;
     let { plugin_settings } = this.state;
-    plugin_settings[_id] = {start_date_column_key, end_date_column_key, label_column_key};
-    this.setState({plugin_settings}, () => {
+    plugin_settings[_id] = { start_date_column_key, end_date_column_key, label_column_key };
+    this.setState({ plugin_settings }, () => {
       window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
   };
@@ -221,7 +221,7 @@ class App extends React.Component {
     }
     const prtContent = document.getElementById('exported-months');
 
-    if(!document.head?.innerHTML || !prtContent?.innerHTML) {
+    if (!document.head?.innerHTML || !prtContent?.innerHTML) {
       toaster.danger(intl.get('Exporting_failed'));
       exportedMonths.length = 0;
       return;
@@ -234,7 +234,7 @@ class App extends React.Component {
       const iframeID = 'iframe-for-print';
       const printIframe = document.getElementById(iframeID) || document.body.appendChild(document.createElement('iframe'));
       const printWindow = printIframe.contentWindow;
-      const removeIframe = function() {
+      const removeIframe = function () {
         printWindow.document.open();
         printWindow.document.close();
       };
@@ -280,7 +280,7 @@ class App extends React.Component {
     let { views: updatedViews } = plugin_settings;
     let selectedViewIdx = updatedViews.length;
     let _id = generatorViewId(updatedViews);
-    let newView = new View({_id, name: viewName});
+    let newView = new View({ _id, name: viewName });
     updatedViews.push(newView);
     let { settings } = updatedViews[selectedViewIdx];
     let isViewSettingPanelOpen = !this.isValidViewSettings(settings);
@@ -299,7 +299,7 @@ class App extends React.Component {
   onRenameView = (viewName) => {
     let { plugin_settings, selectedViewIdx } = this.state;
     let updatedView = plugin_settings.views[selectedViewIdx];
-    updatedView = Object.assign({}, updatedView, {name: viewName});
+    updatedView = Object.assign({}, updatedView, { name: viewName });
     plugin_settings.views[selectedViewIdx] = updatedView;
     this.setState({
       plugin_settings
@@ -380,7 +380,7 @@ class App extends React.Component {
       const isViewSettingPanelOpen = !this.isValidViewSettings(settings);
       const rows = this.getPluginViewRows(settings);
       const rowsColor = this.getRowsColor(settings);
-      this.setState({selectedViewIdx: viewIdx, isViewSettingPanelOpen, rows, rowsColor});
+      this.setState({ selectedViewIdx: viewIdx, isViewSettingPanelOpen, rows, rowsColor });
       this.storeSelectedViewId(viewId);
     }
   };
@@ -408,7 +408,7 @@ class App extends React.Component {
     updatedView.settings = updated;
     updatedViews[selectedViewIdx] = updatedView;
     plugin_settings.views = updatedViews;
-    this.setState({plugin_settings}, () => {
+    this.setState({ plugin_settings }, () => {
       window.dtableSDK.updatePluginSettings(PLUGIN_NAME, plugin_settings);
     });
   };
@@ -483,7 +483,7 @@ class App extends React.Component {
     const tableViews = getNonPrivateViews(getNonArchiveViews(selectedTable.views));
     let selectedTableView = this.getSelectedView(selectedTable, settings);
     const formulaRows = this.getTableFormulaRows(selectedTable, selectedTableView);
-    selectedTableView = Object.assign({}, selectedTableView, {formula_rows: formulaRows});
+    selectedTableView = Object.assign({}, selectedTableView, { formula_rows: formulaRows });
     const columns = getViewShownColumns(selectedTableView, selectedTable.columns);
     const modalClassNames = classnames(
       'dtable-plugin',

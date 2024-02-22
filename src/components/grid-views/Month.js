@@ -68,7 +68,7 @@ class MonthView extends React.Component {
       let m_eventWeekEnd = dayjs(dates.endOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
       this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
 
-      while(m_end.isAfter(m_eventWeekEnd)) {
+      while (m_end.isAfter(m_eventWeekEnd)) {
         m_eventWeekStart = m_eventWeekStart.add(7, DATE_UNIT.DAY);
         m_eventWeekEnd = m_eventWeekEnd.add(7, DATE_UNIT.DAY);
         this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
@@ -116,7 +116,7 @@ class MonthView extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.events !== this.props.events) {
       const newWeekEventsMap = this.getWeekEventsMap(this.props.events, this.props.accessors);
-      this.setState({weekEventsMap: newWeekEventsMap});
+      this.setState({ weekEventsMap: newWeekEventsMap });
     }
 
     if (prevProps.configuredWeekStart !== this.props.configuredWeekStart) { // for set 'week start'
@@ -282,7 +282,7 @@ class MonthView extends React.Component {
   };
 
   handleShowMore = (events, date, cell, slot, target) => {
-    //cancel any pending selections so only the event click goes through.
+    // cancel any pending selections so only the event click goes through.
     const { containerPaddingTop, calendarHeaderHeight } = this.props;
     if (!this.state.popup) {
       this.clearSelection();
@@ -302,7 +302,7 @@ class MonthView extends React.Component {
   };
 
   onHidePopup = () => {
-    this.setState({popup: false, overlay: {}});
+    this.setState({ popup: false, overlay: {} });
   };
 
   onInsertRow = (date) => {
@@ -324,8 +324,8 @@ class MonthView extends React.Component {
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
         </div>
-        <div className={classnames('rbc-month-rows', {'rbc-mobile-month-rows': isMobile})} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
-          <div style={{paddingTop: offsetTop, paddingBottom: offsetBottom}}>
+        <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
+          <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom }}>
             {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
           </div>
         </div>
@@ -383,7 +383,7 @@ class MonthView extends React.Component {
     return (
       <div
         {...props}
-        className={classnames(className, {'rbc-off-range': isOffRange})}
+        className={classnames(className, { 'rbc-off-range': isOffRange })}
       >
         <DateHeaderComponent
           label={label}
@@ -462,7 +462,7 @@ class MonthView extends React.Component {
   }
 
   measureRowLimit() {
-    this.setState({needLimitMeasure: false});
+    this.setState({ needLimitMeasure: false });
   }
 
   handleSelectSlot = (range, slotInfo) => {

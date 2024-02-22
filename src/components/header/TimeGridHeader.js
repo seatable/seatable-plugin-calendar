@@ -136,7 +136,7 @@ class TimeGridHeader extends React.Component {
       <div
         style={style}
         ref={scrollRef}
-        className={classnames('rbc-time-header', {'rbc-overflowing': isOverflowing})}
+        className={classnames('rbc-time-header', { 'rbc-overflowing': isOverflowing })}
       >
         <div
           className='rbc-label rbc-time-header-gutter'

@@ -856,7 +856,7 @@ class Calendar extends React.Component {
       }
     }
     this.handleRangeChange(updatedDate, ViewComponent);
-    this.setState({date: updatedDate, changeDateByNavicate: true});
+    this.setState({ date: updatedDate, changeDateByNavicate: true });
   };
 
   checkCurrentDate = date => {
@@ -911,11 +911,11 @@ class Calendar extends React.Component {
   onInsertRow = (date) => {
     const { startDateColumn, onInsertRow } = this.props;
     const { name } = startDateColumn;
-    onInsertRow({[name]: date});
+    onInsertRow({ [name]: date });
   };
 
   updateCurrentDate = (date) => {
-    this.setState({date, changeDateByNavicate: false});
+    this.setState({ date, changeDateByNavicate: false });
   };
 
   render() {
@@ -946,7 +946,7 @@ class Calendar extends React.Component {
     return (
       <div
         {...elementProps}
-        className={classnames(className, 'rbc-calendar', {'rbc-rtl': props.rtl})}
+        className={classnames(className, 'rbc-calendar', { 'rbc-rtl': props.rtl })}
         style={style}
         onClick={this.props.hideViewSettingPanel}
       >
@@ -1018,7 +1018,7 @@ class Calendar extends React.Component {
               />
             )}
           </React.Fragment>
-        ):
+        ) :
           <div className="empty-date-tips">{intl.get('No_date_field_to_place_records_on_the_calendar')}</div>
         }
       </div>

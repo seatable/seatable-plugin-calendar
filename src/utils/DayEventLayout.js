@@ -1,4 +1,4 @@
-/*eslint no-unused-vars: 'off'*/
+/* eslint no-unused-vars: 'off'*/
 
 import overlap from './layout-algorithms/overlap';
 import noOverlap from './layout-algorithms/no-overlap';

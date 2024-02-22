@@ -120,7 +120,7 @@ class Selection {
   filter(items) {
     let box = this._selectRect;
 
-    //not selecting
+    // not selecting
     if (!box || !this.selecting) return [];
 
     return items.filter(this.isSelected, this);

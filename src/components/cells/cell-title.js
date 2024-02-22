@@ -60,19 +60,19 @@ class CellTitle extends Component {
 
   getCollaborator = (value) => {
     if (!value) {
-      this.setState({isDataLoaded: true, collaborator: null});
+      this.setState({ isDataLoaded: true, collaborator: null });
       return;
     }
     const { state, collaboratorsCache, getUserCommonInfo } = window.app;
     const collaborators = (state && state.collaborators) || [];
     const collaborator = getKnownCreatorByEmail(value, collaborators, collaboratorsCache);
     if (collaborator) {
-      this.setState({isDataLoaded: true, collaborator});
+      this.setState({ isDataLoaded: true, collaborator });
       return;
     }
     getUserCommonInfo(value, () => {
       const collaborator = getKnownCreatorByEmail(value, collaborators, collaboratorsCache);
-      this.setState({isDataLoaded: true, collaborator});
+      this.setState({ isDataLoaded: true, collaborator });
       return;
     });
   };

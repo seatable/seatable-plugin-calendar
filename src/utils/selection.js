@@ -65,7 +65,7 @@ export function dateCellSelection(start, rowBox, box, slots, rtl) {
 
     if (isCurrentRow) {
       if (currentSlot < startIdx) startIdx = currentSlot;
-      else endIdx = currentSlot; //select current range
+      else endIdx = currentSlot; // select current range
     } else if (start.y < box.y) {
       // the current row is below start row
       // select cells to the right of the start cell

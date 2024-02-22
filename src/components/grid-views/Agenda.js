@@ -231,7 +231,7 @@ class Agenda extends React.Component {
           <div className="mr-3 d-flex text-truncate">
             <span
               className="agenda-event-decorator"
-              style={{'borderColor': event.bgColor, 'background': event.bgColor}}
+              style={{ 'borderColor': event.bgColor, 'background': event.bgColor }}
             ></span>
             <div>
               {Event ? <Event event={event} title={title} /> : title}

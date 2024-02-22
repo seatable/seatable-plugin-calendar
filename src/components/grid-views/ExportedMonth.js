@@ -43,7 +43,7 @@ class ExportedMonth extends React.Component {
       let m_eventWeekStart = dayjs(dates.startOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
       let m_eventWeekEnd = dayjs(dates.endOf(start, DATE_UNIT.WEEK, this.props.localizer.startOfWeek()));
       this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
-      while(m_end.isAfter(m_eventWeekEnd)) {
+      while (m_end.isAfter(m_eventWeekEnd)) {
         m_eventWeekStart = m_eventWeekStart.add(7, DATE_UNIT.DAY);
         m_eventWeekEnd = m_eventWeekEnd.add(7, DATE_UNIT.DAY);
         this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
@@ -74,7 +74,7 @@ class ExportedMonth extends React.Component {
   };
 
   handleShowMore = (events, date, cell, slot, target) => {
-    //cancel any pending selections so only the event click goes through.
+    // cancel any pending selections so only the event click goes through.
     const { containerPaddingTop, calendarHeaderHeight } = this.props;
     if (!this.state.popup) {
       this.clearSelection();
@@ -94,7 +94,7 @@ class ExportedMonth extends React.Component {
   };
 
   onHidePopup = () => {
-    this.setState({popup: false, overlay: {}});
+    this.setState({ popup: false, overlay: {} });
   };
 
   onInsertRow = (date) => {
@@ -113,7 +113,7 @@ class ExportedMonth extends React.Component {
 
     return (
       <div className={classnames('rbc-month-view-exported', className)}>
-        <h3 className="mb-3 h4 text-center font-weight-normal">{ExportedMonth.title(date, {localizer})}</h3>
+        <h3 className="mb-3 h4 text-center font-weight-normal">{ExportedMonth.title(date, { localizer })}</h3>
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
         </div>
@@ -170,7 +170,7 @@ class ExportedMonth extends React.Component {
     return (
       <div
         {...props}
-        className={classnames(className, {'rbc-off-range': isOffRange})}
+        className={classnames(className, { 'rbc-off-range': isOffRange })}
       >
         <DateHeaderComponent
           label={label}

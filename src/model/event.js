@@ -193,8 +193,8 @@ export default class TableEvent {
    * @param {?TableEventDTableColumnDefinitionTypedef} colorColumn
    * @return {{highlightColor: ?string, bgColor: ?string, textColor: ?string}}
    */
-  static getColors({row, colorColumn, configuredUseRowColor, rowsColor, rowColorsMap}) {
-    const colors = {bgColor: null, textColor: null, highlightColor: null};
+  static getColors({ row, colorColumn, configuredUseRowColor, rowsColor, rowColorsMap }) {
+    const colors = { bgColor: null, textColor: null, highlightColor: null };
     const defaultOptionColor = SELECT_OPTION_COLORS[2];
     if (configuredUseRowColor) {
       const bgColor = rowsColor[row._id];

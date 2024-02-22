@@ -2,24 +2,19 @@ import { useDroppable } from '@dnd-kit/core';
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as dates from '../../utils/dates';
+import { v4 as uuidv4 } from 'uuid';
 
-export function TimeSlot({ value, }) {
+export function TimeSlot({ value }) {
 
-  const currentSlotValue = useRef(null);
-
-  if (!currentSlotValue.current){
-    if (dates.isJustDate(value)) {
-      // if it's a isJustDate date, add 1s to making it not
-      currentSlotValue.current = new Date(value.getTime() + 1000);
-    } else {
-      currentSlotValue.current = value;
-    }
-  }
+  const uniqueId = useRef(uuidv4());
 
   const { isOver, setNodeRef, active } =  useDroppable({
     // use time as id cause it's unique
-    id: currentSlotValue.current,
-    type: 'TimeSlot'
+    id: uniqueId.current,
+    data: {
+      value: value,
+      type: 'TimeSlot',
+    }
   });
 
   const bgCls = 'empty-time-slot-is-drag-over';

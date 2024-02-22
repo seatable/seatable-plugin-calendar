@@ -53,6 +53,10 @@ function TimeGridEvent(props) {
     setEventTop(props.style.top);
   }, [props.style.top]);
 
+  useEffect(() => {
+    setEventHeight(props.style.height);
+  }, [props.style.height]);
+
   // evaluate just once after mounted
   useEffect(() => {
     computeSingleSlotHeight();

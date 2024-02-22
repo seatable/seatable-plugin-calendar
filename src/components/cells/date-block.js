@@ -1,13 +1,18 @@
 import { useDroppable } from '@dnd-kit/core';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useRef } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function DateBlock({ className, blockStyle, value, range }) {
+
+  const uniqueId = useRef(uuidv4());
+
   const { isOver, setNodeRef, active } = useDroppable({
-    id: value,
+    id: uniqueId.current,
     data: {
-      date: value,
+      value,
       range,
+      type: 'DateBlock',
     },
   });
 

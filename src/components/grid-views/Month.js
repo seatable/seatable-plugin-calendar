@@ -523,11 +523,24 @@ class MonthView extends React.Component {
   };
 
   handleEventDrop = (e) => {
+
+    // fix use double clicking on event was recognized as drag and drop
+    const endDragging = new Date();
+    const timeDiff = endDragging - this.startDragging;
+    if (timeDiff < 300) {
+      this.setShouldSort(true);
+      this.startDragging = null;
+      return;
+    }
+
     const dropData = e.active.data.current;
     const event = dropData.event;
     if (!e.over || !event) return;
+
+    const droppedValue = e.over.data.current?.value;
+
     if (dropData.type === 'dnd') {
-      this.handleEventDrag(event, e.over.id);
+      this.handleEventDrag(event, droppedValue);
     } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
       this.handleEventResizeDrop();
     } else {
@@ -543,7 +556,7 @@ class MonthView extends React.Component {
     const resizingData = e.active.data.current;
     if (isEmptyObject(resizingData)) return;
 
-    let newTime = e.over.id;
+    let newTime = e.over.data.current?.value;
     let start, end;
     if (resizingData.type === 'leftResize') {
       start = newTime;
@@ -580,11 +593,14 @@ class MonthView extends React.Component {
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
         </div>
         <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
-          <DndContext 
+          <DndContext
             collisionDetection={this.customCollisionDetectionAlgorithm}
             onDragEnd={throttleHandleEventDrop}
             onDragMove={throttleHandleEventResize}
-            onDragStart={() => this.setShouldSort(false)}
+            onDragStart={() => {
+              this.setShouldSort(false);
+              this.startDragging = new Date();
+            }}
           >
             <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom, }}>
               <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>

@@ -127,12 +127,17 @@ export default class TimeGrid extends Component {
     return resources.map(([id, resource], i) =>
       range.map((date, jj) => {
         let daysEvents = (groupedEvents.get(id) || []).filter(event =>
-          dates.inRange(
+        { 
+          // special case: 00:00 is inRange of next day, which renders useless span
+          if (dates.isJustDate(accessors.end(event)) && dates.eq(date, accessors.end(event), 'day' )) return false;
+
+          const inRange =  dates.inRange(
             date,
             accessors.start(event),
             accessors.end(event),
-            'day'
-          )
+            'day');  
+          return inRange;
+        }
         );
 
         return (
@@ -225,21 +230,23 @@ export default class TimeGrid extends Component {
     this.prevNodes = [];
   };
 
-  getNewEventTime = (event, newStartDate, isJustDate, isAllDay, direction) => {
+  getNewEventTime = (event, newStartDate, direction, isJustDate, isAllDay, type ) => {
     let unit;
     isJustDate ? unit = 'day' : unit = 'minute';
     let dateRange = dates.range(event.start, event.end, unit);
     let newStart, newEnd;
     // drag from allDaySlot to allDaySlot
-    if (isJustDate && isAllDay) {
+    if (type === 'DateBlock' && isAllDay) {
       newStart = newStartDate;
       newEnd = dates.add(newStartDate, dateRange.length - 1, unit);
-    } else  if (isJustDate && !isAllDay) {
+    } else  if (type === 'DateBlock' && !isAllDay) {
       // from timeSlot to allDaySlot
       newStart = newStartDate;
       newEnd = newStartDate;
-    } else if (!isJustDate && !isAllDay) {
+    } else if (type === 'TimeSlot' && !isAllDay) {
       // from timeSlot to timeSlot
+
+      // resize
       if (direction) {
         // top/bottom resize
         if (direction === 'top') {
@@ -250,8 +257,15 @@ export default class TimeGrid extends Component {
           newEnd = newStartDate;
         }
       } else {
+      // drag and drop
         newStart = newStartDate;
-        newEnd = dates.add(newStartDate, dateRange.length - 1, unit);
+        let mins;
+        if (dateRange.length === 1) {
+          mins = 30;
+        } else {
+          mins = dateRange.length - 1;
+        }
+        newEnd = dates.add(newStartDate, mins, unit);
       }
      
     } else {
@@ -262,10 +276,13 @@ export default class TimeGrid extends Component {
     return { start: newStart, end: newEnd };
   };
 
-  handleEventDragDrop = (event, newTime, isAllDay, direction) => {
-    // use date as the dropped item id, cause they are unique
+  // isAllDay used to determine if the event is dragged from allDaySlot or not
+  // type used to determine if the event is dropped to timeSlot/DateBlock
+  handleEventDragDrop = (event, newTime, isAllDay, direction, type) => {
+
     if (dates.isJustDate(newTime) && dates.eq(event.start, newTime) && isAllDay) return;
-    const { start, end } = this.getNewEventTime(event, newTime, dates.isJustDate(newTime), isAllDay, direction);
+  
+    const { start, end } = this.getNewEventTime(event, newTime, direction, dates.isJustDate(newTime), isAllDay, type);
     this.props.onEventDragDrop({ event, start, end, allDay: event.allDay });
   };
 
@@ -274,18 +291,32 @@ export default class TimeGrid extends Component {
   };
 
   handleEventDrop = (e) => {
+
+    // fix use double clicking on event was recognized as drag and drop
+    const endDragging = new Date();
+    const timeDiff = endDragging - this.startDragging;
+    if (timeDiff < 300) {
+      this.startDragging = null;
+      return;
+    }
+
     const dropData = e.active.data.current;
+
     const event = dropData.event;
     // e.over is the drop target data, event is the dragged item data
     if (!e.over || !event) return;
+    const overData = e.over?.data.current;
+
     if (dropData.type === 'dnd' || dropData.type === 'grid-event-resize') {
-    // use date as the dropped item id, cause they are unique,(e.over.id here)
-    // dropData.direction handle weather start/end time need to be updated
-      let newTime = e.over.id;      // fix the bug that when drag down, time is 30 mins less
+
+      // dropData.direction handle weather start/end time need to be updated
+      let newTime = e.over.data.current?.value; // fix the bug that when drag down, time is 30 mins less
       if (dropData.mouseDirection === 'down') {
         newTime = dates.add(newTime, 30, 'minutes');
       }
-      this.handleEventDragDrop(event, newTime, dropData.isAllDay, dropData.direction);    
+
+      this.handleEventDragDrop(event, newTime, dropData.isAllDay, dropData.direction, overData.type);
+        
     } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
       this.handleEventResizeDrop();
     } else {
@@ -302,7 +333,7 @@ export default class TimeGrid extends Component {
     const resizingData = e.active.data.current;
     if (isEmptyObject(resizingData)) return;
 
-    let newTime = e.over.id;
+    let newTime = e.over.data.current?.value;
     let start, end;
     if (resizingData.type === 'leftResize') {
       start = newTime;
@@ -346,15 +377,19 @@ export default class TimeGrid extends Component {
     let allDayEvents = [],
       rangeEvents = [];
 
+      
+
     events.forEach(event => {
       if (inRange(event, start, end, accessors)) {
         let eStart = accessors.start(event),
           eEnd = accessors.end(event);
 
+        const a = accessors.allDay(event); 
+        const b = dates.isJustDate(eStart) && dates.isJustDate(eEnd);
+        const c = (!showMultiDayTimes && !dates.eq(eStart, eEnd, 'day') && dates.isJustDate(eStart) && dates.isJustDate(eEnd));
+
         if (
-          accessors.allDay(event) ||
-          (dates.isJustDate(eStart) && dates.isJustDate(eEnd)) ||
-          (!showMultiDayTimes && !dates.eq(eStart, eEnd, 'day'))
+          a || c || b
         ) {
           allDayEvents.push(event);
         } else {
@@ -381,6 +416,7 @@ export default class TimeGrid extends Component {
           collisionDetection={this.timeSlotDetectionAlgorithm}
           onDragEnd={throttleHandleEventDrop}
           onDragMove={throttleHandleEventResize}
+          onDragStart={(e) => { this.startDragging = new Date();}}
         >
           <div className='rbc-time-container'>
             <div className='rbc-time-overflow-controller'>

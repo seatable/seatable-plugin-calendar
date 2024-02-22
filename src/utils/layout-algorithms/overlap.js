@@ -2,6 +2,9 @@ import { sortDate } from '../common';
 
 class Event {
   constructor(data, { accessors, slotMetrics }) {
+    let a = accessors.start(data);
+    let b = accessors.end(data);
+    
     const {
       start,
       startDate,

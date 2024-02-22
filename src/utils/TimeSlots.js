@@ -31,15 +31,19 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }) {
 
     for (let slot = 0; slot < timeslots; slot++) {
       const slotIdx = grp * timeslots + slot;
-      const minFromStart = slotIdx * step;
+      // const minFromStart = slotIdx * step;
+      const mins = minutesFromMidnight + slotIdx * step;
       // A date with total minutes calculated from the start of the day
+
+      // a day starts with 00:01
+      const seconds = slotIdx === 0 ? 1 : 0;
       slots[slotIdx] = groups[grp][slot] = new Date(
         start.getFullYear(),
         start.getMonth(),
         start.getDate(),
         0,
-        minutesFromMidnight + minFromStart,
-        0,
+        mins,
+        seconds,
         0
       );
     }
@@ -113,11 +117,12 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }) {
     },
 
     startsAfterDay(date) {
-      return dates.gt(date, end, 'day');
+      return dates.gt(date, end, 'day') && !dates.isJustDate(date);
     },
 
     startsBefore(date) {
-      return dates.lt(dates.merge(start, date), start, 'minutes');
+      const merged = dates.merge(start, date);
+      return dates.lt(merged, start, 'minutes');
     },
 
     startsAfter(date) {
@@ -135,9 +140,10 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }) {
           ? ((rangeStartMin - step) / (step * numSlots)) * 100
           : (rangeStartMin / (step * numSlots)) * 100;
 
+      const h = (rangeEndMin / (step * numSlots)) * 100 - top;
       return {
         top,
-        height: (rangeEndMin / (step * numSlots)) * 100 - top,
+        height: h,
         start: positionFromDate(rangeStart),
         startDate: rangeStart,
         end: positionFromDate(rangeEnd),

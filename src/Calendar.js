@@ -995,6 +995,7 @@ class Calendar extends React.Component {
               onEventDragDrop={this.props.onEventDragDrop}
               onEventDragResize={this.props.onEventDragResize}
               onResizeDrop={this.props.onResizeDrop}
+              onSelectEvent={this.props.onSelectEvent}
             />
             {this.props.isExporting && (
               <ExportedMonths

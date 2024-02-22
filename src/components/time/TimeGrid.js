@@ -317,6 +317,7 @@ export default class TimeGrid extends Component {
     const endDragging = new Date();
     const timeDiff = endDragging - this.startDragging;
     if (timeDiff < 300) {
+      this.props.onSelectEvent(e.active.data.current.event);
       this.startDragging = null;
       return;
     }

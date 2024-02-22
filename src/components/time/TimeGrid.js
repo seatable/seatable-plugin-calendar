@@ -250,9 +250,27 @@ export default class TimeGrid extends Component {
       if (direction) {
         // top/bottom resize
         if (direction === 'top') {
+          if (newStartDate >= event.end && dates.eq(newStartDate, event.end, 'day')) {
+            newStartDate = dates.add(event.end, -30, 'minutes');
+          }
+
+          if (!dates.eq(newStartDate, event.start, 'day')) {
+            newStartDate = event.start.setHours(newStartDate.getHours(), newStartDate.getMinutes(), 0);
+            newStartDate = new Date(newStartDate);
+          }
+          
           newStart = newStartDate;
           newEnd = event.end;
         } else {
+          if (newStartDate <= event.start && dates.eq(newStartDate, event.start, 'day')) {
+            newStartDate = dates.add(event.start, 30, 'minutes');
+          }
+
+          if (!dates.eq(newStartDate, event.end, 'day')) {
+            newStartDate = event.end.setHours(newStartDate.getHours(), newStartDate.getMinutes(), 0);
+            newStartDate = new Date(newStartDate);
+          }
+          
           newStart = event.start;
           newEnd = newStartDate;
         }
@@ -283,6 +301,9 @@ export default class TimeGrid extends Component {
     if (dates.isJustDate(newTime) && dates.eq(event.start, newTime) && isAllDay) return;
   
     const { start, end } = this.getNewEventTime(event, newTime, direction, dates.isJustDate(newTime), isAllDay, type);
+    // invalid drag & drop
+    if (!start || !end) return;
+
     this.props.onEventDragDrop({ event, start, end, allDay: event.allDay });
   };
 
@@ -301,7 +322,6 @@ export default class TimeGrid extends Component {
     }
 
     const dropData = e.active.data.current;
-
     const event = dropData.event;
     // e.over is the drop target data, event is the dragged item data
     if (!e.over || !event) return;

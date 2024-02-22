@@ -7,6 +7,7 @@ import {
   CellType, SELECT_OPTION_COLORS, getTableByName, getViewByName,
   getNonArchiveViews, getNonPrivateViews, getViewShownColumns,
 } from 'dtable-utils';
+import { toaster } from 'dtable-ui-component';
 import ReactBigCalendar from './ReactBigCalendar';
 import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT, CALENDAR_VIEWS, KEY_SELECTED_CALENDAR_VIEW } from './constants';
 import ViewsTabs from './components/views-tabs';
@@ -18,7 +19,6 @@ import icon from './image/icon.png';
 import './locale';
 
 import './css/plugin-layout.css';
-import { toaster } from 'dtable-ui-component';
 
 /**
  * the data structure of settings
@@ -222,7 +222,7 @@ class App extends React.Component {
     const prtContent = document.getElementById('exported-months');
 
     if (!document.head?.innerHTML || !prtContent?.innerHTML) {
-      toaster.danger('当前选中日期范围内没有记录');
+      toaster.danger(intl.get('Exporting_failed'));
       exportedMonths.length = 0;
       return;
     }
@@ -239,7 +239,7 @@ class App extends React.Component {
         printWindow.document.close();
       };
       printIframe.id = iframeID;
-      printIframe.className = 'position-fixed fixed-bottom w-0 h-0 border-0 invisible';
+      printIframe.className = 'invisible w-0 h-0 border-0 position-fixed fixed-bottom';
       printWindow.document.open();
       printWindow.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>' + prtContent.innerHTML + '</body></html>');
       printWindow.document.title = `${intl.get('Calendar')}–${start}${start === end ? '' : '–' + end}.pdf`;
@@ -263,11 +263,11 @@ class App extends React.Component {
     return (
       <div className="d-flex align-items-center plugin-calendar-operators">
         {!this.isMobile &&
-          <span className="op-icon mr-1" onClick={this.toggleTimeRangeDialog}>
+          <span className="mr-1 op-icon" onClick={this.toggleTimeRangeDialog}>
             <i className="dtable-font dtable-icon-print"></i>
           </span>
         }
-        <span className="op-icon mr-1" onClick={this.toggleViewSettingPanel}>
+        <span className="mr-1 op-icon" onClick={this.toggleViewSettingPanel}>
           <i className="dtable-font dtable-icon-set-up"></i>
         </span>
         <span className="dtable-font dtable-icon-x op-icon btn-close" onClick={this.onPluginToggle}></span>
@@ -518,13 +518,13 @@ class App extends React.Component {
       <div className={modalClassNames} ref={ref => this.plugin = ref}>
         <div className={`d-flex plugin-header flex-shrink-0 h-7 ${this.isMobile ? 'justify-content-between' : ''}`}>
           <div className="logo-title d-flex align-items-center">
-            <img className="plugin-logo mr-2" src={icon} alt="" width="24" />
+            <img className="mr-2 plugin-logo" src={icon} alt="" width="24" />
             <span className="plugin-title">{intl.get('Calendar')}</span>
           </div>
           {!this.isMobile && ViewsTabsEl}
           {this.renderBtnGroups()}
         </div>
-        {this.isMobile && <div className="flex-shrink-0 h-7 d-flex pl-4 pr-4 border-bottom">{ViewsTabsEl}</div>}
+        {this.isMobile && <div className="flex-shrink-0 pl-4 pr-4 h-7 d-flex border-bottom">{ViewsTabsEl}</div>}
         <div className="calendar-plugin-content">
           <ReactBigCalendar
             ref={ref => this.calendar = ref}

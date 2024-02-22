@@ -316,6 +316,7 @@ class MonthView extends React.Component {
     this.props.onInsertRow(dates.getFormattedDate(date, 'YYYY-MM-DD'));
   };
 
+<<<<<<< HEAD
   measureRowLimit() {
     this.setState({ needLimitMeasure: false });
   }
@@ -358,6 +359,31 @@ class MonthView extends React.Component {
   clearSelection() {
     clearTimeout(this._selectTimer);
     this._pendingSelection = [];
+=======
+  render() {
+    let { className, isMobile } = this.props;
+    let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
+    let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
+    if (allWeeksStartDates) {
+      renderWeeks = allWeeksStartDates.slice(overscanStartIndex, overscanEndIndex);
+      offsetTop = overscanStartIndex * MONTH_ROW_HEIGHT;
+      offsetBottom = (allWeeksStartDates.length - overscanEndIndex) * MONTH_ROW_HEIGHT;
+    }
+    let weeksCount = renderWeeks.length;
+    return (
+      <div className={classnames('rbc-month-view', className)} ref={ref => this.currentView = ref}>
+        <div className='rbc-month-header'>
+          {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
+        </div>
+        <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
+          <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom }}>
+            {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
+          </div>
+        </div>
+        {this.state.popup && this.renderOverlay()}
+      </div>
+    );
+>>>>>>> master
   }
 
   renderWeek = (weekStartDate, weekIdx) => {
@@ -505,6 +531,18 @@ class MonthView extends React.Component {
     const newStart = newStartDate;
     const newEnd = dates.add(newStartDate, dateRange.length - 1, 'day');
     return { start: newStart, end: newEnd };
+
+  }
+  
+  measureRowLimit() {
+    this.setState({ needLimitMeasure: false });
+  }
+
+  handleSelectSlot = (range, slotInfo) => {
+    this._pendingSelection = this._pendingSelection.concat(range);
+
+    clearTimeout(this._selectTimer);
+    this._selectTimer = setTimeout(() => this.selectDates(slotInfo));
   };
 
   handleEventDrag = (event, newTime) => {

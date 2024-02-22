@@ -48,6 +48,9 @@ const fr = {
   'Table': 'Tableau',
   'View': 'Vue',
   'Title': 'Titre',
+  'Fields': 'Colonnes',
+  'Hide_all': 'Masquer tout',
+  'Show_all': 'Afficher tout',
   'No_options': 'Il n\'y a pas d\'options.',
   'Not_used': 'Ne pas utilisé',
   'Choose_the_time_range': 'Sélectionner la période',
@@ -57,6 +60,7 @@ const fr = {
   'Start_the_first_week_of_the_year_on': 'Commencer la 1ère semaine de l\'année le',
   'First_day_of_the_year': '1er jour de l\'année',
   'First_full_week_of_the_year': '1ère semaine complète de l\'année',
+  'Exporting_failed': 'Aucun événement dans la période sélectionnée.',
 };
 
 export default fr;

@@ -47,7 +47,6 @@ class DayColumn extends React.Component {
       rtl,
       isNow,
       resource,
-     
       localizer,
       getters: { dayProp, ...getters },
       components: { eventContainerWrapper: EventContainer, ...components }
@@ -132,7 +131,7 @@ class DayColumn extends React.Component {
       const  dateOfSecondDayStart = new Date(start).setHours(24, 0, 0, 0);
       const  dateOfEnd = new Date(end).setHours(0, 0, 0, 0);
 
-      const continueToAnotherDayEnd = dateOfEnd >= dateOfSecondDayStart;
+      const continueToAnotherDayEnd = dateOfEnd > dateOfSecondDayStart;
 
       if (startsBeforeDay) format = 'eventTimeRangeEndFormat';
       else if (startsAfterDay || continueToAnotherDayEnd) format = 'eventTimeRangeStartFormat';

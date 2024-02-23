@@ -396,8 +396,6 @@ export default class TimeGrid extends Component {
     let allDayEvents = [],
       rangeEvents = [];
 
-      
-
     events.forEach(event => {
       if (inRange(event, start, end, accessors)) {
         let eStart = accessors.start(event),
@@ -406,7 +404,6 @@ export default class TimeGrid extends Component {
         const a = accessors.allDay(event); 
         const b = dates.isJustDate(eStart) && dates.isJustDate(eEnd);
         const c = (!showMultiDayTimes && !dates.eq(eStart, eEnd, 'day') && dates.isJustDate(eStart) && dates.isJustDate(eEnd));
-
         if (
           a || c || b
         ) {

@@ -12,7 +12,7 @@ const mixins = {
     localizer: PropTypes.object.isRequired,
     components: PropTypes.object.isRequired,
     getters: PropTypes.object.isRequired,
-    onRowExpand: PropTypes.func,
+    handleRowExpand: PropTypes.func,
     onDoubleClick: PropTypes.func
   },
 
@@ -26,7 +26,7 @@ const mixins = {
       selected,
       accessors,
       getters,
-      onRowExpand,
+      handleRowExpand,
       onDoubleClick,
       localizer,
       slotMetrics,
@@ -44,7 +44,7 @@ const mixins = {
         localizer={localizer}
         accessors={accessors}
         components={components}
-        onRowExpand={onRowExpand}
+        handleRowExpand={handleRowExpand}
         onDoubleClick={onDoubleClick}
         continuesPrior={continuesPrior}
         continuesAfter={continuesAfter}

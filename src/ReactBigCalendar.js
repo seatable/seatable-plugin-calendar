@@ -8,14 +8,11 @@ import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
 import { KEY_SELECTED_CALENDAR_VIEW, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
 import TableEvent from './model/event';
-// import withDragAndDrop from './addons/dragAndDrop';
 
 import './css/react-big-calendar.css';
 import './addons/dragAndDrop/styles.css';
 
-const DragAndDropCalendar =
- Calendar;
-// withDragAndDrop(Calendar);
+const DragAndDropCalendar = Calendar;
 
 const propTypes = {
   activeTable: PropTypes.object,
@@ -27,7 +24,7 @@ const propTypes = {
   settings: PropTypes.object,
   isMobile: PropTypes.bool,
   getSelectedGridView: PropTypes.func,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   onInsertRow: PropTypes.func,
   appendRow: PropTypes.func,
   modifyRow: PropTypes.func,
@@ -181,11 +178,11 @@ class ReactBigCalendar extends React.Component {
     return date;
   };
 
-  onRowExpand = (row) => {
-    this.props.onRowExpand(row, this.props.activeTable);
+  handleRowExpand = (row) => {
+    this.props.handleRowExpand(row, this.props.activeTable);
   };
 
-  onSelectEvent = ({ row }) => this.onRowExpand(row);
+  onSelectEvent = ({ row }) => this.handleRowExpand(row);
 
   onInsertRow = (rowData) => {
     let { activeTable, activeView, onInsertRow, rows } = this.props;
@@ -280,7 +277,7 @@ class ReactBigCalendar extends React.Component {
   };
 
   // do not modify row utils drop handle drop on the date block，just update view
-  updateEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
+  handleEventDragResize = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     if (!this.currentResizingEvt) this.currentResizingEvt = event; 
     if (event.row._id !== this.currentResizingEvt.row._id) return;
     const { events } = this.state;
@@ -315,7 +312,7 @@ class ReactBigCalendar extends React.Component {
     this.currentResizingEvt = null;
   };
 
-  moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
+  handleEventDrop = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     const { events } = this.state;
     const idx = events.findIndex(evt => evt.row._id === event.row._id);
     if (idx === -1) return;
@@ -370,16 +367,16 @@ class ReactBigCalendar extends React.Component {
         view={this.state.selectedView}
         onSelectView={this.onSelectView}
         defaultDate={new Date()}
-        onRowExpand={this.onRowExpand}
+        handleRowExpand={this.handleRowExpand}
         onSelectEvent={this.onSelectEvent}
         onInsertRow={this.onInsertRow}
         selectable='ignoreEvents'
         onSelectSlot={this.handleSelectSlot}
         onSelecting={this.handleSelecting}
-        onEventDragDrop={this.moveEvent} // repeat use moveEvent to keep compatibility with old code in “withDragAndDrop”
-        onEventDragResize={this.updateEvent}
+        onEventDragDrop={this.handleEventDrop} // repeat use moveEvent to keep compatibility with old code in “withDragAndDrop”
+        onEventDragResize={this.handleResizeDrop}
         onResizeDrop={this.handleResizeDrop}
-        onEventDrop={this.moveEvent}
+        onEventDrop={this.handleEventDrop}
       />
     );
   }

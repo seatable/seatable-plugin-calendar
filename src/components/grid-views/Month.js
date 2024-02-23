@@ -304,8 +304,8 @@ class MonthView extends React.Component {
     }
   };
 
-  onRowExpand = (row) => {
-    this.props.onRowExpand(row);
+  handleRowExpand = (row) => {
+    this.props.handleRowExpand(row);
   };
 
   onHidePopup = () => {
@@ -390,7 +390,7 @@ class MonthView extends React.Component {
         renderFestival={isMobile && this.isChinese && this.renderFestivalCell}
         renderForMeasure={needLimitMeasure}
         onShowMore={this.handleShowMore}
-        onRowExpand={this.onRowExpand}
+        handleRowExpand={this.handleRowExpand}
         onDoubleClick={this.handleDoubleClickEvent}
         onSelectSlot={this.handleSelectSlot}
         longPressThreshold={longPressThreshold}
@@ -480,7 +480,7 @@ class MonthView extends React.Component {
         events={overlay.events}
         slotStart={overlay.date}
         slotEnd={overlay.end}
-        onSelect={this.onRowExpand}
+        onSelect={this.handleRowExpand}
         onDoubleClick={this.handleDoubleClickEvent}
         onHidePopup={this.onHidePopup}
       />
@@ -632,7 +632,7 @@ MonthView.propTypes = {
   longPressThreshold: PropTypes.number,
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   onDoubleClickEvent: PropTypes.func,
   onShowMore: PropTypes.func,
   onDrillDown: PropTypes.func,

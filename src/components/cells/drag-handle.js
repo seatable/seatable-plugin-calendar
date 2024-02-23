@@ -6,7 +6,7 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
 
   const uniqueId = useRef(uuidv4());
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: uniqueId.current + `-${resizeDirection}-handle`,
+    id: `${uniqueId.current}-${resizeDirection}-handle`,
     data: { ...data, type: resizeDirection + 'Resize', uuid: uniqueId.current },
   });
 

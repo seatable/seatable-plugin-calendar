@@ -95,10 +95,10 @@ export default class TimeGrid extends Component {
     this.gutter = ref && findDOMNode(ref);
   };
 
-  onRowExpand = (...args) => {
+  handleRowExpand = (...args) => {
     // cancel any pending selections so only the event click goes through.
     this.clearSelection();
-    notify(this.props.onRowExpand, args);
+    notify(this.props.handleRowExpand, args);
   };
 
   handleSelectAllDaySlot = (slots, slotInfo) => {
@@ -129,7 +129,7 @@ export default class TimeGrid extends Component {
         let daysEvents = (groupedEvents.get(id) || []).filter(event =>
         { 
           // special case: 00:00 is inRange of next day, which renders useless span
-          if (dates.isJustDate(accessors.end(event)) && dates.eq(date, accessors.end(event), 'day' )) return false;
+          if (dates.isJustDate(accessors.end(event)) && dates.eq(date, accessors.end(event), 'day')) return false;
 
           const inRange =  dates.inRange(
             date,
@@ -159,14 +159,14 @@ export default class TimeGrid extends Component {
     );
   }
 
-  isOverHorizontalBoundrys = (boundaryWIdth, nodeRect, targetRect) => {
+  isOverHorizontalBoundrys = (boundaryWidth, nodeRect, targetRect) => {
     if (nodeRect.right > targetRect.left && nodeRect.left < targetRect.left) {
-      if (nodeRect.right - targetRect.left < boundaryWIdth) {
+      if (nodeRect.right - targetRect.left < boundaryWidth) {
         return false;
       } 
       return true;
     } else if (nodeRect.left < targetRect.right && nodeRect.right > targetRect.right) {
-      if (targetRect.right - nodeRect.left < boundaryWIdth) {
+      if (targetRect.right - nodeRect.left < boundaryWidth) {
         return false;
       } 
       return true;
@@ -214,7 +214,8 @@ export default class TimeGrid extends Component {
     const boundaryheight = (droppableContainers[0].rect.current.height) * 0.5;
 
     const currentNodes = collisions.filter(v => {
-      return this.isOverHorizontalBoundrys(boundaryWidth, v.data.droppableContainer.rect.current, collisionRect) && this.isOverVerticalBoundrys(boundaryheight, v.data.droppableContainer.rect.current, collisionRect);
+      const rect = v.data.droppableContainer.rect;
+      return this.isOverHorizontalBoundrys(boundaryWidth, rect.current, collisionRect) && this.isOverVerticalBoundrys(boundaryheight, rect.current, collisionRect);
     });
     currentNodes.forEach(v => { v.data.droppableContainer.node.current.classList.add('empty-time-slot-is-drag-over');});
     this.prevNodes = currentNodes;
@@ -231,8 +232,7 @@ export default class TimeGrid extends Component {
   };
 
   getNewEventTime = (event, newStartDate, direction, isJustDate, isAllDay, type ) => {
-    let unit;
-    isJustDate ? unit = 'day' : unit = 'minute';
+    const unit = isJustDate ? 'day' : 'minute';
     let dateRange = dates.range(event.start, event.end, unit);
     let newStart, newEnd;
     // drag from allDaySlot to allDaySlot
@@ -268,7 +268,7 @@ export default class TimeGrid extends Component {
 
           const startOfDate = new Date(newStartDate.getTime()).setHours(0, 0, 0, 0);
 
-          if ( newStartDate > event.end && !dates.eq(newStartDate, event.end, 'day') && !dates.eq(newStartDate, new Date(startOfDate), 'minutes') ) {
+          if (newStartDate > event.end && !dates.eq(newStartDate, event.end, 'day') && !dates.eq(newStartDate, new Date(startOfDate), 'minutes')) {
             newStartDate = event.end.setHours(newStartDate.getHours(), newStartDate.getMinutes(), 0);
             newStartDate = new Date(newStartDate);
           }
@@ -349,8 +349,7 @@ export default class TimeGrid extends Component {
   handleEventResizing = (e) => {
     if (!e.over) return;
     const operateType = e.active.data.current?.type;
-    if (!operateType || operateType === 'grid-event-resize' || operateType?.includes('dnd')  ) return;
-
+    if (!operateType || operateType === 'grid-event-resize' || operateType?.includes('dnd')) return;
     const resizingData = e.active.data.current;
     if (isEmptyObject(resizingData)) return;
 
@@ -398,14 +397,11 @@ export default class TimeGrid extends Component {
 
     events.forEach(event => {
       if (inRange(event, start, end, accessors)) {
-        let eStart = accessors.start(event),
-          eEnd = accessors.end(event);
-
-        const a = accessors.allDay(event); 
-        const b = dates.isJustDate(eStart) && dates.isJustDate(eEnd);
-        const c = (!showMultiDayTimes && !dates.eq(eStart, eEnd, 'day') && dates.isJustDate(eStart) && dates.isJustDate(eEnd));
+        let eStart = accessors.start(event), eEnd = accessors.end(event);
         if (
-          a || c || b
+          accessors.allDay(event) ||
+          (dates.isJustDate(eStart) && dates.isJustDate(eEnd)) ||
+          (!showMultiDayTimes && !dates.eq(eStart, eEnd, 'day') && dates.isJustDate(eStart) && dates.isJustDate(eEnd))
         ) {
           allDayEvents.push(event);
         } else {
@@ -453,7 +449,7 @@ export default class TimeGrid extends Component {
                 isOverflowing={this.state.isOverflowing}
                 longPressThreshold={longPressThreshold}
                 onSelectSlot={this.handleSelectAllDaySlot}
-                onRowExpand={this.onRowExpand}
+                handleRowExpand={this.handleRowExpand}
                 onDoubleClickEvent={this.props.onDoubleClickEvent}
                 onDrillDown={this.props.onDrillDown}
                 getDrilldownView={this.props.getDrilldownView}
@@ -574,7 +570,7 @@ TimeGrid.propTypes = {
   onSelectSlot: PropTypes.func,
   onSelectEnd: PropTypes.func,
   onSelectStart: PropTypes.func,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   onDoubleClickEvent: PropTypes.func,
   onDrillDown: PropTypes.func,
   getDrilldownView: PropTypes.func.isRequired,

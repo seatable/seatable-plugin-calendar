@@ -160,14 +160,16 @@ function TimeGridEvent(props) {
           'rbc-event-continues-later': continuesLater
         })}
       >
-        <TimeGridEventDragHandle direction="top"
+        <TimeGridEventDragHandle 
+          direction="top"
           resizeEventTop={resizeEventTop}
           resizeEventHeight={resizeEventHeight}         
           singleSlotHeight={singleSlotHeight}
           event={event}
         />
         {inner}
-        <TimeGridEventDragHandle direction="bottom" 
+        <TimeGridEventDragHandle 
+          direction="bottom" 
           resizeEventTop={resizeEventTop}
           resizeEventHeight={resizeEventHeight}
           singleSlotHeight={singleSlotHeight}

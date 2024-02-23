@@ -693,12 +693,12 @@ class Calendar extends React.Component {
     columns: PropTypes.array,
     startDateColumn: PropTypes.object,
     isMobile: PropTypes.bool,
-    onRowExpand: PropTypes.func,
+    handleRowExpand: PropTypes.func,
     onInsertRow: PropTypes.func,
     onDoubleClick: PropTypes.func,
     renderFestival: PropTypes.func,
     onShowMore: PropTypes.func,
-    hideViewSettingPanel: PropTypes.bool,
+    hideViewSettingPanel: PropTypes.func,
     onEventDragDrop: PropTypes.func,
     onEventDragResize: PropTypes.func,
     onEventResize: PropTypes.func,
@@ -992,7 +992,7 @@ class Calendar extends React.Component {
               getDrilldownView={this.getDrilldownView}
               onNavigate={this.handleNavigate}
               onDrillDown={this.handleDrillDown}
-              onRowExpand={this.props.onRowExpand}
+              handleRowExpand={this.props.handleRowExpand}
               onDoubleClickEvent={this.handleDoubleClickEvent}
               onSelectSlot={this.handleSelectSlot}
               containerPaddingTop={CALENDAR_DIALOG_PADDINGTOP}
@@ -1021,7 +1021,7 @@ class Calendar extends React.Component {
                 getDrilldownView={this.getDrilldownView}
                 onNavigate={this.handleNavigate}
                 onDrillDown={this.handleDrillDown}
-                onRowExpand={this.props.onRowExpand}
+                handleRowExpand={this.props.handleRowExpand}
                 onDoubleClickEvent={this.handleDoubleClickEvent}
                 onSelectSlot={this.handleSelectSlot}
                 containerPaddingTop={CALENDAR_DIALOG_PADDINGTOP}

@@ -50,8 +50,8 @@ function EventCell(props) {
     };
   };
 
-  const onRowExpand = (data) => {
-    props.onRowExpand(data.row);
+  const handleRowExpand = (data) => {
+    props.handleRowExpand(data.row);
   };
 
   let title = <CellTitle event={event} />;
@@ -99,14 +99,14 @@ function EventCell(props) {
 
   return (
     <div>
-      {  (normalEvent || eventCrossWeeksStartHandler)  &&
+      {(normalEvent || eventCrossWeeksStartHandler) &&
         <DragHandle 
           continuesPrior={continuesPrior}
           continuesAfter={continuesAfter}
           rowId={event.row._id}
           data={props}
           resizeDirection='left'
-        ></DragHandle>
+        />
       }
       <div
         ref={dndSetNodeRef}
@@ -120,7 +120,7 @@ function EventCell(props) {
           'rbc-event-continues-prior': continuesPrior,
           'rbc-event-continues-after': continuesAfter
         })}
-        onClick={e => onRowExpand(event, e)}
+        onClick={e => handleRowExpand(event, e)}
         onDoubleClick={e => onDoubleClick && onDoubleClick(event, e)}
       >
         {typeof children === 'function' ? children(content) : content}
@@ -133,7 +133,7 @@ function EventCell(props) {
           rowId={event.row._id}
           data={props}
           resizeDirection='right'
-        ></DragHandle>
+        />
       }
     </div>
   );
@@ -151,7 +151,7 @@ EventCell.propTypes = {
   components: PropTypes.object.isRequired,
   getters: PropTypes.object.isRequired,
   localizer: PropTypes.object,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   onDoubleClick: PropTypes.func,
   style: PropTypes.object,
   className: PropTypes.object,

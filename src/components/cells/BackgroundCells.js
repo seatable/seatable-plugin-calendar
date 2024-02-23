@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import Selection, { getBoundsForNode, isEvent } from '../selection/Selection';
 import * as dates from '../../utils/dates';
 import { getSlotAtX, pointInBox } from '../../utils/selection';
-import  DateBlock  from './date-block';
+import DateBlock from './date-block';
 
 
 function BackgroundCells(props) {

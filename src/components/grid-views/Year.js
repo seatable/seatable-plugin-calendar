@@ -273,7 +273,7 @@ class YearView extends React.Component {
             position={overlay.position}
             events={overlay.events}
             slotStart={overlay.date}
-            onSelect={this.props.onRowExpand}
+            onSelect={this.props.handleRowExpand}
             onHidePopup={this.onHidePopup}
           />
         }
@@ -287,7 +287,7 @@ YearView.propTypes = {
   localizer: PropTypes.object.isRequired,
   className: PropTypes.object,
   onInsertRow: PropTypes.func,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   events: PropTypes.array,
   isMobile: PropTypes.bool,
   changeDateByNavicate: PropTypes.bool,

@@ -179,7 +179,7 @@ class App extends React.Component {
     });
   };
 
-  onRowExpand = (row, table) => {
+  handleRowExpand = (row, table) => {
     if (window.app.expandRow) {
       window.app.expandRow(row, table);
     }
@@ -542,7 +542,7 @@ class App extends React.Component {
             formulaRows={formulaRows}
             rowColorsMap={this.rowColorsMap}
             getSelectedGridView={this.getSelectedGridView}
-            onRowExpand={this.onRowExpand}
+            handleRowExpand={this.handleRowExpand}
             onInsertRow={this.onInsertRow}
             hideViewSettingPanel={this.hideViewSettingPanel}
             isExporting={this.state.isExporting}

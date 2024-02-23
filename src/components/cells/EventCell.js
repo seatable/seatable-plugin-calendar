@@ -21,7 +21,7 @@ function EventCell(props) {
     accessors,
     getters,
     children,
-    components: { event: Event, eventWrapper: EventWrapper },
+    components: { event: Event },
     slotStart,
     slotEnd,
     continuesPrior, 

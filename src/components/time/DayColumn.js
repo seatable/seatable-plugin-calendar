@@ -47,7 +47,7 @@ class DayColumn extends React.Component {
       rtl,
       isNow,
       resource,
-      accessors,
+     
       localizer,
       getters: { dayProp, ...getters },
       components: { eventContainerWrapper: EventContainer, ...components }

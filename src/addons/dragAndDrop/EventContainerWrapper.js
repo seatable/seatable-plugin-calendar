@@ -26,6 +26,7 @@ class EventContainerWrapper extends React.Component {
     localizer: PropTypes.object.isRequired,
     slotMetrics: PropTypes.object.isRequired,
     resource: PropTypes.any,
+    children: PropTypes.node,
   };
 
   static contextTypes = {

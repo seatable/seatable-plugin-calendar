@@ -287,6 +287,12 @@ YearView.propTypes = {
   localizer: PropTypes.object.isRequired,
   className: PropTypes.object,
   onInsertRow: PropTypes.func,
+  onRowExpand: PropTypes.func,
+  events: PropTypes.array,
+  isMobile: PropTypes.bool,
+  changeDateByNavicate: PropTypes.bool,
+  updateCurrentDate: PropTypes.func,
+  configuredWeekStart: PropTypes.number,
 };
 
 YearView.range = (date, { localizer }) => {

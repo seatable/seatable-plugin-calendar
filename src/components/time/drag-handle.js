@@ -10,7 +10,7 @@ function TimeGridEventDragHandle({ direction, resizeEventHeight, resizeEventTop,
   const uniqueId = useRef(uuidv4());
   const [mouseDirection, setMouseDirection] = useState(null);
 
-  const { over, attributes, listeners, setNodeRef, transform } = useDraggable(
+  const { attributes, listeners, setNodeRef } = useDraggable(
     {
       id: uniqueId.current,
       data: { type: 'grid-event-resize', event, direction, mouseDirection }

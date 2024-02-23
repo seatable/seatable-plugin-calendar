@@ -27,6 +27,7 @@ class EventWrapper extends React.Component {
     continuesAfter: PropTypes.bool,
     isDragging: PropTypes.bool,
     isResizing: PropTypes.bool,
+    children: PropTypes.node,
   };
 
   handleResizeUp = e => {

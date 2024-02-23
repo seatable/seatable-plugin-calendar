@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { findDOMNode } from 'react-dom';
 import classnames from 'classnames';
 import Selection, { getBoundsForNode, isEvent } from '../selection/Selection';
 import * as dates from '../../utils/dates';

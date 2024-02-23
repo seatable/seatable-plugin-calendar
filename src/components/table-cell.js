@@ -33,7 +33,8 @@ const propTypes = {
   collaborators: PropTypes.array,
   tableID: PropTypes.string.isRequired,
   formulaRows: PropTypes.object,
-  autoWidth: PropTypes.bool
+  autoWidth: PropTypes.bool,
+  className: PropTypes.string
 };
 
 const EMPTY_CELL_FORMATTER = <span className="row-cell-empty d-inline-block"></span>;

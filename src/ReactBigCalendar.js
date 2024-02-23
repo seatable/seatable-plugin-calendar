@@ -8,7 +8,7 @@ import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
 import { KEY_SELECTED_CALENDAR_VIEW, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
 import TableEvent from './model/event';
-import withDragAndDrop from './addons/dragAndDrop';
+// import withDragAndDrop from './addons/dragAndDrop';
 
 import './css/react-big-calendar.css';
 import './addons/dragAndDrop/styles.css';
@@ -29,6 +29,15 @@ const propTypes = {
   getSelectedGridView: PropTypes.func,
   onRowExpand: PropTypes.func,
   onInsertRow: PropTypes.func,
+  appendRow: PropTypes.func,
+  modifyRow: PropTypes.func,
+  collaborators: PropTypes.array,
+  formulaRows: PropTypes.object,
+  rowsColor: PropTypes.object,
+  rowColorsMap: PropTypes.object,
+  isIosMobile: PropTypes.bool,
+  isSafari: PropTypes.bool,
+  
 };
 
 class ReactBigCalendar extends React.Component {

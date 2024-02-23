@@ -544,8 +544,6 @@ class MonthView extends React.Component {
       this.handleEventDrag(event, droppedValue);
     } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
       this.handleEventResizeDrop();
-    } else {
-      console.log('invalid type' + dropData.type);
     }
   };
 
@@ -565,8 +563,6 @@ class MonthView extends React.Component {
     } else if ( resizingData.type === 'rightResize') {
       end = newTime;
       start = resizingData.event.start;
-    } else {
-      console.log('invalid type' + resizingData.type);
     }
     if (start > end) return;
     this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
@@ -660,6 +656,11 @@ MonthView.propTypes = {
   onEventDragResize: PropTypes.func,
   onEventDragDrop: PropTypes.func,
   onSelectEvent: PropTypes.func,
+  isMobile: PropTypes.bool,
+  configuredWeekStart: PropTypes.number,
+  changeDateByNavicate: PropTypes.bool,
+  updateCurrentDate: PropTypes.func,
+
 };
 
 MonthView.range = (date, { localizer }) => {

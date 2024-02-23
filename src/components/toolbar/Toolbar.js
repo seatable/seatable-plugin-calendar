@@ -87,6 +87,7 @@ Toolbar.propTypes = {
   onNavigate: PropTypes.func.isRequired,
   onSelectView: PropTypes.func.isRequired,
   isToday: PropTypes.bool,
+  isMobile: PropTypes.bool
 };
 
 export default Toolbar;

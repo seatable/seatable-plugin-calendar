@@ -1,7 +1,6 @@
 import { useDroppable } from '@dnd-kit/core';
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import * as dates from '../../utils/dates';
 import { v4 as uuidv4 } from 'uuid';
 
 export function TimeSlot({ value }) {

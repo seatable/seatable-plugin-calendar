@@ -43,7 +43,7 @@ export let formats = {
   agendaTimeRangeFormat: timeRangeFormat
 };
 
-export default function (moment, configuredWeekStart, startYearFirstWeek) {
+export default function getLocale(moment, configuredWeekStart, startYearFirstWeek) {
   let locale = (m, c) => (c ? m.locale(c) : m);
 
   return new DateLocalizer({

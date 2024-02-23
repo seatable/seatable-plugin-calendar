@@ -695,6 +695,15 @@ class Calendar extends React.Component {
     isMobile: PropTypes.bool,
     onRowExpand: PropTypes.func,
     onInsertRow: PropTypes.func,
+    onDoubleClick: PropTypes.func,
+    renderFestival: PropTypes.func,
+    onShowMore: PropTypes.func,
+    hideViewSettingPanel: PropTypes.bool,
+    onEventDragDrop: PropTypes.func,
+    onEventDragResize: PropTypes.func,
+    onEventResize: PropTypes.func,
+    onResizeDrop: PropTypes.func,
+    isExporting: PropTypes.bool,
   };
 
   static defaultProps = {

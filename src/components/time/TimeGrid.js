@@ -272,7 +272,7 @@ export default class TimeGrid extends Component {
             newStartDate = event.end.setHours(newStartDate.getHours(), newStartDate.getMinutes(), 0);
             newStartDate = new Date(newStartDate);
           }
-          
+
           newStart = event.start;
           newEnd = newStartDate;
         }
@@ -342,9 +342,7 @@ export default class TimeGrid extends Component {
         
     } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
       this.handleEventResizeDrop();
-    } else {
-      console.log('invalid type' + dropData.type);
-    }
+    } 
     this.clearIsOveredNodes();
   };
 
@@ -364,9 +362,7 @@ export default class TimeGrid extends Component {
     } else if (resizingData.type === 'rightResize') {
       end = newTime;
       start = resizingData.event.start;
-    } else {
-      console.log('invalid type' + resizingData.type);
-    }
+    } 
     if (start > end) return;
     this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
   };
@@ -589,6 +585,7 @@ TimeGrid.propTypes = {
   onEventDragDrop: PropTypes.func,
   onResizeDrop: PropTypes.func,
   onEventDragResize: PropTypes.func,
+  onSelectEvent: PropTypes.func
 };
 
 TimeGrid.defaultProps = {

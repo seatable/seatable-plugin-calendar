@@ -9,7 +9,15 @@ import Selection, { getBoundsForNode } from '../../components/selection/Selectio
 import EventRow from '../../components/rows/EventRow';
 import { dragAccessors } from './common';
 
-const propTypes = {};
+const propTypes = {
+  isAllDay: PropTypes.bool,
+  slotMetrics: PropTypes.object.isRequired,
+  accessors: PropTypes.object.isRequired,
+  getters: PropTypes.object.isRequired,
+  components: PropTypes.object.isRequired,
+  resourceId: PropTypes.any,
+  children: PropTypes.node,
+};
 
 const eventTimes = (event, accessors) => {
   let start = accessors.start(event);

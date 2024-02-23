@@ -1,7 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { findDOMNode } from 'react-dom';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import getHeight from 'dom-helpers/height';
 import qsa from 'dom-helpers/querySelectorAll';
 import classnames from 'classnames';
 import * as dates from '../../utils/dates';
@@ -195,6 +193,8 @@ DateContentRow.propTypes = {
   maxRows: PropTypes.number.isRequired,
   className: PropTypes.string,
   uuid: PropTypes.string,
+  renderFestival: PropTypes.func,
+  isMobile: PropTypes.bool
 };
 
 DateContentRow.defaultProps = {

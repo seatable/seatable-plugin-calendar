@@ -100,6 +100,7 @@ YearMonth.propTypes = {
   dateOfToday: PropTypes.number,
   dayEventsMap: PropTypes.object,
   localizer: PropTypes.object,
+  handleShowMore: PropTypes.func,
 };
 
 export default YearMonth;

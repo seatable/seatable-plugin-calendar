@@ -129,8 +129,13 @@ class DayColumn extends React.Component {
       const startsBeforeDay = slotMetrics.startsBeforeDay(start);
       const startsAfterDay = slotMetrics.startsAfterDay(end);
 
+      const  dateOfStart = new Date(start).setHours(0, 0, 0, 0);
+      const  dateOfEnd = new Date(end).setHours(0, 0, 0, 0);
+
+      const continueToAnotherDayEnd = dateOfEnd > dateOfStart;
+
       if (startsBeforeDay) format = 'eventTimeRangeEndFormat';
-      else if (startsAfterDay) format = 'eventTimeRangeStartFormat';
+      else if (startsAfterDay || continueToAnotherDayEnd) format = 'eventTimeRangeStartFormat';
 
       if (startsBeforeDay && startsAfterDay) label = intl.get('.rbc.messages.allDay').d(messages.allDay);
       else label = localizer.format({ start, end }, format);

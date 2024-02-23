@@ -266,7 +266,9 @@ export default class TimeGrid extends Component {
             newStartDate = dates.add(event.start, 30, 'minutes');
           }
 
-          if (!dates.eq(newStartDate, event.end, 'day')) {
+          const startOfDate = new Date(newStartDate.getTime()).setHours(0, 0, 0, 0);
+
+          if ( newStartDate > event.end && !dates.eq(newStartDate, event.end, 'day') && !dates.eq(newStartDate, new Date(startOfDate), 'minutes') ) {
             newStartDate = event.end.setHours(newStartDate.getHours(), newStartDate.getMinutes(), 0);
             newStartDate = new Date(newStartDate);
           }

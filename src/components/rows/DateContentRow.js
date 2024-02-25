@@ -193,7 +193,7 @@ DateContentRow.propTypes = {
   maxRows: PropTypes.number.isRequired,
   className: PropTypes.string,
   uuid: PropTypes.string,
-  renderFestival: PropTypes.func,
+  renderFestival: PropTypes.bool,
   isMobile: PropTypes.bool
 };
 

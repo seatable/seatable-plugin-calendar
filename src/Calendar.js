@@ -696,7 +696,7 @@ class Calendar extends React.Component {
     handleRowExpand: PropTypes.func,
     onInsertRow: PropTypes.func,
     onDoubleClick: PropTypes.func,
-    renderFestival: PropTypes.func,
+    renderFestival: PropTypes.bool,
     onShowMore: PropTypes.func,
     hideViewSettingPanel: PropTypes.func,
     onEventDragDrop: PropTypes.func,

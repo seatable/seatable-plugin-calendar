@@ -26,6 +26,7 @@ function EventCell(props) {
     slotEnd,
     continuesPrior, 
     continuesAfter,
+    handleRowExpand,
     ...restProps
   } = props;
 
@@ -50,7 +51,7 @@ function EventCell(props) {
     };
   };
 
-  const handleRowExpand = (data) => {
+  const handleRowExpanding = (data) => {
     props.handleRowExpand(data.row);
   };
 
@@ -120,7 +121,7 @@ function EventCell(props) {
           'rbc-event-continues-prior': continuesPrior,
           'rbc-event-continues-after': continuesAfter
         })}
-        onClick={e => handleRowExpand(event, e)}
+        onClick={e => handleRowExpanding(event, e)}
         onDoubleClick={e => onDoubleClick && onDoubleClick(event, e)}
       >
         {typeof children === 'function' ? children(content) : content}

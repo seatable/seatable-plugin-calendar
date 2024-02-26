@@ -112,6 +112,7 @@ export default function withDragAndDrop(Calendar) {
     constructor(...args) {
       super(...args);
 
+      // it's {} , empty object
       const { components } = this.props;
 
       this.components = mergeComponents(components, {

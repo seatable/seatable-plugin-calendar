@@ -20,7 +20,6 @@ class ExportedMonth extends React.Component {
     super(...args);
     this._bgRows = [];
     this._pendingSelection = [];
-    this.slotRowRef = React.createRef();
     this.state = {
       needLimitMeasure: false,
       popup: false,
@@ -89,8 +88,8 @@ class ExportedMonth extends React.Component {
     }
   };
 
-  onRowExpand = (row) => {
-    this.props.onRowExpand(row);
+  handleRowExpand = (row) => {
+    this.props.handleRowExpand(row);
   };
 
   onHidePopup = () => {
@@ -135,7 +134,7 @@ class ExportedMonth extends React.Component {
     return (
       <DateContentRow
         key={formatWeekStartDate}
-        ref={weekIdx === 0 ? this.slotRowRef : undefined}
+        uuid={formatWeekStartDate}
         container={this.getContainer}
         className='rbc-month-row'
         getNow={getNow}
@@ -152,7 +151,7 @@ class ExportedMonth extends React.Component {
         renderHeader={this.readerDateHeading}
         renderForMeasure={needLimitMeasure}
         onShowMore={this.handleShowMore}
-        onRowExpand={this.onRowExpand}
+        handleRowExpand={this.handleRowExpand}
         onDoubleClick={this.handleDoubleClickEvent}
         onSelectSlot={this.handleSelectSlot}
         longPressThreshold={longPressThreshold}
@@ -278,7 +277,7 @@ ExportedMonth.propTypes = {
   longPressThreshold: PropTypes.number,
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   onDoubleClickEvent: PropTypes.func,
   onShowMore: PropTypes.func,
   onDrillDown: PropTypes.func,

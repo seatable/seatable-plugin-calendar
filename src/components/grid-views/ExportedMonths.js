@@ -32,7 +32,7 @@ ExportedMonths.propTypes = {
   longPressThreshold: PropTypes.number,
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   onDoubleClickEvent: PropTypes.func,
   onShowMore: PropTypes.func,
   onDrillDown: PropTypes.func,

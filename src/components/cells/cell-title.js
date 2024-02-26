@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { CellType, FORMULA_RESULT_TYPE } from 'dtable-utils';
 import { getKnownCreatorByEmail } from '../../utils/common';
 import { getCollaboratorsName } from '../../utils/value-format-utils';
+import propTypes from 'prop-types';
 
 const COLLABORATOR_COLUMN_TYPES = [CellType.COLLABORATOR, CellType.CREATOR, CellType.LAST_MODIFIER];
 
@@ -121,5 +122,9 @@ class CellTitle extends Component {
     );
   }
 }
+
+CellTitle.propTypes = {
+  event: propTypes.object.isRequired,
+};
 
 export default CellTitle;

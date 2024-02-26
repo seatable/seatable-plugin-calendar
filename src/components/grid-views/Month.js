@@ -33,6 +33,10 @@ import Header from '../header/Header';
 import DateHeader from '../header/DateHeader';
 import { sortEvents } from '../../utils/eventLevels';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { DndContext } from '@dnd-kit/core';
+import { pointerWithin, rectIntersection } from '@dnd-kit/core';
+import { isEmptyObject } from 'dtable-utils';
+import { throttle } from 'lodash-es';
 
 dayjs.extend(customParseFormat);
 
@@ -42,13 +46,12 @@ class MonthView extends React.Component {
     super(...args);
     this._bgRows = [];
     this._pendingSelection = [];
-    this.slotRowRef = React.createRef();
     this.state = {
       needLimitMeasure: false,
       popup: false,
       hoverDate: null,
       hoverDateCellPosition: {},
-      weekEventsMap: this.getWeekEventsMap(this.props.events, this.props.accessors)
+      weekEventsMap: this.getWeekEventsMap(this.props.events, this.props.accessors),
     };
     this.rbcDateCells = {};
     this.lang = getDtableLang();
@@ -57,6 +60,7 @@ class MonthView extends React.Component {
     this.isScrolling = false;
     this.festivals = {};
     this.initDateRange();
+    this.shouldSortEvents = true;
   }
 
   getWeekEventsMap = (events, accessors) => {
@@ -74,7 +78,10 @@ class MonthView extends React.Component {
         this.updateWeekEvents(weekEventsMap, m_eventWeekStart, event);
       }
     });
-    this.sortWeeksEvents(weekEventsMap, accessors);
+
+    if (this.shouldSortEvents) {
+      this.sortWeeksEvents(weekEventsMap, accessors);
+    }
     return weekEventsMap;
   };
 
@@ -297,8 +304,8 @@ class MonthView extends React.Component {
     }
   };
 
-  onRowExpand = (row) => {
-    this.props.onRowExpand(row);
+  handleRowExpand = (row) => {
+    this.props.handleRowExpand(row);
   };
 
   onHidePopup = () => {
@@ -309,29 +316,48 @@ class MonthView extends React.Component {
     this.props.onInsertRow(dates.getFormattedDate(date, 'YYYY-MM-DD'));
   };
 
-  render() {
-    let { className, isMobile } = this.props;
-    let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
-    let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
-    if (allWeeksStartDates) {
-      renderWeeks = allWeeksStartDates.slice(overscanStartIndex, overscanEndIndex);
-      offsetTop = overscanStartIndex * MONTH_ROW_HEIGHT;
-      offsetBottom = (allWeeksStartDates.length - overscanEndIndex) * MONTH_ROW_HEIGHT;
-    }
-    let weeksCount = renderWeeks.length;
-    return (
-      <div className={classnames('rbc-month-view', className)} ref={ref => this.currentView = ref}>
-        <div className='rbc-month-header'>
-          {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
-        </div>
-        <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
-          <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom }}>
-            {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
-          </div>
-        </div>
-        {this.state.popup && this.renderOverlay()}
-      </div>
-    );
+  measureRowLimit() {
+    this.setState({ needLimitMeasure: false });
+  }
+
+  handleSelectSlot = (range, slotInfo) => {
+    this._pendingSelection = this._pendingSelection.concat(range);
+
+    clearTimeout(this._selectTimer);
+    this._selectTimer = setTimeout(() => this.selectDates(slotInfo));
+  };
+
+  handleHeadingClick = (date, view, e) => {
+    e.preventDefault();
+    this.clearSelection();
+    notify(this.props.onDrillDown, [date, view]);
+  };
+
+  handleDoubleClickEvent = (...args) => {
+    this.clearSelection();
+    notify(this.props.onDoubleClickEvent, args);
+  };
+
+  selectDates(slotInfo) {
+    let slots = this._pendingSelection.slice();
+
+    this._pendingSelection = [];
+
+    slots.sort((a, b) => +a - +b);
+
+    notify(this.props.onSelectSlot, {
+      slots,
+      start: slots[0],
+      end: slots[slots.length - 1],
+      action: slotInfo.action,
+      bounds: slotInfo.bounds,
+      box: slotInfo.box
+    });
+  }
+
+  clearSelection() {
+    clearTimeout(this._selectTimer);
+    this._pendingSelection = [];
   }
 
   renderWeek = (weekStartDate, weekIdx) => {
@@ -345,7 +371,7 @@ class MonthView extends React.Component {
     return (
       <DateContentRow
         key={formatWeekStartDate}
-        ref={weekIdx === 0 ? this.slotRowRef : undefined}
+        uuid={formatWeekStartDate}
         container={this.getContainer}
         className='rbc-month-row'
         getNow={getNow}
@@ -364,7 +390,7 @@ class MonthView extends React.Component {
         renderFestival={isMobile && this.isChinese && this.renderFestivalCell}
         renderForMeasure={needLimitMeasure}
         onShowMore={this.handleShowMore}
-        onRowExpand={this.onRowExpand}
+        handleRowExpand={this.handleRowExpand}
         onDoubleClick={this.handleDoubleClickEvent}
         onSelectSlot={this.handleSelectSlot}
         longPressThreshold={longPressThreshold}
@@ -454,56 +480,137 @@ class MonthView extends React.Component {
         events={overlay.events}
         slotStart={overlay.date}
         slotEnd={overlay.end}
-        onSelect={this.onRowExpand}
+        onSelect={this.handleRowExpand}
         onDoubleClick={this.handleDoubleClickEvent}
         onHidePopup={this.onHidePopup}
       />
     );
   }
 
-  measureRowLimit() {
-    this.setState({ needLimitMeasure: false });
-  }
+  customCollisionDetectionAlgorithm =  (args) => {
+    // First, let's see if there are any collisions with the pointer
+    const pointerCollisions = pointerWithin(args);
+    
+    // Collision detection algorithms return an array of collisions
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions;
+    }
+    
+    // If there are no collisions with the pointer, return rectangle intersections
+    return rectIntersection(args);
+  };
+  
+  getNewEventTime = (event, newStartDate) => {
+    const dateRange = dates.range(event.start, event.end, 'day');
+    const newStart = newStartDate;
+    const newEnd = dates.add(newStartDate, dateRange.length - 1, 'day');
+    return { start: newStart, end: newEnd };
 
-  handleSelectSlot = (range, slotInfo) => {
-    this._pendingSelection = this._pendingSelection.concat(range);
-
-    clearTimeout(this._selectTimer);
-    this._selectTimer = setTimeout(() => this.selectDates(slotInfo));
   };
 
-  handleHeadingClick = (date, view, e) => {
-    e.preventDefault();
-    this.clearSelection();
-    notify(this.props.onDrillDown, [date, view]);
+  handleEventDrag = (event, newTime) => {
+    // i just use date as the dropped item id, cause they are unique
+    const { start, end } = this.getNewEventTime(event, newTime);
+    this.props.onEventDragDrop({ event, start, end, allDay: event.allDay });
   };
 
-  handleDoubleClickEvent = (...args) => {
-    this.clearSelection();
-    notify(this.props.onDoubleClickEvent, args);
+  handleEventResizeDrop = () => {
+    this.props.onResizeDrop();
+    // sort after resize end
+    setTimeout(() => {
+      this.setShouldSort(true);
+    }, 500);
   };
 
-  selectDates(slotInfo) {
-    let slots = this._pendingSelection.slice();
+  handleEventDrop = (e) => {
 
-    this._pendingSelection = [];
+    // fix use double clicking on event was recognized as drag and drop
+    const endDragging = new Date();
+    const timeDiff = endDragging - this.startDragging;
+    if (timeDiff < 300) {
+      this.props.onSelectEvent(e.active.data.current.event.row._id);
+      this.setShouldSort(true);
+      this.startDragging = null;
+      return;
+    }
 
-    slots.sort((a, b) => +a - +b);
+    const dropData = e.active.data.current;
+    const event = dropData.event;
+    if (!e.over || !event) return;
 
-    notify(this.props.onSelectSlot, {
-      slots,
-      start: slots[0],
-      end: slots[slots.length - 1],
-      action: slotInfo.action,
-      bounds: slotInfo.bounds,
-      box: slotInfo.box
-    });
+    const droppedValue = e.over.data.current?.value;
+
+    if (dropData.type === 'dnd') {
+      this.handleEventDrag(event, droppedValue);
+    } else if (dropData.type === 'leftResize' || dropData.type === 'rightResize') {
+      this.handleEventResizeDrop();
+    }
+  };
+
+  handleEventResizing = (e) => {
+    if (!e.over) return;
+    const operateType = e.active.data.current?.type;
+    if (operateType?.includes('dnd') || !operateType ) return;
+
+    const resizingData = e.active.data.current;
+    if (isEmptyObject(resizingData)) return;
+
+    let newTime = e.over.data.current?.value;
+    let start, end;
+    if (resizingData.type === 'leftResize') {
+      start = newTime;
+      end = resizingData.event.end;
+    } else if ( resizingData.type === 'rightResize') {
+      end = newTime;
+      start = resizingData.event.start;
+    }
+    if (start > end) return;
+    this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
+  };
+
+  setShouldSort = (bool) => { 
+    this.shouldSortEvents = bool;
+  };
+
+  render() {
+    const throttleHandleEventDrop = throttle(this.handleEventDrop, 50);
+    const throttleHandleEventResize = throttle(this.handleEventResizing, 50);
+    let { className, isMobile } = this.props;
+    let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
+    let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
+    if (allWeeksStartDates) {
+      renderWeeks = allWeeksStartDates.slice(overscanStartIndex, overscanEndIndex);
+      offsetTop = overscanStartIndex * MONTH_ROW_HEIGHT;
+      offsetBottom = (allWeeksStartDates.length - overscanEndIndex) * MONTH_ROW_HEIGHT;
+    }
+    let weeksCount = renderWeeks.length;
+    return (
+      <div className={classnames('rbc-month-view', className)} ref={ref => this.currentView = ref}>
+        <div className='rbc-month-header'>
+          {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
+        </div>
+        <div className={classnames('rbc-month-rows', { 'rbc-mobile-month-rows': isMobile })} ref={ref => this.rbcMonthRows = ref} onScroll={this.onMonthViewScroll}>
+          <DndContext
+            collisionDetection={this.customCollisionDetectionAlgorithm}
+            onDragEnd={throttleHandleEventDrop}
+            onDragMove={throttleHandleEventResize}
+            onDragStart={() => {
+              this.setShouldSort(false);
+              this.startDragging = new Date();
+            }}
+          >
+            <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom, }}>
+              <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                {weeksCount > 0 && renderWeeks.map(this.renderWeek)}
+              </div>
+            </div>
+          </DndContext>
+        </div>
+        {this.state.popup && this.renderOverlay()}
+      </div>
+    );
   }
 
-  clearSelection() {
-    clearTimeout(this._selectTimer);
-    this._pendingSelection = [];
-  }
 }
 
 MonthView.propTypes = {
@@ -525,7 +632,7 @@ MonthView.propTypes = {
   longPressThreshold: PropTypes.number,
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   onDoubleClickEvent: PropTypes.func,
   onShowMore: PropTypes.func,
   onDrillDown: PropTypes.func,
@@ -543,6 +650,17 @@ MonthView.propTypes = {
   calendarHeaderHeight: PropTypes.number,
   onHidePopup: PropTypes.func,
   onInsertRow: PropTypes.func,
+  onEventDrop: PropTypes.func,
+  onEventResize: PropTypes.func,
+  onResizeDrop: PropTypes.func,
+  onEventDragResize: PropTypes.func,
+  onEventDragDrop: PropTypes.func,
+  onSelectEvent: PropTypes.func,
+  isMobile: PropTypes.bool,
+  configuredWeekStart: PropTypes.number,
+  changeDateByNavicate: PropTypes.bool,
+  updateCurrentDate: PropTypes.func,
+
 };
 
 MonthView.range = (date, { localizer }) => {

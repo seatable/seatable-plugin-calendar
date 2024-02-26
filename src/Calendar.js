@@ -693,8 +693,17 @@ class Calendar extends React.Component {
     columns: PropTypes.array,
     startDateColumn: PropTypes.object,
     isMobile: PropTypes.bool,
-    onRowExpand: PropTypes.func,
+    handleRowExpand: PropTypes.func,
     onInsertRow: PropTypes.func,
+    onDoubleClick: PropTypes.func,
+    renderFestival: PropTypes.bool,
+    onShowMore: PropTypes.func,
+    hideViewSettingPanel: PropTypes.func,
+    onEventDragDrop: PropTypes.func,
+    onEventDragResize: PropTypes.func,
+    onEventResize: PropTypes.func,
+    onResizeDrop: PropTypes.func,
+    isExporting: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -763,7 +772,7 @@ class Calendar extends React.Component {
       }
     };
 
-    return {
+    const context = {
       viewNames: names,
       localizer: mergeWithDefaults(localizer, culture, formats, msgs),
       getters: {
@@ -791,6 +800,8 @@ class Calendar extends React.Component {
         resourceTitle: wrapAccessor(resourceTitleAccessor)
       }
     };
+
+    return context; 
   }
 
   getView2ComponentMap = () => {
@@ -981,7 +992,7 @@ class Calendar extends React.Component {
               getDrilldownView={this.getDrilldownView}
               onNavigate={this.handleNavigate}
               onDrillDown={this.handleDrillDown}
-              onRowExpand={this.props.onRowExpand}
+              handleRowExpand={this.props.handleRowExpand}
               onDoubleClickEvent={this.handleDoubleClickEvent}
               onSelectSlot={this.handleSelectSlot}
               containerPaddingTop={CALENDAR_DIALOG_PADDINGTOP}
@@ -990,6 +1001,10 @@ class Calendar extends React.Component {
               updateCurrentDate={this.updateCurrentDate}
               changeDateByNavicate={this.state.changeDateByNavicate}
               isMobile={this.props.isMobile}
+              onEventDragDrop={this.props.onEventDragDrop}
+              onEventDragResize={this.props.onEventDragResize}
+              onResizeDrop={this.props.onResizeDrop}
+              onSelectEvent={this.props.onSelectEvent}
             />
             {this.props.isExporting && (
               <ExportedMonths
@@ -1006,7 +1021,7 @@ class Calendar extends React.Component {
                 getDrilldownView={this.getDrilldownView}
                 onNavigate={this.handleNavigate}
                 onDrillDown={this.handleDrillDown}
-                onRowExpand={this.props.onRowExpand}
+                handleRowExpand={this.props.handleRowExpand}
                 onDoubleClickEvent={this.handleDoubleClickEvent}
                 onSelectSlot={this.handleSelectSlot}
                 containerPaddingTop={CALENDAR_DIALOG_PADDINGTOP}

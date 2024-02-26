@@ -59,6 +59,7 @@ YearMonthsRow.propTypes = {
   dayEventsMap: PropTypes.object,
   localizer: PropTypes.object,
   handleShowMore: PropTypes.func,
+  isMobile: PropTypes.bool
 };
 
 export default YearMonthsRow;

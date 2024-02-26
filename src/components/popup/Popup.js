@@ -52,7 +52,7 @@ class Popup extends React.Component {
   render() {
     let {
       events,
-      onRowExpand,
+      handleRowExpand,
       getters,
       accessors,
       components,
@@ -86,7 +86,7 @@ class Popup extends React.Component {
               type='popup'
               event={event}
               getters={getters}
-              onRowExpand={onRowExpand}
+              handleRowExpand={handleRowExpand}
               accessors={accessors}
               components={components}
               continuesPrior={dates.lt(accessors.end(event), slotStart, 'day')}
@@ -116,7 +116,7 @@ Popup.propTypes = {
   components: PropTypes.object.isRequired,
   getters: PropTypes.object.isRequired,
   localizer: PropTypes.object.isRequired,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   slotStart: PropTypes.instanceOf(Date),
   slotEnd: PropTypes.number,
   style: PropTypes.object,

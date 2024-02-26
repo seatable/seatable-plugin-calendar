@@ -1,5 +1,9 @@
 import { SORT_TYPE } from '../constants/sort-constants';
 
+export function stringifyPercent(v) {
+  return typeof v === 'string' ? v : v + '%';
+}
+
 // creates an object composed of the own and inherited enumerable property paths of object that are not omitted
 export function omit(object, propertyName) {
   let result = {};

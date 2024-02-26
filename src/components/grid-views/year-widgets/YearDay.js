@@ -37,6 +37,7 @@ YearDay.propTypes = {
   isOffRange: PropTypes.bool,
   isCurrentDay: PropTypes.bool,
   handleShowMore: PropTypes.func,
+  label: PropTypes.number,
 };
 
 export default YearDay;

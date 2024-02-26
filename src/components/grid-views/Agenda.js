@@ -352,6 +352,11 @@ Agenda.propTypes = {
   getters: PropTypes.object.isRequired,
   localizer: PropTypes.object.isRequired,
   isMobile: PropTypes.bool,
+  activeTable: PropTypes.object,
+  collaborators: PropTypes.array,
+  formulaRows: PropTypes.array,
+  columns: PropTypes.array,
+  settings: PropTypes.object
 };
 
 Agenda.defaultProps = {

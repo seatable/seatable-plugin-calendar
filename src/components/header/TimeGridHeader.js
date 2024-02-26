@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import scrollbarSize from 'dom-helpers/scrollbarSize';
 import classnames from 'classnames';
 import Header from './Header';
 import ResourceHeader from './ResourceHeader';
@@ -96,7 +95,7 @@ class TimeGridHeader extends React.Component {
         accessors={accessors}
         getters={getters}
         localizer={localizer}
-        onRowExpand={this.props.onRowExpand}
+        handleRowExpand={this.props.handleRowExpand}
         onDoubleClick={this.props.onDoubleClickEvent}
         onSelectSlot={this.props.onSelectSlot}
         longPressThreshold={this.props.longPressThreshold}
@@ -126,9 +125,9 @@ class TimeGridHeader extends React.Component {
     } = this.props;
 
     let style = {};
-    if (isOverflowing) {
-      style[rtl ? 'marginLeft' : 'marginRight'] = `${scrollbarSize()}px`;
-    }
+    // if (isOverflowing) {
+    //   style[rtl ? 'marginLeft' : 'marginRight'] = `${scrollbarSize()}px`;
+    // }
 
     const groupedEvents = resources.groupEvents(events);
 
@@ -180,7 +179,7 @@ class TimeGridHeader extends React.Component {
               accessors={accessors}
               getters={getters}
               localizer={localizer}
-              onRowExpand={this.props.onRowExpand}
+              handleRowExpand={this.props.handleRowExpand}
               onDoubleClick={this.props.onDoubleClickEvent}
               onSelectSlot={this.props.onSelectSlot}
               longPressThreshold={this.props.longPressThreshold}
@@ -208,7 +207,7 @@ TimeGridHeader.propTypes = {
   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
   longPressThreshold: PropTypes.number,
   onSelectSlot: PropTypes.func,
-  onRowExpand: PropTypes.func,
+  handleRowExpand: PropTypes.func,
   onDoubleClickEvent: PropTypes.func,
   onDrillDown: PropTypes.func,
   getDrilldownView: PropTypes.func.isRequired,

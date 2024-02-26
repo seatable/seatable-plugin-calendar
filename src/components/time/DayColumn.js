@@ -47,7 +47,6 @@ class DayColumn extends React.Component {
       rtl,
       isNow,
       resource,
-      accessors,
       localizer,
       getters: { dayProp, ...getters },
       components: { eventContainerWrapper: EventContainer, ...components }
@@ -83,19 +82,9 @@ class DayColumn extends React.Component {
             components={components}
           />
         ))}
-        <EventContainer
-          localizer={localizer}
-          resource={resource}
-          accessors={accessors}
-          getters={getters}
-          components={components}
-          slotMetrics={slotMetrics}
-        >
-          <div className={classnames('rbc-events-container', { 'rtl': rtl })}>
-            {this.renderEvents()}
-          </div>
-        </EventContainer>
-
+        <div className={classnames('rbc-events-container', { 'rtl': rtl })}>
+          {this.renderEvents()}
+        </div>
         {selecting && (
           <div className='rbc-slot-selection' style={{ top, height }}>
             <span>{localizer.format(selectDates, 'selectRangeFormat')}</span>
@@ -139,8 +128,13 @@ class DayColumn extends React.Component {
       const startsBeforeDay = slotMetrics.startsBeforeDay(start);
       const startsAfterDay = slotMetrics.startsAfterDay(end);
 
+      const  dateOfSecondDayStart = new Date(start).setHours(24, 0, 0, 0);
+      const  dateOfEnd = new Date(end).setHours(0, 0, 0, 0);
+
+      const continueToAnotherDayEnd = dateOfEnd > dateOfSecondDayStart;
+
       if (startsBeforeDay) format = 'eventTimeRangeEndFormat';
-      else if (startsAfterDay) format = 'eventTimeRangeStartFormat';
+      else if (startsAfterDay || continueToAnotherDayEnd) format = 'eventTimeRangeStartFormat';
 
       if (startsBeforeDay && startsAfterDay) label = intl.get('.rbc.messages.allDay').d(messages.allDay);
       else label = localizer.format({ start, end }, format);

@@ -179,8 +179,9 @@ class App extends React.Component {
     });
   };
 
-  handleRowExpand = (row, table) => {
+  handleRowExpand = (rowId, table) => {
     if (window.app.expandRow) {
+      const row = this.state.rows.find(row => row._id === rowId);
       window.app.expandRow(row, table);
     }
   };

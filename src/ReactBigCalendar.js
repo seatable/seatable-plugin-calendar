@@ -178,11 +178,11 @@ class ReactBigCalendar extends React.Component {
     return date;
   };
 
-  handleRowExpand = (row) => {
-    this.props.handleRowExpand(row, this.props.activeTable);
+  handleRowExpand = (rowId) => {
+    this.props.handleRowExpand(rowId, this.props.activeTable);
   };
 
-  onSelectEvent = ({ row }) => this.handleRowExpand(row);
+  onSelectEvent = (rowId) => this.handleRowExpand(rowId);
 
   onInsertRow = (rowData) => {
     let { activeTable, activeView, onInsertRow, rows } = this.props;

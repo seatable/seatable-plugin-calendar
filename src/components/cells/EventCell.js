@@ -51,10 +51,6 @@ function EventCell(props) {
     };
   };
 
-  const handleRowExpanding = (data) => {
-    props.handleRowExpand(data.row);
-  };
-
   let title = <CellTitle event={event} />;
   let tooltip = accessors.tooltip(event);
   let end = accessors.end(event);
@@ -121,7 +117,7 @@ function EventCell(props) {
           'rbc-event-continues-prior': continuesPrior,
           'rbc-event-continues-after': continuesAfter
         })}
-        onClick={e => handleRowExpanding(event, e)}
+        onClick={() => props.handleRowExpand(event.row._id)}
         onDoubleClick={e => onDoubleClick && onDoubleClick(event, e)}
       >
         {typeof children === 'function' ? children(content) : content}

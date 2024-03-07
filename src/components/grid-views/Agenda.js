@@ -84,8 +84,10 @@ class Agenda extends React.Component {
 
   renderDay = (day, events, dayKey) => {
     let {
-      activeTable, collaborators,
-      formulaRows, columns,
+      activeTable,
+      collaborators,
+      formulaRows,
+      columns,
       settings,
       selected,
       getters,
@@ -172,8 +174,10 @@ class Agenda extends React.Component {
 
   renderDayForMobile = (day, events, dayKey) => {
     let {
-      activeTable, collaborators,
-      formulaRows, columns,
+      activeTable,
+      collaborators,
+      formulaRows,
+      columns,
       settings,
       selected,
       getters,
@@ -354,7 +358,7 @@ Agenda.propTypes = {
   isMobile: PropTypes.bool,
   activeTable: PropTypes.object,
   collaborators: PropTypes.array,
-  formulaRows: PropTypes.array,
+  formulaRows: PropTypes.object,
   columns: PropTypes.array,
   settings: PropTypes.object
 };

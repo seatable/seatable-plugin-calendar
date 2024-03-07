@@ -220,18 +220,20 @@ class App extends React.Component {
       // `push` the 1st day of each month, in the native Date object
       exportedMonths.push(dayjs(startMonth).add(i, 'months').date(1).toDate());
     }
-    const prtContent = document.getElementById('exported-months');
 
-    if (!document.head?.innerHTML || !prtContent?.innerHTML) {
-      toaster.danger(intl.get('Exporting_failed'));
-      exportedMonths.length = 0;
-      return;
-    }
-    
     this.setState({
       isExporting: true,
       exportedMonths: exportedMonths
     }, () => {
+      const prtContent = document.getElementById('exported-months');
+      if (!prtContent?.innerHTML) {
+        toaster.danger(intl.get('Exporting_failed'));
+        this.setState({
+          isExporting: false,
+          exportedMonths: [],
+        });
+        return;
+      }
       const iframeID = 'iframe-for-print';
       const printIframe = document.getElementById(iframeID) || document.body.appendChild(document.createElement('iframe'));
       const printWindow = printIframe.contentWindow;

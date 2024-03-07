@@ -21,7 +21,7 @@ class CellTitle extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.calculateCollaboratorData(nextProps);
   }
 

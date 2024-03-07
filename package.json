@@ -1,6 +1,6 @@
 {
   "name": "seatable-plugin-calendar",
-  "version": "4.3.9",
+  "version": "4.3.10",
   "private": true,
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",

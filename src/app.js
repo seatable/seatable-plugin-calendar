@@ -220,43 +220,45 @@ class App extends React.Component {
       // `push` the 1st day of each month, in the native Date object
       exportedMonths.push(dayjs(startMonth).add(i, 'months').date(1).toDate());
     }
-    const prtContent = document.getElementById('exported-months');
-
-    if (!document.head?.innerHTML || !prtContent?.innerHTML) {
-      toaster.danger(intl.get('Exporting_failed'));
-      exportedMonths.length = 0;
-      return;
-    }
+    
     
     this.setState({
       isExporting: true,
       exportedMonths: exportedMonths
     }, () => {
-      const iframeID = 'iframe-for-print';
-      const printIframe = document.getElementById(iframeID) || document.body.appendChild(document.createElement('iframe'));
-      const printWindow = printIframe.contentWindow;
-      const removeIframe = function () {
-        printWindow.document.open();
-        printWindow.document.close();
-      };
-      printIframe.id = iframeID;
-      printIframe.className = 'invisible w-0 h-0 border-0 position-fixed fixed-bottom';
-      printWindow.document.open();
-      printWindow.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>' + prtContent.innerHTML + '</body></html>');
-      printWindow.document.title = `${intl.get('Calendar')}–${start}${start === end ? '' : '–' + end}.pdf`;
-      printWindow.document.close();
-      printWindow.onload = function () {
-        printWindow.focus();
-        printWindow.print();
-      };
-      printWindow.onafterprint = removeIframe;
-      setTimeout(() => {
+      const prtContent = document.getElementById('exported-months');
+      if (!prtContent?.innerHTML) {
+        toaster.danger(intl.get('Exporting_failed'));
         this.setState({
           isExporting: false,
-          exportedMonths: []
         });
-        this.toggleTimeRangeDialog();
-      });
+      } else  {
+        const iframeID = 'iframe-for-print';
+        const printIframe = document.getElementById(iframeID) || document.body.appendChild(document.createElement('iframe'));
+        const printWindow = printIframe.contentWindow;
+        const removeIframe = function () {
+          printWindow.document.open();
+          printWindow.document.close();
+        };
+        printIframe.id = iframeID;
+        printIframe.className = 'invisible w-0 h-0 border-0 position-fixed fixed-bottom';
+        printWindow.document.open();
+        printWindow.document.write('<!DOCTYPE html><html><head>' + document.head.innerHTML + '</head><body>' + prtContent.innerHTML + '</body></html>');
+        printWindow.document.title = `${intl.get('Calendar')}–${start}${start === end ? '' : '–' + end}.pdf`;
+        printWindow.document.close();
+        printWindow.onload = function () {
+          printWindow.focus();
+          printWindow.print();
+        };
+        printWindow.onafterprint = removeIframe;
+        setTimeout(() => {
+          this.setState({
+            isExporting: false,
+            exportedMonths: []
+          });
+          this.toggleTimeRangeDialog();
+        });
+      }
     });
   };
 

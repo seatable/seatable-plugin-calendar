@@ -466,6 +466,8 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-month-view-exported .rbc-month-rows-6weeks .rbc-month-row .rbc-row-segment .rbc-event-content {
   height: 13px;
+  line-height: 13px;
+  font-size: 0.75rem;
 }
 
 @media print {

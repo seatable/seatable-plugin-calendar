@@ -45,7 +45,9 @@ class TaskList {
 
   static async execute() {
     await this.init();
-    ReactDOM.render(<App isDevelopment showDialog key={(new Date()).getTime()} />, document.getElementById('root'));
+    const ele = document.getElementById('root');
+    if (!ele) return null;
+    ReactDOM.render(<App isDevelopment showDialog key={(new Date()).getTime()} />, ele);
   }
 }
 

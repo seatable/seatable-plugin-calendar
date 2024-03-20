@@ -472,16 +472,15 @@ button.rbc-input::-moz-focus-inner {
 }
 
 @media print {
+
+  body {
+    height: auto;
+  }
+
   .rbc-month-view-exported {
     font-family: Arial, Helvetica, sans-serif, fangsong;
-     /* for old browsers */
-    page-break-inside: avoid;
-    /* for old browsers */
-    page-break-after: always; 
-    break-inside: avoid;
-    break-after: page;
   }
-  
+
   .rbc-month-view-exported .rbc-event {
     -webkit-print-color-adjust: exact;
     -moz-print-color-adjust: exact;

@@ -34,6 +34,7 @@ class Agenda extends React.Component {
   render() {
     let { length, date, events, accessors, localizer, isMobile } = this.props;
     let { messages } = localizer;
+    date = dates.startOf(date, 'day');
     let end = dates.add(date, length, 'day');
     let range = dates.range(date, end, 'day');
 

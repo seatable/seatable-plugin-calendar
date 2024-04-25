@@ -19,6 +19,7 @@ import icon from './image/icon.png';
 import './locale';
 
 import './css/plugin-layout.css';
+import { handleEnterKeyDown } from './utils/accessibility';
 
 /**
  * the data structure of settings
@@ -266,14 +267,29 @@ class App extends React.Component {
     return (
       <div className="d-flex align-items-center plugin-calendar-operators">
         {!this.isMobile &&
-          <span className="mr-1 op-icon" onClick={this.toggleTimeRangeDialog}>
+          <span
+            className="mr-1 op-icon" 
+            onClick={this.toggleTimeRangeDialog}
+            onKeyDown={handleEnterKeyDown(this.toggleTimeRangeDialog)}
+            tabIndex={0}
+          >
             <i className="dtable-font dtable-icon-print"></i>
           </span>
         }
-        <span className="mr-1 op-icon" onClick={this.toggleViewSettingPanel}>
+        <span 
+          className="mr-1 op-icon" 
+          onClick={this.toggleViewSettingPanel}
+          onKeyDown={handleEnterKeyDown(this.toggleViewSettingPanel)}
+          tabIndex={0}
+        >
           <i className="dtable-font dtable-icon-set-up"></i>
         </span>
-        <span className="dtable-font dtable-icon-x op-icon btn-close" onClick={this.onPluginToggle}></span>
+        <span 
+          className="dtable-font dtable-icon-x op-icon btn-close"
+          onClick={this.onPluginToggle}
+          onKeyDown={handleEnterKeyDown(this.onPluginToggle)}
+          tabIndex={0}
+        ></span>
       </div>
     );
   };

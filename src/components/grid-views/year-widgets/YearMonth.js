@@ -17,7 +17,8 @@ class YearMonth extends React.PureComponent {
   renderMonthHeader() {
     let { localizer } = this.props;
     return (
-      <div className='rbc-year-month-header'>
+      <div className='rbc-year-month-header' 
+      >
         <Header
           label={localizer.format(this.monthDate, 'monthFormat')}
         />
@@ -28,7 +29,7 @@ class YearMonth extends React.PureComponent {
   renderWeekDayHeaders(row) {
     let { localizer } = this.props;
     return row.map((day, idx) => (
-      <div key={'header_' + idx} className='rbc-header'>
+      <div key={'header_' + idx} className='rbc-header' >
         <Header
           label={localizer.format(day, 'yearMonthWeekdayFormat')}
         />
@@ -57,6 +58,8 @@ class YearMonth extends React.PureComponent {
                 key={`rbc-year-day-${displayDate}`}
                 isOffRange={isOffRange}
                 isCurrentDay={isCurrentDay}
+                currentDate={now}
+                labelDate={date}
                 hasEvents={hasEvents}
                 localizer={this.props.localizer}
                 label={day}

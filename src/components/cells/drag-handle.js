@@ -27,6 +27,7 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
       style={{ ...resizeTransformPosition, ...{
         touchAction: 'none'
       } }}
+      tabIndex={-1}
     >
     </div>
   );

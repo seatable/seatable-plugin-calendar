@@ -42,8 +42,8 @@ class TimeRangeDialog extends Component {
               readOnly={true}
               value={value && value[0] && value[1] ? `${value[0].format(DATE_FORMAT.YEAR_MONTH)} - ${value[1].format(DATE_FORMAT.YEAR_MONTH)}` : ''}
             />
-          );}
-        }
+          );
+        }}
       </Picker>
     );
   };

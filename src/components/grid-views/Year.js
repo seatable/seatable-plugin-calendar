@@ -246,7 +246,8 @@ class YearView extends React.Component {
       offsetBottom = (this.renderMonthStartDates.length - overscanEndIndex) * YEAR_MONTHS_ROW_HEIGHT;
     }
     return (
-      <div className={classnames('rbc-year-view', className, isMobile && 'mobile')} onScroll={this.onYearViewScroll} ref={ref => this.rbcYearView = ref} >
+      <div className={classnames('rbc-year-view', className, isMobile && 'mobile')} onScroll={this.onYearViewScroll} ref={ref => this.rbcYearView = ref} 
+      >
         <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom }}>
           {renderMonthsRows.map(monthStartDate => {
             const year = monthStartDate.getFullYear();

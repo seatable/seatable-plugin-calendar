@@ -7,6 +7,7 @@ import RenameViewDialog from './dialog/rename-view-dialog';
 import DropdownMenu from './dropdownmenu';
 import intl from 'react-intl-universal';
 import '../locale';
+import { handleEnterKeyDown, handleShiftKeyDown } from '../utils/accessibility';
 
 const SCROLL_TYPE = {
   PREV: 'prev',
@@ -161,12 +162,20 @@ class ViewTab extends React.Component {
           ref={this.props.setViewItem(index)}
           onClick={this.onSelectView}
         >
-          <div className="view-name">{name}</div>
+          <div 
+            className="view-name"
+            onKeyDown={handleEnterKeyDown(this.onSelectView)}
+            tabIndex={0}
+          >
+            {name}
+          </div>
           {isActiveView &&
             <div
               className="btn-view-dropdown d-flex align-items-center justify-content-center"
               ref={ref => this.btnViewDropdown = ref}
               onClick={this.onDropdownToggle}
+              onKeyDown={handleEnterKeyDown(this.onDropdownToggle)}
+              tabIndex={0}
             >
               <i className="dtable-font dtable-icon-drop-down"></i>
               {isShowViewDropdown &&
@@ -175,12 +184,20 @@ class ViewTab extends React.Component {
                     dropdownMenuPosition={dropdownMenuPosition}
                     options={
                       <React.Fragment>
-                        <button className="dropdown-item" onClick={this.props.onRenameViewToggle}>
+                        <button className="dropdown-item" 
+                          onClick={this.props.onRenameViewToggle}
+                          onKeyDown={handleEnterKeyDown(this.props.onRenameViewToggle)}
+                          tabIndex={0}
+                        >
                           <i className="item-icon dtable-font dtable-icon-rename"></i>
                           <span className="item-text">{intl.get('Rename_View')}</span>
                         </button>
                         {canDelete &&
-                        <button className="dropdown-item" onClick={this.onDeleteView}>
+                        <button className="dropdown-item"
+                          onClick={this.onDeleteView}
+                          onKeyDown={handleEnterKeyDown(this.onDeleteView)}
+                          tabIndex={0}
+                        >
                           <i className="item-icon dtable-font dtable-icon-delete"></i>
                           <span className="item-text">{intl.get('Delete_View')}</span>
                         </button>
@@ -372,8 +389,12 @@ class ViewsTabs extends React.Component {
             </span>
           </div>
         }
-        <div className="btn-add-view d-flex align-items-center" onClick={this.onNewViewToggle}>
-          <i className="dtable-font dtable-icon-add-table"></i>
+        <div 
+          className="btn-add-view d-flex align-items-center" 
+          onClick={this.onNewViewToggle}
+          onKeyDown={handleEnterKeyDown(this.onNewViewToggle)}
+        >
+          <i className="dtable-font dtable-icon-add-table" tabIndex={0}></i>
         </div>
         {isShowNewViewDialog &&
           <NewViewDialog

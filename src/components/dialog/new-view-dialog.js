@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Alert, Button } from 'reactstrap';
 import intl from 'react-intl-universal';
 import '../../locale';
+import { handleEnterKeyDown } from '../../utils/accessibility';
 
 const propTypes = {
   onNewViewConfirm: PropTypes.func,
@@ -19,22 +20,22 @@ class NewViewDialog extends React.Component {
     };
   }
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.onHotKey);
-  }
+  // componentDidMount() {
+  //   document.addEventListener('keydown', this.onHotKey);
+  // }
 
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.onHotKey);
-  }
+  // componentWillUnmount() {
+  //   document.removeEventListener('keydown', this.onHotKey);
+  // }
 
-  onHotKey = (e) => {
-    // Enter
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      this.handleSubmit();
-      return;
-    }
-  };
+  // onHotKey = (e) => {
+  //   // Enter
+  //   if (e.keyCode === 13 && document.activeElement === this.newInput) {
+  //     e.preventDefault();
+  //     this.handleSubmit();
+  //     return;
+  //   }
+  // };
 
   handleChange = (event) => {
     let value = event.target.value;
@@ -48,7 +49,7 @@ class NewViewDialog extends React.Component {
     this.props.onNewViewCancel();
   };
 
-  handleSubmit = () => {
+  handleSubmit = () => {    
     let { viewName } = this.state;
     viewName = viewName.trim();
     if (!viewName) {
@@ -67,7 +68,14 @@ class NewViewDialog extends React.Component {
           <Form>
             <FormGroup>
               <Label for="viewName">{intl.get('Name')}</Label>
-              <Input id="viewName" value={this.state.viewName} innerRef={input => {this.newInput = input;}} onChange={this.handleChange} autoFocus={true} />
+              <Input 
+                id="viewName"
+                value={this.state.viewName} 
+                innerRef={input => {this.newInput = input;}}
+                onChange={this.handleChange}
+                onKeyDown={handleEnterKeyDown(this.handleSubmit)}
+                autoFocus={true}
+              />
               <Input style={{ display: 'none' }} />
             </FormGroup>
           </Form>

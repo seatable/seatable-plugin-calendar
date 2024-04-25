@@ -7,6 +7,7 @@ import { isMobile } from '../../utils/common';
 import { useDraggable } from '@dnd-kit/core';
 import { DragHandle } from './drag-handle';
 import { v4 as uuidv4 } from 'uuid';
+import { handleEnterKeyDown } from '../../utils/accessibility';
 
 function EventCell(props) {
   
@@ -73,6 +74,7 @@ function EventCell(props) {
         style={{
           touchAction: 'none'
         }}
+        tabIndex={-1}
         title={tooltip || undefined}>
         {Event ? (
           <Event
@@ -94,8 +96,14 @@ function EventCell(props) {
   const eventCrossWeeksStartHandler = (continuesAfter && !continuesPrior);
   const eventCrossWeeksEndHandler = (continuesPrior && !continuesAfter);
 
+  const onRowExpand = () => {    
+    props.handleRowExpand(event.row._id);
+  }; 
   return (
-    <div>
+    <div 
+      tabIndex={0}
+      onKeyDown={handleEnterKeyDown(onRowExpand)}
+    >
       {(normalEvent || eventCrossWeeksStartHandler) &&
         <DragHandle 
           continuesPrior={continuesPrior}
@@ -108,7 +116,7 @@ function EventCell(props) {
       <div
         ref={dndSetNodeRef}
         {...restProps}
-        tabIndex={0}
+        tabIndex={-1}
         style={{ ...userProps.style, ...style, ...getRbcEventStyle(), ...dndTransformPosition }}
         className={classnames('rbc-event', className, userProps.className, {
           'rbc-selected': selected,
@@ -117,7 +125,7 @@ function EventCell(props) {
           'rbc-event-continues-prior': continuesPrior,
           'rbc-event-continues-after': continuesAfter
         })}
-        onClick={() => props.handleRowExpand(event.row._id)}
+        onClick={onRowExpand}
         onDoubleClick={e => onDoubleClick && onDoubleClick(event, e)}
       >
         {typeof children === 'function' ? children(content) : content}

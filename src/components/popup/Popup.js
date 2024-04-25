@@ -5,6 +5,7 @@ import getScrollLeft from 'dom-helpers/scrollLeft';
 import intl from 'react-intl-universal';
 import EventCell from '../cells/EventCell';
 import * as dates from '../../utils/dates';
+import { handleEnterKeyDown } from '../../utils/accessibility';
 
 class Popup extends React.Component {
 
@@ -77,7 +78,12 @@ class Popup extends React.Component {
       >
         <div className='rbc-overlay-header'>
           {localizer.format(slotStart, 'dayHeaderFormat')}
-          <button className='close'><span aria-hidden="true" ref={ref => this.closeBtn = ref}>×</span></button>
+          <button 
+            className='close'            
+            onKeyDown={handleEnterKeyDown(this.props.onHidePopup)}
+          >
+            <span aria-hidden="true" ref={ref => this.closeBtn = ref}>×</span>
+          </button>
         </div>
         <div className="rbc-overlay-body" onScroll={this.handleScroll}>
           {events.length === 0 ? <span>{intl.get('There_are_no_records')}</span> : events.map((event, idx) => (

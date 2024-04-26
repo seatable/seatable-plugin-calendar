@@ -165,6 +165,7 @@ class ViewTab extends React.Component {
           <div 
             className="view-name"
             onKeyDown={handleEnterKeyDown(this.onSelectView)}
+            aria-selected={isActiveView}
             tabIndex={0}
           >
             {name}
@@ -176,6 +177,7 @@ class ViewTab extends React.Component {
               onClick={this.onDropdownToggle}
               onKeyDown={handleEnterKeyDown(this.onDropdownToggle)}
               aria-label={intl.get('Open_view_dropdown_options')}
+              aria-expanded={isShowViewDropdown}
               tabIndex={0}
             >
               <i className="dtable-font dtable-icon-drop-down"></i>

@@ -20,6 +20,7 @@ class Toolbar extends React.Component {
               onClick={this.navigate.bind(null, navigate.PREVIOUS)} 
               className={'rbc-tool-icon'}
               onKeyDown={handleEnterKeyDown(this.navigate.bind(null, navigate.PREVIOUS))}
+              aria-label={intl.get('Previous')}
               tabIndex={0}
             >
               <i className="dtable-font dtable-icon-left"></i>
@@ -29,6 +30,7 @@ class Toolbar extends React.Component {
               onClick={this.navigate.bind(null, navigate.NEXT)} 
               className={'rbc-tool-icon'}
               onKeyDown={handleEnterKeyDown(this.navigate.bind(null, navigate.NEXT))}
+              aria-label={intl.get('Next')}
               tabIndex={0}
             >
               <i className="dtable-font dtable-icon-right"></i>

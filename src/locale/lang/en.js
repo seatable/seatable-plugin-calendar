@@ -61,6 +61,13 @@ const en = {
   'First_day_of_the_year': 'First day of the year',
   'First_full_week_of_the_year': 'First full week of the year',
   'Exporting_failed': 'No Records within the selected date range.',
+  'Open_view_dropdown_options': 'Open view dropdown menu options',
+  'Dropdown_Menu': 'Dropdown Menu',
+  'Add_new_view': 'Add new view',
+  'Choose_time_range': 'Choose time range',
+  'Close_plugin': 'Close plugin', 
+  'Previous': 'Back',
+  'Next': 'Next',
 };
 
 export default en;

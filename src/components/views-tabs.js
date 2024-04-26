@@ -7,7 +7,7 @@ import RenameViewDialog from './dialog/rename-view-dialog';
 import DropdownMenu from './dropdownmenu';
 import intl from 'react-intl-universal';
 import '../locale';
-import { handleEnterKeyDown, handleShiftKeyDown } from '../utils/accessibility';
+import { handleEnterKeyDown } from '../utils/accessibility';
 
 const SCROLL_TYPE = {
   PREV: 'prev',
@@ -175,6 +175,8 @@ class ViewTab extends React.Component {
               ref={ref => this.btnViewDropdown = ref}
               onClick={this.onDropdownToggle}
               onKeyDown={handleEnterKeyDown(this.onDropdownToggle)}
+              aria-label={intl.get('Open_view_dropdown_options')}
+              role={intl.get('Dropdown_Menu')}
               tabIndex={0}
             >
               <i className="dtable-font dtable-icon-drop-down"></i>
@@ -394,7 +396,7 @@ class ViewsTabs extends React.Component {
           onClick={this.onNewViewToggle}
           onKeyDown={handleEnterKeyDown(this.onNewViewToggle)}
         >
-          <i className="dtable-font dtable-icon-add-table" tabIndex={0}></i>
+          <i className="dtable-font dtable-icon-add-table" aria-label={intl.get('Add_new_view')} tabIndex={0}></i>
         </div>
         {isShowNewViewDialog &&
           <NewViewDialog

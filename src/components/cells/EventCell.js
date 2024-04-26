@@ -131,7 +131,7 @@ function EventCell(props) {
         {typeof children === 'function' ? children(content) : content}
       </div>
       {
-        (normalEvent || eventCrossWeeksEndHandler) && 
+        (normalEvent || eventCrossWeeksEndHandler) &&
         <DragHandle 
           continuesPrior={continuesPrior}
           continuesAfter={continuesAfter}

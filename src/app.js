@@ -271,15 +271,17 @@ class App extends React.Component {
             className="mr-1 op-icon" 
             onClick={this.toggleTimeRangeDialog}
             onKeyDown={handleEnterKeyDown(this.toggleTimeRangeDialog)}
+            aria-label={intl.get('Choose_time_range')}
             tabIndex={0}
           >
-            <i className="dtable-font dtable-icon-print"></i>
+            <i className="dtable-font dtable-icon-print" ></i>
           </span>
         }
         <span 
           className="mr-1 op-icon" 
           onClick={this.toggleViewSettingPanel}
           onKeyDown={handleEnterKeyDown(this.toggleViewSettingPanel)}
+          aria-label={intl.get('Settings')}
           tabIndex={0}
         >
           <i className="dtable-font dtable-icon-set-up"></i>
@@ -288,6 +290,7 @@ class App extends React.Component {
           className="dtable-font dtable-icon-x op-icon btn-close"
           onClick={this.onPluginToggle}
           onKeyDown={handleEnterKeyDown(this.onPluginToggle)}
+          aria-label={intl.get('Close_plugin')}
           tabIndex={0}
         ></span>
       </div>

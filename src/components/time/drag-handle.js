@@ -74,6 +74,7 @@ function TimeGridEventDragHandle({ direction, resizeEventHeight, resizeEventTop,
     {...attributes}
     ref={setNodeRef}
     onMouseDown={handleMouseDown}
+    tabIndex={-1}
   ></div>;
 }
 

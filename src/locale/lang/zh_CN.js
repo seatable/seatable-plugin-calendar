@@ -68,6 +68,7 @@ const zh_CN = {
   'Close_plugin': '关闭插件', 
   'Previous': '上一页',
   'Next': '下一页',
+  'Drag_resize_handle': '拖拽按钮'
 };
 
 export default zh_CN;

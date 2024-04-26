@@ -68,6 +68,7 @@ const en = {
   'Close_plugin': 'Close plugin', 
   'Previous': 'Back',
   'Next': 'Next',
+  'Drag_resize_handle': 'Drag resize handler',
 };
 
 export default en;

@@ -29,7 +29,7 @@ export function DragHandle({ display, rowId, data, resizeDirection, continuesPri
         touchAction: 'none'
       } }}
       tabIndex={-1}
-      aria-label={intl.get('Drag_resize_handle')}
+      aria-hidden="true"
     >
     </div>
   );

@@ -60,5 +60,13 @@
   "Start_the_first_week_of_the_year_on": "Empezar la primera semana del año en",
   "First_day_of_the_year": "Primer día del año",
   "First_full_week_of_the_year": "Primera semana completa del año",
-  "Exporting_failed": "No Records within the selected date range."
+  "Exporting_failed": "No hay registros en el intervalo de fechas seleccionado.",
+  "Open_view_dropdown_options": "Abrir opciones del menú desplegable de vista",
+  "Dropdown_Menu": "Menú desplegable",
+  "Add_new_view": "Agregar nueva vista",
+  "Choose_time_range": "Elige rango de tiempo",
+  "Close_plugin": "Cerrar complemento",
+  "Previous": "Atrás",
+  "Next": "Siguiente",
+  "Drag_resize_handle": "Arrastre el controlador de cambio de tamaño"
 }

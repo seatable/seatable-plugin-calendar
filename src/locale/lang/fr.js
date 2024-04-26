@@ -61,6 +61,14 @@ const fr = {
   'First_day_of_the_year': '1er jour de l\'année',
   'First_full_week_of_the_year': '1ère semaine complète de l\'année',
   'Exporting_failed': 'Aucun événement dans la période sélectionnée.',
+  'Open_view_dropdown_options': 'Ouvrir les options du menu déroulant de la vue',
+  'Dropdown_Menu': 'Menu déroulant',
+  'Add_new_view': 'Ajouter une nouvelle vue',
+  'Choose_time_range': 'Choisissez une plage horaire',
+  'Close_plugin': 'Fermer le plugin',
+  'Previous': 'Revenir',
+  'Next': 'Avancer',
+  'Drag_resize_handle': 'Gestionnaire de redimensionnement par glisser-déposer',
 };
 
 export default fr;

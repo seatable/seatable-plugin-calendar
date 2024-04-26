@@ -60,7 +60,15 @@ const pt = {
   'Start_the_first_week_of_the_year_on': 'Comece a primeira semana do ano em',
   'First_day_of_the_year': 'Primeiro dia do ano',
   'First_full_week_of_the_year': 'Primeira semana completa do ano',
-  'Exporting_failed': 'No Records within the selected date range.',
+  'Exporting_failed': 'Nenhum registro no período selecionado',
+  'Open_view_dropdown_options': 'Abrir opções do menu suspenso de visualização',
+  'Dropdown_Menu': 'Menu suspenso',
+  'Add_new_view': 'Adicionar nova visualização',
+  'Choose_time_range': 'Escolha o intervalo de tempo',
+  'Close_plugin': 'Fechar plug-in',
+  'Previous': 'Voltar',
+  'Next': 'Próximo',
+  'Drag_resize_handle': 'Arraste o manipulador de redimensionamento',
 };
 
 export default pt;

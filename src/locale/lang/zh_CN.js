@@ -61,14 +61,14 @@ const zh_CN = {
   'First_day_of_the_year': '一年的第一天',
   'First_full_week_of_the_year': '一年的第一个完整周',
   'Exporting_failed': '当前选中日期范围内没有记录',
-  'Open_view_dropdown_options': '打开视图下拉菜单选项',
-  'Dropdown_Menu': '下拉菜单',
-  'Add_new_view': '添加新视图',
+  'Open_view_dropdown_options': '打开视图下拉选项菜单',
+  'Dropdown_Menu': '下拉选项菜单',
+  'Add_new_view': '新建视图',
   'Choose_time_range': '选择时间范围',
-  'Close_plugin': '关闭插件', 
-  'Previous': '上一页',
-  'Next': '下一页',
-  'Drag_resize_handle': '拖拽按钮'
+  'Close_plugin': '关闭插件',
+  'Previous': '返回',
+  'Next': '下一步',
+  'Drag_resize_handle': '拖拽按钮',
 };
 
 export default zh_CN;

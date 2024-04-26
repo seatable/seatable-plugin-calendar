@@ -2,7 +2,6 @@ import { useDraggable } from '@dnd-kit/core';
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import intl from 'react-intl-universal';
 export function DragHandle({ display, rowId, data, resizeDirection, continuesPrior, continuesAfter }) {
 
   const uniqueId = useRef(uuidv4());

@@ -307,6 +307,7 @@ class ReactBigCalendar extends React.Component {
 
   handleResizeDrop = () => {
     const { activeTable, modifyRow } = this.props;
+    if (!this.resizingUpdatedData) return;
     const { event, updatedData } = this.resizingUpdatedData;
     modifyRow(activeTable, event.row, updatedData);
     this.currentResizingEvt = null;

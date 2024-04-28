@@ -14,12 +14,12 @@ import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
 import { generatorViewId, getDtableUuid, isIOS, isMobile, isSafari } from './utils/common';
+import { handleEnterKeyDown } from './utils/accessibility';
 import View from './model/view';
 import icon from './image/icon.png';
 import './locale';
 
 import './css/plugin-layout.css';
-import { handleEnterKeyDown } from './utils/accessibility';
 
 /**
  * the data structure of settings
@@ -72,6 +72,24 @@ class App extends React.Component {
 
   componentDidMount() {
     this.initPluginDTableData();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { isViewSettingPanelOpen } = this.state;
+    const { isViewSettingPanelOpen: prevSetting } = prevState;    
+    // if (isViewSettingPanelOpen === prevSetting) return;
+  
+    const closeBtn = document.querySelector('#calendar-setting-close-btn');
+    const toggleBtn = document.querySelector('#calendar-setting-toggle-btn');
+
+    if (isViewSettingPanelOpen && !prevSetting) {
+      closeBtn && closeBtn.focus();
+    }
+
+    if (!isViewSettingPanelOpen && prevSetting) {
+      toggleBtn && toggleBtn.focus();
+    }
+    
   }
 
   componentWillUnmount() {
@@ -199,6 +217,7 @@ class App extends React.Component {
   };
 
   toggleViewSettingPanel = () => {
+    console.log(1);
     this.setState({ isViewSettingPanelOpen: !this.state.isViewSettingPanelOpen });
   };
 
@@ -279,6 +298,7 @@ class App extends React.Component {
         }
         <span 
           className="mr-1 op-icon" 
+          id='calendar-setting-toggle-btn'
           onClick={this.toggleViewSettingPanel}
           onKeyDown={handleEnterKeyDown(this.toggleViewSettingPanel)}
           aria-label={intl.get('Settings')}

@@ -44,6 +44,37 @@ class ViewTab extends React.Component {
     document.addEventListener('click', this.onHideViewDropdown);
   }
 
+  componentDidUpdate() {
+    if (this.handleArrowKeyDown) {
+      document.removeEventListener('keydown', this.handleArrowKeyDown);
+    }
+
+    const btns = document.querySelectorAll('.dropdown-item-btn');
+    const dropDownBtn = document.querySelector('.btn-view-dropdown');
+    if (!btns.length) return;
+    let currentIdx = -1;
+    this.handleArrowKeyDown = (e) => {
+      if (e.key === 'ArrowUp') {
+        currentIdx--;
+        if (currentIdx < 0) {
+          dropDownBtn.focus();
+          currentIdx = -1;
+        } else {
+          btns[currentIdx].focus();
+        }
+      } else if (e.key === 'ArrowDown') {
+        currentIdx++;
+        if (currentIdx >= btns.length) {
+          dropDownBtn.focus();
+          currentIdx = -1;
+        } else {
+          btns[currentIdx].focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', this.handleArrowKeyDown);
+  }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.onHideViewDropdown);
   }
@@ -187,7 +218,7 @@ class ViewTab extends React.Component {
                     dropdownMenuPosition={dropdownMenuPosition}
                     options={
                       <React.Fragment>
-                        <button className="dropdown-item" 
+                        <button className="dropdown-item dropdown-item-btn" 
                           onClick={this.props.onRenameViewToggle}
                           onKeyDown={handleEnterKeyDown(this.props.onRenameViewToggle)}
                           tabIndex={0}
@@ -196,7 +227,7 @@ class ViewTab extends React.Component {
                           <span className="item-text">{intl.get('Rename_View')}</span>
                         </button>
                         {canDelete &&
-                        <button className="dropdown-item"
+                        <button className="dropdown-item dropdown-item-btn"
                           onClick={this.onDeleteView}
                           onKeyDown={handleEnterKeyDown(this.onDeleteView)}
                           tabIndex={0}

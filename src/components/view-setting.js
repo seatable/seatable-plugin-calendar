@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { CellType, COLUMNS_ICON_CONFIG } from 'dtable-utils';
 import { FieldDisplaySetting, DTableSelect } from 'dtable-ui-component';
 import { CALENDAR_VIEWS, SETTING_KEY, SETTING_VALUE, TITLE_COLUMN_TYPES } from '../constants';
+import { handleEnterKeyDown } from '../utils/accessibility';
 import '../locale';
 
 import '../css/view-setting.css';
@@ -293,9 +294,15 @@ class ViewSetting extends React.Component {
       <div className="plugin-view-setting position-absolute d-flex flex-column mt-7" style={{ zIndex: 4 }} ref={ref => this.ViewSetting = ref}>
         <div className="setting-header-container d-flex justify-content-between align-items-center">
           <h3 className="h5 m-0">{intl.get('Settings')}</h3>
-          <button className="close op-icon" onClick={this.props.toggleViewSettingPanel}>
+          <div className="close op-icon " 
+            id='calendar-setting-close-btn'
+            onClick={this.props.toggleViewSettingPanel}
+            onKeyDown={handleEnterKeyDown(this.props.toggleViewSettingPanel)}
+            aria-label={intl.get('Cancel')}
+            tabIndex={0}
+          >
             <i className="dtable-font dtable-icon-x"></i>
-          </button>
+          </div>
         </div>
         <div className="setting-body o-auto">
           <div className="setting-list">

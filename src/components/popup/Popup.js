@@ -27,10 +27,16 @@ class Popup extends React.Component {
       this.setState({ topOffset, leftOffset });
     }
     document.addEventListener('click', this.onHidePopup, true);
+    this.currentActive = document.activeElement;
+    
+    const closeBtn = document.getElementById('calender-date-popup-close');
+    closeBtn && closeBtn.focus();
   }
 
   componentWillUnmount() {
     document.removeEventListener('click', this.onHidePopup, true);
+    this.currentActive.focus();
+    this.currentActive = null;
   }
 
   onHidePopup = (event) => {
@@ -78,11 +84,17 @@ class Popup extends React.Component {
       >
         <div className='rbc-overlay-header'>
           {localizer.format(slotStart, 'dayHeaderFormat')}
-          <button 
+          <button
             className='close'            
-            onKeyDown={handleEnterKeyDown(this.props.onHidePopup)}
+            
           >
-            <span aria-hidden="true" ref={ref => this.closeBtn = ref}>×</span>
+            <span 
+              onKeyDown={handleEnterKeyDown(this.props.onHidePopup)}
+              aria-label={intl.get('Close')}
+              id='calender-date-popup-close'
+              tabIndex={0} 
+              ref={ref => this.closeBtn = ref}
+            >×</span>
           </button>
         </div>
         <div className="rbc-overlay-body" onScroll={this.handleScroll}>

@@ -86,7 +86,7 @@ class Popup extends React.Component {
           {localizer.format(slotStart, 'dayHeaderFormat')}
           <button
             className='close'            
-            
+            tabIndex={-1}
           >
             <span 
               onKeyDown={handleEnterKeyDown(this.props.onHidePopup)}

@@ -90,7 +90,7 @@ class Popup extends React.Component {
           >
             <span 
               onKeyDown={handleEnterKeyDown(this.props.onHidePopup)}
-              aria-label={intl.get('Close')}
+              aria-label={intl.get('Cancel')}
               id='calender-date-popup-close'
               tabIndex={0} 
               ref={ref => this.closeBtn = ref}

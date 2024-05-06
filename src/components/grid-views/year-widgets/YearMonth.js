@@ -39,6 +39,7 @@ class YearMonth extends React.PureComponent {
 
   renderDays = (weeks, dayEventsMap, currentMonth, isCurrentMonth, dateOfToday) => {
     const now = new Date();
+    const firstDayOfTheYear = new Date(now.getFullYear(), 0, 1);
     return weeks.map(week => {
       return (
         <div className="rbc-row rbc-year-week" key={`rbc-year-week-${week[0] + ''}`}>
@@ -63,6 +64,8 @@ class YearMonth extends React.PureComponent {
                 hasEvents={hasEvents}
                 localizer={this.props.localizer}
                 label={day}
+                currentMonth={currentMonth}
+                firstDayOfTheYear={firstDayOfTheYear}
                 handleShowMore={this.handleShowMore.bind(this, date, dayEvents)}
               />
             );

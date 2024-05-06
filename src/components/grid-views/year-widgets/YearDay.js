@@ -17,15 +17,23 @@ class YearDay extends React.PureComponent {
   };
 
   render() {
-    const { isOffRange, isCurrentDay, hasEvents, label, labelDate, currentDate } = this.props;
-    const prevDate = new Date(currentDate);
-    prevDate.setDate(prevDate.getDate() - 1);
+    const { isOffRange, isCurrentDay, hasEvents, label, labelDate, firstDayOfTheYear } = this.props;
+   
+    let tabIndex = 0;
+    if (labelDate < firstDayOfTheYear) {
+      tabIndex = -1;
+    }
+
+    if (labelDate.getMonth() === firstDayOfTheYear.getMonth() && isOffRange) {
+      tabIndex = -1;
+    }
+    
     return (
       <div
         className="rbc-year-day-item"
         onClick={this.onEventsToggle}
         onKeyDown={handleEnterKeyDown(this.onEventsToggle)}
-        tabIndex={prevDate > labelDate ? -1 : 0}
+        tabIndex={tabIndex}
       >
         <div className="rbc-year-day-content">
           <div className={classnames('rbc-year-day', { 'rbc-off-range': isOffRange, 'rbc-current': isCurrentDay })} >{label}</div>
@@ -44,6 +52,8 @@ YearDay.propTypes = {
   label: PropTypes.number,
   labelDate: PropTypes.object,
   currentDate: PropTypes.object,
+  firstDayOfTheYear: PropTypes.object,
+  currentMonth: PropTypes.string,
 };
 
 export default YearDay;

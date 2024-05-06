@@ -217,7 +217,6 @@ class App extends React.Component {
   };
 
   toggleViewSettingPanel = () => {
-    console.log(1);
     this.setState({ isViewSettingPanelOpen: !this.state.isViewSettingPanelOpen });
   };
 

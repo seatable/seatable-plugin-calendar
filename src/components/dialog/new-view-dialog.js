@@ -32,7 +32,7 @@ class NewViewDialog extends React.Component {
     this.props.onNewViewCancel();
   };
 
-  handleSubmit = () => {    
+  handleSubmit = () => {
     let { viewName } = this.state;
     viewName = viewName.trim();
     if (!viewName) {
@@ -51,10 +51,12 @@ class NewViewDialog extends React.Component {
           <Form>
             <FormGroup>
               <Label for="viewName">{intl.get('Name')}</Label>
-              <Input 
+              <Input
                 id="viewName"
-                value={this.state.viewName} 
-                innerRef={input => {this.newInput = input;}}
+                value={this.state.viewName}
+                innerRef={input => {
+                  this.newInput = input;
+                }}
                 onChange={this.handleChange}
                 onKeyDown={handleEnterKeyDown(this.handleSubmit)}
                 autoFocus={true}

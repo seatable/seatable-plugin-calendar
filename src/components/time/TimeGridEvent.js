@@ -94,7 +94,7 @@ function TimeGridEvent(props) {
     id: uniqueId.current + '-dnd',
     data: { ...props, type: 'dnd', uuid: uniqueId.current },
   });
-  
+
   const dndTransformPosition = dndTransform ? {
     transform: `translate(${dndTransform.x}px, ${dndTransform.y}px)`,
     // rise zIndex after drag start
@@ -107,7 +107,9 @@ function TimeGridEvent(props) {
     }
   }
 
-  let title = <CellTitle event={event} changeTitle={(title) => {changeTitle(title, label);}} />;
+  let title = <CellTitle event={event} changeTitle={(title) => {
+    changeTitle(title, label);
+  }} />;
   let tooltip = accessors.tooltip(event);
   let end = accessors.end(event);
   let start = accessors.start(event);
@@ -121,7 +123,7 @@ function TimeGridEvent(props) {
       className='rbc-event-label'
       {...dndListeners}
       {...dndAttributes}
-      tabIndex={-1} 
+      tabIndex={-1}
     >
       <span>
         {label}
@@ -130,7 +132,7 @@ function TimeGridEvent(props) {
     <div key='2'
       className={classnames('rbc-event-content', 'rbc-event-content-timeslot', { 'd-flex align-items-center text-nowrap': eventInSingleLine })}
       {...dndListeners}
-      {...dndAttributes} 
+      {...dndAttributes}
       tabIndex={-1}
     >
       {Event ? <Event event={event} title={title} /> : title}
@@ -166,16 +168,16 @@ function TimeGridEvent(props) {
         aria-label={tooltip}
         tabIndex={0}
       >
-        <TimeGridEventDragHandle 
+        <TimeGridEventDragHandle
           direction="top"
           resizeEventTop={resizeEventTop}
-          resizeEventHeight={resizeEventHeight}         
+          resizeEventHeight={resizeEventHeight}
           singleSlotHeight={singleSlotHeight}
           event={event}
         />
         {inner}
-        <TimeGridEventDragHandle 
-          direction="bottom" 
+        <TimeGridEventDragHandle
+          direction="bottom"
           resizeEventTop={resizeEventTop}
           resizeEventHeight={resizeEventHeight}
           singleSlotHeight={singleSlotHeight}

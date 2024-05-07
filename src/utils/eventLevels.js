@@ -21,7 +21,7 @@ export function eventSegments(event, range, accessors) {
   if (dates.eq(end, event.end) && !dates.eq(last, event.end)) {
     span += 1;
   }
-  
+
   span = Math.min(span, slots);
   span = Math.max(span, 1);
 
@@ -34,11 +34,11 @@ export function eventSegments(event, range, accessors) {
 }
 
 export function eventLevels(rowSegments, limit = Infinity) {
-  let i,
-    j,
-    seg,
-    levels = [],
-    extra = [];
+  let i;
+  let j;
+  let seg;
+  let levels = [];
+  let extra = [];
 
   for (i = 0; i < rowSegments.length; i++) {
     seg = rowSegments[i];

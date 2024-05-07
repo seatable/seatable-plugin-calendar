@@ -193,7 +193,7 @@ class ViewTab extends React.Component {
           ref={this.props.setViewItem(index)}
           onClick={this.onSelectView}
         >
-          <div 
+          <div
             className="view-name"
             onKeyDown={handleEnterKeyDown(this.onSelectView)}
             aria-selected={isActiveView}
@@ -218,7 +218,7 @@ class ViewTab extends React.Component {
                     dropdownMenuPosition={dropdownMenuPosition}
                     options={
                       <React.Fragment>
-                        <button className="dropdown-item dropdown-item-btn" 
+                        <button className="dropdown-item dropdown-item-btn"
                           onClick={this.props.onRenameViewToggle}
                           onKeyDown={handleEnterKeyDown(this.props.onRenameViewToggle)}
                           tabIndex={0}
@@ -423,8 +423,8 @@ class ViewsTabs extends React.Component {
             </span>
           </div>
         }
-        <div 
-          className="btn-add-view d-flex align-items-center" 
+        <div
+          className="btn-add-view d-flex align-items-center"
           onClick={this.onNewViewToggle}
           onKeyDown={handleEnterKeyDown(this.onNewViewToggle)}
         >

@@ -76,9 +76,9 @@ class App extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { isViewSettingPanelOpen } = this.state;
-    const { isViewSettingPanelOpen: prevSetting } = prevState;    
+    const { isViewSettingPanelOpen: prevSetting } = prevState;
     // if (isViewSettingPanelOpen === prevSetting) return;
-  
+
     const closeBtn = document.querySelector('#calendar-setting-close-btn');
     const toggleBtn = document.querySelector('#calendar-setting-toggle-btn');
 
@@ -89,7 +89,7 @@ class App extends React.Component {
     if (!isViewSettingPanelOpen && prevSetting) {
       toggleBtn && toggleBtn.focus();
     }
-    
+
   }
 
   componentWillUnmount() {
@@ -100,10 +100,16 @@ class App extends React.Component {
   async initPluginDTableData() {
     if (this.props.isDevelopment) {
       // local develop
-      window.dtableSDK.subscribe('dtable-connect', () => { this.onDTableConnect(); });
+      window.dtableSDK.subscribe('dtable-connect', () => {
+        this.onDTableConnect();
+      });
     }
-    this.unsubscribeLocalDtableChanged = window.dtableSDK.subscribe('local-dtable-changed', () => { this.onDTableChanged(); });
-    this.unsubscribeRemoteDtableChanged = window.dtableSDK.subscribe('remote-dtable-changed', () => { this.onDTableChanged(); });
+    this.unsubscribeLocalDtableChanged = window.dtableSDK.subscribe('local-dtable-changed', () => {
+      this.onDTableChanged();
+    });
+    this.unsubscribeRemoteDtableChanged = window.dtableSDK.subscribe('remote-dtable-changed', () => {
+      this.onDTableChanged();
+    });
     this.resetData(true);
   }
 
@@ -286,7 +292,7 @@ class App extends React.Component {
       <div className="d-flex align-items-center plugin-calendar-operators">
         {!this.isMobile &&
           <span
-            className="mr-1 op-icon" 
+            className="mr-1 op-icon"
             onClick={this.toggleTimeRangeDialog}
             onKeyDown={handleEnterKeyDown(this.toggleTimeRangeDialog)}
             aria-label={intl.get('Choose_time_range')}
@@ -295,8 +301,8 @@ class App extends React.Component {
             <i className="dtable-font dtable-icon-print" ></i>
           </span>
         }
-        <span 
-          className="mr-1 op-icon" 
+        <span
+          className="mr-1 op-icon"
           id='calendar-setting-toggle-btn'
           onClick={this.toggleViewSettingPanel}
           onKeyDown={handleEnterKeyDown(this.toggleViewSettingPanel)}
@@ -305,13 +311,14 @@ class App extends React.Component {
         >
           <i className="dtable-font dtable-icon-set-up"></i>
         </span>
-        <span 
+        <span
           className="dtable-font dtable-icon-x op-icon btn-close"
           onClick={this.onPluginToggle}
           onKeyDown={handleEnterKeyDown(this.onPluginToggle)}
           aria-label={intl.get('Close_plugin')}
           tabIndex={0}
-        ></span>
+        >
+        </span>
       </div>
     );
   };

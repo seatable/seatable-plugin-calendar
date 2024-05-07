@@ -227,9 +227,9 @@ class Selection {
     }
 
     const { clientX, clientY, pageX, pageY } = getEventCoordinates(e);
-    let node = this.container(),
-      collides,
-      offsetData;
+    let node = this.container();
+    let collides;
+    let offsetData;
 
     // Right clicks
     if (
@@ -387,9 +387,9 @@ class Selection {
     let w = Math.abs(x - pageX);
     let h = Math.abs(y - pageY);
 
-    let left = Math.min(pageX, x),
-      top = Math.min(pageY, y),
-      old = this.selecting;
+    let left = Math.min(pageX, x);
+    let top = Math.min(pageY, y);
+    let old = this.selecting;
 
     // Prevent emitting selectStart event until mouse is moved.
     // in Chrome on Windows, mouseMove event may be fired just after mouseDown event.
@@ -487,9 +487,9 @@ export function objectsCollide(nodeA, nodeB, tolerance = 0) {
 export function getBoundsForNode(node) {
   if (!node.getBoundingClientRect) return node;
 
-  let rect = node.getBoundingClientRect(),
-    left = rect.left + pageOffset('left'),
-    top = rect.top + pageOffset('top');
+  let rect = node.getBoundingClientRect();
+  let left = rect.left + pageOffset('left');
+  let top = rect.top + pageOffset('top');
 
   return {
     top,

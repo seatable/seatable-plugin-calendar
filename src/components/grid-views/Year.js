@@ -239,14 +239,16 @@ class YearView extends React.Component {
   render() {
     const { className, isMobile } = this.props;
     const { dayEventsMap, overlay, overscanStartIndex, overscanEndIndex, localizer } = this.state;
-    let renderMonthsRows = [], offsetTop = 0, offsetBottom = 0;
+    let renderMonthsRows = [];
+    let offsetTop = 0;
+    let offsetBottom = 0;
     if (this.renderMonthStartDates) {
       renderMonthsRows = this.renderMonthStartDates.slice(overscanStartIndex, overscanEndIndex);
       offsetTop = overscanStartIndex * YEAR_MONTHS_ROW_HEIGHT;
       offsetBottom = (this.renderMonthStartDates.length - overscanEndIndex) * YEAR_MONTHS_ROW_HEIGHT;
     }
     return (
-      <div className={classnames('rbc-year-view', className, isMobile && 'mobile')} onScroll={this.onYearViewScroll} ref={ref => this.rbcYearView = ref} 
+      <div className={classnames('rbc-year-view', className, isMobile && 'mobile')} onScroll={this.onYearViewScroll} ref={ref => this.rbcYearView = ref}
       >
         <div style={{ paddingTop: offsetTop, paddingBottom: offsetBottom }}>
           {renderMonthsRows.map(monthStartDate => {

@@ -13,8 +13,8 @@ export default function TimeSlotGroup(props) {
     group,
     getters,
     components: { timeSlotWrapper: Wrapper = BackgroundWrapper } = {}
-  } = props;  
-  
+  } = props;
+
   return (
     <div className='rbc-timeslot-group'>
       {group.map((value, idx) => {

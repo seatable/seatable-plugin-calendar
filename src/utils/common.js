@@ -196,7 +196,7 @@ export const generatorBase64Code = (keyLength = 4) => {
 };
 
 export const generatorViewId = (views) => {
-  let view_id, isUnique = false;
+  let view_id; let isUnique = false;
   while (!isUnique) {
     view_id = generatorBase64Code(4);
 

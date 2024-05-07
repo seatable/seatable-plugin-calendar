@@ -22,9 +22,9 @@ function TimeGridEventDragHandle({ direction, resizeEventHeight, resizeEventTop,
 
   function customRound(number) {
     if (number >= 0) {
-      return Math.ceil(number); 
+      return Math.ceil(number);
     } else {
-      return Math.floor(number); 
+      return Math.floor(number);
     }
   }
 
@@ -67,15 +67,17 @@ function TimeGridEventDragHandle({ direction, resizeEventHeight, resizeEventTop,
     top: 'event-drag-handle-top',
     bottom: 'event-drag-handle-bottom'
   };
-  const cls = directionClass[direction];
-  return <div 
-    className={`time-gird-event-drag-handle ${cls}`}
-    {...listeners}
-    {...attributes}
-    ref={setNodeRef}
-    onMouseDown={handleMouseDown}
-    tabIndex={-1}
-  ></div>;
+  return (
+    <div
+      className={`time-gird-event-drag-handle ${directionClass[direction]}`}
+      {...listeners}
+      {...attributes}
+      ref={setNodeRef}
+      onMouseDown={handleMouseDown}
+      tabIndex={-1}
+    >
+    </div>
+  );
 }
 
 TimeGridEventDragHandle.propTypes = {

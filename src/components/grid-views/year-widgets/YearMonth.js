@@ -17,11 +17,8 @@ class YearMonth extends React.PureComponent {
   renderMonthHeader() {
     let { localizer } = this.props;
     return (
-      <div className='rbc-year-month-header' 
-      >
-        <Header
-          label={localizer.format(this.monthDate, 'monthFormat')}
-        />
+      <div className='rbc-year-month-header'>
+        <Header label={localizer.format(this.monthDate, 'monthFormat')} />
       </div>
     );
   }

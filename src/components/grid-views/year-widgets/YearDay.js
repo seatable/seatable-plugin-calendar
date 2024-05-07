@@ -18,7 +18,7 @@ class YearDay extends React.PureComponent {
 
   render() {
     const { isOffRange, isCurrentDay, hasEvents, label, labelDate, firstDayOfTheYear } = this.props;
-   
+
     let tabIndex = 0;
     if (labelDate < firstDayOfTheYear) {
       tabIndex = -1;
@@ -27,7 +27,7 @@ class YearDay extends React.PureComponent {
     if (labelDate.getMonth() === firstDayOfTheYear.getMonth() && isOffRange) {
       tabIndex = -1;
     }
-    
+
     return (
       <div
         className="rbc-year-day-item"

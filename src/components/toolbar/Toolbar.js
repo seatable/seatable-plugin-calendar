@@ -16,8 +16,8 @@ class Toolbar extends React.Component {
       <div className='rbc-toolbar'>
         <div className='rbc-btn-group d-flex'>
           <div className='rbc-tool-icon-group d-flex'>
-            <span 
-              onClick={this.navigate.bind(null, navigate.PREVIOUS)} 
+            <span
+              onClick={this.navigate.bind(null, navigate.PREVIOUS)}
               className={'rbc-tool-icon'}
               onKeyDown={handleEnterKeyDown(this.navigate.bind(null, navigate.PREVIOUS))}
               aria-label={intl.get('Previous')}
@@ -26,8 +26,8 @@ class Toolbar extends React.Component {
               <i className="dtable-font dtable-icon-left"></i>
             </span>
             <span className="rbc-split-line"></span>
-            <span 
-              onClick={this.navigate.bind(null, navigate.NEXT)} 
+            <span
+              onClick={this.navigate.bind(null, navigate.NEXT)}
               className={'rbc-tool-icon'}
               onKeyDown={handleEnterKeyDown(this.navigate.bind(null, navigate.NEXT))}
               aria-label={intl.get('Next')}

@@ -8,7 +8,7 @@ import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import BackgroundCells from '../cells/BackgroundCells';
 
-const slotMetrics  = DateSlotMetrics.getSlotMetrics();
+const slotMetrics = DateSlotMetrics.getSlotMetrics();
 
 function DateContentRow(props) {
 
@@ -99,9 +99,9 @@ function DateContentRow(props) {
   } = props;
 
   if (renderForMeasure) return renderDummy();
-    
+
   let metrics = slotMetrics(props);
-  
+
   let { levels, extra } = metrics;
 
   // let WeekWrapper = components.weekWrapper;

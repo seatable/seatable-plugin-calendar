@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { handleEnterKeyDown } from '../../utils/accessibility';
 
 function EventCell(props) {
-  
+
   let {
     style,
     className,
@@ -25,7 +25,7 @@ function EventCell(props) {
     components: { event: Event },
     slotStart,
     slotEnd,
-    continuesPrior, 
+    continuesPrior,
     continuesAfter,
     handleRowExpand,
     ...restProps
@@ -37,7 +37,7 @@ function EventCell(props) {
     id: uniqueId.current + '-dnd',
     data: { ...props, type: 'dnd', uuid: uniqueId.current },
   });
-  
+
   const dndTransformPosition = dndTransform ? {
     transform: `translate3d(${dndTransform.x}px, ${dndTransform.y}px, 0)`,
   } : {};
@@ -66,10 +66,10 @@ function EventCell(props) {
   let userProps = getters.eventProp(event, start, end, selected);
 
   const content = (
-    <div>   
-      <div 
+    <div>
+      <div
         {...dndListeners}
-        {...dndAttributes} 
+        {...dndAttributes}
         className='rbc-event-content'
         style={{
           touchAction: 'none'
@@ -96,16 +96,16 @@ function EventCell(props) {
   const eventCrossWeeksStartHandler = (continuesAfter && !continuesPrior);
   const eventCrossWeeksEndHandler = (continuesPrior && !continuesAfter);
 
-  const onRowExpand = () => {    
+  const onRowExpand = () => {
     props.handleRowExpand(event.row._id);
-  }; 
+  };
   return (
-    <div 
+    <div
       tabIndex={0}
       onKeyDown={handleEnterKeyDown(onRowExpand)}
     >
       {(normalEvent || eventCrossWeeksStartHandler) &&
-        <DragHandle 
+        <DragHandle
           continuesPrior={continuesPrior}
           continuesAfter={continuesAfter}
           rowId={event.row._id}
@@ -132,7 +132,7 @@ function EventCell(props) {
       </div>
       {
         (normalEvent || eventCrossWeeksEndHandler) &&
-        <DragHandle 
+        <DragHandle
           continuesPrior={continuesPrior}
           continuesAfter={continuesAfter}
           rowId={event.row._id}

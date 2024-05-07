@@ -28,7 +28,7 @@ function BackgroundCells(props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectable]);
 
-  
+
   function _selectable() {
     let node = currentRef.current;
     let selector = (_selector.current = new Selection(props.container, {
@@ -71,7 +71,7 @@ function BackgroundCells(props) {
 
   function _selectSlot({ endIdx, startIdx, action, bounds, box }) {
     if (endIdx !== -1 && startIdx !== -1)
-      props.onSelectSlot &&  props.onSelectSlot({
+      props.onSelectSlot && props.onSelectSlot({
         start: startIdx,
         end: endIdx,
         action,
@@ -79,7 +79,7 @@ function BackgroundCells(props) {
         box
       });
   }
-  
+
   let {
     range,
     getNow,
@@ -88,7 +88,8 @@ function BackgroundCells(props) {
     components: { dateCellWrapper: Wrapper }
   } = props;
 
-  let startIdx, endIdx;
+  let startIdx;
+  let endIdx;
   let current = getNow();
 
   return (
@@ -99,8 +100,8 @@ function BackgroundCells(props) {
 
         return (
           <Wrapper key={index} value={date} range={range}>
-            <DateBlock 
-              blockStyle={style} 
+            <DateBlock
+              blockStyle={style}
               className={classnames(
                 'rbc-day-bg',
                 className,
@@ -109,7 +110,7 @@ function BackgroundCells(props) {
                   'rbc-today': dates.eq(date, current, 'day'),
                   'rbc-off-range-bg': currentDate && dates.month(currentDate) !== dates.month(date)
                 }
-              )} 
+              )}
               value={date}
               range={range}
             >

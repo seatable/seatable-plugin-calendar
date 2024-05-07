@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import classnames from 'classnames';
+import intl from 'react-intl-universal';
 import CellTitle from './cell-title';
 import * as dates from '../../utils/dates';
 import { isMobile } from '../../utils/common';
@@ -75,7 +76,7 @@ function EventCell(props) {
           touchAction: 'none'
         }}
         tabIndex={-1}
-        title={tooltip || undefined}>
+        title={tooltip || intl.get('Empty')}>
         {Event ? (
           <Event
             event={event}

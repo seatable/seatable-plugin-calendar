@@ -69,6 +69,7 @@ const en = {
   'Previous': 'Back',
   'Next': 'Next',
   'Drag_resize_handle': 'Drag resize handler',
+  'Empty': 'Empty',
 };
 
 export default en;

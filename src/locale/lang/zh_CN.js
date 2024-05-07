@@ -69,6 +69,7 @@ const zh_CN = {
   'Previous': '返回',
   'Next': '下一步',
   'Drag_resize_handle': '拖拽按钮',
+  'Empty': '空',
 };
 
 export default zh_CN;

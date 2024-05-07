@@ -205,8 +205,8 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-btn-group .rbc-tool-btn:hover,
 .rbc-btn-group .rbc-tool-btn.today-btn-disabled {
-  background-color: #ff8000;
-  border: 1px solid #ff8000;
+  background-color: #ED7109;
+  border: 1px solid #ED7109;
   color: #ffffff;
 }
 
@@ -270,7 +270,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-btn-group .rbc-tool-icon:hover {
-  background-color: #ff8000;
+  background-color: #ED7109;
   color: #ffffff;
 }
 
@@ -298,7 +298,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-btn-group .view-type-list .rbc-view-type.rbc-active {
   color: #fff;
-  background: #ff8000;
+  background: #ED7109;
 }
 
 .rbc-btn-group .view-type-list .rbc-view-type.rbc-active:hover {
@@ -528,7 +528,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-now .rbc-date-context {
-  background-color: #ff8000;
+  background-color: #ED7109;
   color: #ffffff;
 }
 
@@ -1019,7 +1019,7 @@ button.rbc-input::-moz-focus-inner {
   padding: 0 5px;
   font-size: 14px;
   font-weight: 400;
-  color: #ff8000;
+  color: #ED7109;
   border-left: 0px !important;
 }
 
@@ -1028,8 +1028,8 @@ button.rbc-input::-moz-focus-inner {
   z-index: 3;
   right: 0;
   height: 1px;
-  background-color: #ff8000;
-  border-color: #ff8000;
+  background-color: #ED7109;
+  border-color: #ED7109;
   pointer-events: none;
 }
 
@@ -1119,7 +1119,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-year-view .rbc-year-month-header {
   padding-left: 10px;
-  color: #ff8000;
+  color: #ED7109;
 }
 
 .rbc-year-view .rbc-header {
@@ -1160,7 +1160,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-year-view .rbc-current {
   border-radius: 2px;
-  background-color: #ff8000;
+  background-color: #ED7109;
   color: #ffffff;
 }
 
@@ -1169,7 +1169,7 @@ button.rbc-input::-moz-focus-inner {
   height: 4px;
   width: 4px;
   border-radius: 50%;
-  background-color: #ff8000;
+  background-color: #ED7109;
   top: 22px;
   left: 16px;
 }

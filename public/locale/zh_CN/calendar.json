@@ -68,5 +68,6 @@
   "Close_plugin": "关闭插件",
   "Previous": "返回",
   "Next": "下一步",
-  "Drag_resize_handle": "拖拽按钮"
+  "Drag_resize_handle": "拖拽按钮",
+  "Empty": "空"
 }

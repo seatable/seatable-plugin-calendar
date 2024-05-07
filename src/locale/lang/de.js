@@ -69,6 +69,7 @@ const de = {
   'Previous': 'Zurück',
   'Next': 'Vor',
   'Drag_resize_handle': 'Neue Ansicht hinzufügen',
+  'Empty': 'Leer',
 };
 
 export default de;

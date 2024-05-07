@@ -63,12 +63,13 @@ const ru = {
   'Exporting_failed': 'No Records within the selected date range',
   'Open_view_dropdown_options': 'Open view dropdown menu options',
   'Dropdown_Menu': 'Dropdown Menu',
-  'Add_new_view': 'Add new view',
-  'Choose_time_range': 'Choose time range',
-  'Close_plugin': 'Close plugin',
+  'Add_new_view': 'Добавить новое представление',
+  'Choose_time_range': 'Выберите временной диапазон',
+  'Close_plugin': 'Закрыть плагин',
   'Previous': 'Назад',
   'Next': 'Вперед',
   'Drag_resize_handle': 'Drag resize handler',
+  'Empty': 'Пустой',
 };
 
 export default ru;

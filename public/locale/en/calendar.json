@@ -68,5 +68,6 @@
   "Close_plugin": "Close plugin",
   "Previous": "Back",
   "Next": "Next",
-  "Drag_resize_handle": "Drag resize handler"
+  "Drag_resize_handle": "Drag resize handler",
+  "Empty": "Empty"
 }

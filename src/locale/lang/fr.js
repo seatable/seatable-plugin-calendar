@@ -69,6 +69,7 @@ const fr = {
   'Previous': 'Revenir',
   'Next': 'Avancer',
   'Drag_resize_handle': 'Gestionnaire de redimensionnement par glisser-déposer',
+  'Empty': 'Vide',
 };
 
 export default fr;

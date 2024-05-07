@@ -69,6 +69,7 @@ const es = {
   'Previous': 'Atrás',
   'Next': 'Siguiente',
   'Drag_resize_handle': 'Arrastre el controlador de cambio de tamaño',
+  'Empty': 'Vacío',
 };
 
 export default es;

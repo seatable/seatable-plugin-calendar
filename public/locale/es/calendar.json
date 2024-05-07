@@ -68,5 +68,6 @@
   "Close_plugin": "Cerrar complemento",
   "Previous": "Atrás",
   "Next": "Siguiente",
-  "Drag_resize_handle": "Arrastre el controlador de cambio de tamaño"
+  "Drag_resize_handle": "Arrastre el controlador de cambio de tamaño",
+  "Empty": "Vacío"
 }

@@ -69,6 +69,7 @@ const pt = {
   'Previous': 'Voltar',
   'Next': 'Próximo',
   'Drag_resize_handle': 'Arraste o manipulador de redimensionamento',
+  'Empty': 'Vazio',
 };
 
 export default pt;

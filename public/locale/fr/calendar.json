@@ -68,5 +68,6 @@
   "Close_plugin": "Fermer le plugin",
   "Previous": "Revenir",
   "Next": "Avancer",
-  "Drag_resize_handle": "Gestionnaire de redimensionnement par glisser-déposer"
+  "Drag_resize_handle": "Gestionnaire de redimensionnement par glisser-déposer",
+  "Empty": "Vide"
 }

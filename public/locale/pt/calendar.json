@@ -68,5 +68,6 @@
   "Close_plugin": "Fechar plug-in",
   "Previous": "Voltar",
   "Next": "Próximo",
-  "Drag_resize_handle": "Arraste o manipulador de redimensionamento"
+  "Drag_resize_handle": "Arraste o manipulador de redimensionamento",
+  "Empty": "Vazio"
 }

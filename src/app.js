@@ -77,7 +77,6 @@ class App extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { isViewSettingPanelOpen } = this.state;
     const { isViewSettingPanelOpen: prevSetting } = prevState;
-    // if (isViewSettingPanelOpen === prevSetting) return;
 
     const closeBtn = document.querySelector('#calendar-setting-close-btn');
     const toggleBtn = document.querySelector('#calendar-setting-toggle-btn');

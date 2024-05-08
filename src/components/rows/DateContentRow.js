@@ -104,8 +104,6 @@ function DateContentRow(props) {
 
   let { levels, extra } = metrics;
 
-  // let WeekWrapper = components.weekWrapper;
-
   const eventRowProps = {
     selected,
     accessors,

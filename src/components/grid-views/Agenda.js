@@ -34,10 +34,13 @@ class Agenda extends React.Component {
   render() {
     let { length, date, events, accessors, localizer, isMobile } = this.props;
     let { messages } = localizer;
-    let end = dates.add(date, length, 'day');
-    let range = dates.range(date, end, 'day');
 
-    events = events.filter(event => inRange(event, date, end, accessors));
+    const startTime = dates.startOf(date, 'day');
+    
+    let end = dates.add(startTime, length, 'day');
+    let range = dates.range(startTime, end, 'day');
+
+    events = events.filter(event => inRange(event, startTime, end, accessors));
     events.sort((a, b) => +accessors.start(a) - +accessors.start(b));
 
     const desktopView = (

@@ -33,8 +33,7 @@ import Header from '../header/Header';
 import DateHeader from '../header/DateHeader';
 import { sortEvents } from '../../utils/eventLevels';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { DndContext } from '@dnd-kit/core';
-import { pointerWithin, rectIntersection } from '@dnd-kit/core';
+import { pointerWithin, rectIntersection, DndContext } from '@dnd-kit/core';
 import { isEmptyObject } from 'dtable-utils';
 import { throttle } from 'lodash-es';
 
@@ -433,9 +432,11 @@ class MonthView extends React.Component {
       this.festivals[date] = festival;
     }
     if (festival) {
-      return <div className="rbc-festival">
-        <span className="rbc-festival-context" title={festival}>{festival}</span>
-      </div>;
+      return (
+        <div className="rbc-festival">
+          <span className="rbc-festival-context" title={festival}>{festival}</span>
+        </div>
+      );
     }
     return null;
   }
@@ -487,19 +488,19 @@ class MonthView extends React.Component {
     );
   }
 
-  customCollisionDetectionAlgorithm =  (args) => {
+  customCollisionDetectionAlgorithm = (args) => {
     // First, let's see if there are any collisions with the pointer
     const pointerCollisions = pointerWithin(args);
-    
+
     // Collision detection algorithms return an array of collisions
     if (pointerCollisions.length > 0) {
       return pointerCollisions;
     }
-    
+
     // If there are no collisions with the pointer, return rectangle intersections
     return rectIntersection(args);
   };
-  
+
   getNewEventTime = (event, newStartDate) => {
     const dateRange = dates.range(event.start, event.end, 'day');
     const newStart = newStartDate;
@@ -556,7 +557,8 @@ class MonthView extends React.Component {
     if (isEmptyObject(resizingData)) return;
 
     let newTime = e.over.data.current?.value;
-    let start, end;
+    let start;
+    let end;
     if (resizingData.type === 'leftResize') {
       start = newTime;
       end = resizingData.event.end;
@@ -568,7 +570,7 @@ class MonthView extends React.Component {
     this.props.onEventDragResize({ event: resizingData.event, start, end, isAllDay: resizingData.event.allDay });
   };
 
-  setShouldSort = (bool) => { 
+  setShouldSort = (bool) => {
     this.shouldSortEvents = bool;
   };
 
@@ -577,7 +579,9 @@ class MonthView extends React.Component {
     const throttleHandleEventResize = throttle(this.handleEventResizing, 50);
     let { className, isMobile } = this.props;
     let { overscanStartIndex, overscanEndIndex, allWeeksStartDates } = this.state;
-    let renderWeeks = [], offsetTop = 0, offsetBottom = 0;
+    let renderWeeks = [];
+    let offsetTop = 0;
+    let offsetBottom = 0;
     if (allWeeksStartDates) {
       renderWeeks = allWeeksStartDates.slice(overscanStartIndex, overscanEndIndex);
       offsetTop = overscanStartIndex * MONTH_ROW_HEIGHT;

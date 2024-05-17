@@ -14,6 +14,7 @@ import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
 import { generatorViewId, getDtableUuid, isIOS, isMobile, isSafari } from './utils/common';
+import { handleEnterKeyDown } from './utils/accessibility';
 import View from './model/view';
 import icon from './image/icon.png';
 import './locale';
@@ -73,6 +74,23 @@ class App extends React.Component {
     this.initPluginDTableData();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { isViewSettingPanelOpen } = this.state;
+    const { isViewSettingPanelOpen: prevSetting } = prevState;
+
+    const closeBtn = document.querySelector('#calendar-setting-close-btn');
+    const toggleBtn = document.querySelector('#calendar-setting-toggle-btn');
+
+    if (isViewSettingPanelOpen && !prevSetting) {
+      closeBtn && closeBtn.focus();
+    }
+
+    if (!isViewSettingPanelOpen && prevSetting) {
+      toggleBtn && toggleBtn.focus();
+    }
+
+  }
+
   componentWillUnmount() {
     this.unsubscribeLocalDtableChanged();
     this.unsubscribeRemoteDtableChanged();
@@ -81,10 +99,16 @@ class App extends React.Component {
   async initPluginDTableData() {
     if (this.props.isDevelopment) {
       // local develop
-      window.dtableSDK.subscribe('dtable-connect', () => { this.onDTableConnect(); });
+      window.dtableSDK.subscribe('dtable-connect', () => {
+        this.onDTableConnect();
+      });
     }
-    this.unsubscribeLocalDtableChanged = window.dtableSDK.subscribe('local-dtable-changed', () => { this.onDTableChanged(); });
-    this.unsubscribeRemoteDtableChanged = window.dtableSDK.subscribe('remote-dtable-changed', () => { this.onDTableChanged(); });
+    this.unsubscribeLocalDtableChanged = window.dtableSDK.subscribe('local-dtable-changed', () => {
+      this.onDTableChanged();
+    });
+    this.unsubscribeRemoteDtableChanged = window.dtableSDK.subscribe('remote-dtable-changed', () => {
+      this.onDTableChanged();
+    });
     this.resetData(true);
   }
 
@@ -266,14 +290,34 @@ class App extends React.Component {
     return (
       <div className="d-flex align-items-center plugin-calendar-operators">
         {!this.isMobile &&
-          <span className="mr-1 op-icon" onClick={this.toggleTimeRangeDialog}>
-            <i className="dtable-font dtable-icon-print"></i>
+          <span
+            className="mr-1 op-icon"
+            onClick={this.toggleTimeRangeDialog}
+            onKeyDown={handleEnterKeyDown(this.toggleTimeRangeDialog)}
+            aria-label={intl.get('Choose_time_range')}
+            tabIndex={0}
+          >
+            <i className="dtable-font dtable-icon-print" ></i>
           </span>
         }
-        <span className="mr-1 op-icon" onClick={this.toggleViewSettingPanel}>
+        <span
+          className="mr-1 op-icon"
+          id='calendar-setting-toggle-btn'
+          onClick={this.toggleViewSettingPanel}
+          onKeyDown={handleEnterKeyDown(this.toggleViewSettingPanel)}
+          aria-label={intl.get('Settings')}
+          tabIndex={0}
+        >
           <i className="dtable-font dtable-icon-set-up"></i>
         </span>
-        <span className="dtable-font dtable-icon-x op-icon btn-close" onClick={this.onPluginToggle}></span>
+        <span
+          className="dtable-font dtable-icon-x op-icon btn-close"
+          onClick={this.onPluginToggle}
+          onKeyDown={handleEnterKeyDown(this.onPluginToggle)}
+          aria-label={intl.get('Close_plugin')}
+          tabIndex={0}
+        >
+        </span>
       </div>
     );
   };

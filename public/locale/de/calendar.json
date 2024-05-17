@@ -60,5 +60,14 @@
   "Start_the_first_week_of_the_year_on": "Die 1. Woche des Jahres beginnt am",
   "First_day_of_the_year": "1. Tag des Jahres",
   "First_full_week_of_the_year": "1. volle Woche des Jahres",
-  "Exporting_failed": "Es gibt keine Ereignisse im ausgewählten Zeitraum."
+  "Exporting_failed": "Es gibt keine Ereignisse im ausgewählten Zeitraum.",
+  "Open_view_dropdown_options": "Ziehen Sie den Handler zur Größenänderung",
+  "Dropdown_Menu": "Dropdown-Menü",
+  "Add_new_view": "Neue Ansicht hinzufügen",
+  "Choose_time_range": "Neue Ansicht hinzufügen",
+  "Close_plugin": "Neue Ansicht hinzufügen",
+  "Previous": "Zurück",
+  "Next": "Vor",
+  "Drag_resize_handle": "Neue Ansicht hinzufügen",
+  "Empty": "Leer"
 }

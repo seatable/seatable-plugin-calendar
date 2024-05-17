@@ -7,6 +7,7 @@ import RenameViewDialog from './dialog/rename-view-dialog';
 import DropdownMenu from './dropdownmenu';
 import intl from 'react-intl-universal';
 import '../locale';
+import { handleEnterKeyDown } from '../utils/accessibility';
 
 const SCROLL_TYPE = {
   PREV: 'prev',
@@ -41,6 +42,37 @@ class ViewTab extends React.Component {
 
   componentDidMount() {
     document.addEventListener('click', this.onHideViewDropdown);
+  }
+
+  componentDidUpdate() {
+    if (this.handleArrowKeyDown) {
+      document.removeEventListener('keydown', this.handleArrowKeyDown);
+    }
+
+    const btns = document.querySelectorAll('.dropdown-item-btn');
+    const dropDownBtn = document.querySelector('.btn-view-dropdown');
+    if (!btns.length) return;
+    let currentIdx = -1;
+    this.handleArrowKeyDown = (e) => {
+      if (e.key === 'ArrowUp') {
+        currentIdx--;
+        if (currentIdx < 0) {
+          dropDownBtn.focus();
+          currentIdx = -1;
+        } else {
+          btns[currentIdx].focus();
+        }
+      } else if (e.key === 'ArrowDown') {
+        currentIdx++;
+        if (currentIdx >= btns.length) {
+          dropDownBtn.focus();
+          currentIdx = -1;
+        } else {
+          btns[currentIdx].focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', this.handleArrowKeyDown);
   }
 
   componentWillUnmount() {
@@ -161,12 +193,21 @@ class ViewTab extends React.Component {
           ref={this.props.setViewItem(index)}
           onClick={this.onSelectView}
         >
-          <div className="view-name">{name}</div>
+          <div
+            className="view-name"
+            onKeyDown={handleEnterKeyDown(this.onSelectView)}
+            tabIndex={0}
+          >
+            {name}
+          </div>
           {isActiveView &&
             <div
               className="btn-view-dropdown d-flex align-items-center justify-content-center"
               ref={ref => this.btnViewDropdown = ref}
               onClick={this.onDropdownToggle}
+              onKeyDown={handleEnterKeyDown(this.onDropdownToggle)}
+              aria-label={intl.get('Open_view_dropdown_options')}
+              tabIndex={0}
             >
               <i className="dtable-font dtable-icon-drop-down"></i>
               {isShowViewDropdown &&
@@ -175,12 +216,20 @@ class ViewTab extends React.Component {
                     dropdownMenuPosition={dropdownMenuPosition}
                     options={
                       <React.Fragment>
-                        <button className="dropdown-item" onClick={this.props.onRenameViewToggle}>
+                        <button className="dropdown-item dropdown-item-btn"
+                          onClick={this.props.onRenameViewToggle}
+                          onKeyDown={handleEnterKeyDown(this.props.onRenameViewToggle)}
+                          tabIndex={0}
+                        >
                           <i className="item-icon dtable-font dtable-icon-rename"></i>
                           <span className="item-text">{intl.get('Rename_View')}</span>
                         </button>
                         {canDelete &&
-                        <button className="dropdown-item" onClick={this.onDeleteView}>
+                        <button className="dropdown-item dropdown-item-btn"
+                          onClick={this.onDeleteView}
+                          onKeyDown={handleEnterKeyDown(this.onDeleteView)}
+                          tabIndex={0}
+                        >
                           <i className="item-icon dtable-font dtable-icon-delete"></i>
                           <span className="item-text">{intl.get('Delete_View')}</span>
                         </button>
@@ -337,7 +386,7 @@ class ViewsTabs extends React.Component {
     let selectedGridView = views[selectedViewIdx] || {};
     const canDelete = views.length > 1;
     return (
-      <div className="views-tabs d-flex h-100">
+      <div className="views-tabs d-flex h-100" >
         <div className="views-tabs-scroll d-flex pr-1" ref={ref => this.viewsTabsScroll = ref} onScroll={this.onViewsScroll}>
           {views.map((view, index) => {
             return (
@@ -372,8 +421,12 @@ class ViewsTabs extends React.Component {
             </span>
           </div>
         }
-        <div className="btn-add-view d-flex align-items-center" onClick={this.onNewViewToggle}>
-          <i className="dtable-font dtable-icon-add-table"></i>
+        <div
+          className="btn-add-view d-flex align-items-center"
+          onClick={this.onNewViewToggle}
+          onKeyDown={handleEnterKeyDown(this.onNewViewToggle)}
+        >
+          <i className="dtable-font dtable-icon-add-table" aria-label={intl.get('Add_new_view')} tabIndex={0}></i>
         </div>
         {isShowNewViewDialog &&
           <NewViewDialog

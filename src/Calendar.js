@@ -801,7 +801,7 @@ class Calendar extends React.Component {
       }
     };
 
-    return context; 
+    return context;
   }
 
   getView2ComponentMap = () => {

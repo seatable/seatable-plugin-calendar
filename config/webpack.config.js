@@ -779,7 +779,6 @@ module.exports = function (webpackEnv) {
       !isEnvProduction &&
         new ESLintPlugin({
           // Plugin options
-          fix: true,
           extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
           formatter: require.resolve('react-dev-utils/eslintFormatter'),
           eslintPath: require.resolve('eslint'),

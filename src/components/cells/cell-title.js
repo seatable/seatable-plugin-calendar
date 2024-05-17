@@ -117,8 +117,9 @@ class CellTitle extends Component {
   };
 
   render() {
+    const cellTitle = this.renderCellTitle();
     return (
-      <span>{this.renderCellTitle()}</span>
+      <span aria-label={cellTitle}>{cellTitle}</span>
     );
   }
 }

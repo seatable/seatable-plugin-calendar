@@ -128,8 +128,8 @@ class DayColumn extends React.Component {
       const startsBeforeDay = slotMetrics.startsBeforeDay(start);
       const startsAfterDay = slotMetrics.startsAfterDay(end);
 
-      const  dateOfSecondDayStart = new Date(start).setHours(24, 0, 0, 0);
-      const  dateOfEnd = new Date(end).setHours(0, 0, 0, 0);
+      const dateOfSecondDayStart = new Date(start).setHours(24, 0, 0, 0);
+      const dateOfEnd = new Date(end).setHours(0, 0, 0, 0);
 
       const continueToAnotherDayEnd = dateOfEnd > dateOfSecondDayStart;
 
@@ -272,8 +272,8 @@ class DayColumn extends React.Component {
   };
 
   _selectSlot = ({ startDate, endDate, action, bounds, box }) => {
-    let current = startDate,
-      slots = [];
+    let current = startDate;
+    let slots = [];
 
     while (dates.lte(current, endDate)) {
       slots.push(current);

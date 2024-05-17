@@ -212,7 +212,7 @@ class Agenda extends React.Component {
     }
 
     let dateLabel = localizer.format(day, 'agendaDateFormat');
-    let eventsDate =  AgendaDate ? (
+    let eventsDate = AgendaDate ? (
       <AgendaDate day={day} label={dateLabel} />
     ) : dateLabel;
 
@@ -239,7 +239,8 @@ class Agenda extends React.Component {
             <span
               className="agenda-event-decorator"
               style={{ 'borderColor': event.bgColor, 'background': event.bgColor }}
-            ></span>
+            >
+            </span>
             <div>
               {Event ? <Event event={event} title={title} /> : title}
               <div className="d-flex">
@@ -277,9 +278,9 @@ class Agenda extends React.Component {
   timeRangeLabel = (day, event) => {
     let { accessors, localizer, components, isMobile } = this.props;
 
-    let labelClass = '',
-      TimeComponent = components.time,
-      label = intl.get('.rbc.messages.allDay').d(localizer.messages.allDay);
+    let labelClass = '';
+    let TimeComponent = components.time;
+    let label = intl.get('.rbc.messages.allDay').d(localizer.messages.allDay);
 
     let end = accessors.end(event);
     let start = accessors.start(event);

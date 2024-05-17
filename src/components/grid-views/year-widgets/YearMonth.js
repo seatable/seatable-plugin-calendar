@@ -18,9 +18,7 @@ class YearMonth extends React.PureComponent {
     let { localizer } = this.props;
     return (
       <div className='rbc-year-month-header'>
-        <Header
-          label={localizer.format(this.monthDate, 'monthFormat')}
-        />
+        <Header label={localizer.format(this.monthDate, 'monthFormat')} />
       </div>
     );
   }
@@ -28,7 +26,7 @@ class YearMonth extends React.PureComponent {
   renderWeekDayHeaders(row) {
     let { localizer } = this.props;
     return row.map((day, idx) => (
-      <div key={'header_' + idx} className='rbc-header'>
+      <div key={'header_' + idx} className='rbc-header' >
         <Header
           label={localizer.format(day, 'yearMonthWeekdayFormat')}
         />
@@ -38,6 +36,7 @@ class YearMonth extends React.PureComponent {
 
   renderDays = (weeks, dayEventsMap, currentMonth, isCurrentMonth, dateOfToday) => {
     const now = new Date();
+    const firstDayOfTheYear = new Date(now.getFullYear(), 0, 1);
     return weeks.map(week => {
       return (
         <div className="rbc-row rbc-year-week" key={`rbc-year-week-${week[0] + ''}`}>
@@ -57,9 +56,13 @@ class YearMonth extends React.PureComponent {
                 key={`rbc-year-day-${displayDate}`}
                 isOffRange={isOffRange}
                 isCurrentDay={isCurrentDay}
+                currentDate={now}
+                labelDate={date}
                 hasEvents={hasEvents}
                 localizer={this.props.localizer}
                 label={day}
+                currentMonth={currentMonth}
+                firstDayOfTheYear={firstDayOfTheYear}
                 handleShowMore={this.handleShowMore.bind(this, date, dayEvents)}
               />
             );

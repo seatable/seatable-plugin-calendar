@@ -104,9 +104,9 @@ class ExportedMonth extends React.Component {
     let { className } = this.props;
     let renderWeeks = [];
 
-    let { localizer, date } = this.props,
-      month = dates.visibleDays(date, localizer),
-      weeks = chunk(month, 7);
+    let { localizer, date } = this.props;
+    let month = dates.visibleDays(date, localizer);
+    let weeks = chunk(month, 7);
     renderWeeks = weeks.map(week => week[0]);
     let weeksCount = renderWeeks.length; // usually there are 5 weeks in a month, but in months such as 2021-05, there are 6 weeks.
 
@@ -193,9 +193,11 @@ class ExportedMonth extends React.Component {
       this.festivals[date] = festival;
     }
     if (festival) {
-      return <div className="rbc-festival">
-        <span className="rbc-festival-context" title={festival}>{festival}</span>
-      </div>;
+      return (
+        <div className="rbc-festival">
+          <span className="rbc-festival-context" title={festival}>{festival}</span>
+        </div>
+      );
     }
     return null;
   }

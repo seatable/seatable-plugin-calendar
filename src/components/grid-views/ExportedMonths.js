@@ -5,11 +5,13 @@ import ExportedMonth from './ExportedMonth';
 class ExportedMonths extends React.Component {
   render() {
     const { exportedMonths, date, ...props } = this.props;
-    return (<div id="exported-months" className="position-absolute w-100" style={{ 'zIndex': '-1000' }}>
-      {exportedMonths.map((startDate, index) => {
-        return <ExportedMonth {...props} key={index} date={startDate} />;
-      })}
-    </div>);
+    return (
+      <div id="exported-months" className="position-absolute w-100" style={{ 'zIndex': '-1000' }}>
+        {exportedMonths.map((startDate, index) => {
+          return <ExportedMonth {...props} key={index} date={startDate} />;
+        })}
+      </div>
+    );
   }
 }
 

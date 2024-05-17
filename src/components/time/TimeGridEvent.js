@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useDraggable } from '@dnd-kit/core';
 import TimeGridEventDragHandle from './drag-handle';
 import { stringifyPercent } from '../../utils/common';
+import { handleEnterKeyDown } from '../../utils/accessibility';
 
 // height of a single slot, a half hour
 const minimalHeightUnit = 2.0833333333333357;
@@ -93,7 +94,7 @@ function TimeGridEvent(props) {
     id: uniqueId.current + '-dnd',
     data: { ...props, type: 'dnd', uuid: uniqueId.current },
   });
-  
+
   const dndTransformPosition = dndTransform ? {
     transform: `translate(${dndTransform.x}px, ${dndTransform.y}px)`,
     // rise zIndex after drag start
@@ -106,7 +107,9 @@ function TimeGridEvent(props) {
     }
   }
 
-  let title = <CellTitle event={event} changeTitle={(title) => {changeTitle(title, label);}} />;
+  let title = <CellTitle event={event} changeTitle={(title) => {
+    changeTitle(title, label);
+  }} />;
   let tooltip = accessors.tooltip(event);
   let end = accessors.end(event);
   let start = accessors.start(event);
@@ -119,7 +122,8 @@ function TimeGridEvent(props) {
     <div key='1'
       className='rbc-event-label'
       {...dndListeners}
-      {...dndAttributes} 
+      {...dndAttributes}
+      tabIndex={-1}
     >
       <span>
         {label}
@@ -128,7 +132,8 @@ function TimeGridEvent(props) {
     <div key='2'
       className={classnames('rbc-event-content', 'rbc-event-content-timeslot', { 'd-flex align-items-center text-nowrap': eventInSingleLine })}
       {...dndListeners}
-      {...dndAttributes} 
+      {...dndAttributes}
+      tabIndex={-1}
     >
       {Event ? <Event event={event} title={title} /> : title}
     </div>
@@ -139,6 +144,7 @@ function TimeGridEvent(props) {
       <div
         ref={dndSetNodeRef}
         onClick={onClick}
+        onKeyDown={handleEnterKeyDown(onClick)}
         onDoubleClick={onDoubleClick}
         style={{
           ...getRbcEventStyle(props),
@@ -159,17 +165,19 @@ function TimeGridEvent(props) {
           'rbc-event-continues-earlier': continuesEarlier,
           'rbc-event-continues-later': continuesLater
         })}
+        aria-label={tooltip}
+        tabIndex={0}
       >
-        <TimeGridEventDragHandle 
+        <TimeGridEventDragHandle
           direction="top"
           resizeEventTop={resizeEventTop}
-          resizeEventHeight={resizeEventHeight}         
+          resizeEventHeight={resizeEventHeight}
           singleSlotHeight={singleSlotHeight}
           event={event}
         />
         {inner}
-        <TimeGridEventDragHandle 
-          direction="bottom" 
+        <TimeGridEventDragHandle
+          direction="bottom"
           resizeEventTop={resizeEventTop}
           resizeEventHeight={resizeEventHeight}
           singleSlotHeight={singleSlotHeight}

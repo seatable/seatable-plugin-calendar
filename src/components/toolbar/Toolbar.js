@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import intl from 'react-intl-universal';
 import { navigate } from '../../constants';
+import { handleEnterKeyDown } from '../../utils/accessibility';
 
 class Toolbar extends React.Component {
   render() {
@@ -15,17 +16,31 @@ class Toolbar extends React.Component {
       <div className='rbc-toolbar'>
         <div className='rbc-btn-group d-flex'>
           <div className='rbc-tool-icon-group d-flex'>
-            <span onClick={this.navigate.bind(null, navigate.PREVIOUS)} className={'rbc-tool-icon'}>
+            <span
+              onClick={this.navigate.bind(null, navigate.PREVIOUS)}
+              className={'rbc-tool-icon'}
+              onKeyDown={handleEnterKeyDown(this.navigate.bind(null, navigate.PREVIOUS))}
+              aria-label={intl.get('Previous')}
+              tabIndex={0}
+            >
               <i className="dtable-font dtable-icon-left"></i>
             </span>
             <span className="rbc-split-line"></span>
-            <span onClick={this.navigate.bind(null, navigate.NEXT)} className={'rbc-tool-icon'}>
+            <span
+              onClick={this.navigate.bind(null, navigate.NEXT)}
+              className={'rbc-tool-icon'}
+              onKeyDown={handleEnterKeyDown(this.navigate.bind(null, navigate.NEXT))}
+              aria-label={intl.get('Next')}
+              tabIndex={0}
+            >
               <i className="dtable-font dtable-icon-right"></i>
             </span>
           </div>
           <span
             className={classnames('rbc-tool-btn text-truncate', { 'today-btn-disabled': isToday })}
             onClick={!isToday ? this.navigate.bind(null, navigate.TODAY) : undefined}
+            onKeyDown={handleEnterKeyDown(!isToday ? this.navigate.bind(null, navigate.TODAY) : undefined)}
+            tabIndex={0}
           >
             {intl.get('.rbc.messages.today').d(messages.today)}
           </span>
@@ -69,6 +84,8 @@ class Toolbar extends React.Component {
               key={name}
               className={classnames({ 'rbc-view-type': true, 'rbc-active': activeView === name })}
               onClick={this.onSelectView.bind(null, name)}
+              onKeyDown={handleEnterKeyDown(this.onSelectView.bind(null, name))}
+              tabIndex={0}
             >
               {intl.get(`.rbc.messages.${name}`).d(messages[name])}
             </div>

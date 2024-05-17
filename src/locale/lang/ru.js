@@ -60,7 +60,16 @@ const ru = {
   'Start_the_first_week_of_the_year_on': 'Start the first week of the year on',
   'First_day_of_the_year': 'First day of the year',
   'First_full_week_of_the_year': 'First full week of the year',
-  'Exporting_failed': 'No Records within the selected date range.',
+  'Exporting_failed': 'No Records within the selected date range',
+  'Open_view_dropdown_options': 'Open view dropdown menu options',
+  'Dropdown_Menu': 'Dropdown Menu',
+  'Add_new_view': 'Добавить новое представление',
+  'Choose_time_range': 'Выберите временной диапазон',
+  'Close_plugin': 'Закрыть плагин',
+  'Previous': 'Назад',
+  'Next': 'Вперед',
+  'Drag_resize_handle': 'Drag resize handler',
+  'Empty': 'Пустой',
 };
 
 export default ru;

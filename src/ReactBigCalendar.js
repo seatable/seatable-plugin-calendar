@@ -34,7 +34,7 @@ const propTypes = {
   rowColorsMap: PropTypes.object,
   isIosMobile: PropTypes.bool,
   isSafari: PropTypes.bool,
-  
+
 };
 
 class ReactBigCalendar extends React.Component {
@@ -237,7 +237,7 @@ class ReactBigCalendar extends React.Component {
     const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
     const endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
-    
+
     let updatedData = {};
     if (startDateColumn) {
       const { type, data } = startDateColumn;
@@ -278,7 +278,7 @@ class ReactBigCalendar extends React.Component {
 
   // do not modify row utils drop handle drop on the date block，just update view
   handleEventDragResize = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
-    if (!this.currentResizingEvt) this.currentResizingEvt = event; 
+    if (!this.currentResizingEvt) this.currentResizingEvt = event;
     if (event.row._id !== this.currentResizingEvt.row._id) return;
     const { events } = this.state;
     const { activeTable } = this.props;
@@ -298,7 +298,7 @@ class ReactBigCalendar extends React.Component {
       Object.setPrototypeOf(updatedEvent, TableEvent.prototype);
       const nextEvents = [...events];
       nextEvents.splice(idx, 1, updatedEvent);
-    
+
       this.setState({
         events: nextEvents
       });
@@ -307,6 +307,7 @@ class ReactBigCalendar extends React.Component {
 
   handleResizeDrop = () => {
     const { activeTable, modifyRow } = this.props;
+    if (!this.resizingUpdatedData) return;
     const { event, updatedData } = this.resizingUpdatedData;
     modifyRow(activeTable, event.row, updatedData);
     this.currentResizingEvt = null;

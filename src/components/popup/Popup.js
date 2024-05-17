@@ -5,6 +5,7 @@ import getScrollLeft from 'dom-helpers/scrollLeft';
 import intl from 'react-intl-universal';
 import EventCell from '../cells/EventCell';
 import * as dates from '../../utils/dates';
+import { handleEnterKeyDown } from '../../utils/accessibility';
 
 class Popup extends React.Component {
 
@@ -16,7 +17,8 @@ class Popup extends React.Component {
     let bottom = top + height;
     let right = left + width;
     if (bottom > viewBottom || right > viewRight) {
-      let topOffset, leftOffset;
+      let topOffset;
+      let leftOffset;
       if (bottom > viewBottom) {
         topOffset = bottom - viewBottom + (popupOffset.y || + popupOffset || 0);
       }
@@ -26,10 +28,15 @@ class Popup extends React.Component {
       this.setState({ topOffset, leftOffset });
     }
     document.addEventListener('click', this.onHidePopup, true);
+    this.currentActive = document.activeElement;
+    const closeBtn = document.getElementById('calender-date-popup-close');
+    closeBtn && closeBtn.focus();
   }
 
   componentWillUnmount() {
     document.removeEventListener('click', this.onHidePopup, true);
+    this.currentActive.focus();
+    this.currentActive = null;
   }
 
   onHidePopup = (event) => {
@@ -77,7 +84,19 @@ class Popup extends React.Component {
       >
         <div className='rbc-overlay-header'>
           {localizer.format(slotStart, 'dayHeaderFormat')}
-          <button className='close'><span aria-hidden="true" ref={ref => this.closeBtn = ref}>×</span></button>
+          <button
+            className='close'
+            tabIndex={-1}
+          >
+            <span
+              onKeyDown={handleEnterKeyDown(this.props.onHidePopup)}
+              aria-label={intl.get('Cancel')}
+              id='calender-date-popup-close'
+              tabIndex={0}
+              ref={ref => this.closeBtn = ref}
+            >×
+            </span>
+          </button>
         </div>
         <div className="rbc-overlay-body" onScroll={this.handleScroll}>
           {events.length === 0 ? <span>{intl.get('There_are_no_records')}</span> : events.map((event, idx) => (

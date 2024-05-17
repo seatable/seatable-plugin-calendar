@@ -28,9 +28,9 @@ export function lastVisibleDay(date, localizer) {
 }
 
 export function visibleDays(date, localizer) {
-  let current = firstVisibleDay(date, localizer),
-    last = lastVisibleDay(date, localizer),
-    days = [];
+  let current = firstVisibleDay(date, localizer);
+  let last = lastVisibleDay(date, localizer);
+  let days = [];
 
   while (lte(current, last, DATE_UNIT.DAY)) {
     days.push(current);
@@ -41,8 +41,8 @@ export function visibleDays(date, localizer) {
 }
 
 export function visibleYearDays(date, localizer) {
-  let current = firstVisibleDay(date, localizer),
-    days = [];
+  let current = firstVisibleDay(date, localizer);
+  let days = [];
 
   while (days.length < 42) {
     days.push(current);
@@ -59,8 +59,8 @@ export function ceil(date, unit) {
 }
 
 export function range(start, end, unit = DATE_UNIT.DAY) {
-  let current = start,
-    days = [];
+  let current = start;
+  let days = [];
 
   while (lte(current, end, unit)) {
     days.push(current);
@@ -125,8 +125,8 @@ export function diff(dateA, dateB, unit) {
 }
 
 export function total(date, unit) {
-  let ms = date.getTime(),
-    div = 1;
+  let ms = date.getTime();
+  let div = 1;
 
   // noinspection FallThroughInSwitchStatementJS
   switch (unit) {
@@ -242,12 +242,24 @@ export function endOf(d, unit, firstOfWeek){
   return d;
 }
 
-export const eq = createComparer(function (a, b){ return a === b; });
-export const neq = createComparer(function (a, b){ return a !== b; });
-export const gt =  createComparer(function (a, b){ return a > b; });
-export const gte = createComparer(function (a, b){ return a >= b; });
-export const lt =  createComparer(function (a, b){ return a < b; });
-export const lte = createComparer(function (a, b){ return a <= b; });
+export const eq = createComparer(function (a, b){
+  return a === b;
+});
+export const neq = createComparer(function (a, b){
+  return a !== b;
+});
+export const gt = createComparer(function (a, b){
+  return a > b;
+});
+export const gte = createComparer(function (a, b){
+  return a >= b;
+});
+export const lt = createComparer(function (a, b){
+  return a < b;
+});
+export const lte = createComparer(function (a, b){
+  return a <= b;
+});
 
 export function min(){
   return dayjs(Math.min.apply(Math, arguments)).toDate();
@@ -273,13 +285,13 @@ export function weekday(d, val, firstDay) {
 }
 
 export const milliseconds = createAccessor('Milliseconds');
-export const seconds =      createAccessor('Seconds');
-export const minutes =      createAccessor('Minutes');
-export const hours =        createAccessor('Hours');
-export const day =          createAccessor('Day');
-export const date =         createAccessor('Date');
-export const month =        createAccessor('Month');
-export const year =         createAccessor('FullYear');
+export const seconds = createAccessor('Seconds');
+export const minutes = createAccessor('Minutes');
+export const hours = createAccessor('Hours');
+export const day = createAccessor('Day');
+export const date = createAccessor('Date');
+export const month = createAccessor('Month');
+export const year = createAccessor('FullYear');
 
 export function decade(d, val) {
   return val === undefined
@@ -319,7 +331,7 @@ export function getDatesInRange(startDate, endDate, unit = DATE_UNIT.DAY) {
 }
 
 export function getWeekDates(weekStartDate) {
-  let dates = [], startDate = weekStartDate;
+  let dates = []; let startDate = weekStartDate;
   for (let i = 0; i < 7; i++) {
     dates.push(startDate);
     startDate = dayjs(startDate).add(1, DATE_UNIT.DAY).toDate();

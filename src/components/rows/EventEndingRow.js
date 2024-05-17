@@ -20,9 +20,9 @@ class EventEndingRow extends React.Component {
     let rowSegments = eventLevels(segments).levels[0];
 
 
-    let current = 1,
-      lastEnd = 1,
-      row = [];
+    let current = 1;
+    let lastEnd = 1;
+    let row = [];
 
     while (current <= slots) {
       let key = '_lvl_' + current;

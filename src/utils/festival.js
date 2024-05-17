@@ -80,7 +80,10 @@ const S_TERM_INFO = [
 
 
 export function getFestival(date) {
-  let mDate, lunarFestival, solarFestival, term;
+  let mDate;
+  let lunarFestival;
+  let solarFestival;
+  let term;
   let lunarDate = solarLunarConverter.solorToLunar(date);
   if (lunarDate) {
     mDate = dayjs(lunarDate);
@@ -133,8 +136,12 @@ function getTerm2Day(year, index) {
   ];
 
   // 24 节气对应的日
-  let group1 = terms[0], group2 = terms[1], group3 = terms[2], group4 = terms[3],
-    group5 = terms[4], group6 = terms[5];
+  let group1 = terms[0];
+  let group2 = terms[1];
+  let group3 = terms[2];
+  let group4 = terms[3];
+  let group5 = terms[4];
+  let group6 = terms[5];
   let term2Days = [
     group1.substr(0, 1), group1.substr(1, 2), group1.substr(3, 1), group1.substr(4, 2),
     group2.substr(0, 1), group2.substr(1, 2), group2.substr(3, 1), group2.substr(4, 2),

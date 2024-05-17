@@ -7,7 +7,7 @@ export function TimeSlot({ value }) {
 
   const uniqueId = useRef(uuidv4());
 
-  const { isOver, setNodeRef, active } =  useDroppable({
+  const { isOver, setNodeRef, active } = useDroppable({
     // use time as id cause it's unique
     id: uniqueId.current,
     data: {
@@ -22,7 +22,7 @@ export function TimeSlot({ value }) {
   if (isOver && active && active.data.current.type !== 'grid-event-resize'){
     cls += ` ${bgCls}`;
   }
-  
+
   return <div className={cls} ref={setNodeRef}></div>;
 }
 

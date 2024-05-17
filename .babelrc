@@ -3,6 +3,13 @@
     ["react-app", { "absoluteRuntime" : false }]
   ],
   "plugins": [
-    ["on-demand-loading", {"library": "dtable-ui-component"}]
+    ["import", {
+      "libraryName": "dtable-ui-component",
+      "libraryDirectory": "lib",
+      "camel2DashComponentName": false,
+      "camel2UnderlineComponentName": false
+    },
+      "dtable-ui-component"
+    ]
   ]
 }

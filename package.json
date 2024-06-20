@@ -1,6 +1,6 @@
 {
   "name": "seatable-plugin-calendar",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "private": true,
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
@@ -8,7 +8,7 @@
     "classnames": "^2.2.6",
     "dayjs": "1.10.7",
     "dom-helpers": "^5.1.4",
-    "dtable-ui-component": "5.0.2",
+    "dtable-ui-component": "5.0.19",
     "dtable-utils": "4.4.5",
     "lodash-es": "^4.17.21",
     "react": "17.0.2",

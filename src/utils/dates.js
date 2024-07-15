@@ -11,6 +11,22 @@ dayjs.extend(localizedFormat);
 dayjs.extend(advancedFormat);
 dayjs.extend(isoWeek);
 
+export const calculateHoursFromMidnight = (time) => {
+  let startOfDay = new Date(time.getFullYear(), time.getMonth(), time.getDate());
+
+  let timeDifference = time - startOfDay;
+
+  let hours = timeDifference / (1000 * 60 * 60);
+
+  return hours;
+};
+
+export const addHoursToDate = (date, hours) => {
+  let newDate = new Date(date);
+  newDate.setTime(newDate.getTime() + hours * 60 * 60 * 1000);
+  return newDate;
+};
+
 export function monthsInYear(year) {
   return MONTHS.map(m => dayjs(`${year}-${m}`).startOf(DATE_UNIT.MONTH).toDate());
 }

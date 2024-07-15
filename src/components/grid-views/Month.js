@@ -503,10 +503,16 @@ class MonthView extends React.Component {
 
   getNewEventTime = (event, newStartDate) => {
     const dateRange = dates.range(event.start, event.end, 'day');
-    const newStart = newStartDate;
-    const newEnd = dates.add(newStartDate, dateRange.length - 1, 'day');
-    return { start: newStart, end: newEnd };
 
+    const startHours = dates.calculateHoursFromMidnight(event.start);
+    const endHours = dates.calculateHoursFromMidnight(event.end);
+    
+    const newEndDate = dates.add(newStartDate, dateRange.length - 1, 'day');
+
+    const newStartTime = dates.addHoursToDate(newStartDate, startHours);
+    const newEndTime = dates.addHoursToDate(newEndDate, endHours);
+
+    return { start: newStartTime, end: newEndTime };
   };
 
   handleEventDrag = (event, newTime) => {

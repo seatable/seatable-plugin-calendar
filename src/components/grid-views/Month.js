@@ -506,7 +506,7 @@ class MonthView extends React.Component {
 
     const startHours = dates.calculateHoursFromMidnight(event.start);
     const endHours = dates.calculateHoursFromMidnight(event.end);
-    
+
     const newEndDate = dates.add(newStartDate, dateRange.length - 1, 'day');
 
     const newStartTime = dates.addHoursToDate(newStartDate, startHours);

@@ -36,7 +36,7 @@ class Agenda extends React.Component {
     let { messages } = localizer;
 
     const startTime = dates.startOf(date, 'day');
-    
+
     let end = dates.add(startTime, length, 'day');
     let range = dates.range(startTime, end, 'day');
 

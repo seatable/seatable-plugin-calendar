@@ -31,23 +31,18 @@
   margin-bottom: 10px;
 }
 
-.dtable-selectcalendar-view-setting-selector__menu .header-icon,
+.calendar-view-setting-selector__menu .header-icon,
 .plugin-view-setting .header-icon {
   display: inline-block;
   padding: 0 0.3125rem;
   margin-left: -0.3125rem;
 }
 
-.dtable-selectcalendar-view-setting-selector__menu .header-icon .dtable-font,
+.calendar-view-setting-selector__menu .header-icon .dtable-font,
 .plugin-view-setting .header-icon .dtable-font {
   font-size: 14px;
   color: #aaa;
   cursor: pointer;
-}
-
-.dtable-selectcalendar-view-setting-selector__indicator.dtable-selectcalendar-view-setting-selector__dropdown-indicator,
-.dtable-selectcalendar-view-setting-selector__indicator.dtable-selectcalendar-view-setting-selector__clear-indicator {
-  padding: 8px 6px;
 }
 
 .plugin-view-setting .setting-body .split-line {

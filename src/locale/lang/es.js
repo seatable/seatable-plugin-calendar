@@ -52,7 +52,6 @@ const es = {
   'Hide_all': 'Ocultar todo',
   'Show_all': 'Mostrar todo',
   'No_options': 'Sin opciones',
-  'Not_used': 'No usado',
   'Choose_the_time_range': 'Elige el rango de tiempo',
   'Out_of_range': 'Se pueden seleccionar 12 meses como máximo.',
   'Row_color': 'Color de fila',

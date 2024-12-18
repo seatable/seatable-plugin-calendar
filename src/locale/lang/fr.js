@@ -52,7 +52,6 @@ const fr = {
   'Hide_all': 'Masquer tout',
   'Show_all': 'Afficher tout',
   'No_options': 'Il n\'y a pas d\'options.',
-  'Not_used': 'Ne pas utilisé',
   'Choose_the_time_range': 'Sélectionner la période',
   'Out_of_range': 'La période maximale est de 12 mois.',
   'Row_color': 'Couleur de la ligne',

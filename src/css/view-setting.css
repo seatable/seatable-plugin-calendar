@@ -45,11 +45,6 @@
   cursor: pointer;
 }
 
-.plugin-view-setting .null-option-name,
-.calendar-view-setting-selector__menu .null-option-name {
-  color: rgba(0, 0, 0, .25) !important;
-}
-
 .plugin-view-setting .setting-body .split-line {
   margin-bottom: 14px;
   border-bottom: 1px solid #ddd;

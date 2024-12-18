@@ -44,14 +44,18 @@ class ViewSetting extends React.Component {
     }));
   }
 
-  onModifySettings = (selectedOption) => {
-    let { settings } = this.state;
-    let { setting_key, value } = selectedOption;
+  onModifySettings = (selectedOption, settingKey) => {
     let updated;
-    if (setting_key === SETTING_KEY.TABLE_NAME) {
-      updated = { [setting_key]: value }; // Need init settings after select new table.
+    let { settings } = this.state;
+    if (!selectedOption && settingKey === SETTING_KEY.COLUMN_END_DATE) {
+      updated = Object.assign({}, settings, { [settingKey]: '' });
     } else {
-      updated = Object.assign({}, settings, { [setting_key]: value });
+      let { setting_key, value } = selectedOption;
+      if (setting_key === SETTING_KEY.TABLE_NAME) {
+        updated = { [setting_key]: value }; // Need init settings after select new table.
+      } else {
+        updated = Object.assign({}, settings, { [setting_key]: value });
+      }
     }
     this.setState(({ settings: updated }));
     if (!this.timer) {
@@ -102,23 +106,8 @@ class ViewSetting extends React.Component {
     const titleColumnOptions = this.createOptions(titleColumns, SETTING_KEY.COLUMN_TITLE, 'value');
     const dateColumnOptions = this.createOptions(dateColumns, SETTING_KEY.COLUMN_START_DATE, 'value');
     const endDateColumnOptions = this.createOptions(endDateColumns, SETTING_KEY.COLUMN_END_DATE, 'value');
-    if (endDateColumnOptions.length) {
-      endDateColumnOptions.unshift(
-        {
-          value: '',
-          setting_key: SETTING_KEY.COLUMN_END_DATE,
-          label: <span className={'select-module select-module-name null-option-name'}>{intl.get('Not_used')}</span>,
-        }
-      );
-    }
-
     const colorFieldOptions = this.createOptions(colorColumns, SETTING_KEY.COLUMN_COLOR, 'value');
     colorFieldOptions.unshift(
-      {
-        value: '',
-        setting_key: SETTING_KEY.COLUMN_COLOR,
-        label: <span className={'select-module select-module-name null-option-name'}>{intl.get('Not_used')}</span>
-      },
       {
         value: 'row_color',
         setting_key: SETTING_KEY.COLORED_BY_ROW_COLOR,
@@ -157,7 +146,8 @@ class ViewSetting extends React.Component {
         classNamePrefix={'calendar-view-setting-selector'}
         value={selectedOption}
         options={options}
-        onChange={this.onModifySettings}
+        onChange={(selectedOption) => this.onModifySettings(selectedOption, settingKey)}
+        isClearable={(selectedOption && settingKey === SETTING_KEY.COLUMN_END_DATE) ? true : false}
       />
     );
   };
@@ -171,7 +161,7 @@ class ViewSetting extends React.Component {
       selectedOption = options.find((option) => option.value === settings[SETTING_KEY.COLUMN_COLOR]);
     }
     if (!selectedOption) {
-      selectedOption = options[0];
+      selectedOption = '';
     }
     return (
       <DTableSelect
@@ -179,19 +169,25 @@ class ViewSetting extends React.Component {
         value={selectedOption}
         options={options}
         onChange={this.onSelectColoredBy}
+        isClearable={selectedOption ? true : false}
       />
     );
   };
 
   onSelectColoredBy = (selectedOption) => {
-    const { setting_key, value } = selectedOption;
     let update = {};
-    if (setting_key === SETTING_KEY.COLORED_BY_ROW_COLOR) {
-      update[SETTING_KEY.COLORED_BY_ROW_COLOR] = true;
-      update[SETTING_KEY.COLUMN_COLOR] = null;
-    } else {
+    if (!selectedOption) {
       update[SETTING_KEY.COLORED_BY_ROW_COLOR] = false;
-      update[SETTING_KEY.COLUMN_COLOR] = value;
+      update[SETTING_KEY.COLUMN_COLOR] = '';
+    } else {
+      const { setting_key, value } = selectedOption;
+      if (setting_key === SETTING_KEY.COLORED_BY_ROW_COLOR) {
+        update[SETTING_KEY.COLORED_BY_ROW_COLOR] = true;
+        update[SETTING_KEY.COLUMN_COLOR] = null;
+      } else {
+        update[SETTING_KEY.COLORED_BY_ROW_COLOR] = false;
+        update[SETTING_KEY.COLUMN_COLOR] = value;
+      }
     }
     const newSettings = Object.assign({}, this.props.settings, update);
     this.props.onModifyViewSettings(newSettings);

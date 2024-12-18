@@ -52,7 +52,6 @@ const zh_CN = {
   'Hide_all': '隐藏全部',
   'Show_all': '显示全部',
   'No_options': '没有选项',
-  'Not_used': '不使用',
   'Choose_the_time_range': '选择时间范围',
   'Out_of_range': '最多可以选择12个月。',
   'Row_color': '行颜色',

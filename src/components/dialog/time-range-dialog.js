@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input, Alert } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, Button, Input, Alert } from 'reactstrap';
 import intl from 'react-intl-universal';
+import { DTableModalHeader } from 'dtable-ui-component';
 import Picker from '@seafile/seafile-calendar/lib/Picker';
 import RangeCalendar from '@seafile/seafile-calendar/lib/RangeCalendar';
 import { translateCalendar } from '../../utils/seafile-calendar-translate';
@@ -116,7 +117,7 @@ class TimeRangeDialog extends Component {
     const { outOfRange } = this.state;
     return (
       <Modal isOpen={true} toggle={this.toggle} autoFocus={false}>
-        <ModalHeader toggle={this.toggle}>{intl.get('Choose_the_time_range')}</ModalHeader>
+        <DTableModalHeader toggle={this.toggle}>{intl.get('Choose_the_time_range')}</DTableModalHeader>
         <ModalBody>
           {this.renderPicker()}
           {outOfRange && <Alert color="danger" className="mt-2">{intl.get('Out_of_range')}</Alert>}

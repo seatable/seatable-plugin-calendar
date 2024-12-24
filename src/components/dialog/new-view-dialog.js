@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Alert, Button } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Alert, Button } from 'reactstrap';
+import { DTableModalHeader } from 'dtable-ui-component';
 import intl from 'react-intl-universal';
 import '../../locale';
 import { handleEnterKeyDown } from '../../utils/accessibility';
@@ -46,7 +47,7 @@ class NewViewDialog extends React.Component {
   render() {
     return (
       <Modal isOpen={true} toggle={this.toggle} autoFocus={false}>
-        <ModalHeader toggle={this.toggle}>{intl.get('New_View')}</ModalHeader>
+        <DTableModalHeader toggle={this.toggle}>{intl.get('New_View')}</DTableModalHeader>
         <ModalBody>
           <Form>
             <FormGroup>

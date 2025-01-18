@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { findDOMNode } from 'react-dom';
-import getPosition from 'dom-helpers/position';
 import YearMonthsRow from './year-widgets/YearMonthsRow';
 import Popup from '../popup/Popup';
 import * as dates from '../../utils/dates';
@@ -221,12 +219,10 @@ class YearView extends React.Component {
 
   handleShowMore = ({ cell, events, date }) => {
     if (!this.state.popup) {
-      const position = getPosition(cell, findDOMNode(this));
-      const { left } = cell.getBoundingClientRect();
-      const scrollTop = this.rbcYearView.scrollTop;
-      let { top } = position;
-      position.top = top - scrollTop + 2;
-      position.left = left - 200;
+      const position = {};
+      const { left, top } = cell.getBoundingClientRect();
+      position.top = top - 132 - 8;
+      position.left = left - 200 + 8;
       this.setState({
         overlay: { position, events: events || [], date },
         popup: true,

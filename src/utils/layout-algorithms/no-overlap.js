@@ -100,7 +100,7 @@ export default function noOverlap({
     // it will be used with calc()
     const padding = e.idx === 0 ? 0 : 1;
     e.style.width = `calc(${e.size}% - ${padding}px)`;
-    e.style.height = `calc(${e.style.height}%)`;
+    e.style.height = `calc(${e.style.height}% - 2px)`;
     e.style.xOffset = `calc(${e.style.left}% + ${padding}px)`;
   }
 

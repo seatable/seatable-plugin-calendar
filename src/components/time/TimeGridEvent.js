@@ -120,16 +120,6 @@ function TimeGridEvent(props) {
   const eventInSingleLine = eventHeight < 3.5 ? true : false;
   const inner = [
     <div key='1'
-      className='rbc-event-label'
-      {...dndListeners}
-      {...dndAttributes}
-      tabIndex={-1}
-    >
-      <span>
-        {label}
-      </span>
-    </div>,
-    <div key='2'
       className={classnames('rbc-event-content', 'rbc-event-content-timeslot', { 'd-flex align-items-center text-nowrap': eventInSingleLine })}
       {...dndListeners}
       {...dndAttributes}

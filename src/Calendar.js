@@ -924,11 +924,11 @@ class Calendar extends React.Component {
 
   onInsertRow = (startDate, endDate) => {
     const { startDateColumn, endDateColumn, onInsertRow } = this.props;
-    const { key } = startDateColumn || {};
-    const { key: endKey } = endDateColumn || {};
-    const row = key ? { [key]: startDate } : {};
-    if (endDate && endKey) {
-      row[endKey] = endDate;
+    const { name } = startDateColumn || {};
+    const { name: endName } = endDateColumn || {};
+    const row = name ? { [name]: startDate } : {};
+    if (endDate && endName) {
+      row[endName] = endDate;
     }
     onInsertRow(row);
   };
@@ -961,7 +961,7 @@ class Calendar extends React.Component {
     //  hide insert tip
     const insertTip = document.querySelector('#calendar-insert-new-record-tip');
     const calendarContent = document.querySelector('.calendar-plugin-content');
-    const contentLeftOffset = calendarContent.getBoundingClientRect().left;
+    const { left, top } = calendarContent.getBoundingClientRect();
     // const appNav = document.querySelector('.seatable-app-nav');
 
     insertTip.style.display = 'none';
@@ -969,8 +969,8 @@ class Calendar extends React.Component {
       clearTimeout(this.timer);
     }
     const { clientX, clientY } = e;
-    insertTip.style.left = `${clientX - contentLeftOffset - 30}px`;
-    insertTip.style.top = `${clientY - 85 + 20}px`; // 47 + 38 = 85
+    insertTip.style.left = `${clientX - left - 30}px`;
+    insertTip.style.top = `${clientY - top + 20}px`;
     this.timer = setTimeout(() => {
       insertTip.style.display = 'flex';
     }, 500);
@@ -1100,7 +1100,7 @@ class Calendar extends React.Component {
                 <span className='dtable-font dtable-icon-add-table'></span>
               </div>
             }
-            <div id='calendar-insert-new-record-tip'>{intl.get('Double_click_to_insert_new_record')}</div>
+            {!this.isTableReadOnly && <div id='calendar-insert-new-record-tip'>{intl.get('Double_click_to_insert_new_record')}</div>}
           </React.Fragment>
         ) :
           <div className="empty-date-tips">{intl.get('No_date_field_to_place_records_on_the_calendar')}</div>

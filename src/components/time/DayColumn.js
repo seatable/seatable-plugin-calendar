@@ -14,6 +14,7 @@ import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
 import intl from 'react-intl-universal';
 import { debounce } from 'lodash-es';
 import { isMobile } from '../../utils/common';
+import dayjs from 'dayjs';
 
 const SLOT_HEIGHT = 20;
 
@@ -72,9 +73,13 @@ class DayColumn extends React.Component {
     this.currentActiveEndTime = null;
   };
 
+  formatDate = (date) => {
+    return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+  };
+
   onDoubleClick = () => {
     if (!this.currentActiveTime || !this.currentActiveEndTime) return;
-    this.props.onInsertRow(this.currentActiveTime, this.currentActiveEndTime);
+    this.props.onInsertRow(this.formatDate(this.currentActiveTime), this.formatDate(this.currentActiveEndTime));
   };
 
   render() {

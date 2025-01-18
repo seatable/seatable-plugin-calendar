@@ -8,7 +8,8 @@ class EventRow extends React.Component {
     let {
       segments,
       slotMetrics: { slots },
-      className
+      className,
+      isAllDayCell
     } = this.props;
 
     let lastEnd = 1;
@@ -23,7 +24,7 @@ class EventRow extends React.Component {
 
           if (gap) row.push(EventRowMixin.renderSpan(slots, gap, `${key}_gap`));
 
-          row.push(EventRowMixin.renderSpan(slots, span, key, content));
+          row.push(EventRowMixin.renderSpan(slots, span, key, content, isAllDayCell));
 
           lastEnd = right + 1;
 

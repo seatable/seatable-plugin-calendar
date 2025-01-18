@@ -6,14 +6,34 @@ import { handleEnterKeyDown } from '../../../utils/accessibility';
 
 class YearDay extends React.PureComponent {
 
-  onEventsToggle = () => {
-    this.props.handleShowMore({
-      cell: findDOMNode(this),
-    });
+  clickCount = 0;
+  timeout = null;
+
+  onClick = () => {
+    this.clickCount++;
+    if (this.clickCount === 1) {
+      this.timeout = setTimeout(() => {
+        this.props.handleShowMore({
+          cell: findDOMNode(this),
+        });
+        this.clickCount = 0;
+        this.timeout = null;
+      }, 200);
+    } else if (this.clickCount === 2) {
+      this.onJumpToDay();
+      this.clickCount = 0;
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
   };
 
   hideDayEvents = () => {
     this.setState({ isShowEvents: false });
+  };
+
+  onJumpToDay = (e) => {
+    const { labelDate, onJumpToDay } = this.props;
+    onJumpToDay(labelDate);
   };
 
   render() {
@@ -31,8 +51,8 @@ class YearDay extends React.PureComponent {
     return (
       <div
         className="rbc-year-day-item"
-        onClick={this.onEventsToggle}
-        onKeyDown={handleEnterKeyDown(this.onEventsToggle)}
+        onClick={this.onClick}
+        onKeyDown={handleEnterKeyDown(this.onClick)}
         tabIndex={tabIndex}
       >
         <div className="rbc-year-day-content">
@@ -54,6 +74,7 @@ YearDay.propTypes = {
   currentDate: PropTypes.object,
   firstDayOfTheYear: PropTypes.object,
   currentMonth: PropTypes.string,
+  onJumpToDay: PropTypes.func,
 };
 
 export default YearDay;

@@ -69,6 +69,8 @@ const de = {
   'Next': 'Vor',
   'Drag_resize_handle': 'Neue Ansicht hinzufügen',
   'Empty': 'Leer',
+  'New_record': 'New record',
+  'Double_click_to_insert_new_record': 'Double click to insert new record',
 };
 
 export default de;

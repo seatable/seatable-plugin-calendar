@@ -222,9 +222,11 @@ class YearView extends React.Component {
   handleShowMore = ({ cell, events, date }) => {
     if (!this.state.popup) {
       const position = getPosition(cell, findDOMNode(this));
+      const { left } = cell.getBoundingClientRect();
       const scrollTop = this.rbcYearView.scrollTop;
       let { top } = position;
-      position.top = top - scrollTop;
+      position.top = top - scrollTop + 2;
+      position.left = left - 200;
       this.setState({
         overlay: { position, events: events || [], date },
         popup: true,
@@ -266,6 +268,7 @@ class YearView extends React.Component {
                 localizer={localizer}
                 isMobile={this.props.isMobile}
                 handleShowMore={this.handleShowMore}
+                onJumpToDay={this.props.onJumpToDay}
               />
             );
           })}

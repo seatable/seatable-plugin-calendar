@@ -69,6 +69,8 @@ const pt = {
   'Next': 'Próximo',
   'Drag_resize_handle': 'Arraste o manipulador de redimensionamento',
   'Empty': 'Vazio',
+  'New_record': 'New record',
+  'Double_click_to_insert_new_record': 'Double click to insert new record',
 };
 
 export default pt;

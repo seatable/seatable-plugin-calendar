@@ -69,6 +69,8 @@ const ru = {
   'Next': 'Вперед',
   'Drag_resize_handle': 'Drag resize handler',
   'Empty': 'Пустой',
+  'New_record': 'New record',
+  'Double_click_to_insert_new_record': 'Double click to insert new record',
 };
 
 export default ru;

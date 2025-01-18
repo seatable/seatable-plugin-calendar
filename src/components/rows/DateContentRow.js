@@ -7,6 +7,8 @@ import * as DateSlotMetrics from '../../utils/DateSlotMetrics';
 import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import BackgroundCells from '../cells/BackgroundCells';
+import dayjs from 'dayjs';
+import { throttle } from 'lodash-es';
 
 const slotMetrics = DateSlotMetrics.getSlotMetrics();
 
@@ -15,6 +17,8 @@ function DateContentRow(props) {
   const dateContentRowRef = useRef(null);
   const headingRowRef = useRef(null);
   const eventRowRef = useRef(null);
+  const rbcRowContentRef = useRef(null);
+  const currentActiveDate = useRef(null);
 
   const handleSelectSlot = slot => {
     const { range, onSelectSlot } = props;
@@ -96,13 +100,55 @@ function DateContentRow(props) {
     longPressThreshold,
     isAllDay,
     isMobile,
+    onInsertRow,
+    canAddRecord,
   } = props;
 
   if (renderForMeasure) return renderDummy();
 
   let metrics = slotMetrics(props);
 
-  let { levels, extra } = metrics;
+  let { levels, extra, slots } = metrics;
+
+  const isAllDayCell = className === 'rbc-allday-cell';
+
+  const onMouseLeave = () => {
+    range.forEach(date => {
+      const dateStr = dayjs(date).format('YYYY-MM-DD-HH-mm-ss');
+      const insertBtn = document.querySelector(`#calendar-insert-${dateStr}`);
+      if (!insertBtn) return;
+      insertBtn.style.display = 'none';
+    });
+    currentActiveDate.current = null;
+  };
+
+  const onMouseMove = (e) => {
+    if (e.target.closest('.rbc-row-segment') && !e.target.matches('.rbc-row-segment')) {
+      // when mouse moved into event cell, hide current block insert button
+      onMouseLeave();
+      return;
+    }
+    // determine the currently hovered date based on the mouse position.
+    const rbcRowContentWidth = rbcRowContentRef.current.clientWidth;
+    const singleBlockWidth = rbcRowContentWidth / slots;
+    const x = e.clientX - rbcRowContentRef.current.getBoundingClientRect().left;
+    const slot = Math.floor(x / singleBlockWidth);
+    currentActiveDate.current = range[slot];
+    range.forEach(date => {
+      const dateStr = dayjs(date).format('YYYY-MM-DD-HH-mm-ss');
+      const insertBtn = document.querySelector(`#calendar-insert-${dateStr}`);
+      if (!insertBtn) return;
+      if (date === currentActiveDate.current) {
+        insertBtn.style.display = 'flex';
+      } else {
+        insertBtn.style.display = 'none';
+      }
+    });
+  };
+
+  const onDoubleClickAddRecord = () => {
+    currentActiveDate.current && onInsertRow(currentActiveDate.current);
+  };
 
   const eventRowProps = {
     selected,
@@ -116,6 +162,12 @@ function DateContentRow(props) {
     slotMetrics: metrics,
     isAllDay
   };
+
+  const addRowProps = canAddRecord && !isMobile ? {
+    onMouseMove: throttle(onMouseMove, 100, { trailing: false }),
+    onMouseLeave,
+    onDoubleClick: onDoubleClickAddRecord
+  } : {};
 
   return (
     <div className={className} ref={dateContentRowRef} >
@@ -133,7 +185,11 @@ function DateContentRow(props) {
         components={components}
         longPressThreshold={longPressThreshold}
       />
-      <div className='rbc-row-content'>
+      <div
+        className='rbc-row-content'
+        ref={rbcRowContentRef}
+        {...addRowProps}
+      >
         {renderHeader && (
           <div className='rbc-row rbc-header-row' ref={headingRowRef}>
             {range.map(renderHeadingCell)}
@@ -147,7 +203,7 @@ function DateContentRow(props) {
           </div>
         )}
         {levels.map((segs, idx) => (
-          <EventRow key={idx} segments={segs} {...eventRowProps} />
+          <EventRow isAllDayCell={isAllDayCell} range={range} key={idx} segments={segs} {...eventRowProps} />
         ))}
         {((!isMobile && !!extra.length) || isMobile) && (
           <EventEndingRow
@@ -192,7 +248,9 @@ DateContentRow.propTypes = {
   className: PropTypes.string,
   uuid: PropTypes.string,
   renderFestival: PropTypes.bool,
-  isMobile: PropTypes.bool
+  isMobile: PropTypes.bool,
+  onInsertRow: PropTypes.func,
+  canAddRecord: PropTypes.bool,
 };
 
 DateContentRow.defaultProps = {

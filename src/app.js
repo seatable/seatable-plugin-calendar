@@ -211,6 +211,9 @@ class App extends React.Component {
   };
 
   onInsertRow = (rowData, activeTable, activeView, rowId) => {
+    if (!rowData['0000']) {
+      rowData['0000'] = `${intl.get('New_record')}`;
+    }
     const initData = window.dtableSDK.getInsertedRowInitData(activeView, activeTable, rowId);
     const newRowData = Object.assign({}, initData, rowData);
     window.dtableSDK.appendRow(activeTable, newRowData, activeView);

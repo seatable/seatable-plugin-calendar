@@ -104,6 +104,7 @@ function EventCell(props) {
     <div
       tabIndex={0}
       onKeyDown={handleEnterKeyDown(onRowExpand)}
+      className='rbc-event-container'
     >
       {(normalEvent || eventCrossWeeksStartHandler) &&
         <DragHandle

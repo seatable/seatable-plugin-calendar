@@ -69,6 +69,8 @@ const es = {
   'Next': 'Siguiente',
   'Drag_resize_handle': 'Arrastre el controlador de cambio de tamaño',
   'Empty': 'Vacío',
+  'New_record': 'New record',
+  'Double_click_to_insert_new_record': 'Double click to insert new record',
 };
 
 export default es;

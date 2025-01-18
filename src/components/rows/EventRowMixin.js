@@ -57,15 +57,25 @@ const mixins = {
   },
 
   // randerSpan component wraps both empty space and events，compute width of them
-  renderSpan(slots, len, key, content = ' ') {
+  renderSpan(slots, len, key, content = ' ', isAllDayCell) {
     let per = (Math.abs(len) / slots) * 100 + '%';
+
+    const props = {
+      key,
+      // IE10/11 need max-width. flex-basis doesn't respect box-sizing
+      style: {
+        WebkitFlexBasis: per,
+        flexBasis: per,
+        maxWidth: per,
+        position: 'relative',
+        paddingRight: isAllDayCell ? '12px' : '0',
+      },
+      className: 'rbc-row-segment',
+    };
 
     return (
       <div
-        key={key}
-        className='rbc-row-segment'
-        // IE10/11 need max-width. flex-basis doesn't respect box-sizing
-        style={{ WebkitFlexBasis: per, flexBasis: per, maxWidth: per, position: 'relative' }}
+        {...props}
       >
         {content}
       </div>

@@ -69,6 +69,8 @@ const fr = {
   'Next': 'Avancer',
   'Drag_resize_handle': 'Gestionnaire de redimensionnement par glisser-déposer',
   'Empty': 'Vide',
+  'New_record': 'New record',
+  'Double_click_to_insert_new_record': 'Double click to insert new record',
 };
 
 export default fr;

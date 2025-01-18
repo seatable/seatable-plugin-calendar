@@ -295,9 +295,11 @@ class MonthView extends React.Component {
     if (!this.state.popup) {
       this.clearSelection();
       let position = getPosition(cell, findDOMNode(this));
+      const { left } = cell.getBoundingClientRect();
       let { top } = position;
       top = top + containerPaddingTop + calendarHeaderHeight;
       position.top = top;
+      position.left = left - 200;
       this.setState({
         overlay: { date, events, position, target },
         popup: true

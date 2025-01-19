@@ -544,7 +544,6 @@ button.rbc-input::-moz-focus-inner {
   border-radius: 3px;
   align-items: center;
   justify-content: center;
-  color: #666666;
 }
 
 .rbc-time-view .rbc-header {
@@ -586,6 +585,10 @@ button.rbc-input::-moz-focus-inner {
   transform: scale(.7);
   font-weight: 600;
   color: #333;
+}
+
+.rbc-date-cell .calendar-insert-row-btn .dtable-icon-add-table {
+  color: #666666;
 }
 
 .rbc-row-bg {
@@ -637,9 +640,15 @@ button.rbc-input::-moz-focus-inner {
   background: #f5f5f5;
 }
 
+.rbc-overlay .rbc-overlay-header .calender-date-popup-close {
+  font-size: 14px;
+}
+
 .rbc-overlay .rbc-overlay-header .close {
   font-size: 1.2rem;
   line-height: normal;
+  display: flex;
+  align-items: center;
 }
 
 .rbc-overlay .rbc-overlay-body {
@@ -678,6 +687,10 @@ button.rbc-input::-moz-focus-inner {
   border: 1px solid #ddd;
   border-spacing: 0;
   border-collapse: collapse;
+}
+
+.rbc-agenda-view .rbc-agenda-content .rbc-agenda-table {
+  border-top: none;
 }
 
 .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
@@ -1374,6 +1387,10 @@ button.rbc-input::-moz-focus-inner {
   align-items: center;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   z-index: 5
+}
+
+.rbc-calendar .seatable-plugin-calendar-insert-row .dtable-icon-add-table {
+  font-size: 20px;
 }
  
 .rbc-calendar #calendar-insert-new-record-tip {

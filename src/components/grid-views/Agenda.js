@@ -130,7 +130,7 @@ class Agenda extends React.Component {
         isSelected(event, selected)
       );
 
-      let dateLabel = idx === 0 && localizer.format(day, 'agendaDateFormat');
+      let dateLabel = idx === 0 && localizer.format(day, 'agendaHeaderFormat');
       let first =
         idx === 0 ? (
           <td rowSpan={events.length} className='rbc-agenda-date-cell'>

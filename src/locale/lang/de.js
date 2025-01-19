@@ -17,6 +17,7 @@ const de = {
   '.rbc.localizer.moment.yearHeaderFormat': 'YYYY',
   '.rbc.localizer.moment.dayHeaderFormat': 'dddd, DD. MMMM',
   '.rbc.localizer.moment.agendaDateFormat': 'ddd, DD. MMMM',
+  '.rbc.localizer.moment.agendaHeaderFormat': 'ddd MMM DD',
   '.rbc.localizer.moment.yearMonthWeekdayFormat': 'ddd',
   '.rbc.localizer.moment.yearMonthDateFormat': 'D',
   '.rbc.localizer.moment.weekOfYearFormat': 'WW',

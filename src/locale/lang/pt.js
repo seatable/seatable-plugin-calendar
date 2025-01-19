@@ -17,6 +17,7 @@ const pt = {
   '.rbc.localizer.moment.yearHeaderFormat': 'AAAA',
   '.rbc.localizer.moment.dayHeaderFormat': 'MM-dd-DD',
   '.rbc.localizer.moment.agendaDateFormat': 'ddd MMM DD',
+  '.rbc.localizer.moment.agendaHeaderFormat': 'ddd MMM DD',
   '.rbc.localizer.moment.yearMonthWeekdayFormat': 'Dd',
   '.rbc.localizer.moment.yearMonthDateFormat': 'D',
   '.rbc.localizer.moment.weekOfYearFormat': 'WW',

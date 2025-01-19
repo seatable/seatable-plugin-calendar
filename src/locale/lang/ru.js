@@ -17,6 +17,7 @@ const ru = {
   '.rbc.localizer.moment.yearHeaderFormat': 'ГГГГ',
   '.rbc.localizer.moment.dayHeaderFormat': 'ММ-дд-ДД',
   '.rbc.localizer.moment.agendaDateFormat': 'ddd MMM DD',
+  '.rbc.localizer.moment.agendaHeaderFormat': 'ddd MMM DD',
   '.rbc.localizer.moment.yearMonthWeekdayFormat': 'дд',
   '.rbc.localizer.moment.yearMonthDateFormat': 'D',
   '.rbc.localizer.moment.weekOfYearFormat': 'WW',

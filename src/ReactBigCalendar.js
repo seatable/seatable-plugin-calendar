@@ -6,7 +6,7 @@ import Calendar from './Calendar';
 import momentLocalizer from './utils/localizers/intl-decorator';
 import { getDtableUuid } from './utils/common';
 import { isValidDateObject } from './utils/dates';
-import { KEY_SELECTED_CALENDAR_VIEW, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
+import { CALENDAR_VIEWS, KEY_SELECTED_CALENDAR_VIEW, SETTING_KEY, TITLE_COLUMN_TYPES } from './constants';
 import TableEvent from './model/event';
 
 import './css/react-big-calendar.css';
@@ -348,19 +348,28 @@ class ReactBigCalendar extends React.Component {
     return startDateColumn.type === CellType.DATE;
   };
 
+  onJumpToDay = (date) => {
+    this.onSelectView(CALENDAR_VIEWS.DAY);
+    this.calendarRef.updateCurrentDate(date);
+  };
+
   render() {
     const { settings, calendarViews } = this.props;
     const { events } = this.state;
     const startDateColumnName = settings[SETTING_KEY.COLUMN_START_DATE];
+    const endDateColumnName = settings[SETTING_KEY.COLUMN_END_DATE];
     const startDateColumn = this.getDateColumn(startDateColumnName);
+    const endDateColumn = endDateColumnName ? this.getDateColumn(endDateColumnName) : null;
 
     const configuredWeekStart = settings[SETTING_KEY.WEEK_START];
     const startYearFirstWeek = settings[SETTING_KEY.START_YEAR_FIRST_WEEK];
     const localizer = momentLocalizer(dayjs, configuredWeekStart, startYearFirstWeek);
     return (
       <DragAndDropCalendar
+        ref={ref => this.calendarRef = ref}
         {...this.props}
         startDateColumn={startDateColumn}
+        endDateColumn={endDateColumn}
         configuredWeekStart={configuredWeekStart}
         localizer={localizer}
         events={events}
@@ -378,6 +387,7 @@ class ReactBigCalendar extends React.Component {
         onEventDragResize={this.handleResizeDrop}
         onResizeDrop={this.handleResizeDrop}
         onEventDrop={this.handleEventDrop}
+        onJumpToDay={this.onJumpToDay}
       />
     );
   }

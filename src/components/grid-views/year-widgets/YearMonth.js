@@ -64,6 +64,7 @@ class YearMonth extends React.PureComponent {
                 currentMonth={currentMonth}
                 firstDayOfTheYear={firstDayOfTheYear}
                 handleShowMore={this.handleShowMore.bind(this, date, dayEvents)}
+                onJumpToDay={this.props.onJumpToDay}
               />
             );
           })}
@@ -104,6 +105,7 @@ YearMonth.propTypes = {
   dayEventsMap: PropTypes.object,
   localizer: PropTypes.object,
   handleShowMore: PropTypes.func,
+  onJumpToDay: PropTypes.func,
 };
 
 export default YearMonth;

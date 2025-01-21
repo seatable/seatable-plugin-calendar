@@ -12,7 +12,7 @@ import {
 import { notify } from './utils/helpers';
 import message from './utils/messages';
 import moveDate from './utils/move';
-import { omit, defaults } from './utils/common';
+import { omit, defaults, isMobile, getDtablePermission } from './utils/common';
 import { wrapAccessor } from './utils/accessors';
 import { mergeWithDefaults } from './utils/localizers/localizer';
 import * as dates from './utils/dates';
@@ -692,6 +692,7 @@ class Calendar extends React.Component {
     className: PropTypes.string,
     columns: PropTypes.array,
     startDateColumn: PropTypes.object,
+    endDateColumn: PropTypes.object,
     isMobile: PropTypes.bool,
     handleRowExpand: PropTypes.func,
     onInsertRow: PropTypes.func,
@@ -704,6 +705,7 @@ class Calendar extends React.Component {
     onEventResize: PropTypes.func,
     onResizeDrop: PropTypes.func,
     isExporting: PropTypes.bool,
+    onJumpToDay: PropTypes.func,
   };
 
   static defaultProps = {
@@ -726,7 +728,7 @@ class Calendar extends React.Component {
 
     longPressThreshold: 250,
     getNow: () => new Date(),
-    dayLayoutAlgorithm: 'overlap'
+    dayLayoutAlgorithm: 'no-overlap',
   };
 
   constructor(...args) {
@@ -736,6 +738,7 @@ class Calendar extends React.Component {
       changeDateByNavicate: false,
     };
     this.view2ComponentMap = this.getView2ComponentMap();
+    this.isTableReadOnly = getDtablePermission() === 'r';
   }
 
   getContext({
@@ -919,14 +922,65 @@ class Calendar extends React.Component {
     this.handleNavigate(navigate.DATE, date);
   };
 
-  onInsertRow = (date) => {
-    const { startDateColumn, onInsertRow } = this.props;
-    const { name } = startDateColumn;
-    onInsertRow({ [name]: date });
+  onInsertRow = (startDate, endDate) => {
+    const { startDateColumn, endDateColumn, onInsertRow } = this.props;
+    const { name } = startDateColumn || {};
+    const { name: endName } = endDateColumn || {};
+    const row = name ? { [name]: startDate } : {};
+    if (endDate && endName) {
+      row[endName] = endDate;
+    }
+    onInsertRow(row);
+  };
+
+  onGlobalInsertRow = () => {
+    const { onInsertRow } = this.props;
+    onInsertRow({});
   };
 
   updateCurrentDate = (date) => {
     this.setState({ date, changeDateByNavicate: false });
+  };
+
+  onShowInsertRecordTip = (e) => {
+    // when mouse move out of these cases, dont show insert tip
+    if (!e.target.closest('.rbc-row-content') && !e.target.closest('.rbc-day-slot') && !e.target.closest('.rbc-header')) {
+      this.onHideInsertRecordTip();
+      return;
+    }
+    //  dont show insert tip when mouse moved in these cases
+    if (
+      (e.target.closest('.rbc-row-segment') && !e.target.matches('.rbc-row-segment')) ||
+      e.target.closest('.rbc-event') ||
+      e.target.closest('.calendar-insert-row-btn') ||
+      e.target.closest('.rbc-header-drilldown-btn')
+    ) {
+      this.onHideInsertRecordTip();
+      return;
+    }
+    //  hide insert tip
+    const insertTip = document.querySelector('#calendar-insert-new-record-tip');
+    const calendarContent = document.querySelector('.calendar-plugin-content');
+    const { left, top } = calendarContent.getBoundingClientRect();
+    // const appNav = document.querySelector('.seatable-app-nav');
+
+    insertTip.style.display = 'none';
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    const { clientX, clientY } = e;
+    insertTip.style.left = `${clientX - left - 30}px`;
+    insertTip.style.top = `${clientY - top + 20}px`;
+    this.timer = setTimeout(() => {
+      insertTip.style.display = 'flex';
+    }, 500);
+  };
+
+
+  onHideInsertRecordTip = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
   };
 
   render() {
@@ -954,12 +1008,17 @@ class Calendar extends React.Component {
     const { accessors, components, getters, localizer, viewNames } = this.getContext(this.props);
     const CalToolbar = components.toolbar || Toolbar;
     const label = View.title(current, { localizer, length });
+    const insertRecordProps = this.isTableReadOnly ? {} : {
+      onMouseMove: this.onShowInsertRecordTip,
+      onMouseLeave: this.onHideInsertRecordTip
+    };
     return (
       <div
         {...elementProps}
         className={classnames(className, 'rbc-calendar', { 'rbc-rtl': props.rtl })}
         style={style}
         onClick={this.props.hideViewSettingPanel}
+        {...insertRecordProps}
       >
         {toolbar && (
           <CalToolbar
@@ -1005,6 +1064,7 @@ class Calendar extends React.Component {
               onEventDragResize={this.props.onEventDragResize}
               onResizeDrop={this.props.onResizeDrop}
               onSelectEvent={this.props.onSelectEvent}
+              onJumpToDay={this.props.onJumpToDay}
             />
             {this.props.isExporting && (
               <ExportedMonths
@@ -1032,6 +1092,15 @@ class Calendar extends React.Component {
                 isMobile={this.props.isMobile}
               />
             )}
+            {!isMobile && !this.isTableReadOnly &&
+              <div
+                className='seatable-plugin-calendar-insert-row '
+                onClick={this.onGlobalInsertRow}
+              >
+                <span className='dtable-font dtable-icon-add-table'></span>
+              </div>
+            }
+            {!this.isTableReadOnly && <div id='calendar-insert-new-record-tip'>{intl.get('Double_click_to_insert_new_record')}</div>}
           </React.Fragment>
         ) :
           <div className="empty-date-tips">{intl.get('No_date_field_to_place_records_on_the_calendar')}</div>

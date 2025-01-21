@@ -17,6 +17,7 @@ const zh_CN = {
   '.rbc.localizer.moment.yearHeaderFormat': 'YYYY年',
   '.rbc.localizer.moment.dayHeaderFormat': 'MMMDD日 星期dd',
   '.rbc.localizer.moment.agendaDateFormat': 'ddd MMM DD',
+  '.rbc.localizer.moment.agendaHeaderFormat': 'MMMDD日 周dd',
   '.rbc.localizer.moment.yearMonthWeekdayFormat': 'dd',
   '.rbc.localizer.moment.yearMonthDateFormat': 'D',
   '.rbc.localizer.moment.weekOfYearFormat': 'WW',
@@ -69,6 +70,8 @@ const zh_CN = {
   'Next': '下一步',
   'Drag_resize_handle': '拖拽按钮',
   'Empty': '空',
+  'New_record': '新建记录',
+  'Double_click_to_insert_new_record': '双击新建记录',
 };
 
 export default zh_CN;

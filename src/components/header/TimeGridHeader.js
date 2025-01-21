@@ -6,6 +6,10 @@ import ResourceHeader from './ResourceHeader';
 import DateContentRow from '../rows/DateContentRow';
 import * as dates from '../../utils/dates';
 import { notify } from '../../utils/helpers';
+import { isMobile } from '../../utils/common';
+import dayjs from 'dayjs';
+import { UncontrolledTooltip } from 'reactstrap';
+import intl from 'react-intl-universal';
 
 class TimeGridHeader extends React.Component {
 
@@ -14,13 +18,20 @@ class TimeGridHeader extends React.Component {
     notify(this.props.onDrillDown, [date, view]);
   };
 
+  onInsertRow = (date) => {
+    const { canAddRecord } = this.props;
+    if (!canAddRecord || isMobile) return;
+    this.props.onInsertRow(dates.getFormattedDate(date, 'YYYY-MM-DD'));
+  };
+
   renderHeaderCells(range) {
     let {
       localizer,
       getDrilldownView,
       getNow,
       getters: { dayProp },
-      components: { header: HeaderComponent = Header }
+      components: { header: HeaderComponent = Header },
+      canAddRecord,
     } = this.props;
 
     const today = getNow();
@@ -28,6 +39,7 @@ class TimeGridHeader extends React.Component {
     return range.map((date, i) => {
       let drilldownView = getDrilldownView(date);
       let label = localizer.format(date, 'dayFormat');
+      const dateStr = dayjs(date).format('YYYY-MM-DD-HH-mm-ss');
 
       const { className, style } = dayProp(date);
 
@@ -46,14 +58,35 @@ class TimeGridHeader extends React.Component {
               'rbc-today': dates.eq(date, today, 'day')
             }
           )}
+          onDoubleClick={() => this.onInsertRow(date)}
         >
           {drilldownView ? (
-            <button
-              tabIndex={-1}
-              onClick={e => this.handleHeaderClick(date, drilldownView, e)}
-            >
-              {header}
-            </button>
+            <>
+              <button
+                onClick={e => this.handleHeaderClick(date, drilldownView, e)}
+                className='rbc-header-drilldown-btn'
+              >
+                {header}
+              </button>
+              {canAddRecord && !isMobile && (
+                <>
+                  <div
+                    id={`calendar-insert-${dateStr}`}
+                    className="calendar-insert-row-btn"
+                    onClick={this.onInsertRow.bind(this, date)}
+                  >
+                    <i className="dtable-font dtable-icon-add-table"></i>
+                  </div>
+                  <UncontrolledTooltip
+                    modifiers={{ preventOverflow: { boundariesElement: document.body } }}
+                    target={`calendar-insert-${dateStr}`}
+                    placement="bottom"
+                  >
+                    {intl.get('New_record')}
+                  </UncontrolledTooltip>
+                </>
+              )}
+            </>
           ) : (
             <span>{header}</span>
           )}
@@ -72,7 +105,8 @@ class TimeGridHeader extends React.Component {
       getters,
       localizer,
       accessors,
-      components
+      components,
+      canAddRecord
     } = this.props;
 
     const resourceId = accessors.resourceId(resource);
@@ -100,6 +134,9 @@ class TimeGridHeader extends React.Component {
         onDoubleClick={this.props.onDoubleClickEvent}
         onSelectSlot={this.props.onSelectSlot}
         longPressThreshold={this.props.longPressThreshold}
+        onInsertRow={this.onInsertRow}
+        canAddRecord={canAddRecord}
+        isDesktop={!isMobile}
       />
     );
   };
@@ -159,9 +196,7 @@ class TimeGridHeader extends React.Component {
               </div>
             )}
             <div
-              className={`rbc-row rbc-time-header-cell${
-                range.length <= 1 ? ' rbc-time-header-cell-single-day' : ''
-              }`}
+              className='rbc-row rbc-time-header-cell'
             >
               {this.renderHeaderCells(range)}
             </div>
@@ -184,6 +219,9 @@ class TimeGridHeader extends React.Component {
               onDoubleClick={this.props.onDoubleClickEvent}
               onSelectSlot={this.props.onSelectSlot}
               longPressThreshold={this.props.longPressThreshold}
+              onInsertRow={this.onInsertRow}
+              canAddRecord={this.props.canAddRecord}
+              isDesktop={!isMobile}
             />
           </div>
         ))}

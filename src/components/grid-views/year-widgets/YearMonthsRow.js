@@ -42,6 +42,7 @@ class YearMonthsRow extends React.PureComponent {
               dayEventsMap={dayEventsMap}
               localizer={localizer}
               handleShowMore={this.props.handleShowMore}
+              onJumpToDay={this.props.onJumpToDay}
             />
           );
         })}
@@ -59,7 +60,8 @@ YearMonthsRow.propTypes = {
   dayEventsMap: PropTypes.object,
   localizer: PropTypes.object,
   handleShowMore: PropTypes.func,
-  isMobile: PropTypes.bool
+  isMobile: PropTypes.bool,
+  onJumpToDay: PropTypes.func,
 };
 
 export default YearMonthsRow;

@@ -63,6 +63,7 @@ const intlDayHeaderFormatDecorator = (subject, moment) => {
   intlFormat('dayHeaderFormat');
 
   intlFormat('agendaDateFormat', 'ddd MMM Do');
+  intlFormat('agendaHeaderFormat', 'ddd MMM DD');
 
   /* additional decorator formats */
   intlFormat('yearMonthWeekdayFormat', 'dd');

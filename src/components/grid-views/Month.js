@@ -36,6 +36,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { pointerWithin, rectIntersection, DndContext } from '@dnd-kit/core';
 import { isEmptyObject } from 'dtable-utils';
 import { throttle } from 'lodash-es';
+import intl from 'react-intl-universal';
+import { UncontrolledTooltip } from 'reactstrap';
 
 dayjs.extend(customParseFormat);
 
@@ -293,9 +295,11 @@ class MonthView extends React.Component {
     if (!this.state.popup) {
       this.clearSelection();
       let position = getPosition(cell, findDOMNode(this));
+      const { left } = cell.getBoundingClientRect();
       let { top } = position;
       top = top + containerPaddingTop + calendarHeaderHeight;
       position.top = top;
+      position.left = left - 200;
       this.setState({
         overlay: { date, events, position, target },
         popup: true
@@ -394,6 +398,8 @@ class MonthView extends React.Component {
         onSelectSlot={this.handleSelectSlot}
         longPressThreshold={longPressThreshold}
         rtl={this.props.rtl}
+        onInsertRow={this.onInsertRow}
+        canAddRecord={!this.isTableReadOnly}
       />
     );
   };
@@ -403,6 +409,7 @@ class MonthView extends React.Component {
     let isOffRange = dates.month(date) !== dates.month(currentDate);
     let drilldownView = getDrilldownView(date);
     let label = localizer.format(date, 'dateFormat');
+    const dateStr = dayjs(date).format('YYYY-MM-DD-HH-mm-ss');
     let DateHeaderComponent = this.props.components.dateHeader || DateHeader;
     const isDesktop = !isMobile;
     return (
@@ -418,7 +425,23 @@ class MonthView extends React.Component {
           onDrillDown={e => this.handleHeadingClick(date, drilldownView, e)}
         />
         {isDesktop && this.isChinese && this.renderFestival(date)}
-        {isDesktop && !this.isTableReadOnly && <div className="calendar-insert-row-btn" onClick={this.onInsertRow.bind(this, date)}><i className="dtable-font dtable-icon-add-table"></i></div>}
+        {isDesktop && !this.isTableReadOnly &&
+          <>
+            <div
+              id={`calendar-insert-${dateStr}`}
+              className="calendar-insert-row-btn"
+              onClick={this.onInsertRow.bind(this, date)}
+            >
+              <i className="dtable-font dtable-icon-add-table"></i>
+            </div>
+            <UncontrolledTooltip
+              modifiers={{ preventOverflow: { boundariesElement: document.body } }}
+              target={`calendar-insert-${dateStr}`}
+              placement="bottom"
+            >
+              {intl.get('New_record')}
+            </UncontrolledTooltip>
+          </>}
       </div>
     );
   };

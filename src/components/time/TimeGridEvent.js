@@ -120,16 +120,6 @@ function TimeGridEvent(props) {
   const eventInSingleLine = eventHeight < 3.5 ? true : false;
   const inner = [
     <div key='1'
-      className='rbc-event-label'
-      {...dndListeners}
-      {...dndAttributes}
-      tabIndex={-1}
-    >
-      <span>
-        {label}
-      </span>
-    </div>,
-    <div key='2'
       className={classnames('rbc-event-content', 'rbc-event-content-timeslot', { 'd-flex align-items-center text-nowrap': eventInSingleLine })}
       {...dndListeners}
       {...dndAttributes}
@@ -141,48 +131,50 @@ function TimeGridEvent(props) {
 
   return (
     <EventWrapper type='time' {...props}>
-      <div
-        ref={dndSetNodeRef}
-        onClick={onClick}
-        onKeyDown={handleEnterKeyDown(onClick)}
-        onDoubleClick={onDoubleClick}
-        style={{
-          ...getRbcEventStyle(props),
-          ...userProps.style,
-          top: stringifyPercent(eventTop),
-          [rtl ? 'right' : 'left']: stringifyPercent(xOffset),
-          width: stringifyPercent(width),
-          height: stringifyPercent(eventHeight),
-          ...dndTransformPosition
-        }}
-        title={
-          tooltip
-            ? (typeof label === 'string' ? label + ': ' : '') + tooltip
-            : undefined
-        }
-        className={classnames('rbc-event', className, userProps.className, {
-          'rbc-selected': selected,
-          'rbc-event-continues-earlier': continuesEarlier,
-          'rbc-event-continues-later': continuesLater
-        })}
-        aria-label={tooltip}
-        tabIndex={0}
-      >
-        <TimeGridEventDragHandle
-          direction="top"
-          resizeEventTop={resizeEventTop}
-          resizeEventHeight={resizeEventHeight}
-          singleSlotHeight={singleSlotHeight}
-          event={event}
-        />
-        {inner}
-        <TimeGridEventDragHandle
-          direction="bottom"
-          resizeEventTop={resizeEventTop}
-          resizeEventHeight={resizeEventHeight}
-          singleSlotHeight={singleSlotHeight}
-          event={event}
-        />
+      <div className='rbc-day-event-container'>
+        <div
+          ref={dndSetNodeRef}
+          onClick={onClick}
+          onKeyDown={handleEnterKeyDown(onClick)}
+          onDoubleClick={onDoubleClick}
+          style={{
+            ...getRbcEventStyle(props),
+            ...userProps.style,
+            top: stringifyPercent(eventTop),
+            [rtl ? 'right' : 'left']: stringifyPercent(xOffset),
+            width: stringifyPercent(width),
+            height: stringifyPercent(eventHeight),
+            ...dndTransformPosition
+          }}
+          title={
+            tooltip
+              ? (typeof label === 'string' ? label + ': ' : '') + tooltip
+              : undefined
+          }
+          className={classnames('rbc-event', className, userProps.className, {
+            'rbc-selected': selected,
+            'rbc-event-continues-earlier': continuesEarlier,
+            'rbc-event-continues-later': continuesLater
+          })}
+          aria-label={tooltip}
+          tabIndex={0}
+        >
+          <TimeGridEventDragHandle
+            direction="top"
+            resizeEventTop={resizeEventTop}
+            resizeEventHeight={resizeEventHeight}
+            singleSlotHeight={singleSlotHeight}
+            event={event}
+          />
+          {inner}
+          <TimeGridEventDragHandle
+            direction="bottom"
+            resizeEventTop={resizeEventTop}
+            resizeEventHeight={resizeEventHeight}
+            singleSlotHeight={singleSlotHeight}
+            event={event}
+          />
+        </div>
       </div>
     </EventWrapper>
   );

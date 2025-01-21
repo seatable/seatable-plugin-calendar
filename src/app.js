@@ -211,6 +211,12 @@ class App extends React.Component {
   };
 
   onInsertRow = (rowData, activeTable, activeView, rowId) => {
+    const { columns } = activeTable;
+    const firstColumn = columns.find(column => column.key === '0000');
+    const name = firstColumn.name;
+    if (!rowData[name]) {
+      rowData[name] = intl.get('New_record');
+    }
     const initData = window.dtableSDK.getInsertedRowInitData(activeView, activeTable, rowId);
     const newRowData = Object.assign({}, initData, rowData);
     window.dtableSDK.appendRow(activeTable, newRowData, activeView);

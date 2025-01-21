@@ -12,7 +12,11 @@ import { notify } from '../../utils/helpers';
 import * as DayEventLayout from '../../utils/DayEventLayout';
 import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
 import intl from 'react-intl-universal';
+import { debounce } from 'lodash-es';
+import { isMobile } from '../../utils/common';
+import dayjs from 'dayjs';
 
+const SLOT_HEIGHT = 20;
 
 class DayColumn extends React.Component {
   state = {
@@ -23,10 +27,21 @@ class DayColumn extends React.Component {
     super(...args);
 
     this.slotMetrics = TimeSlotUtils.getSlotMetrics(this.props);
+    this.timeRange = this.slotMetrics.groups.reduce((arr, group) => {
+      arr.push(...group);
+      return arr;
+    }, []);
+    this.dayColumnRef = React.createRef();
+    this.currentActiveTime = null;
+    this.currentActiveEndTime = null;
   }
 
   componentDidMount() {
     this.props.selectable && this._selectable();
+    this.timeRange = this.slotMetrics.groups.reduce((arr, group) => {
+      arr.push(...group);
+      return arr;
+    }, []);
   }
 
   componentWillUnmount() {
@@ -41,6 +56,32 @@ class DayColumn extends React.Component {
     this.slotMetrics = this.slotMetrics.update(nextProps);
   }
 
+  onMouseMove = e => {
+    const mouseY = e.clientY;
+    const dayColumnTop = this.dayColumnRef.current.getBoundingClientRect().top;
+    const slot = Math.floor(((mouseY - dayColumnTop) / SLOT_HEIGHT));
+    if (slot < 0 || slot >= this.timeRange.length) return;
+    this.currentActiveTime = this.timeRange[slot];
+    this.currentActiveEndTime = dates.add(this.currentActiveTime, 30, 'minutes');
+    if (this.currentActiveTime.getDate() !== this.currentActiveEndTime.getDate()) {
+      this.currentActiveEndTime.setMilliseconds(-1);
+    }
+  };
+
+  onMouseLeave = () => {
+    this.currentActiveTime = null;
+    this.currentActiveEndTime = null;
+  };
+
+  formatDate = (date) => {
+    return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+  };
+
+  onDoubleClick = () => {
+    if (!this.currentActiveTime || !this.currentActiveEndTime) return;
+    this.props.onInsertRow(this.formatDate(this.currentActiveTime), this.formatDate(this.currentActiveEndTime));
+  };
+
   render() {
     const {
       max,
@@ -49,15 +90,19 @@ class DayColumn extends React.Component {
       resource,
       localizer,
       getters: { dayProp, ...getters },
-      components: { eventContainerWrapper: EventContainer, ...components }
+      components: { eventContainerWrapper: EventContainer, ...components },
+      canAddRecord,
     } = this.props;
 
     let { slotMetrics } = this;
     let { selecting, top, height, startDate, endDate } = this.state;
-
     let selectDates = { start: startDate, end: endDate };
-
     const { className, style } = dayProp(max);
+    const insertRecordProps = canAddRecord && !isMobile ? {
+      onMouseMove: debounce(this.onMouseMove, 100, { trailing: true }),
+      onMouseLeave: this.onMouseLeave,
+      onDoubleClick: this.onDoubleClick
+    } : {};
 
     return (
       <div
@@ -82,8 +127,14 @@ class DayColumn extends React.Component {
             components={components}
           />
         ))}
-        <div className={classnames('rbc-events-container', { 'rtl': rtl })}>
-          {this.renderEvents()}
+        <div
+          ref={this.dayColumnRef}
+          className={classnames('rbc-events-container', { 'rtl': rtl })}
+          {...insertRecordProps}
+        >
+          <div className='rbc-events-content'>
+            {this.renderEvents()}
+          </div>
         </div>
         {selecting && (
           <div className='rbc-slot-selection' style={{ top, height }}>

@@ -18,6 +18,7 @@ import { DayLayoutAlgorithmPropType } from '../../utils/propTypes';
 import { DndContext, rectIntersection, pointerWithin } from '@dnd-kit/core';
 import { isEmptyObject } from 'dtable-utils';
 import { throttle } from 'lodash-es';
+import { getDtablePermission, isMobile } from '../../utils/common';
 
 export default class TimeGrid extends Component {
   constructor(props) {
@@ -32,6 +33,8 @@ export default class TimeGrid extends Component {
     this.scrollRef = React.createRef();
     this.contentRef = React.createRef();
     this._scrollRatio = null;
+    this.canAddRecord = getDtablePermission() !== 'r';
+    this.isDesktop = !isMobile;
   }
 
   UNSAFE_componentWillMount() {
@@ -152,6 +155,9 @@ export default class TimeGrid extends Component {
             date={date}
             events={daysEvents}
             dayLayoutAlgorithm={dayLayoutAlgorithm}
+            onInsertRow={this.props.onInsertRow}
+            canAddRecord={this.canAddRecord}
+            isDesktop={this.isDesktop}
           />
         );
       })
@@ -458,6 +464,9 @@ export default class TimeGrid extends Component {
                 onDoubleClickEvent={this.props.onDoubleClickEvent}
                 onDrillDown={this.props.onDrillDown}
                 getDrilldownView={this.props.getDrilldownView}
+                onInsertRow={this.props.onInsertRow}
+                canAddRecord={this.canAddRecord}
+                isDesktop={this.isDesktop}
               />
               <div
                 ref={this.contentRef}
@@ -476,6 +485,9 @@ export default class TimeGrid extends Component {
                   timeslots={this.props.timeslots}
                   components={components}
                   className='rbc-time-gutter'
+                  onInsertRow={this.props.onInsertRow}
+                  canAddRecord={this.canAddRecord}
+                  isDesktop={this.isDesktop}
                 />
                 {this.renderEvents(range, rangeEvents, getNow())}
                 <CurrentTimeIndicator

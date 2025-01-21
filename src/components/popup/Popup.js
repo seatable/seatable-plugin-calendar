@@ -94,7 +94,8 @@ class Popup extends React.Component {
               id='calender-date-popup-close'
               tabIndex={0}
               ref={ref => this.closeBtn = ref}
-            >×
+              className="dtable-font dtable-icon-x calender-date-popup-close"
+            >
             </span>
           </button>
         </div>

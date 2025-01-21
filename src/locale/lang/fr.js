@@ -17,6 +17,7 @@ const fr = {
   '.rbc.localizer.moment.yearHeaderFormat': 'YYYY',
   '.rbc.localizer.moment.dayHeaderFormat': 'ddd MMM DD',
   '.rbc.localizer.moment.agendaDateFormat': 'ddd MMM DD',
+  '.rbc.localizer.moment.agendaHeaderFormat': 'ddd MMM DD',
   '.rbc.localizer.moment.yearMonthWeekdayFormat': 'dd',
   '.rbc.localizer.moment.yearMonthDateFormat': 'D',
   '.rbc.localizer.moment.weekOfYearFormat': 'WW',
@@ -69,6 +70,8 @@ const fr = {
   'Next': 'Avancer',
   'Drag_resize_handle': 'Gestionnaire de redimensionnement par glisser-déposer',
   'Empty': 'Vide',
+  'New_record': 'New record',
+  'Double_click_to_insert_new_record': 'Double click to insert new record',
 };
 
 export default fr;

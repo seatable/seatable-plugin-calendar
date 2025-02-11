@@ -59,8 +59,7 @@ const mixins = {
   // randerSpan component wraps both empty space and events，compute width of them
   renderSpan(slots, len, key, content = ' ', isAllDayCell) {
     let per = (Math.abs(len) / slots) * 100 + '%';
-    const excludeDays = [3, 5, 6];
-    const isExcluded = typeof content === 'object' && excludeDays.includes(content.props.event.start.getDay());
+
     const props = {
       key,
       // IE10/11 need max-width. flex-basis doesn't respect box-sizing
@@ -69,7 +68,7 @@ const mixins = {
         flexBasis: per,
         maxWidth: per,
         position: 'relative',
-        paddingRight: isAllDayCell ? '12px' : len === 1 && !isExcluded ? '0.5px' : '0.1px',
+        paddingRight: isAllDayCell ? '12px' : '0',
       },
       className: 'rbc-row-segment',
     };

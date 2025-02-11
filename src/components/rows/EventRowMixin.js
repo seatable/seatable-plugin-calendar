@@ -60,8 +60,8 @@ const mixins = {
   renderSpan(slots, len, key, content = ' ', isAllDayCell) {
     let per = (Math.abs(len) / slots) * 100 + '%';
     const excludeDays = [5, 6];
-    const isExcluded = typeof content === 'object' && excludeDays.includes(content.props.event.end.getDay());
-    const endAtSunday = typeof content === 'object' && content.props.event.end.getDay() === 0;
+    const isExcluded = typeof content === 'object' && excludeDays.includes(content.props.event?.end.getDay());
+    const endAtSunday = typeof content === 'object' && content.props.event?.end.getDay() === 0;
     let paddingRight;
     if (isAllDayCell) {
       paddingRight = '12px';

@@ -243,19 +243,14 @@ DateContentRow.propTypes = {
   components: PropTypes.object.isRequired,
   getters: PropTypes.object.isRequired,
   localizer: PropTypes.object.isRequired,
-  minRows: PropTypes.number.isRequired,
-  maxRows: PropTypes.number.isRequired,
+  minRows: PropTypes.number,
+  maxRows: PropTypes.number,
   className: PropTypes.string,
   uuid: PropTypes.string,
   renderFestival: PropTypes.bool,
   isMobile: PropTypes.bool,
   onInsertRow: PropTypes.func,
   canAddRecord: PropTypes.bool,
-};
-
-DateContentRow.defaultProps = {
-  minRows: 0,
-  maxRows: Infinity
 };
 
 export default DateContentRow;

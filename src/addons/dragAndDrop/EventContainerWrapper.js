@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import * as dates from '../../utils/dates';
-import { findDOMNode } from 'react-dom';
-
 import Selection, {
   getBoundsForNode,
   getEventNodeFromPoint,
@@ -43,6 +41,7 @@ class EventContainerWrapper extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {};
+    this.containerRef = React.createRef();
   }
 
   componentDidMount() {
@@ -134,7 +133,8 @@ class EventContainerWrapper extends React.Component {
   };
 
   _selectable = () => {
-    let node = findDOMNode(this);
+    let node = this.containerRef.current;
+    if (!node) return;
     let isBeingDragged = false;
     let selector = (this._selector = new Selection(() =>
       node.closest('.rbc-time-view')
@@ -252,6 +252,7 @@ class EventContainerWrapper extends React.Component {
     else label = localizer.format({ start, end }, format);
 
     return React.cloneElement(children, {
+      ref: this.containerRef,
       children: (
         <React.Fragment>
           {events}

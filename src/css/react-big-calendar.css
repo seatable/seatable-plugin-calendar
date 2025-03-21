@@ -649,6 +649,8 @@ button.rbc-input::-moz-focus-inner {
   line-height: normal;
   display: flex;
   align-items: center;
+  border: none;
+  background-color: inherit;
 }
 
 .rbc-overlay .rbc-overlay-body {

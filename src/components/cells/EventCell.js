@@ -100,6 +100,7 @@ function EventCell(props) {
   const onRowExpand = () => {
     props.handleRowExpand(event.row._id);
   };
+
   return (
     <div
       tabIndex={0}

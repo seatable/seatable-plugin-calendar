@@ -14,6 +14,10 @@ import TableCell from '../table-cell';
 
 class Agenda extends React.Component {
 
+  static defaultProps = {
+    length: 30
+  };
+
   constructor(props) {
     super(props);
     this.headerRef = React.createRef();
@@ -365,10 +369,6 @@ Agenda.propTypes = {
   formulaRows: PropTypes.object,
   columns: PropTypes.array,
   settings: PropTypes.object
-};
-
-Agenda.defaultProps = {
-  length: 30
 };
 
 Agenda.range = (start, { length = Agenda.defaultProps.length }) => {

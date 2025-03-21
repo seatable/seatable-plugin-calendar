@@ -1,11 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './app';
 
 class TaskList {
 
   static execute() {
-    ReactDOM.render(<App showDialog key={(new Date()).getTime()} />, document.querySelector('#plugin-wrapper'));
+    const root = createRoot(document.querySelector('#plugin-wrapper'));
+    root.render(<App showDialog key={(new Date()).getTime()} />);
   }
 }
 

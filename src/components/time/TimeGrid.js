@@ -21,6 +21,15 @@ import { throttle } from 'lodash-es';
 import { getDtablePermission, isMobile } from '../../utils/common';
 
 export default class TimeGrid extends Component {
+
+  static defaultProps = {
+    step: 30,
+    timeslots: 2,
+    min: dates.startOf(new Date(), 'day'),
+    max: dates.endOf(new Date(), 'day'),
+    scrollToTime: dayjs().startOf('day').add(8, 'hour').toDate(),
+  };
+
   constructor(props) {
     super(props);
 
@@ -596,12 +605,4 @@ TimeGrid.propTypes = {
   onResizeDrop: PropTypes.func,
   onEventDragResize: PropTypes.func,
   onSelectEvent: PropTypes.func
-};
-
-TimeGrid.defaultProps = {
-  step: 30,
-  timeslots: 2,
-  min: dates.startOf(new Date(), 'day'),
-  max: dates.endOf(new Date(), 'day'),
-  scrollToTime: dayjs().startOf('day').add(8, 'hour').toDate(),
 };

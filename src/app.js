@@ -317,7 +317,7 @@ class App extends React.Component {
           <i className="dtable-font dtable-icon-set-up"></i>
         </span>
         <span
-          className="dtable-font dtable-icon-x op-icon btn-close"
+          className="dtable-font dtable-icon-x op-icon"
           onClick={this.onPluginToggle}
           onKeyDown={handleEnterKeyDown(this.onPluginToggle)}
           aria-label={intl.get('Close_plugin')}

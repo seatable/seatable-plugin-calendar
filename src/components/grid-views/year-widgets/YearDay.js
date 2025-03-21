@@ -1,5 +1,4 @@
 import React from 'react';
-import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { handleEnterKeyDown } from '../../../utils/accessibility';
@@ -8,13 +7,14 @@ class YearDay extends React.PureComponent {
 
   clickCount = 0;
   timeout = null;
+  containerRef = React.createRef();
 
   onClick = () => {
     this.clickCount++;
     if (this.clickCount === 1) {
       this.timeout = setTimeout(() => {
         this.props.handleShowMore({
-          cell: findDOMNode(this),
+          cell: this.containerRef.current,
         });
         this.clickCount = 0;
         this.timeout = null;
@@ -54,6 +54,7 @@ class YearDay extends React.PureComponent {
         onClick={this.onClick}
         onKeyDown={handleEnterKeyDown(this.onClick)}
         tabIndex={tabIndex}
+        ref={this.containerRef}
       >
         <div className="rbc-year-day-content">
           <div className={classnames('rbc-year-day', { 'rbc-off-range': isOffRange, 'rbc-current': isCurrentDay })} >{label}</div>

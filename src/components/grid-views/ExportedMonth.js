@@ -1,5 +1,4 @@
 import React from 'react';
-import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import dayjs from 'dayjs';
@@ -27,6 +26,7 @@ class ExportedMonth extends React.Component {
       hoverDateCellPosition: {},
       weekEventsMap: this.getWeekEventsMap(this.props.events, this.props.accessors)
     };
+    this.containerRef = React.createRef();
     this.rbcDateCells = {};
     this.lang = getDtableLang();
     this.isChinese = this.lang && this.lang.toLowerCase() === 'zh-cn';
@@ -69,7 +69,7 @@ class ExportedMonth extends React.Component {
   };
 
   getContainer = () => {
-    return findDOMNode(this);
+    return this.containerRef.current;
   };
 
   handleShowMore = (events, date, cell, slot, target) => {
@@ -77,7 +77,7 @@ class ExportedMonth extends React.Component {
     const { containerPaddingTop, calendarHeaderHeight } = this.props;
     if (!this.state.popup) {
       this.clearSelection();
-      let position = getPosition(cell, findDOMNode(this));
+      let position = getPosition(cell, this.getContainer());
       let { top } = position;
       top = top + containerPaddingTop + calendarHeaderHeight;
       position.top = top;
@@ -111,7 +111,7 @@ class ExportedMonth extends React.Component {
     let weeksCount = renderWeeks.length; // usually there are 5 weeks in a month, but in months such as 2021-05, there are 6 weeks.
 
     return (
-      <div className={classnames('rbc-month-view-exported', className)}>
+      <div className={classnames('rbc-month-view-exported', className)} ref={this.containerRef}>
         <h3 className="mb-3 h4 text-center font-weight-normal">{ExportedMonth.title(date, { localizer })}</h3>
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}

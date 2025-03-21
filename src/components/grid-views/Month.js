@@ -1,5 +1,4 @@
 import React from 'react';
-import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import dayjs from 'dayjs';
@@ -54,6 +53,7 @@ class MonthView extends React.Component {
       hoverDateCellPosition: {},
       weekEventsMap: this.getWeekEventsMap(this.props.events, this.props.accessors),
     };
+    this.containerRef = React.createRef();
     this.rbcDateCells = {};
     this.lang = getDtableLang();
     this.isChinese = this.lang && this.lang.toLowerCase() === 'zh-cn';
@@ -164,7 +164,7 @@ class MonthView extends React.Component {
   }
 
   getContainer = () => {
-    return findDOMNode(this);
+    return this.containerRef.current;
   };
 
   initDateRange = () => {
@@ -294,7 +294,7 @@ class MonthView extends React.Component {
     const { containerPaddingTop, calendarHeaderHeight } = this.props;
     if (!this.state.popup) {
       this.clearSelection();
-      let position = getPosition(cell, findDOMNode(this));
+      let position = getPosition(cell, this.getContainer());
       const { left } = cell.getBoundingClientRect();
       let { top } = position;
       top = top + containerPaddingTop + calendarHeaderHeight;
@@ -435,7 +435,7 @@ class MonthView extends React.Component {
               <i className="dtable-font dtable-icon-add-table"></i>
             </div>
             <UncontrolledTooltip
-              modifiers={{ preventOverflow: { boundariesElement: document.body } }}
+              modifiers={[{ preventOverflow: { boundariesElement: document.body } }]}
               target={`calendar-insert-${dateStr}`}
               placement="bottom"
             >
@@ -618,7 +618,7 @@ class MonthView extends React.Component {
     }
     let weeksCount = renderWeeks.length;
     return (
-      <div className={classnames('rbc-month-view', className)} ref={ref => this.currentView = ref}>
+      <div className={classnames('rbc-month-view', className)} ref={this.containerRef}>
         <div className='rbc-month-header'>
           {weeksCount > 0 && this.renderHeaders(dates.getWeekDates(renderWeeks[0]))}
         </div>

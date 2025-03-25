@@ -225,14 +225,14 @@ class ViewTab extends React.Component {
                           <span className="item-text">{intl.get('Rename_View')}</span>
                         </button>
                         {canDelete &&
-                        <button className="dropdown-item dropdown-item-btn"
-                          onClick={this.onDeleteView}
-                          onKeyDown={handleEnterKeyDown(this.onDeleteView)}
-                          tabIndex={0}
-                        >
-                          <i className="item-icon dtable-font dtable-icon-delete"></i>
-                          <span className="item-text">{intl.get('Delete_View')}</span>
-                        </button>
+                          <button className="dropdown-item dropdown-item-btn"
+                            onClick={this.onDeleteView}
+                            onKeyDown={handleEnterKeyDown(this.onDeleteView)}
+                            tabIndex={0}
+                          >
+                            <i className="item-icon dtable-font dtable-icon-delete"></i>
+                            <span className="item-text">{intl.get('Delete_View')}</span>
+                          </button>
                         }
                       </React.Fragment>
                     }

@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import * as dates from '../../utils/dates';
 import { getSlotAtX, pointInBox } from '../../utils/selection';
-import { findDOMNode } from 'react-dom';
-
 import { eventSegments } from '../../utils/eventLevels';
 import Selection, { getBoundsForNode } from '../../components/selection/Selection';
 import EventRow from '../../components/rows/EventRow';
@@ -54,6 +52,7 @@ class WeekWrapper extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {};
+    this.containerRef = React.createRef();
   }
 
   componentDidMount() {
@@ -198,7 +197,7 @@ class WeekWrapper extends React.Component {
   }
 
   _selectable = () => {
-    let node = findDOMNode(this).closest('.rbc-month-row, .rbc-allday-cell');
+    let node = this.containerRef.current?.closest('.rbc-month-row, .rbc-allday-cell');
     let container = node.closest('.rbc-month-view, .rbc-time-view');
     if (!container) {
       return;
@@ -293,7 +292,7 @@ class WeekWrapper extends React.Component {
     let { segment } = this.state;
 
     return (
-      <div className="rbc-addons-dnd-row-body">
+      <div ref={this.containerRef} className="rbc-addons-dnd-row-body">
         {children}
 
         {segment && (

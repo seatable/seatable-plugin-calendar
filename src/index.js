@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import DTable from 'dtable-sdk';
 import App from './app';
 import { getMediaUrl } from './utils/common';
@@ -47,7 +47,8 @@ class TaskList {
     await this.init();
     const ele = document.getElementById('root');
     if (!ele) return null;
-    ReactDOM.render(<App isDevelopment showDialog key={(new Date()).getTime()} />, ele);
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App isDevelopment showDialog key={(new Date()).getTime()} />);
   }
 }
 

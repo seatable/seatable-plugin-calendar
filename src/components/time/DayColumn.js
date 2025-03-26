@@ -1,5 +1,4 @@
 import React from 'react';
-import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import TimeSlotGroup from './TimeSlotGroup';
@@ -23,6 +22,11 @@ class DayColumn extends React.Component {
     selecting: false,
   };
 
+  static defaultProps = {
+    dragThroughEvents: true,
+    timeslots: 2
+  };
+
   constructor(...args) {
     super(...args);
 
@@ -32,6 +36,7 @@ class DayColumn extends React.Component {
       return arr;
     }, []);
     this.dayColumnRef = React.createRef();
+    this.containerRef = React.createRef();
     this.currentActiveTime = null;
     this.currentActiveEndTime = null;
   }
@@ -107,6 +112,7 @@ class DayColumn extends React.Component {
     return (
       <div
         style={style}
+        ref={this.containerRef}
         className={classnames(
           className,
           'rbc-day-slot',
@@ -214,8 +220,8 @@ class DayColumn extends React.Component {
   };
 
   _selectable = () => {
-    let node = findDOMNode(this);
-    let selector = (this._selector = new Selection(() => findDOMNode(this), {
+    const node = this.containerRef.current;
+    let selector = (this._selector = new Selection(() => node, {
       longPressThreshold: this.props.longPressThreshold
     }));
 
@@ -275,7 +281,7 @@ class DayColumn extends React.Component {
     };
 
     let selectorClicksHandler = (box, actionType) => {
-      if (!isEvent(findDOMNode(this), box)) {
+      if (!isEvent(node, box)) {
         const { startDate, endDate } = selectionState(box);
         this._selectSlot({
           startDate,
@@ -293,7 +299,7 @@ class DayColumn extends React.Component {
     selector.on('beforeSelect', box => {
       if (this.props.selectable !== 'ignoreEvents') return;
 
-      return !isEvent(findDOMNode(this), box);
+      return !isEvent(node, box);
     });
 
     selector.on('click', box => selectorClicksHandler(box, 'click'));
@@ -379,11 +385,6 @@ DayColumn.propTypes = {
   dragThroughEvents: PropTypes.bool,
   resource: PropTypes.any,
   dayLayoutAlgorithm: DayLayoutAlgorithmPropType
-};
-
-DayColumn.defaultProps = {
-  dragThroughEvents: true,
-  timeslots: 2
 };
 
 export default DayColumn;

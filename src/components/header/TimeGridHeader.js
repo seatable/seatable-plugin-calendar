@@ -78,7 +78,7 @@ class TimeGridHeader extends React.Component {
                     <i className="dtable-font dtable-icon-add-table"></i>
                   </div>
                   <UncontrolledTooltip
-                    modifiers={{ preventOverflow: { boundariesElement: document.body } }}
+                    modifiers={[{ preventOverflow: { boundariesElement: document.body } }]}
                     target={`calendar-insert-${dateStr}`}
                     placement="bottom"
                   >

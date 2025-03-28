@@ -50,6 +50,10 @@
   border-bottom: 1px solid #ddd;
 }
 
+.plugin-view-setting .setting-body .form-label {
+  font-weight: unset;
+}
+
 /* column manager */
 .column-setting-item {
   position: relative;

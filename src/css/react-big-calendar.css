@@ -425,12 +425,6 @@ button.rbc-input::-moz-focus-inner {
   overflow-y: scroll;
 }
 
-.rbc-month-rows::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
-}
-
 @media print {
   .rbc-month-header,
   .rbc-month-rows {
@@ -1146,10 +1140,6 @@ button.rbc-input::-moz-focus-inner {
   }
 }
 
-.rbc-year-view::-webkit-scrollbar {
-  display: none;
-}
-
 .rbc-year-view .year-months-row {
   display: flex;
   flex-direction: row;
@@ -1319,10 +1309,6 @@ button.rbc-input::-moz-focus-inner {
   border: 1px solid transparent;
   border-radius: 1px;
   margin-right: 5px;
-}
-
-.rbc-agenda-view::-webkit-scrollbar {
-  display: none;
 }
 
 .rbc-event-container {

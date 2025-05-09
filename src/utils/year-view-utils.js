@@ -58,19 +58,19 @@ export const getOverscanEndIndex = (visibleEndIndex, rowsCount) => {
   return Math.min(Math.ceil(visibleEndIndex / 10) * 10 + YEAR_OVERSCAN_ROWS, rowsCount);
 };
 
-export const getMonthStartDates = (currentDate, renderedRowsCount) => {
+export const getMonthStartDates = (currentDate, renderedRowsCount, monthCountPerRow) => {
   const objCurrentDate = new Date(currentDate);
   const currentYear = objCurrentDate.getFullYear();
   const currentMonth = objCurrentDate.getMonth();
 
-  const startDate = new Date(currentYear, currentMonth - (YEAR_OVERSCAN_ROWS + YEAR_OFFSET_ROWS) * 4);
-  const endDate = new Date(currentYear, currentMonth + (YEAR_OVERSCAN_ROWS + YEAR_OFFSET_ROWS + renderedRowsCount) * 4);
+  const startDate = new Date(currentYear, currentMonth - (YEAR_OVERSCAN_ROWS + YEAR_OFFSET_ROWS) * monthCountPerRow);
+  const endDate = new Date(currentYear, currentMonth + (YEAR_OVERSCAN_ROWS + YEAR_OFFSET_ROWS + renderedRowsCount) * monthCountPerRow);
 
   let rows = [];
   let current = startDate;
   while (current <= endDate) {
     rows.push(current);
-    current = new Date(current.getFullYear(), current.getMonth() + 4);
+    current = new Date(current.getFullYear(), current.getMonth() + monthCountPerRow);
   }
   return rows;
 };

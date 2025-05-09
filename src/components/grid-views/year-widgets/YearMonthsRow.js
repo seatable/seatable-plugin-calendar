@@ -4,37 +4,52 @@ import YearMonth from './YearMonth';
 
 class YearMonthsRow extends React.PureComponent {
 
-  constructor(props) {
-    super(props);
-    this.months = this.getMonths();
-  }
-
-  getMonths = () => {
-    const { isMobile, month } = this.props;
-    if (isMobile) {
-      const displayMonth = month > 9 ? month + '' : `0${month}`;
-      return [displayMonth];
-    }
-
-    // for pc.
-    let months = [];
-    for (let i = 0; i < 4; i++) {
+  getMonthsData = () => {
+    const { year, month, monthCountPerRow } = this.props;
+    let monthsData = [];
+    for (let i = 0; i < monthCountPerRow; i++) {
       let _month = month + i;
-      months.push(_month > 9 ? _month + '' : `0${_month}`);
+      let _year = year;
+      if (_month >= 13) {
+        _month = _month - 12;
+        _year++;
+      }
+      const m = _month > 9 ? _month + '' : `0${_month}`;
+      const y = _year;
+      monthsData.push({
+        month: m,
+        year: y,
+      });
     }
-    return months;
+    return monthsData;
   };
 
-  render() {
-    const { year, yearOfToday, sMonthOfToday, dateOfToday, dayEventsMap, localizer } = this.props;
-    return (
-      <div className="year-months-row">
-        {this.months.map((month) => {
+  renderMonths = () => {
+    const { year, month, yearOfToday, sMonthOfToday, dateOfToday, dayEventsMap, localizer, isMobile } = this.props;
+    if (isMobile) {
+      const displayMonth = month > 9 ? month + '' : `0${month}`;
+      return (
+        <YearMonth
+          key={`year-month-${year}-${displayMonth}`}
+          year={year}
+          month={displayMonth}
+          isCurrentMonth={year === yearOfToday && displayMonth === sMonthOfToday}
+          dateOfToday={dateOfToday}
+          dayEventsMap={dayEventsMap}
+          localizer={localizer}
+          handleShowMore={this.props.handleShowMore}
+          onJumpToDay={this.props.onJumpToDay}
+        />
+      );
+    } else {
+      const monthsData = this.getMonthsData();
+      return (
+        monthsData.map((monthData) => {
+          const { month, year } = monthData;
           const isCurrentMonth = year === yearOfToday && month === sMonthOfToday;
-          const key = `${year}-${month}`;
           return (
             <YearMonth
-              key={`year-month-${key}`}
+              key={`year-month-${year}-${month}`}
               year={year}
               month={month}
               isCurrentMonth={isCurrentMonth}
@@ -45,7 +60,15 @@ class YearMonthsRow extends React.PureComponent {
               onJumpToDay={this.props.onJumpToDay}
             />
           );
-        })}
+        })
+      );
+    }
+  };
+
+  render() {
+    return (
+      <div className="year-months-row">
+        {this.renderMonths()}
       </div>
     );
   }
@@ -55,6 +78,7 @@ YearMonthsRow.propTypes = {
   year: PropTypes.number,
   month: PropTypes.number,
   yearOfToday: PropTypes.number,
+  monthCountPerRow: PropTypes.number,
   sMonthOfToday: PropTypes.string,
   dateOfToday: PropTypes.number,
   dayEventsMap: PropTypes.object,

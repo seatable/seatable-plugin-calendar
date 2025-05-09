@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { debounce } from 'lodash-es';
 import YearMonthsRow from './year-widgets/YearMonthsRow';
 import Popup from '../popup/Popup';
 import * as dates from '../../utils/dates';
@@ -13,6 +14,9 @@ import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 dayjs.extend(isSameOrAfter);
 
+// 240 is the width of month cell, 20 is the gap width between month cells
+const SINGLE_MONTH_WIDTH = 240;
+const GAP_WIDTH = 20;
 
 class YearView extends React.Component {
 
@@ -23,6 +27,7 @@ class YearView extends React.Component {
       popup: false,
       dayEventsMap: this.getDayEventsMap(props.events),
       localizer: props.localizer,
+      monthCountPerRow: 4,
     };
     const today = new Date();
     const monthOfToday = today.getMonth() + 1;
@@ -45,7 +50,11 @@ class YearView extends React.Component {
   componentDidMount() {
     if (!this.rbcYearView) return;
     const { isMobile, date } = this.props;
-    const { offsetHeight } = this.rbcYearView;
+    const { offsetHeight, offsetWidth } = this.rbcYearView;
+
+    // n*240 + (n-1)*20 = offsetWidth
+    // n = (offsetWidth + 20) / 260
+    const monthCountPerRow = Math.floor((offsetWidth + GAP_WIDTH) / (SINGLE_MONTH_WIDTH + GAP_WIDTH));
     const renderedRowsCount = getRenderedRowsCount(offsetHeight);
     let initState;
     if (isMobile) {
@@ -53,12 +62,20 @@ class YearView extends React.Component {
       initState = getInitStateWithDates(this.renderMonthStartDates, date, renderedRowsCount);
     } else {
       const initDate = new Date(new Date(date).getFullYear(), 0);
-      this.renderMonthStartDates = getMonthStartDates(initDate, renderedRowsCount);
+      this.renderMonthStartDates = getMonthStartDates(initDate, renderedRowsCount, monthCountPerRow);
       initState = getInitState(renderedRowsCount, this.renderMonthStartDates);
+      this.observer = new ResizeObserver(() => {
+        this.onResize();
+      });
+      this.observer.observe(this.rbcYearView);
     }
     this.setState({ ...initState }, () => {
       this.rbcYearView.scrollTop = initState.visibleStartIndex * YEAR_MONTHS_ROW_HEIGHT;
     });
+  }
+
+  componentWillUnmount() {
+    this.observer && this.observer.disconnect();
   }
 
   componentDidUpdate(prevProps) {
@@ -72,6 +89,7 @@ class YearView extends React.Component {
       });
     }
     const { date, changeDateByNavicate, isMobile } = this.props;
+    const { monthCountPerRow } = this.state;
     if (prevProps.date !== date && changeDateByNavicate) {
       if (isMobile) {
         this.updateScrollByDateOnMobile(date);
@@ -82,13 +100,25 @@ class YearView extends React.Component {
       const { offsetHeight } = this.rbcYearView;
       const renderedRowsCount = getRenderedRowsCount(offsetHeight);
       const initDate = new Date(new Date(date).getFullYear(), 0);
-      this.renderMonthStartDates = getMonthStartDates(initDate, renderedRowsCount);
+      this.renderMonthStartDates = getMonthStartDates(initDate, renderedRowsCount, monthCountPerRow);
       const initState = getInitState(renderedRowsCount, this.renderMonthStartDates);
       this.setState({ ...initState }, () => {
         this.rbcYearView.scrollTop = initState.visibleStartIndex * YEAR_MONTHS_ROW_HEIGHT;
       });
     }
   }
+
+  onResize = debounce(() => {
+    const { monthCountPerRow } = this.state;
+    const { offsetHeight, offsetWidth } = this.rbcYearView;
+    const newMonthCountPerRow = Math.floor((offsetWidth + GAP_WIDTH) / (SINGLE_MONTH_WIDTH + GAP_WIDTH));
+    if (monthCountPerRow === newMonthCountPerRow) return;
+    const renderedRowsCount = getRenderedRowsCount(offsetHeight);
+    const initDate = new Date(new Date(this.props.date).getFullYear(), 0);
+    this.renderMonthStartDates = getMonthStartDates(initDate, renderedRowsCount, newMonthCountPerRow);
+    const initState = getInitState(renderedRowsCount, this.renderMonthStartDates);
+    this.setState({ ...initState, monthCountPerRow: newMonthCountPerRow });
+  }, 50);
 
   getDayEventsMap = (events) => {
     let dayEventsMap = {};
@@ -128,6 +158,7 @@ class YearView extends React.Component {
 
   onScrollOnDesktop = (scrollTop, viewportHeight) => {
     const { date } = this.props;
+    const { monthCountPerRow } = this.state;
     const renderedRowsCount = getRenderedRowsCount(viewportHeight);
     const overRowsCount = scrollTop / YEAR_MONTHS_ROW_HEIGHT;
     const currentScrollTo = Math.max(0, Math.round(overRowsCount));
@@ -144,7 +175,7 @@ class YearView extends React.Component {
 
       this.isScrolling = false;
       const lastVisibleDate = this.renderMonthStartDates[visibleStartIndex];
-      this.renderMonthStartDates = getMonthStartDates(new Date(nextYear, nextMonth), renderedRowsCount);
+      this.renderMonthStartDates = getMonthStartDates(new Date(nextYear, nextMonth), renderedRowsCount, monthCountPerRow);
       rowsCount = this.renderMonthStartDates.length;
       visibleStartIndex = getVisibleStartIndexByDate(lastVisibleDate, this.renderMonthStartDates);
       scrollTop = (visibleStartIndex + (fract || 1)) * YEAR_MONTHS_ROW_HEIGHT;
@@ -236,7 +267,7 @@ class YearView extends React.Component {
 
   render() {
     const { className, isMobile } = this.props;
-    const { dayEventsMap, overlay, overscanStartIndex, overscanEndIndex, localizer } = this.state;
+    const { dayEventsMap, overlay, overscanStartIndex, overscanEndIndex, localizer, monthCountPerRow } = this.state;
     let renderMonthsRows = [];
     let offsetTop = 0;
     let offsetBottom = 0;
@@ -265,6 +296,7 @@ class YearView extends React.Component {
                 isMobile={this.props.isMobile}
                 handleShowMore={this.handleShowMore}
                 onJumpToDay={this.props.onJumpToDay}
+                monthCountPerRow={monthCountPerRow}
               />
             );
           })}

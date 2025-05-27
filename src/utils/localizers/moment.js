@@ -36,7 +36,7 @@ export let formats = {
   monthHeaderFormat: 'YYYY-MM',
   dayHeaderFormat: 'MM-dd-DD',
   dayRangeHeaderFormat: weekRangeFormat,
-  agendaHeaderFormat: dateRangeFormat,
+  agendaRangeHeaderFormat: dateRangeFormat,
 
   agendaDateFormat: 'ddd MMM DD',
   agendaTimeFormat: 'LT',

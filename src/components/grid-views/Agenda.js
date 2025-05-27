@@ -2,10 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import CellTitle from '../cells/cell-title';
-import addClass from 'dom-helpers/addClass';
-import removeClass from 'dom-helpers/removeClass';
 import getWidth from 'dom-helpers/width';
-import scrollbarSize from 'dom-helpers/scrollbarSize';
 import * as dates from '../../utils/dates';
 import { inRange } from '../../utils/eventLevels';
 import { isSelected } from '../../utils/selection';
@@ -20,7 +17,6 @@ class Agenda extends React.Component {
 
   constructor(props) {
     super(props);
-    this.headerRef = React.createRef();
     this.dateColRef = React.createRef();
     this.timeColRef = React.createRef();
     this.contentRef = React.createRef();
@@ -49,7 +45,7 @@ class Agenda extends React.Component {
 
     const desktopView = (
       <React.Fragment>
-        <table ref={this.headerRef} className='rbc-agenda-table'>
+        <table className='rbc-agenda-table'>
           <thead>
             <tr>
               <th className='rbc-header' ref={this.dateColRef}>
@@ -328,14 +324,8 @@ class Agenda extends React.Component {
   _adjustHeader = () => {
     if (!this.tbodyRef.current) return;
 
-    let header = this.headerRef.current;
     let firstRow = this.tbodyRef.current.firstChild;
-
     if (!firstRow) return;
-
-    let isOverflowing =
-      this.contentRef.current.scrollHeight >
-      this.contentRef.current.clientHeight;
 
     this._widths = [
       getWidth(firstRow.children[0]),
@@ -344,13 +334,6 @@ class Agenda extends React.Component {
 
     this.dateColRef.current.style.width = this._widths[0] + 'px';
     this.timeColRef.current.style.width = this._widths[1] + 'px';
-
-    if (isOverflowing) {
-      addClass(header, 'rbc-header-overflowing');
-      header.style.marginRight = scrollbarSize() + 'px';
-    } else {
-      removeClass(header, 'rbc-header-overflowing');
-    }
   };
 }
 
@@ -391,7 +374,7 @@ Agenda.navigate = (date, action, { length = Agenda.defaultProps.length }) => {
 
 Agenda.title = (start, { length = Agenda.defaultProps.length, localizer }) => {
   let end = dates.add(start, length, 'day');
-  return localizer.format({ start, end }, 'agendaHeaderFormat');
+  return localizer.format({ start, end }, 'agendaRangeHeaderFormat');
 };
 
 export default Agenda;

@@ -1374,7 +1374,7 @@ button.rbc-input::-moz-focus-inner {
   justify-content: center;
   align-items: center;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  z-index: 5
+  z-index: 4
 }
 
 .rbc-calendar .seatable-plugin-calendar-insert-row .dtable-icon-add-table {

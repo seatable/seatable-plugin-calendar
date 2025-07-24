@@ -1,4 +1,4 @@
-'use strict';
+
 
 const fs = require('fs');
 const path = require('path');
@@ -131,34 +131,34 @@ module.exports = function (webpackEnv) {
             config: false,
             plugins: !useTailwind
               ? [
-                  'postcss-flexbugs-fixes',
-                  [
-                    'postcss-preset-env',
-                    {
-                      autoprefixer: {
-                        flexbox: 'no-2009',
-                      },
-                      stage: 3,
+                'postcss-flexbugs-fixes',
+                [
+                  'postcss-preset-env',
+                  {
+                    autoprefixer: {
+                      flexbox: 'no-2009',
                     },
-                  ],
-                  // Adds PostCSS Normalize as the reset css with default options,
-                  // so that it honors browserslist config in package.json
-                  // which in turn let's users customize the target behavior as per their needs.
-                  'postcss-normalize',
-                ]
-              : [
-                  'tailwindcss',
-                  'postcss-flexbugs-fixes',
-                  [
-                    'postcss-preset-env',
-                    {
-                      autoprefixer: {
-                        flexbox: 'no-2009',
-                      },
-                      stage: 3,
-                    },
-                  ],
+                    stage: 3,
+                  },
                 ],
+                // Adds PostCSS Normalize as the reset css with default options,
+                // so that it honors browserslist config in package.json
+                // which in turn let's users customize the target behavior as per their needs.
+                'postcss-normalize',
+              ]
+              : [
+                'tailwindcss',
+                'postcss-flexbugs-fixes',
+                [
+                  'postcss-preset-env',
+                  {
+                    autoprefixer: {
+                      flexbox: 'no-2009',
+                    },
+                    stage: 3,
+                  },
+                ],
+              ],
           },
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
         },
@@ -223,9 +223,9 @@ module.exports = function (webpackEnv) {
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
         ? info =>
-            path
-              .relative(paths.appSrc, info.absoluteResourcePath)
-              .replace(/\\/g, '/')
+          path
+            .relative(paths.appSrc, info.absoluteResourcePath)
+            .replace(/\\/g, '/')
         : isEnvDevelopment &&
           (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
     },
@@ -336,7 +336,7 @@ module.exports = function (webpackEnv) {
         ]),
       ],
       fallback: {
-        path: require.resolve("path-browserify"),
+        path: require.resolve('path-browserify'),
       }
     },
     module: {
@@ -394,21 +394,24 @@ module.exports = function (webpackEnv) {
                   },
                 },
                 {
-                  loader: require.resolve('file-loader'),
+                  loader: 'svgo-loader',
                   options: {
-                    name: 'static/media/[name].[hash].[ext]',
-                  },
-                },
+                    plugins: [
+                      'removeTitle',
+                      'removeStyleElement',
+                      'cleanupIDs',
+                      'inlineStyles',
+                      'removeXMLProcInst',
+                    ]
+                  }
+                }
               ],
-              issuer: {
-                and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
-              },
             },
             {
               test: /\.worker\.js$/,
-              loader: require.resolve("worker-loader"),
+              loader: require.resolve('worker-loader'),
               options: {
-                inline: "no-fallback",
+                inline: 'no-fallback',
               }
             },
             // Process application JS with Babel.
@@ -555,9 +558,9 @@ module.exports = function (webpackEnv) {
             },
             {
               test: /\.less$/,
-              use:  [
-                {loader: 'style-loader'},
-                {loader: 'css-loader'},
+              use: [
+                { loader: 'style-loader' },
+                { loader: 'css-loader' },
                 {
                   loader: 'less-loader',
                   options: {
@@ -565,24 +568,6 @@ module.exports = function (webpackEnv) {
                   }
                 }
               ],
-            },
-            {
-              test: /\.svg$/,
-              use: [
-                {
-                  loader: 'svg-sprite-loader', options: {}
-                },
-                { loader: 'svgo-loader', options: {
-                    plugins:[
-                      'removeTitle',
-                      'removeStyleElement',
-                      'cleanupIDs',
-                      'inlineStyles',
-                      'removeXMLProcInst',
-                    ]
-                  }
-                }
-              ]
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
@@ -627,19 +612,19 @@ module.exports = function (webpackEnv) {
           },
           isEnvProduction
             ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }
             : undefined
         )
       ),

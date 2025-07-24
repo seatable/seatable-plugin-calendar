@@ -1,0 +1,36 @@
+.multicolor-icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.scale-icon {
+  transform: scale(1.5);
+}
+
+.multicolor-icon-single-line-text-sync,
+.multicolor-icon-number-sync,
+.multicolor-icon-checklist-sync,
+.multicolor-icon-calendar-alt-solid-sync,
+.multicolor-icon-single-election-sync,
+.multicolor-icon-long-text-sync,
+.multicolor-icon-picture-sync,
+.multicolor-icon-file-alt-solid-sync,
+.multicolor-icon-multiple-selection-sync,
+.multicolor-icon-collaborator-sync,
+.multicolor-icon-link-other-record-sync,
+.multicolor-icon-formula-sync,
+.multicolor-icon-link-formulas-sync,
+.multicolor-icon-location-sync,
+.multicolor-icon-url-sync,
+.multicolor-icon-email-sync,
+.multicolor-icon-duration-sync,
+.multicolor-icon-button-sync,
+.multicolor-icon-handwritten-signature-sync,
+.multicolor-icon-department-single-selection-sync,
+.multicolor-icon-rate-sync {
+  font-size: 14px;
+  fill: #444;
+  color: #aaa;
+}

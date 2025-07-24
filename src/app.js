@@ -15,6 +15,7 @@ import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
 import { generatorViewId, getDtableUuid, isIOS, isMobile, isSafari } from './utils/common';
 import { handleEnterKeyDown } from './utils/accessibility';
+import Icon from './components/icon';
 import View from './model/view';
 import icon from './image/icon.png';
 import './locale';
@@ -292,9 +293,40 @@ class App extends React.Component {
     });
   };
 
+  MigrateToView = () => {
+    const { plugin_settings, selectedViewIdx } = this.state;
+    const { views } = plugin_settings;
+    const selectedGridView = views[selectedViewIdx];
+    if (JSON.stringify(selectedGridView) === '{}') return;
+    const name = selectedGridView.name;
+    const selectedPluginView = views[selectedViewIdx];
+    const { settings } = selectedPluginView || { settings: {} };
+    const tables = window.dtableSDK.getTables();
+    let tableName = settings['table_name'];
+    if (!tableName){
+      tableName = tables[0].name;
+    }
+    if (window.dtableSDK.canAddCalendarView(tableName, name)){
+      toaster.danger(intl.get('View_name_exist_tip'));
+      return;
+    }
+    window.dtableSDK.addCalendarView(tableName, name, settings);
+    this.onPluginToggle();
+  };
+
   renderBtnGroups = () => {
     return (
       <div className="d-flex align-items-center plugin-calendar-operators">
+        <div
+          className="mr-1 MigrateToView"
+          onClick={this.MigrateToView}
+          onKeyDown={handleEnterKeyDown(this.MigrateToView)}
+          aria-label={intl.get('Migrate_to_view')}
+          tabIndex={0}
+        >
+          <Icon symbol='move-to' className='item-icon mr-1' />
+          <div className="Migrate-text">{intl.get('Migrate_to_view')}</div>
+        </div>
         {!this.isMobile &&
           <span
             className="mr-1 op-icon"

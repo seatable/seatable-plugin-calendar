@@ -405,15 +405,14 @@ class App extends React.Component {
   MigrateToView = () => {
     const { plugin_settings, } = this.state;
     const { views } = plugin_settings;
-    let view_Array = [];
     views.forEach(view => {
-      const { _id, settings } = view;
+      const { settings } = view;
       const selectedTable = this.getSelectedTable(settings);
       const { columns } = this.getProcessedTableView(selectedTable, settings);
       const { tableOptions, titleColumnOptions } = this.getSelectorOptions(this.getSelectorColumns(columns));
-      const defaultTableeName = tableOptions.length > 0 ? tableOptions[0].value : '';
+      const defaultTableName = tableOptions.length > 0 ? tableOptions[0].value : '';
       const defaultColumnTitle = titleColumnOptions.length > 0 ? titleColumnOptions[0].value : '';
-      const { table_name = defaultTableeName, column_title = defaultColumnTitle, column_start_date = '', column_end_date = '', week_start = 0, start_year_first_week = '', column_color = '', columns: displayColumns = [], colored_by_row_color } = settings;
+      const { table_name = defaultTableName, column_title = defaultColumnTitle, column_start_date = '', column_end_date = '', week_start = 0, start_year_first_week = 'year_first_day', column_color = '', columns: agenda_columns = [], colored_by_row_color } = settings;
 
       const tableIndex = tableOptions.findIndex((table) => {
         return table.value === table_name;
@@ -426,19 +425,18 @@ class App extends React.Component {
       const end_date_column_key = end_date_column[0]?.key || '';
 
       const selectTableViews = window.dtableSDK.getViews(selectedTable);
-      let view_Name = this.getOptionalViewName(view.name, selectTableViews);
-
-      const insertData = {
+      const view_Name = this.getOptionalViewName(view.name, selectTableViews);
+      const view_Data = {
         type: 'calendar',
-        name: view_Name
-      };
-      const viewCustomSettings = {
-        title_column_key,
-        start_date_column_key,
-        end_date_column_key,
-        week_start: week_start || 0,
-        start_year_first_week: start_year_first_week || '',
-        agenda_columns: displayColumns || [],
+        name: view_Name,
+        custom_settings: {
+          title_column_key,
+          start_date_column_key,
+          end_date_column_key,
+          week_start,
+          start_year_first_week,
+          agenda_columns,
+        },
       };
       let column_color_by_key = '';
       if (!colored_by_row_color){
@@ -449,20 +447,11 @@ class App extends React.Component {
           color_by_column: column_color_by_key
         };
         if (colorbys){
-          viewCustomSettings.colorbys = colorbys;
+          view_Data.colorbys = colorbys;
         }
       }
-
-      const view_Data = {
-        _id,
-        tableIndex,
-        insertData,
-        viewCustomSettings
-      };
-      view_Array.push(view_Data);
+      window.dtableSDK.insertView(tableIndex, view_Data);
     });
-    if (view_Array && view_Array.length <= 0) return;
-    window.dtableSDK.addCalendarView(view_Array);
     this.onPluginToggle();
   };
 

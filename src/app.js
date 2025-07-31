@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
 import classnames from 'classnames';
+import { Button } from 'reactstrap';
 import {
   CellType, SELECT_OPTION_COLORS, getTableByName, getViewByName,
   getNonArchiveViews, getNonPrivateViews, getViewShownColumns, COLUMNS_ICON_CONFIG
@@ -449,22 +450,20 @@ class App extends React.Component {
       }
       window.dtableSDK.migratePluginView(table_name, view_Data);
     });
-    this.onPluginToggle();
+    toaster.notify(intl.get('Migrate_to_view_successfully'));
   };
 
   renderBtnGroups = () => {
     return (
       <div className="d-flex align-items-center plugin-calendar-operators">
-        <div
-          className="mr-1 MigrateToView"
+        <Button
+          className="mr-4 migrateToView-button"
           onClick={this.migratePluginView}
-          onKeyDown={handleEnterKeyDown(this.migratePluginView)}
-          aria-label={intl.get('Migrate_to_view')}
-          tabIndex={0}
+          color="secondary"
         >
-          <Icon symbol='move-to' className='item-icon mr-1' />
-          <div className="Migrate-text">{intl.get('Migrate_to_view')}</div>
-        </div>
+          <Icon symbol='move-to' className='item-icon mr-2' />
+          <span>{intl.get('Migrate_to_view')}</span>
+        </Button>
         {!this.isMobile &&
           <span
             className="mr-1 op-icon"

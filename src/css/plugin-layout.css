@@ -215,32 +215,25 @@
   opacity: .75;
 }
 
-.calendar-plugin-container .MigrateToView {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  height: 24px;
-  border: 1px solid black;
-  cursor: pointer;
+.calendar-plugin-container .migrateToView-button {
+  height: 26px;
+  padding: 0px 6px;
+  font-weight: 400;
+  border-radius: 2px;
   color: #000;
-  opacity: .5;
-  border-radius:3px;
-}
-
-.calendar-plugin-container .MigrateToView .Migrate-icon {
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-.calendar-plugin-container .MigrateToView:hover {
   opacity: .75;
 }
 
-.calendar-plugin-container .MigrateToView .Migrate-text {
-  text-align: center;
-  font-size: 12px;
+.calendar-plugin-container .migrateToView-button.focus,
+.calendar-plugin-container .migrateToView-button:focus {
+  box-shadow: none;
 }
 
+.calendar-plugin-container .migrateToView-button {
+  color: #000;
+}
+
+.calendar-plugin-container .migrateToView-button:hover {
+  color: #000;
+  opacity: .75;
+}

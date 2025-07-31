@@ -72,7 +72,8 @@ const zh_CN = {
   'Empty': '空',
   'New_record': '新建记录',
   'Double_click_to_insert_new_record': '双击新建记录',
-  'Migrate_to_view': '迁移为视图'
+  'Migrate_to_view': '迁移为视图',
+  'Migrate_to_view_successfully': '迁移为视图成功',
 };
 
 export default zh_CN;

@@ -72,7 +72,8 @@ const ru = {
   'Empty': 'Пустой',
   'New_record': 'New record',
   'Double_click_to_insert_new_record': 'Double click to insert new record',
-  'Migrate_to_view': 'Migrate to view'
+  'Migrate_to_view': 'Migrate to view',
+  'Migrate_to_view_successfully': 'Migrate to view successfully',
 };
 
 export default ru;

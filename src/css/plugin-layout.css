@@ -234,5 +234,5 @@
 }
 
 .calendar-plugin-container .migrateToView-button:hover {
-  color: #000;
+  color: #000 !important;
 }

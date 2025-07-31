@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
 import classnames from 'classnames';
+import { Button } from 'reactstrap';
 import {
   CellType, SELECT_OPTION_COLORS, getTableByName, getViewByName,
-  getNonArchiveViews, getNonPrivateViews, getViewShownColumns,
+  getNonArchiveViews, getNonPrivateViews, getViewShownColumns, COLUMNS_ICON_CONFIG
 } from 'dtable-utils';
 import { toaster } from 'dtable-ui-component';
 import ReactBigCalendar from './ReactBigCalendar';
-import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT, CALENDAR_VIEWS, KEY_SELECTED_CALENDAR_VIEW } from './constants';
+import { PLUGIN_NAME, SETTING_KEY, DATE_FORMAT, CALENDAR_VIEWS, KEY_SELECTED_CALENDAR_VIEW, TITLE_COLUMN_TYPES, SETTING_VALUE } from './constants';
 import ViewsTabs from './components/views-tabs';
 import ViewSetting from './components/view-setting';
 import TimeRangeDialog from './components/dialog/time-range-dialog';
 import { generatorViewId, getDtableUuid, isIOS, isMobile, isSafari } from './utils/common';
 import { handleEnterKeyDown } from './utils/accessibility';
+import Icon from './components/icon';
 import View from './model/view';
 import icon from './image/icon.png';
 import './locale';
@@ -292,9 +294,191 @@ class App extends React.Component {
     });
   };
 
+  createOptions(source, settingKey, valueKey) {
+    if (!Array.isArray(source)) {
+      return [];
+    }
+    return source.map((item) => ({
+      value: item[valueKey],
+      setting_key: settingKey,
+      label: (
+        <Fragment>
+          {item.iconClass && <span className="header-icon"><i className={item.iconClass}></i></span>}
+          <span className='select-module select-module-name'>{item.name}</span>
+        </Fragment>
+      ),
+    }));
+  }
+
+  getSelectorColumns = (columns) => {
+    let dateColumns = [];
+    let endDateColumns = [];
+    let colorColumns = [];
+    let titleColumns = [];
+    columns && columns.forEach((c) => {
+      const { type, name } = c;
+      const columnOption = {
+        name,
+        value: name,
+        iconClass: COLUMNS_ICON_CONFIG[type],
+      };
+      if (
+        type === CellType.DATE ||
+        type === CellType.CTIME ||
+        type === CellType.MTIME ||
+        (type === CellType.FORMULA && c.data.result_type === 'date')) {
+        dateColumns.push(columnOption);
+        endDateColumns.push(columnOption);
+      } else if (type === CellType.DURATION) {
+        endDateColumns.push(columnOption);
+      } else if (type === CellType.SINGLE_SELECT) {
+        colorColumns.push(columnOption);
+      }
+      if (TITLE_COLUMN_TYPES.includes(type)) {
+        titleColumns.push(columnOption);
+      }
+    });
+    return { dateColumns, endDateColumns, colorColumns, titleColumns };
+  };
+
+  getSelectorOptions = ({ dateColumns, endDateColumns, colorColumns, titleColumns }) => {
+    const { plugin_settings } = this.state;
+    const { views } = plugin_settings;
+    const tables = window.dtableSDK.getTables();
+    const tableOptions = this.createOptions(tables, SETTING_KEY.TABLE_NAME, 'name');
+    const viewOptions = this.createOptions(views, SETTING_KEY.VIEW_NAME, 'name');
+    const titleColumnOptions = this.createOptions(titleColumns, SETTING_KEY.COLUMN_TITLE, 'value');
+    const dateColumnOptions = this.createOptions(dateColumns, SETTING_KEY.COLUMN_START_DATE, 'value');
+    const endDateColumnOptions = this.createOptions(endDateColumns, SETTING_KEY.COLUMN_END_DATE, 'value');
+    const colorFieldOptions = this.createOptions(colorColumns, SETTING_KEY.COLUMN_COLOR, 'value');
+    colorFieldOptions.unshift(
+      {
+        value: 'row_color',
+        setting_key: SETTING_KEY.COLORED_BY_ROW_COLOR,
+        label: <span className={'select-module select-module-name'}>{intl.get('Row_color')}</span>
+      }
+    );
+
+    let weekStartOptions = [{ name: intl.get('Sunday'), value: 0 }, { name: intl.get('Monday'), value: 1 }];
+    weekStartOptions = this.createOptions(weekStartOptions, SETTING_KEY.WEEK_START, 'value');
+    let startYearFirstWeekOptions = [
+      { name: intl.get('First_day_of_the_year'), value: SETTING_VALUE.YEAR_FIRST_DAY },
+      { name: intl.get('First_full_week_of_the_year'), value: SETTING_VALUE.YEAR_FIRST_FULL_WEEK },
+    ];
+    startYearFirstWeekOptions = this.createOptions(startYearFirstWeekOptions, SETTING_KEY.START_YEAR_FIRST_WEEK, 'value');
+    return {
+      tableOptions, viewOptions,
+      titleColumnOptions, dateColumnOptions, endDateColumnOptions,
+      colorFieldOptions, weekStartOptions, startYearFirstWeekOptions,
+    };
+  };
+
+  getOptionalViewName = (view_Name, selectTableViews) => {
+    let columnName;
+    let max_number = 0;
+    const regexp = /^[0-9]\d*$/;
+
+    let repeatNameColumns = selectTableViews.filter(opt => {
+      let name = opt.name;
+      if (name === view_Name) return opt;
+      let spaceIndex = name.lastIndexOf(' ');
+      let firstPartName = name.slice(0, spaceIndex);
+      let secondPartName = name.slice(spaceIndex + 1);
+      let isPositiveInteger = regexp.test(secondPartName);
+      if (firstPartName === view_Name && isPositiveInteger) {
+        let current_number = parseInt(secondPartName);
+        if (current_number > max_number) {
+          max_number = current_number;
+        }
+      }
+      return firstPartName && firstPartName === view_Name && isPositiveInteger;
+    });
+
+    if (repeatNameColumns.length === 0) {
+      columnName = view_Name;
+    } else {
+      columnName = `${view_Name} ${max_number + 1}`;
+    }
+
+    return columnName;
+  };
+
+  migratePluginView = async () => {
+    const { plugin_settings } = this.state;
+    const { views } = plugin_settings;
+    if (!views || views.length == 0) return;
+
+    toaster.notify(intl.get('Starting_migration'));
+    try {
+      for (let i = 0; i < views.length; i++) {
+        const view = views[i];
+        const { settings } = view;
+
+        const selectedTable = this.getSelectedTable(settings);
+        const { columns } = this.getProcessedTableView(selectedTable, settings);
+        const { tableOptions, titleColumnOptions } = this.getSelectorOptions(this.getSelectorColumns(columns));
+        const defaultTableName = tableOptions.length > 0 ? tableOptions[0].value : '';
+        const defaultColumnTitle = titleColumnOptions.length > 0 ? titleColumnOptions[0].value : '';
+        const { table_name = defaultTableName, column_title = defaultColumnTitle, column_start_date = '', column_end_date = '', week_start = 0, start_year_first_week = 'year_first_day', column_color = '', columns: agenda_columns = [], colored_by_row_color } = settings;
+
+        const title_column = columns.filter(col => col.name === column_title);
+        const title_column_key = title_column[0]?.key || '';
+        const start_date_column = columns.filter(col => col.name === column_start_date);
+        const start_date_column_key = start_date_column[0]?.key || '';
+        const end_date_column = columns.filter(col => col.name === column_end_date);
+        const end_date_column_key = end_date_column[0]?.key || '';
+
+        const selectTableViews = window.dtableSDK.getViews(selectedTable);
+        const view_Name = this.getOptionalViewName(view.name, selectTableViews);
+        const view_Data = {
+          type: 'calendar',
+          name: view_Name,
+          custom_settings: {
+            title_column_key,
+            start_date_column_key,
+            end_date_column_key,
+            week_start,
+            start_year_first_week,
+            agenda_columns,
+          },
+        };
+
+        let column_color_by_key = '';
+        if (!colored_by_row_color){
+          const column_color_by = columns.filter(col => col.name === column_color);
+          column_color_by_key = column_color_by[0]?.key || '';
+          const colorbys = {
+            type: 'by_column',
+            color_by_column: column_color_by_key
+          };
+          if (colorbys){
+            view_Data.colorbys = colorbys;
+          }
+        }
+
+        await new Promise((resolve, reject) => {
+          try {
+            window.dtableSDK.migratePluginView(table_name, view_Data);
+            setTimeout(resolve, 500);
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }
+      toaster.success(intl.get('Migrate_to_views_successfully'));
+    } catch (error) {
+      console.error('Migration error:', error);
+      toaster.danger(intl.get('Migration_failed'));
+    }
+  };
+
   renderBtnGroups = () => {
     return (
       <div className="d-flex align-items-center plugin-calendar-operators">
+        <Button className="mr-4 migrateToView-button" onClick={this.migratePluginView} color="secondary">
+          <Icon symbol='move-to' className='mr-2' />
+          <span>{intl.get('Migrate_to_view')}</span>
+        </Button>
         {!this.isMobile &&
           <span
             className="mr-1 op-icon"
@@ -519,6 +703,14 @@ class App extends React.Component {
     return window.dtableSDK.getTableFormulaResults(table, rows);
   };
 
+  getProcessedTableView = (selectedTable, settings) => {
+    let selectedTableView = this.getSelectedView(selectedTable, settings);
+    const formulaRows = this.getTableFormulaRows(selectedTable, selectedTableView);
+    selectedTableView = Object.assign({}, selectedTableView, { formula_rows: formulaRows });
+    const columns = getViewShownColumns(selectedTableView, selectedTable.columns);
+    return { selectedTableView, columns };
+  };
+
   render() {
     const {
       isLoading, showDialog, plugin_settings, selectedViewIdx,
@@ -534,10 +726,7 @@ class App extends React.Component {
     const tables = window.dtableSDK.getTables();
     const selectedTable = this.getSelectedTable(settings);
     const tableViews = getNonPrivateViews(getNonArchiveViews(selectedTable.views));
-    let selectedTableView = this.getSelectedView(selectedTable, settings);
-    const formulaRows = this.getTableFormulaRows(selectedTable, selectedTableView);
-    selectedTableView = Object.assign({}, selectedTableView, { formula_rows: formulaRows });
-    const columns = getViewShownColumns(selectedTableView, selectedTable.columns);
+    const { selectedTableView, columns } = this.getProcessedTableView(selectedTable, settings);
     const modalClassNames = classnames(
       'dtable-plugin',
       'calendar-plugin-container',
@@ -592,7 +781,7 @@ class App extends React.Component {
             modifyRow={this.modifyRow}
             settings={settings}
             collaborators={this.getRelatedUsersFromLocal()}
-            formulaRows={formulaRows}
+            formulaRows={selectedTableView.formula_rows}
             rowColorsMap={this.rowColorsMap}
             getSelectedGridView={this.getSelectedGridView}
             handleRowExpand={this.handleRowExpand}
@@ -614,6 +803,9 @@ class App extends React.Component {
         </div>
         {isViewSettingPanelOpen &&
           <ViewSetting
+            createOptions={this.createOptions}
+            getSelectorColumns={this.getSelectorColumns}
+            getSelectorOptions={this.getSelectorOptions}
             tables={tables}
             views={tableViews}
             settings={settings}

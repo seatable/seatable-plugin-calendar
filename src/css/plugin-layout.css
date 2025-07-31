@@ -214,3 +214,22 @@
 .calendar-plugin-container .op-icon:hover {
   opacity: .75;
 }
+
+.calendar-plugin-container .migrateToView-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0px 6px;
+  font-weight: 400;
+  border-radius: 2px;
+  border-color: rgba(0, 0, 0, 0.5) !important;
+  color: #000;
+  opacity: .5;
+}
+
+.calendar-plugin-container .migrateToView-button:hover {
+  border-color: rgba(0, 0, 0, 0.75) !important;
+  color: #000 !important;
+  opacity: .75;
+}

@@ -72,6 +72,10 @@ const de = {
   'Empty': 'Leer',
   'New_record': 'New record',
   'Double_click_to_insert_new_record': 'Double click to insert new record',
+  'Migrate_to_view': 'Migrate to view',
+  'Starting_migration': 'Starting migration...',
+  'Migrate_to_views_successfully': 'Migrate to views successfully',
+  'Migration_failed': 'Migration failed, please try again',
 };
 
 export default de;

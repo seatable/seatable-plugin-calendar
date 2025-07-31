@@ -216,6 +216,9 @@
 }
 
 .calendar-plugin-container .migrateToView-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 26px;
   padding: 0px 6px;
   font-weight: 400;

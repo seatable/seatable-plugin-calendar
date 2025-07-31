@@ -224,15 +224,6 @@
   opacity: .75;
 }
 
-.calendar-plugin-container .migrateToView-button.focus,
-.calendar-plugin-container .migrateToView-button:focus {
-  box-shadow: none;
-}
-
-.calendar-plugin-container .migrateToView-button {
-  color: #000;
-}
-
 .calendar-plugin-container .migrateToView-button:hover {
   color: #000 !important;
 }

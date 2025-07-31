@@ -450,7 +450,7 @@ class App extends React.Component {
       }
       window.dtableSDK.migratePluginView(table_name, view_Data);
     });
-    toaster.notify(intl.get('Migrate_to_view_successfully'));
+    toaster.success(intl.get('Migrate_to_view_successfully'));
   };
 
   renderBtnGroups = () => {

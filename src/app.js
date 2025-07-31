@@ -402,7 +402,7 @@ class App extends React.Component {
     return columnName;
   };
 
-  MigrateToView = () => {
+  migratePluginView = () => {
     const { plugin_settings, } = this.state;
     const { views } = plugin_settings;
     views.forEach(view => {
@@ -414,9 +414,6 @@ class App extends React.Component {
       const defaultColumnTitle = titleColumnOptions.length > 0 ? titleColumnOptions[0].value : '';
       const { table_name = defaultTableName, column_title = defaultColumnTitle, column_start_date = '', column_end_date = '', week_start = 0, start_year_first_week = 'year_first_day', column_color = '', columns: agenda_columns = [], colored_by_row_color } = settings;
 
-      const tableIndex = tableOptions.findIndex((table) => {
-        return table.value === table_name;
-      });
       const title_column = columns.filter(col => col.name === column_title);
       const title_column_key = title_column[0]?.key || '';
       const start_date_column = columns.filter(col => col.name === column_start_date);
@@ -450,7 +447,7 @@ class App extends React.Component {
           view_Data.colorbys = colorbys;
         }
       }
-      window.dtableSDK.insertView(tableIndex, view_Data);
+      window.dtableSDK.migratePluginView(table_name, view_Data);
     });
     this.onPluginToggle();
   };
@@ -460,8 +457,8 @@ class App extends React.Component {
       <div className="d-flex align-items-center plugin-calendar-operators">
         <div
           className="mr-1 MigrateToView"
-          onClick={this.MigrateToView}
-          onKeyDown={handleEnterKeyDown(this.MigrateToView)}
+          onClick={this.migratePluginView}
+          onKeyDown={handleEnterKeyDown(this.migratePluginView)}
           aria-label={intl.get('Migrate_to_view')}
           tabIndex={0}
         >

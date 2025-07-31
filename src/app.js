@@ -403,54 +403,73 @@ class App extends React.Component {
     return columnName;
   };
 
-  migratePluginView = () => {
-    const { plugin_settings, } = this.state;
+  migratePluginView = async () => {
+    const { plugin_settings } = this.state;
     const { views } = plugin_settings;
-    views.forEach(view => {
-      const { settings } = view;
-      const selectedTable = this.getSelectedTable(settings);
-      const { columns } = this.getProcessedTableView(selectedTable, settings);
-      const { tableOptions, titleColumnOptions } = this.getSelectorOptions(this.getSelectorColumns(columns));
-      const defaultTableName = tableOptions.length > 0 ? tableOptions[0].value : '';
-      const defaultColumnTitle = titleColumnOptions.length > 0 ? titleColumnOptions[0].value : '';
-      const { table_name = defaultTableName, column_title = defaultColumnTitle, column_start_date = '', column_end_date = '', week_start = 0, start_year_first_week = 'year_first_day', column_color = '', columns: agenda_columns = [], colored_by_row_color } = settings;
+    if (!views || views.length == 0) return;
 
-      const title_column = columns.filter(col => col.name === column_title);
-      const title_column_key = title_column[0]?.key || '';
-      const start_date_column = columns.filter(col => col.name === column_start_date);
-      const start_date_column_key = start_date_column[0]?.key || '';
-      const end_date_column = columns.filter(col => col.name === column_end_date);
-      const end_date_column_key = end_date_column[0]?.key || '';
+    toaster.notify(intl.get('Starting_migration'));
+    try {
+      for (let i = 0; i < views.length; i++) {
+        const view = views[i];
+        const { settings } = view;
 
-      const selectTableViews = window.dtableSDK.getViews(selectedTable);
-      const view_Name = this.getOptionalViewName(view.name, selectTableViews);
-      const view_Data = {
-        type: 'calendar',
-        name: view_Name,
-        custom_settings: {
-          title_column_key,
-          start_date_column_key,
-          end_date_column_key,
-          week_start,
-          start_year_first_week,
-          agenda_columns,
-        },
-      };
-      let column_color_by_key = '';
-      if (!colored_by_row_color){
-        const column_color_by = columns.filter(col => col.name === column_color);
-        column_color_by_key = column_color_by[0]?.key || '';
-        const colorbys = {
-          type: 'by_column',
-          color_by_column: column_color_by_key
+        const selectedTable = this.getSelectedTable(settings);
+        const { columns } = this.getProcessedTableView(selectedTable, settings);
+        const { tableOptions, titleColumnOptions } = this.getSelectorOptions(this.getSelectorColumns(columns));
+        const defaultTableName = tableOptions.length > 0 ? tableOptions[0].value : '';
+        const defaultColumnTitle = titleColumnOptions.length > 0 ? titleColumnOptions[0].value : '';
+        const { table_name = defaultTableName, column_title = defaultColumnTitle, column_start_date = '', column_end_date = '', week_start = 0, start_year_first_week = 'year_first_day', column_color = '', columns: agenda_columns = [], colored_by_row_color } = settings;
+
+        const title_column = columns.filter(col => col.name === column_title);
+        const title_column_key = title_column[0]?.key || '';
+        const start_date_column = columns.filter(col => col.name === column_start_date);
+        const start_date_column_key = start_date_column[0]?.key || '';
+        const end_date_column = columns.filter(col => col.name === column_end_date);
+        const end_date_column_key = end_date_column[0]?.key || '';
+
+        const selectTableViews = window.dtableSDK.getViews(selectedTable);
+        const view_Name = this.getOptionalViewName(view.name, selectTableViews);
+        const view_Data = {
+          type: 'calendar',
+          name: view_Name,
+          custom_settings: {
+            title_column_key,
+            start_date_column_key,
+            end_date_column_key,
+            week_start,
+            start_year_first_week,
+            agenda_columns,
+          },
         };
-        if (colorbys){
-          view_Data.colorbys = colorbys;
+
+        let column_color_by_key = '';
+        if (!colored_by_row_color){
+          const column_color_by = columns.filter(col => col.name === column_color);
+          column_color_by_key = column_color_by[0]?.key || '';
+          const colorbys = {
+            type: 'by_column',
+            color_by_column: column_color_by_key
+          };
+          if (colorbys){
+            view_Data.colorbys = colorbys;
+          }
         }
+
+        await new Promise((resolve, reject) => {
+          try {
+            window.dtableSDK.migratePluginView(table_name, view_Data);
+            setTimeout(resolve, 500);
+          } catch (error) {
+            reject(error);
+          }
+        });
       }
-      window.dtableSDK.migratePluginView(table_name, view_Data);
-    });
-    toaster.success(intl.get('Migrate_to_view_successfully'));
+      toaster.success(intl.get('Migrate_to_views_successfully'));
+    } catch (error) {
+      console.error('Migration error:', error);
+      toaster.danger(intl.get('Migration_failed'));
+    }
   };
 
   renderBtnGroups = () => {

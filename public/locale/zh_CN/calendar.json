@@ -73,5 +73,7 @@
   "New_record": "新建记录",
   "Double_click_to_insert_new_record": "双击新建记录",
   "Migrate_to_view": "迁移为视图",
-  "Migrate_to_view_successfully": "迁移为视图成功"
+  "Starting_migration": "正在迁移...",
+  "Migrate_to_views_successfully": "迁移为视图成功",
+  "Migration_failed": "迁移失败，请重试"
 }

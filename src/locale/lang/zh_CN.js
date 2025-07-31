@@ -75,7 +75,7 @@ const zh_CN = {
   'Migrate_to_view': '迁移为视图',
   'Starting_migration': '正在迁移...',
   'Migrate_to_views_successfully': '迁移为视图成功',
-  'Migration_failed': '迁移失败，请重试'
+  'Migration_failed': '迁移失败，请重试',
 };
 
 export default zh_CN;

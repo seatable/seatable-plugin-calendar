@@ -234,6 +234,5 @@
 }
 
 .calendar-plugin-container .migrateToView-button:hover {
-  color: #555;
-  opacity: .75;
+  color: #000;
 }

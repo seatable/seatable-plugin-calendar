@@ -456,12 +456,8 @@ class App extends React.Component {
   renderBtnGroups = () => {
     return (
       <div className="d-flex align-items-center plugin-calendar-operators">
-        <Button
-          className="mr-4 migrateToView-button"
-          onClick={this.migratePluginView}
-          color="secondary"
-        >
-          <Icon symbol='move-to' className='item-icon mr-2' />
+        <Button className="mr-4 migrateToView-button" onClick={this.migratePluginView} color="secondary">
+          <Icon symbol='move-to' className='mr-2' />
           <span>{intl.get('Migrate_to_view')}</span>
         </Button>
         {!this.isMobile &&

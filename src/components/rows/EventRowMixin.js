@@ -68,7 +68,7 @@ const mixins = {
     } else if (len === 1) {
       if (endAtSunday) {
         paddingRight = '1px';
-      } else if (isExcluded){
+      } else if (isExcluded) {
         paddingRight = '0.1px';
       } else {
         paddingRight = '0.5px';
@@ -81,7 +81,6 @@ const mixins = {
       }
     }
     const props = {
-      key,
       // IE10/11 need max-width. flex-basis doesn't respect box-sizing
       style: {
         WebkitFlexBasis: per,
@@ -95,6 +94,7 @@ const mixins = {
 
     return (
       <div
+        key={key}
         {...props}
       >
         {content}
